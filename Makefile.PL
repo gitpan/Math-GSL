@@ -4,6 +4,12 @@ my $gsl_ver = `gsl-config --version`;
 chomp $gsl_ver;
 die "Sorry, Gsl >= v0.94 is required" if $gsl_ver < 0.94;
 
+my $gsl_inc = `gsl-config --cflags`;
+chomp $gsl_inc;
+
+my $gsl_libs = `gsl-config --libs`;
+chomp $gsl_libs;
+
 WriteMakefile(
     'DIR'  		=> [qw(Sf)],
     'NAME'		=> 'Math::Gsl',
@@ -12,8 +18,8 @@ WriteMakefile(
     ($] >= 5.005 ?    
       (ABSTRACT => 'Perl Interface to GSL',
        AUTHOR     => 'Jonathan Leto <jonathan@leto.net>') : ()),
-    'LIBS'		=> ['-lgsl -lgslcblas -lm'], 
+    'LIBS'		=> [$gsl_libs], 
     'DEFINE'		=> '', 
-    'INC'		=> '', 
+    'INC'		=> $gsl_inc,
 );
 

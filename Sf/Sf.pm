@@ -107,7 +107,7 @@ for ( @{$EXPORT_TAGS{"all"}} ){
 	eval $str;
 	print $@ if $@;
 }
-$VERSION = '0.06';
+$VERSION = '0.07';
 
 sub AUTOLOAD {
 	

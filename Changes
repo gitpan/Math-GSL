@@ -1,5 +1,9 @@
 Revision history for Math::Gsl
 
+0.07 Sat Dec 01 21:53:19 EST 2001 
+	- figure out LIBS and INC with gsl-config
+	- tests now work when perl is compiled with USE_LONG_DOUBLE
+
 0.06 Tue Nov 06 02:44:17 EST 2001 
 	- Complete rewrite
 	- Renamed Math::Gsl

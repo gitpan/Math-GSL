@@ -22,7 +22,7 @@ for ( keys %EXPORT_TAGS ){
 	push(@{ $EXPORT_TAGS{"all"} },  @{$EXPORT_TAGS{$_}} );
 }
 
-$VERSION = '0.06';
+$VERSION = '0.07';
 
 sub AUTOLOAD {
     # This AUTOLOAD is used to 'autoload' constants from the constant()
