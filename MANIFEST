@@ -1,16 +1,7 @@
-Changes
-Gsl.pm
-Gsl.xs
-typemap
-Sf/Makefile.PL
-Sf/Sf.pm
-Sf/Sf.xs
-Sf/typemap
+GSL.pm
+GSL.xs
+MANIFEST			This list of files
+MANIFEST.SKIP
 Makefile.PL
-MANIFEST
 README
-THANKS
-t/1.t
-contrib/benchmark
-contrib/example
-doc/bench
+t/poly.t
