@@ -1,0 +1,13 @@
+Run1 and Run3 are basically the same, run1 = Math::Gsl::Sf::func, run2 = func. 
+	Both are about 2 times slower that Run4.
+Run2 is $sf->func, OO interface has quite a performance hit, about three times as long as Run4
+Run4 uses the XS function directly, as thus, is the fastest.
+
+
+
+Benchmark: timing 50000 iterations of run1, run2, run3, run4...
+      run1: 20 wallclock secs (19.59 usr +  0.00 sys = 19.59 CPU) @ 2552.32/s (n=50000)
+      run2: 29 wallclock secs (28.77 usr +  0.00 sys = 28.77 CPU) @ 1737.92/s (n=50000)
+      run3: 20 wallclock secs (19.61 usr +  0.00 sys = 19.61 CPU) @ 2549.72/s (n=50000)
+      run4: 10 wallclock secs ( 9.85 usr +  0.00 sys =  9.85 CPU) @ 5076.14/s (n=50000)
+
