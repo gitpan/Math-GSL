@@ -1,6 +1,9 @@
 use Test::More (tests => 21);
 use Math::Complex;
-BEGIN { use_ok('Math::GSL') }
+use Math::Gsl::Polynomial qw(poly_complex_solve);
+ok(1);
+
+# BEGIN { use_ok('Math::Gsl::Polynomial qw(poly_complex_solve)') }
 
 my @a = (15,-8,1);
 

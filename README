@@ -1,19 +1,15 @@
-This wrapper is Copyright Nick Ing-Simmons 2002. All Rights Reserved. 
-The wrapper can be distrubuted under same terms as perl itself.
 
-This is a very resticted perl interface to -lgsl - GNU Scientific Library.
-The GSL is itself distributed under GPL and is available in at least 
-SuSE 8.0 linux distribution, or from :
+Gsl - Perl Interface to The GNU Scientific Library
+--------------------------------------------------
+By Jonathan Leto <jonathan@leto.net>
 
-http://sources.redhat.com/gsl/
+Currently on the Special Functions of GSL are implemented.
 
-Only the routines relating the solving of polynomials are exported.
-It exists to provide that function to "tkscope" in Audio::Data.
+The POD documentation should tell you all that you need to know.
+If you want to help me implement other parts of GSL, please
+contact me.
 
-I am willing to extend the bindings to other functions as requested 
-and as time permits.
+This code has not been thoroughly tested at all, and should be
+considered alpha software.
 
-I may also find an alternate way of solving polynomials and loose interest.
-
-Nick Ing-Simmons <Nick@Ing-Simmons.net> 
-
+This code is release under the GPL Version 2.

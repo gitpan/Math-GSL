@@ -4,7 +4,7 @@
 #include <gsl/gsl_errno.h>
 #include <gsl/gsl_poly.h>
 
-MODULE = Math::GSL  PACKAGE = Math::GSL	PREFIX = gsl_
+MODULE = Math::Gsl::Polynomial  PACKAGE = Math::Gsl::Polynomial	PREFIX = gsl_
 
 PROTOTYPES: DISABLE
 

@@ -1,7 +1,20 @@
-GSL.pm
-GSL.xs
-MANIFEST			This list of files
-MANIFEST.SKIP
+Changes
+Gsl.pm
+Gsl.xs
+typemap
+Sf/Makefile.PL
+Sf/Sf.pm
+Sf/Sf.xs
+Sf/typemap
+Polynomial/Polynomial.pm
+Polynomial/Polynomial.xs
+Polynomial/Makefile.PL
 Makefile.PL
+MANIFEST
 README
-t/poly.t
+THANKS
+t/1.t
+t/2.t
+contrib/benchmark
+contrib/example
+doc/bench
