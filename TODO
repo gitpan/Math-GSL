@@ -1,0 +1,25 @@
+=head1 TODO
+
+=head2 Stuff we realy need
+
+* tests in xt/ to test for correct Build.PL behavior when modules are missing, etc...
+
+=head2 Stuff to do SOON
+
+* port remaining test files to use Test::Class
+
+
+=head2  Stuff to figure out
+
+* check for minimum SWIG version
+
+=head2 Stuff to fix
+
+* make sure in Build.PL that the GSL include files are where we think they
+  are, so that the compilation doesn't blowup when people have put there
+  headers in a non-standard place
+
+* make sure blib/ files are copied to correct place in lib/
+
+* make the interface files not be hardcoded to /usr/local/include/gsl,
+  investigate SWIG preprocessor
