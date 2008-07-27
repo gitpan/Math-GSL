@@ -1474,6 +1474,15 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 #endif
 
 
+    typedef struct callback_t
+    {  
+        SV * obj;
+    };
+    double xsquared(double x,void *params){
+        return x * x;
+    }
+
+
     #include "gsl/gsl_math.h"
     #include "gsl/gsl_deriv.h"
 
@@ -1654,10 +1663,8 @@ XS(_wrap_gsl_function_struct_function_set) {
     }
     arg1 = (struct gsl_function_struct *)(argp1);
     {
-      printf("function pointer * %d \n", (int) arg2);
-      printf("input * %d \n", (int) ST(1));
-      Perl_sv_dump( ST(1) );
-      
+      fprintf(stderr,"input * %d \n", (int) ST(1));
+      //Perl_sv_dump( ST(1) );
     }
     if (arg1) (arg1)->function = arg2;
     
@@ -1719,6 +1726,7 @@ XS(_wrap_gsl_function_struct_params_set) {
     arg1 = (struct gsl_function_struct *)(argp1);
     {
       printf("void * \n");
+      arg2 = (double *) ST(1);
     }
     if (arg1) (arg1)->params = arg2;
     
@@ -1824,10 +1832,8 @@ XS(_wrap_gsl_function_fdf_struct_f_set) {
     }
     arg1 = (struct gsl_function_fdf_struct *)(argp1);
     {
-      printf("function pointer * %d \n", (int) arg2);
-      printf("input * %d \n", (int) ST(1));
-      Perl_sv_dump( ST(1) );
-      
+      fprintf(stderr,"input * %d \n", (int) ST(1));
+      //Perl_sv_dump( ST(1) );
     }
     if (arg1) (arg1)->f = arg2;
     
@@ -1888,10 +1894,8 @@ XS(_wrap_gsl_function_fdf_struct_df_set) {
     }
     arg1 = (struct gsl_function_fdf_struct *)(argp1);
     {
-      printf("function pointer * %d \n", (int) arg2);
-      printf("input * %d \n", (int) ST(1));
-      Perl_sv_dump( ST(1) );
-      
+      fprintf(stderr,"input * %d \n", (int) ST(1));
+      //Perl_sv_dump( ST(1) );
     }
     if (arg1) (arg1)->df = arg2;
     
@@ -2017,6 +2021,7 @@ XS(_wrap_gsl_function_fdf_struct_params_set) {
     arg1 = (struct gsl_function_fdf_struct *)(argp1);
     {
       printf("void * \n");
+      arg2 = (double *) ST(1);
     }
     if (arg1) (arg1)->params = arg2;
     
@@ -2187,6 +2192,7 @@ XS(_wrap_gsl_function_vec_struct_params_set) {
     arg1 = (struct gsl_function_vec_struct *)(argp1);
     {
       printf("void * \n");
+      arg2 = (double *) ST(1);
     }
     if (arg1) (arg1)->params = arg2;
     
@@ -2285,21 +2291,30 @@ XS(_wrap_gsl_deriv_central) {
     int ecode2 = 0 ;
     double val3 ;
     int ecode3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
-    void *argp5 = 0 ;
-    int res5 = 0 ;
+    double temp4 ;
+    int res4 = SWIG_TMPOBJ ;
+    double temp5 ;
+    int res5 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 5) || (items > 5)) {
-      SWIG_croak("Usage: gsl_deriv_central(f,x,h,result,abserr);");
+    arg4 = &temp4;
+    arg5 = &temp5;
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: gsl_deriv_central(f,x,h);");
     }
     {
-      fprintf(stderr,"gsl_func  \n");
-      fprintf(stderr, "HAI %d\n", (int) arg1->params );
-      fprintf(stderr, "HAI %d\n", (int) arg1->function );
+      gsl_function F;
+      F.params = 0;
+      F.function = &xsquared;
+      if( !SvROK(ST(0)) ) {
+        fprintf(stderr,"not a reference value!");
+        croak("bad juju"); 
+      }
+      fprintf(stderr,"gsl_func;input=%d\n", (int) ST(0));
+      Perl_sv_dump( ST(0) );
+      arg1 = &F;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -2311,18 +2326,20 @@ XS(_wrap_gsl_deriv_central) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_deriv_central" "', argument " "3"" of type '" "double""'");
     } 
     arg3 = (double)(val3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_deriv_central" "', argument " "4"" of type '" "double *""'"); 
-    }
-    arg4 = (double *)(argp4);
-    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res5)) {
-      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_deriv_central" "', argument " "5"" of type '" "double *""'"); 
-    }
-    arg5 = (double *)(argp5);
     result = (int)gsl_deriv_central((struct gsl_function_struct const *)arg1,arg2,arg3,arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res4)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res5)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg5)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -2351,21 +2368,30 @@ XS(_wrap_gsl_deriv_backward) {
     int ecode2 = 0 ;
     double val3 ;
     int ecode3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
-    void *argp5 = 0 ;
-    int res5 = 0 ;
+    double temp4 ;
+    int res4 = SWIG_TMPOBJ ;
+    double temp5 ;
+    int res5 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 5) || (items > 5)) {
-      SWIG_croak("Usage: gsl_deriv_backward(f,x,h,result,abserr);");
+    arg4 = &temp4;
+    arg5 = &temp5;
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: gsl_deriv_backward(f,x,h);");
     }
     {
-      fprintf(stderr,"gsl_func  \n");
-      fprintf(stderr, "HAI %d\n", (int) arg1->params );
-      fprintf(stderr, "HAI %d\n", (int) arg1->function );
+      gsl_function F;
+      F.params = 0;
+      F.function = &xsquared;
+      if( !SvROK(ST(0)) ) {
+        fprintf(stderr,"not a reference value!");
+        croak("bad juju"); 
+      }
+      fprintf(stderr,"gsl_func;input=%d\n", (int) ST(0));
+      Perl_sv_dump( ST(0) );
+      arg1 = &F;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -2377,18 +2403,20 @@ XS(_wrap_gsl_deriv_backward) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_deriv_backward" "', argument " "3"" of type '" "double""'");
     } 
     arg3 = (double)(val3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_deriv_backward" "', argument " "4"" of type '" "double *""'"); 
-    }
-    arg4 = (double *)(argp4);
-    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res5)) {
-      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_deriv_backward" "', argument " "5"" of type '" "double *""'"); 
-    }
-    arg5 = (double *)(argp5);
     result = (int)gsl_deriv_backward((struct gsl_function_struct const *)arg1,arg2,arg3,arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res4)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res5)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg5)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -2417,21 +2445,30 @@ XS(_wrap_gsl_deriv_forward) {
     int ecode2 = 0 ;
     double val3 ;
     int ecode3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
-    void *argp5 = 0 ;
-    int res5 = 0 ;
+    double temp4 ;
+    int res4 = SWIG_TMPOBJ ;
+    double temp5 ;
+    int res5 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 5) || (items > 5)) {
-      SWIG_croak("Usage: gsl_deriv_forward(f,x,h,result,abserr);");
+    arg4 = &temp4;
+    arg5 = &temp5;
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: gsl_deriv_forward(f,x,h);");
     }
     {
-      fprintf(stderr,"gsl_func  \n");
-      fprintf(stderr, "HAI %d\n", (int) arg1->params );
-      fprintf(stderr, "HAI %d\n", (int) arg1->function );
+      gsl_function F;
+      F.params = 0;
+      F.function = &xsquared;
+      if( !SvROK(ST(0)) ) {
+        fprintf(stderr,"not a reference value!");
+        croak("bad juju"); 
+      }
+      fprintf(stderr,"gsl_func;input=%d\n", (int) ST(0));
+      Perl_sv_dump( ST(0) );
+      arg1 = &F;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -2443,18 +2480,20 @@ XS(_wrap_gsl_deriv_forward) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_deriv_forward" "', argument " "3"" of type '" "double""'");
     } 
     arg3 = (double)(val3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_deriv_forward" "', argument " "4"" of type '" "double *""'"); 
-    }
-    arg4 = (double *)(argp4);
-    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res5)) {
-      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_deriv_forward" "', argument " "5"" of type '" "double *""'"); 
-    }
-    arg5 = (double *)(argp5);
     result = (int)gsl_deriv_forward((struct gsl_function_struct const *)arg1,arg2,arg3,arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res4)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res5)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg5)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
