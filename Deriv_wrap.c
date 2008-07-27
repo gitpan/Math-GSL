@@ -2306,14 +2306,17 @@ XS(_wrap_gsl_deriv_central) {
     }
     {
       gsl_function F;
+      int count;
       F.params = 0;
       F.function = &xsquared;
+      
       if( !SvROK(ST(0)) ) {
-        fprintf(stderr,"not a reference value!");
-        croak("bad juju"); 
+        croak("Math::GSL : not a reference value!");
       }
-      fprintf(stderr,"gsl_func;input=%d\n", (int) ST(0));
-      Perl_sv_dump( ST(0) );
+      //Perl_sv_dump( ST(0) );
+      
+      // does not work
+      //count = call_sv((SV*) ST(0), G_ARRAY);
       arg1 = &F;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
@@ -2383,14 +2386,17 @@ XS(_wrap_gsl_deriv_backward) {
     }
     {
       gsl_function F;
+      int count;
       F.params = 0;
       F.function = &xsquared;
+      
       if( !SvROK(ST(0)) ) {
-        fprintf(stderr,"not a reference value!");
-        croak("bad juju"); 
+        croak("Math::GSL : not a reference value!");
       }
-      fprintf(stderr,"gsl_func;input=%d\n", (int) ST(0));
-      Perl_sv_dump( ST(0) );
+      //Perl_sv_dump( ST(0) );
+      
+      // does not work
+      //count = call_sv((SV*) ST(0), G_ARRAY);
       arg1 = &F;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
@@ -2460,14 +2466,17 @@ XS(_wrap_gsl_deriv_forward) {
     }
     {
       gsl_function F;
+      int count;
       F.params = 0;
       F.function = &xsquared;
+      
       if( !SvROK(ST(0)) ) {
-        fprintf(stderr,"not a reference value!");
-        croak("bad juju"); 
+        croak("Math::GSL : not a reference value!");
       }
-      fprintf(stderr,"gsl_func;input=%d\n", (int) ST(0));
-      Perl_sv_dump( ST(0) );
+      //Perl_sv_dump( ST(0) );
+      
+      // does not work
+      //count = call_sv((SV*) ST(0), G_ARRAY);
       arg1 = &F;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
