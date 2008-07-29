@@ -2639,7 +2639,6 @@ XS(_wrap_gsl_sort_vector_smallest) {
     result = (int)gsl_sort_vector_smallest(arg1,arg2,(gsl_vector const *)arg3);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     {
-      fprintf(stderr, "matched argout\n");
       int i=0;
       AV* tempav = newAV();
       
@@ -2713,7 +2712,6 @@ XS(_wrap_gsl_sort_vector_largest) {
     result = (int)gsl_sort_vector_largest(arg1,arg2,(gsl_vector const *)arg3);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     {
-      fprintf(stderr, "matched argout\n");
       int i=0;
       AV* tempav = newAV();
       

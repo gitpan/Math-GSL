@@ -3147,8 +3147,6 @@ XS(_wrap_gsl_vector_view_array_with_stride) {
     double *arg1 = (double *) 0 ;
     size_t arg2 ;
     size_t arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -3160,11 +3158,24 @@ XS(_wrap_gsl_vector_view_array_with_stride) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_vector_view_array_with_stride(base,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_vector_view_array_with_stride" "', argument " "1"" of type '" "double *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (double *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_vector_view_array_with_stride" "', argument " "2"" of type '" "size_t""'");
@@ -3233,8 +3244,6 @@ XS(_wrap_gsl_vector_const_view_array_with_stride) {
     double *arg1 = (double *) 0 ;
     size_t arg2 ;
     size_t arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -3246,11 +3255,24 @@ XS(_wrap_gsl_vector_const_view_array_with_stride) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_vector_const_view_array_with_stride(base,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_vector_const_view_array_with_stride" "', argument " "1"" of type '" "double const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (double *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_vector_const_view_array_with_stride" "', argument " "2"" of type '" "size_t""'");
@@ -5970,8 +5992,6 @@ XS(_wrap_gsl_matrix_view_array) {
     double *arg1 = (double *) 0 ;
     size_t arg2 ;
     size_t arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -5983,11 +6003,24 @@ XS(_wrap_gsl_matrix_view_array) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_matrix_view_array(base,n1,n2);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_matrix_view_array" "', argument " "1"" of type '" "double *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (double *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_matrix_view_array" "', argument " "2"" of type '" "size_t""'");
@@ -6019,8 +6052,6 @@ XS(_wrap_gsl_matrix_view_array_with_tda) {
     size_t arg2 ;
     size_t arg3 ;
     size_t arg4 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -6034,11 +6065,24 @@ XS(_wrap_gsl_matrix_view_array_with_tda) {
     if ((items < 4) || (items > 4)) {
       SWIG_croak("Usage: gsl_matrix_view_array_with_tda(base,n1,n2,tda);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_matrix_view_array_with_tda" "', argument " "1"" of type '" "double *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (double *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_matrix_view_array_with_tda" "', argument " "2"" of type '" "size_t""'");
@@ -6546,8 +6590,6 @@ XS(_wrap_gsl_matrix_const_view_array) {
     double *arg1 = (double *) 0 ;
     size_t arg2 ;
     size_t arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -6559,11 +6601,24 @@ XS(_wrap_gsl_matrix_const_view_array) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_matrix_const_view_array(base,n1,n2);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_matrix_const_view_array" "', argument " "1"" of type '" "double const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (double *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_matrix_const_view_array" "', argument " "2"" of type '" "size_t""'");
@@ -6595,8 +6650,6 @@ XS(_wrap_gsl_matrix_const_view_array_with_tda) {
     size_t arg2 ;
     size_t arg3 ;
     size_t arg4 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -6610,11 +6663,24 @@ XS(_wrap_gsl_matrix_const_view_array_with_tda) {
     if ((items < 4) || (items > 4)) {
       SWIG_croak("Usage: gsl_matrix_const_view_array_with_tda(base,n1,n2,tda);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_matrix_const_view_array_with_tda" "', argument " "1"" of type '" "double const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (double *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_matrix_const_view_array_with_tda" "', argument " "2"" of type '" "size_t""'");
@@ -13411,8 +13477,6 @@ XS(_wrap_gsl_matrix_complex_view_array) {
     double *arg1 = (double *) 0 ;
     size_t arg2 ;
     size_t arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -13424,11 +13488,24 @@ XS(_wrap_gsl_matrix_complex_view_array) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_matrix_complex_view_array(base,n1,n2);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_matrix_complex_view_array" "', argument " "1"" of type '" "double *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (double *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_matrix_complex_view_array" "', argument " "2"" of type '" "size_t""'");
@@ -13460,8 +13537,6 @@ XS(_wrap_gsl_matrix_complex_view_array_with_tda) {
     size_t arg2 ;
     size_t arg3 ;
     size_t arg4 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -13475,11 +13550,24 @@ XS(_wrap_gsl_matrix_complex_view_array_with_tda) {
     if ((items < 4) || (items > 4)) {
       SWIG_croak("Usage: gsl_matrix_complex_view_array_with_tda(base,n1,n2,tda);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_matrix_complex_view_array_with_tda" "', argument " "1"" of type '" "double *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (double *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_matrix_complex_view_array_with_tda" "', argument " "2"" of type '" "size_t""'");
@@ -13987,8 +14075,6 @@ XS(_wrap_gsl_matrix_complex_const_view_array) {
     double *arg1 = (double *) 0 ;
     size_t arg2 ;
     size_t arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -14000,11 +14086,24 @@ XS(_wrap_gsl_matrix_complex_const_view_array) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_matrix_complex_const_view_array(base,n1,n2);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_matrix_complex_const_view_array" "', argument " "1"" of type '" "double const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (double *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_matrix_complex_const_view_array" "', argument " "2"" of type '" "size_t""'");
@@ -14036,8 +14135,6 @@ XS(_wrap_gsl_matrix_complex_const_view_array_with_tda) {
     size_t arg2 ;
     size_t arg3 ;
     size_t arg4 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -14051,11 +14148,24 @@ XS(_wrap_gsl_matrix_complex_const_view_array_with_tda) {
     if ((items < 4) || (items > 4)) {
       SWIG_croak("Usage: gsl_matrix_complex_const_view_array_with_tda(base,n1,n2,tda);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_matrix_complex_const_view_array_with_tda" "', argument " "1"" of type '" "double const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (double *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_matrix_complex_const_view_array_with_tda" "', argument " "2"" of type '" "size_t""'");

@@ -131,7 +131,7 @@ sub FWRITE_FREAD : Tests {
     $stream = fopen("histogram", "r");
     my $h = gsl_histogram_alloc(100);  
     ok_status(gsl_histogram_fread($stream, $h),$GSL_SUCCESS);  
-    is_deeply( [ map { gsl_histogram_get($self->{H}, $_) } (0..99) ],
+    is_deeply( [ map { gsl_histogram_get($h, $_) } (0..99) ],
                [ (0) x 50, 1, (0) x 49 ]
     );
     fclose($stream);
@@ -150,7 +150,145 @@ sub FIND : Tests {
     gsl_histogram_set_ranges_uniform($self->{H}, 0, 100);
     my @got = gsl_histogram_find($self->{H}, 1);
     ok_status($got[0], $GSL_SUCCESS);
-    is($got[1], 1);
+    cmp_ok($got[1], '==', 1);
 }
 
+sub ACCUMULATE : Tests {
+    my $self = shift;
+    gsl_histogram_set_ranges_uniform($self->{H}, 0, 100);
+
+    ok_status(gsl_histogram_accumulate($self->{H}, 50.5, 3 ), $GSL_SUCCESS);
+    cmp_ok(3,'==', gsl_histogram_get($self->{H}, 50 ) );
+    ok_status(gsl_histogram_accumulate($self->{H}, -150.5, 3 ), $GSL_EDOM);
+}
+
+sub BINS : Tests { 
+    my $self = shift;
+    gsl_histogram_set_ranges_uniform($self->{H}, 0, 100);
+    cmp_ok(gsl_histogram_bins($self->{H}), '==', 100);
+}
+
+sub RESET : Tests {
+    my $self = shift;
+    gsl_histogram_set_ranges_uniform($self->{H}, 0, 100);
+    gsl_histogram_shift($self->{H}, 2);
+    gsl_histogram_reset($self->{H});
+    is_deeply( [ map { gsl_histogram_get($self->{H}, $_) } (0..99) ],
+               [ (0) x 100 ]
+    );
+}
+
+sub MIN_BIN_MAX_BIN : Tests {
+    my $self = shift;
+    gsl_histogram_set_ranges_uniform($self->{H}, 0, 100);
+    ok_status(gsl_histogram_increment($self->{H}, 50.5 ), $GSL_SUCCESS);
+    cmp_ok(gsl_histogram_min_bin($self->{H}), '==', 0);
+    cmp_ok(gsl_histogram_max_bin($self->{H}), '==', 50);
+}
+
+sub GSL_HISTOGRAM_SIGMA : Tests {
+ local $TODO = "Don't know how to test this function";
+}
+
+sub EQUAL_BINS_P : Tests { 
+    my $self = shift;
+    my $h2 = gsl_histogram_alloc(100);
+    gsl_histogram_set_ranges_uniform($self->{H}, 0, 100);
+    gsl_histogram_set_ranges_uniform($h2, 0, 100);
+    cmp_ok(gsl_histogram_equal_bins_p($self->{H}, $h2), '==', 1);
+    gsl_histogram_set_ranges_uniform($self->{H}, 0, 50);
+    cmp_ok(gsl_histogram_equal_bins_p($self->{H}, $h2), '==', 0);
+}
+
+sub ADD : Tests {
+    my $self = shift;
+    my $h2 = gsl_histogram_alloc(100);
+    gsl_histogram_set_ranges_uniform($self->{H}, 0, 100);
+    gsl_histogram_set_ranges_uniform($h2, 0, 100);
+    gsl_histogram_increment($h2, 50.5 );
+    ok_status(gsl_histogram_add($self->{H}, $h2), $GSL_SUCCESS);
+    cmp_ok(gsl_histogram_get($self->{H}, 50), '==', 1);
+}
+
+sub SUB : Tests {
+    my $self = shift;
+    my $h2 = gsl_histogram_alloc(100);
+    gsl_histogram_set_ranges_uniform($self->{H}, 0, 100);
+    gsl_histogram_set_ranges_uniform($h2, 0, 100);
+    gsl_histogram_increment($h2, 50.5 );
+    gsl_histogram_increment($self->{H}, 50.5 );
+    ok_status(gsl_histogram_sub($self->{H}, $h2), $GSL_SUCCESS);
+    cmp_ok(gsl_histogram_get($self->{H}, 50), '==', 0);
+}
+
+sub MUL : Tests {
+    my $self = shift;
+    my $h2 = gsl_histogram_alloc(100);
+    gsl_histogram_set_ranges_uniform($self->{H}, 0, 100);
+    gsl_histogram_set_ranges_uniform($h2, 0, 100);
+    gsl_histogram_accumulate($h2, 50.5, 2);
+    gsl_histogram_accumulate($self->{H}, 50.5, 3);
+    ok_status(gsl_histogram_mul($self->{H}, $h2), $GSL_SUCCESS);
+    cmp_ok(gsl_histogram_get($self->{H}, 50), '==', 6);
+}
+
+sub DIV	: Tests {
+    my $self = shift;
+    my $h2 = gsl_histogram_alloc(100);
+    gsl_histogram_set_ranges_uniform($self->{H}, 0, 100);
+    gsl_histogram_set_ranges_uniform($h2, 0, 100);
+    gsl_histogram_accumulate($h2, 50.5, 2);
+    gsl_histogram_accumulate($self->{H}, 50.5, 4);
+    ok_status(gsl_histogram_div($self->{H}, $h2), $GSL_SUCCESS);
+    cmp_ok(gsl_histogram_get($self->{H}, 50), '==', 2);
+}
+
+sub SCALE : Tests {
+    my $self = shift;
+    gsl_histogram_set_ranges_uniform($self->{H}, 0, 100);
+    gsl_histogram_accumulate($self->{H}, 50.5, 4);
+    gsl_histogram_increment($self->{H}, 33.5 );
+    ok_status(gsl_histogram_scale($self->{H}, 2), $GSL_SUCCESS);
+    cmp_ok(gsl_histogram_get($self->{H}, 50), '==', 8);
+    cmp_ok(gsl_histogram_get($self->{H}, 33), '==', 2);
+}
+
+sub FPRINTF_FSCANF : Tests {
+    my $self = shift;
+    my $stream = fopen("histogram", "w");
+    gsl_histogram_set_ranges_uniform($self->{H}, 0, 100);
+    ok_status(gsl_histogram_increment($self->{H}, 50.5 ), $GSL_SUCCESS);
+
+    ok_status(gsl_histogram_fprintf($stream, $self->{H}, "%e", "%e"),$GSL_SUCCESS);  
+    fclose($stream);
+   
+    $stream = fopen("histogram", "r");
+    my $h = gsl_histogram_alloc(100);  
+    ok_status(gsl_histogram_fscanf($stream, $h),$GSL_SUCCESS);  
+    is_deeply( [ map { gsl_histogram_get($h, $_) } (0..99) ],
+               [ (0) x 50, 1, (0) x 49 ]
+    );
+    fclose($stream);
+}
+
+sub PDF_ALLOC : Tests {
+    my $pdf = gsl_histogram_pdf_alloc(100);
+    isa_ok($pdf, 'Math::GSL::Histogram' );
+    gsl_histogram_pdf_free($pdf);
+    ok(!$@, 'gsl_histogram_free');
+}
+
+sub PDF_INIT : Tests {
+    my $self = shift;
+    my $p = gsl_histogram_pdf_alloc(100);
+    gsl_histogram_set_ranges_uniform($self->{H}, 0, 100);
+    ok_status(gsl_histogram_pdf_init ($p, $self->{H}),$GSL_SUCCESS);
+    gsl_histogram_accumulate($self->{H}, 50.5, -4);
+    ok_status(gsl_histogram_pdf_init ($p, $self->{H}), $GSL_EDOM);
+}
+
+sub GSL_HISTOGRAM_PDF_SAMPLE : Tests {
+    my $p = gsl_histogram_pdf_alloc(100);
+    ok_status(gsl_histogram_pdf_sample( $p, 0.5 ), $GSL_SUCCESS);
+}
 42;
