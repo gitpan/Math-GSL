@@ -157,7 +157,7 @@ Here is a list of all the functions included in this module :
 
 =head1 EXAMPLES
 
-=head1 AUTHOR
+=head1 AUTHORS
 
 Jonathan Leto <jonathan@leto.net> and Thierry Moisan <thierry.moisan@gmail.com>
 

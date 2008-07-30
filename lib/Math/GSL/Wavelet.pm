@@ -253,7 +253,7 @@ bless $gsl_wavelet_bspline_centered, Math::GSL::Wavelet::gsl_wavelet_type;
 
 =head1 NAME
 
-Math::GSL::Wavelet - wavelets for real data in one dimension
+Math::GSL::Wavelet - Wavelets (for 1-D real data)
 
 =head1 SYNOPSIS
 

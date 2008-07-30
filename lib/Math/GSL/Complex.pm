@@ -505,13 +505,13 @@ This code defines $z as 5 + 3*I, multiplies it by 2 and then prints it out.
 
 =item C<my $real = gsl_real($z);>
 
-=item C<my $imag = gsl_real($z);>
+=item C<my $imag = gsl_imag($z);>
 
 =item C<print "Re(\$z) = $real\n";>
 
 =back
 
-=head1 AUTHOR
+=head1 AUTHORS
 
 Jonathan Leto <jonathan@leto.net> and Thierry Moisan <thierry.moisan@gmail.com>
 

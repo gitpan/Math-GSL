@@ -24,7 +24,7 @@ our %EXPORT_TAGS = (
 
 our ($GSL_PREC_DOUBLE, $GSL_PREC_SINGLE, $GSL_PREC_APPROX ) = 0..2;
 our $GSL_MODE_DEFAULT = $GSL_PREC_DOUBLE;
-our $VERSION = '0.06_03';
+our $VERSION = '0.07';
 
 =head1 NAME
 
@@ -32,7 +32,7 @@ Math::GSL - Perl interface to the  GNU Scientific Library (GSL) using SWIG
 
 =head1 VERSION
 
-Version 0.06_03
+Version 0.07
 
 =cut
 
@@ -70,7 +70,7 @@ intuitive (but slightly slower) object-oriented interface.
     Math::GSL::FFT              - Fast Fourier Transform
     Math::GSL::Fit              - Curve Fitting
     Math::GSL::Heapsort         - Sorting Heaps
-    Math::GSL::Histograma       - Histograms
+    Math::GSL::Histogram        - Histograms
     Math::GSL::Histogram2D      - 2D Histograms
     Math::GSL::Integration      - Numerical Integration
     Math::GSL::Interp           - Interpolation
@@ -110,8 +110,8 @@ Jonathan Leto, C<< <jonathan@leto.net> >> and Thierry Moisan C<< <thierry.moisan
 
 =head1 BUGS
 
-This software is still in active development, we appreciate your detailed bug reports.
-Please report any bugs or feature requests to the authors directly.
+This software is still in active development, we appreciate your detailed bug reports and
+documentation patches. Please report any bugs or feature requests to the authors directly.
 
 
 =head1 SUPPORT
@@ -156,6 +156,12 @@ L<http://git.or.cz>.
 
 =head1 ACKNOWLEDGEMENTS
 
+Thanks to PDX.pm, The Perl Foundation and everyone at Google who makes
+the Summer of Code happen each year. You rock.
+
+=head1 DEDICATION
+
+This Perl module is dedicated in the memory of Nick Ing-Simmons.
 
 =head1 COPYRIGHT & LICENSE
 
