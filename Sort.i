@@ -90,29 +90,29 @@ Here is a list of all the functions included in this module :
 
 =over
 
-=item gsl_sort_vector($v) - This function sorts the elements of the vector v into ascending numerical order. 
+=item * gsl_sort_vector($v) - This function sorts the elements of the vector $v into ascending numerical order. 
 
-=item gsl_sort_vector_index 
+=item * gsl_sort_vector_index($p, $v) - This function indirectly sorts the elements of the vector $v into ascending order, storing the resulting permutation in $p. The elements of $p give the index of the vector element which would have been stored in that position if the vector had been sorted in place. The first element of $p gives the index of the least element in $v, and the last element of $p gives the index of the greatest element in $v. The vector $v is not changed. 
 
-=item gsl_sort_vector_smallest
+=item * gsl_sort_vector_smallest
 
-=item gsl_sort_vector_smallest_index
+=item * gsl_sort_vector_smallest_index
 
-=item gsl_sort_vector_largest
+=item * gsl_sort_vector_largest
 
-=item gsl_sort_vector_largest_index
+=item * gsl_sort_vector_largest_index
 
-=item gsl_sort
+=item * gsl_sort($data, $stride, $n) - This function returns an array reference to the sorted $n elements of the array $data with stride $stride into ascending numerical order.
 
-=item gsl_sort_index 
+=item * gsl_sort_index 
 
-=item gsl_sort_smallest
+=item * gsl_sort_smallest
 
-=item gsl_sort_smallest_index
+=item * gsl_sort_smallest_index
 
-=item gsl_sort_largest
+=item * gsl_sort_largest
 
-=item gsl_sort_largest_index
+=item * gsl_sort_largest_index
 
 =back
 
@@ -130,10 +130,10 @@ Here is a list of all the functions included in this module :
 
 =back
 
- For more informations on the functions, we refer you to the GSL offcial documentation: 
- L<http://www.gnu.org/software/gsl/manual/html_node/>
+For more informations on the functions, we refer you to the GSL offcial documentation: 
+L<http://www.gnu.org/software/gsl/manual/html_node/>
 
- Tip : search on google: site:http://www.gnu.org/software/gsl/manual/html_node/ name_of_the_function_you_want
+Tip : search on google: site:http://www.gnu.org/software/gsl/manual/html_node/ name_of_the_function_you_want
 
 =head1 AUTHORS
 

@@ -2353,28 +2353,41 @@ XS(_wrap_gsl_sum_levin_u_accel) {
     gsl_sum_levin_u_workspace *arg3 = (gsl_sum_levin_u_workspace *) 0 ;
     double *arg4 = (double *) 0 ;
     double *arg5 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     void *argp3 = 0 ;
     int res3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
-    void *argp5 = 0 ;
-    int res5 = 0 ;
+    double temp4 ;
+    int res4 = SWIG_TMPOBJ ;
+    double temp5 ;
+    int res5 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 5) || (items > 5)) {
-      SWIG_croak("Usage: gsl_sum_levin_u_accel(array,n,w,sum_accel,abserr);");
+    arg4 = &temp4;
+    arg5 = &temp5;
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: gsl_sum_levin_u_accel(array,n,w);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sum_levin_u_accel" "', argument " "1"" of type '" "double const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (double *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sum_levin_u_accel" "', argument " "2"" of type '" "size_t""'");
@@ -2385,18 +2398,20 @@ XS(_wrap_gsl_sum_levin_u_accel) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_sum_levin_u_accel" "', argument " "3"" of type '" "gsl_sum_levin_u_workspace *""'"); 
     }
     arg3 = (gsl_sum_levin_u_workspace *)(argp3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_sum_levin_u_accel" "', argument " "4"" of type '" "double *""'"); 
-    }
-    arg4 = (double *)(argp4);
-    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res5)) {
-      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_sum_levin_u_accel" "', argument " "5"" of type '" "double *""'"); 
-    }
-    arg5 = (double *)(argp5);
     result = (int)gsl_sum_levin_u_accel((double const *)arg1,arg2,arg3,arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res4)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res5)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg5)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -2423,8 +2438,6 @@ XS(_wrap_gsl_sum_levin_u_minmax) {
     gsl_sum_levin_u_workspace *arg5 = (gsl_sum_levin_u_workspace *) 0 ;
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -2433,22 +2446,37 @@ XS(_wrap_gsl_sum_levin_u_minmax) {
     int ecode4 = 0 ;
     void *argp5 = 0 ;
     int res5 = 0 ;
-    void *argp6 = 0 ;
-    int res6 = 0 ;
-    void *argp7 = 0 ;
-    int res7 = 0 ;
+    double temp6 ;
+    int res6 = SWIG_TMPOBJ ;
+    double temp7 ;
+    int res7 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 7) || (items > 7)) {
-      SWIG_croak("Usage: gsl_sum_levin_u_minmax(array,n,min_terms,max_terms,w,sum_accel,abserr);");
+    arg6 = &temp6;
+    arg7 = &temp7;
+    if ((items < 5) || (items > 5)) {
+      SWIG_croak("Usage: gsl_sum_levin_u_minmax(array,n,min_terms,max_terms,w);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sum_levin_u_minmax" "', argument " "1"" of type '" "double const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (double *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sum_levin_u_minmax" "', argument " "2"" of type '" "size_t""'");
@@ -2469,18 +2497,20 @@ XS(_wrap_gsl_sum_levin_u_minmax) {
       SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_sum_levin_u_minmax" "', argument " "5"" of type '" "gsl_sum_levin_u_workspace *""'"); 
     }
     arg5 = (gsl_sum_levin_u_workspace *)(argp5);
-    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res6)) {
-      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_sum_levin_u_minmax" "', argument " "6"" of type '" "double *""'"); 
-    }
-    arg6 = (double *)(argp6);
-    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res7)) {
-      SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_sum_levin_u_minmax" "', argument " "7"" of type '" "double *""'"); 
-    }
-    arg7 = (double *)(argp7);
     result = (int)gsl_sum_levin_u_minmax((double const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res6)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg6)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res6) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg6), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res7)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg7)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res7) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg7), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -2517,14 +2547,15 @@ XS(_wrap_gsl_sum_levin_u_step) {
     int ecode3 = 0 ;
     void *argp4 = 0 ;
     int res4 = 0 ;
-    void *argp5 = 0 ;
-    int res5 = 0 ;
+    double temp5 ;
+    int res5 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 5) || (items > 5)) {
-      SWIG_croak("Usage: gsl_sum_levin_u_step(term,n,nmax,w,sum_accel);");
+    arg5 = &temp5;
+    if ((items < 4) || (items > 4)) {
+      SWIG_croak("Usage: gsl_sum_levin_u_step(term,n,nmax,w);");
     }
     ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
     if (!SWIG_IsOK(ecode1)) {
@@ -2546,13 +2577,14 @@ XS(_wrap_gsl_sum_levin_u_step) {
       SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_sum_levin_u_step" "', argument " "4"" of type '" "gsl_sum_levin_u_workspace *""'"); 
     }
     arg4 = (gsl_sum_levin_u_workspace *)(argp4);
-    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res5)) {
-      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_sum_levin_u_step" "', argument " "5"" of type '" "double *""'"); 
-    }
-    arg5 = (double *)(argp5);
     result = (int)gsl_sum_levin_u_step(arg1,arg2,arg3,arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res5)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg5)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -3132,28 +3164,41 @@ XS(_wrap_gsl_sum_levin_utrunc_accel) {
     gsl_sum_levin_utrunc_workspace *arg3 = (gsl_sum_levin_utrunc_workspace *) 0 ;
     double *arg4 = (double *) 0 ;
     double *arg5 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     void *argp3 = 0 ;
     int res3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
-    void *argp5 = 0 ;
-    int res5 = 0 ;
+    double temp4 ;
+    int res4 = SWIG_TMPOBJ ;
+    double temp5 ;
+    int res5 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 5) || (items > 5)) {
-      SWIG_croak("Usage: gsl_sum_levin_utrunc_accel(array,n,w,sum_accel,abserr_trunc);");
+    arg4 = &temp4;
+    arg5 = &temp5;
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: gsl_sum_levin_utrunc_accel(array,n,w);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sum_levin_utrunc_accel" "', argument " "1"" of type '" "double const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (double *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sum_levin_utrunc_accel" "', argument " "2"" of type '" "size_t""'");
@@ -3164,18 +3209,20 @@ XS(_wrap_gsl_sum_levin_utrunc_accel) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_sum_levin_utrunc_accel" "', argument " "3"" of type '" "gsl_sum_levin_utrunc_workspace *""'"); 
     }
     arg3 = (gsl_sum_levin_utrunc_workspace *)(argp3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_sum_levin_utrunc_accel" "', argument " "4"" of type '" "double *""'"); 
-    }
-    arg4 = (double *)(argp4);
-    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res5)) {
-      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_sum_levin_utrunc_accel" "', argument " "5"" of type '" "double *""'"); 
-    }
-    arg5 = (double *)(argp5);
     result = (int)gsl_sum_levin_utrunc_accel((double const *)arg1,arg2,arg3,arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res4)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res5)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg5)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -3202,8 +3249,6 @@ XS(_wrap_gsl_sum_levin_utrunc_minmax) {
     gsl_sum_levin_utrunc_workspace *arg5 = (gsl_sum_levin_utrunc_workspace *) 0 ;
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -3212,22 +3257,37 @@ XS(_wrap_gsl_sum_levin_utrunc_minmax) {
     int ecode4 = 0 ;
     void *argp5 = 0 ;
     int res5 = 0 ;
-    void *argp6 = 0 ;
-    int res6 = 0 ;
-    void *argp7 = 0 ;
-    int res7 = 0 ;
+    double temp6 ;
+    int res6 = SWIG_TMPOBJ ;
+    double temp7 ;
+    int res7 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 7) || (items > 7)) {
-      SWIG_croak("Usage: gsl_sum_levin_utrunc_minmax(array,n,min_terms,max_terms,w,sum_accel,abserr_trunc);");
+    arg6 = &temp6;
+    arg7 = &temp7;
+    if ((items < 5) || (items > 5)) {
+      SWIG_croak("Usage: gsl_sum_levin_utrunc_minmax(array,n,min_terms,max_terms,w);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sum_levin_utrunc_minmax" "', argument " "1"" of type '" "double const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (double *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sum_levin_utrunc_minmax" "', argument " "2"" of type '" "size_t""'");
@@ -3248,18 +3308,20 @@ XS(_wrap_gsl_sum_levin_utrunc_minmax) {
       SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_sum_levin_utrunc_minmax" "', argument " "5"" of type '" "gsl_sum_levin_utrunc_workspace *""'"); 
     }
     arg5 = (gsl_sum_levin_utrunc_workspace *)(argp5);
-    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res6)) {
-      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_sum_levin_utrunc_minmax" "', argument " "6"" of type '" "double *""'"); 
-    }
-    arg6 = (double *)(argp6);
-    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res7)) {
-      SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_sum_levin_utrunc_minmax" "', argument " "7"" of type '" "double *""'"); 
-    }
-    arg7 = (double *)(argp7);
     result = (int)gsl_sum_levin_utrunc_minmax((double const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res6)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg6)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res6) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg6), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res7)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg7)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res7) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg7), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -3293,14 +3355,15 @@ XS(_wrap_gsl_sum_levin_utrunc_step) {
     int ecode2 = 0 ;
     void *argp3 = 0 ;
     int res3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
+    double temp4 ;
+    int res4 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 4) || (items > 4)) {
-      SWIG_croak("Usage: gsl_sum_levin_utrunc_step(term,n,w,sum_accel);");
+    arg4 = &temp4;
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: gsl_sum_levin_utrunc_step(term,n,w);");
     }
     ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
     if (!SWIG_IsOK(ecode1)) {
@@ -3317,13 +3380,14 @@ XS(_wrap_gsl_sum_levin_utrunc_step) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_sum_levin_utrunc_step" "', argument " "3"" of type '" "gsl_sum_levin_utrunc_workspace *""'"); 
     }
     arg3 = (gsl_sum_levin_utrunc_workspace *)(argp3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_sum_levin_utrunc_step" "', argument " "4"" of type '" "double *""'"); 
-    }
-    arg4 = (double *)(argp4);
     result = (int)gsl_sum_levin_utrunc_step(arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res4)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     

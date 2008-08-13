@@ -505,6 +505,12 @@ Here is a list of all the functions in this module :
 
 =item C<gsl_multifit_test_delta($dx, $x, $epsabs, $epsrel)> - This function tests for the convergence of the sequence by comparing the last step vector $dx with the absolute error $epsabs and relative error $epsrel to the current position x. The test returns $GSL_SUCCESS if the following condition is achieved, |dx_i| < epsabs + epsrel |x_i| for each component of x and returns $GSL_CONTINUE otherwise. 
 
+=back
+
+The following functions are not yet implemented. Patches Welcome! 
+
+=over
+
 =item C<gsl_multifit_covar >
 
 =item C<gsl_multifit_fsolver_alloc($T, $n, $p)>
@@ -534,8 +540,8 @@ Here is a list of all the functions in this module :
 
 =back
 
- For more informations on the functions, we refer you to the GSL offcial
- documentation: L<http://www.gnu.org/software/gsl/manual/html_node/>
+For more informations on the functions, we refer you to the GSL offcial
+documentation: L<http://www.gnu.org/software/gsl/manual/html_node/>
 
  Tip : search on google: site:http://www.gnu.org/software/gsl/manual/html_node/ name_of_the_function_you_want
 

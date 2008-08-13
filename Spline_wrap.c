@@ -1474,6 +1474,15 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
     #include "gsl/gsl_spline.h"
 
 
+SWIGINTERNINLINE SV *
+SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
+{    
+  SV *obj = sv_newmortal();
+  sv_setnv(obj, value);
+  return obj;
+}
+
+
 SWIGINTERN int
 SWIG_AsVal_double SWIG_PERL_DECL_ARGS_2(SV *obj, double *val)
 {
@@ -1652,15 +1661,6 @@ SWIG_From_unsigned_SS_int  SWIG_PERL_DECL_ARGS_1(unsigned int value)
   return SWIG_From_unsigned_SS_long  SWIG_PERL_CALL_ARGS_1(value);
 }
 
-
-SWIGINTERNINLINE SV *
-SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
-{    
-  SV *obj = sv_newmortal();
-  sv_setnv(obj, value);
-  return obj;
-}
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -1826,26 +1826,28 @@ XS(_wrap_gsl_spline_y_set) {
     double *arg2 = (double *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
+    double temp2 ;
+    int res2 = SWIG_TMPOBJ ;
     int argvi = 0;
     dXSARGS;
     
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_spline_y_set(self,y);");
+    arg2 = &temp2;
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_spline_y_set(self);");
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_spline, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_spline_y_set" "', argument " "1"" of type '" "gsl_spline *""'"); 
     }
     arg1 = (gsl_spline *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, SWIG_POINTER_DISOWN |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_spline_y_set" "', argument " "2"" of type '" "double *""'"); 
-    }
-    arg2 = (double *)(argp2);
     if (arg1) (arg1)->y = arg2;
     
+    if (SWIG_IsTmpObj(res2)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg2)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res2) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg2), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     XSRETURN(argvi);
@@ -2159,14 +2161,15 @@ XS(_wrap_gsl_spline_eval_e) {
     int ecode2 = 0 ;
     void *argp3 = 0 ;
     int res3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
+    double temp4 ;
+    int res4 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 4) || (items > 4)) {
-      SWIG_croak("Usage: gsl_spline_eval_e(spline,x,a,y);");
+    arg4 = &temp4;
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: gsl_spline_eval_e(spline,x,a);");
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_spline, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
@@ -2183,13 +2186,14 @@ XS(_wrap_gsl_spline_eval_e) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_spline_eval_e" "', argument " "3"" of type '" "gsl_interp_accel *""'"); 
     }
     arg3 = (gsl_interp_accel *)(argp3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_spline_eval_e" "', argument " "4"" of type '" "double *""'"); 
-    }
-    arg4 = (double *)(argp4);
     result = (int)gsl_spline_eval_e((gsl_spline const *)arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res4)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -2265,14 +2269,15 @@ XS(_wrap_gsl_spline_eval_deriv_e) {
     int ecode2 = 0 ;
     void *argp3 = 0 ;
     int res3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
+    double temp4 ;
+    int res4 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 4) || (items > 4)) {
-      SWIG_croak("Usage: gsl_spline_eval_deriv_e(spline,x,a,y);");
+    arg4 = &temp4;
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: gsl_spline_eval_deriv_e(spline,x,a);");
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_spline, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
@@ -2289,13 +2294,14 @@ XS(_wrap_gsl_spline_eval_deriv_e) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_spline_eval_deriv_e" "', argument " "3"" of type '" "gsl_interp_accel *""'"); 
     }
     arg3 = (gsl_interp_accel *)(argp3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_spline_eval_deriv_e" "', argument " "4"" of type '" "double *""'"); 
-    }
-    arg4 = (double *)(argp4);
     result = (int)gsl_spline_eval_deriv_e((gsl_spline const *)arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res4)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -2371,14 +2377,15 @@ XS(_wrap_gsl_spline_eval_deriv2_e) {
     int ecode2 = 0 ;
     void *argp3 = 0 ;
     int res3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
+    double temp4 ;
+    int res4 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 4) || (items > 4)) {
-      SWIG_croak("Usage: gsl_spline_eval_deriv2_e(spline,x,a,y);");
+    arg4 = &temp4;
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: gsl_spline_eval_deriv2_e(spline,x,a);");
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_spline, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
@@ -2395,13 +2402,14 @@ XS(_wrap_gsl_spline_eval_deriv2_e) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_spline_eval_deriv2_e" "', argument " "3"" of type '" "gsl_interp_accel *""'"); 
     }
     arg3 = (gsl_interp_accel *)(argp3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_spline_eval_deriv2_e" "', argument " "4"" of type '" "double *""'"); 
-    }
-    arg4 = (double *)(argp4);
     result = (int)gsl_spline_eval_deriv2_e((gsl_spline const *)arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res4)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -2480,14 +2488,15 @@ XS(_wrap_gsl_spline_eval_integ_e) {
     int ecode3 = 0 ;
     void *argp4 = 0 ;
     int res4 = 0 ;
-    void *argp5 = 0 ;
-    int res5 = 0 ;
+    double temp5 ;
+    int res5 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 5) || (items > 5)) {
-      SWIG_croak("Usage: gsl_spline_eval_integ_e(spline,a,b,acc,y);");
+    arg5 = &temp5;
+    if ((items < 4) || (items > 4)) {
+      SWIG_croak("Usage: gsl_spline_eval_integ_e(spline,a,b,acc);");
     }
     res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_spline, 0 |  0 );
     if (!SWIG_IsOK(res1)) {
@@ -2509,13 +2518,14 @@ XS(_wrap_gsl_spline_eval_integ_e) {
       SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_spline_eval_integ_e" "', argument " "4"" of type '" "gsl_interp_accel *""'"); 
     }
     arg4 = (gsl_interp_accel *)(argp4);
-    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res5)) {
-      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_spline_eval_integ_e" "', argument " "5"" of type '" "double *""'"); 
-    }
-    arg5 = (double *)(argp5);
     result = (int)gsl_spline_eval_integ_e((gsl_spline const *)arg1,arg2,arg3,arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res5)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg5)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     

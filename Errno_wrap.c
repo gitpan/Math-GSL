@@ -1470,6 +1470,7 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 
 
     #include "gsl/gsl_errno.h"
+    #include "gsl/gsl_types.h"
 
 
 SWIGINTERNINLINE SV *

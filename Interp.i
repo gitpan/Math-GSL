@@ -70,7 +70,7 @@ Here is a list of all the functions included in this module :
 
 =item C<gsl_interp_init($interp, $xa, $ya, $size)> - This function initializes the interpolation object interp for the data (xa,ya) where xa and ya are arrays of size size. The interpolation object (gsl_interp) does not save the data arrays xa and ya and only stores the static state computed from the data. The xa data array is always assumed to be strictly ordered, with increasing x values; the behavior for other arrangements is not defined. 
 
-=item C<gsl_interp_name> 
+=item C<gsl_interp_name($interp)> - This function returns the name of the interpolation type used by $interp. 
 
 =item C<gsl_interp_min_size($interp)> - This function returns the minimum number of points required by the interpolation type of $interp. For example, Akima spline interpolation requires a minimum of 5 points.
 
@@ -113,6 +113,14 @@ This module also includes the following constants :
 =item C<$gsl_interp_akima_periodic> - Non-rounded Akima spline with periodic boundary conditions. This method uses the non-rounded corner algorithm of Wodicka.
 
 =back
+
+=head1 EXAMPLES
+
+ use Math::GSL::Interp qw/:all/;
+ my $x_array = [ 0.0, 1.0, 2.0, 3.0, 4.0 ];
+ # check that we get the last interval if x == last value 
+ $index_result = gsl_interp_bsearch($x_array, 4.0, 0, 4);
+ print "The last interval is $index_result \n";
 
 =head1 AUTHORS
 

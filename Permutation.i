@@ -89,7 +89,14 @@ Math::GSL::Permutation - functions for creating and manipulating permutations
 
 =head1 SYNOPSIS
 
-use Math::GSL::Permutation qw/:all/;
+ use Math::GSL::Permutation qw/:all/;
+ my $permutation = Math::GSL::Permutation->new(30); # allocate and initialize a permutation of size 30
+ my $lenght = $permutation->lenght; # returns the lenght of the permutation object, here it is 30
+ gsl_permutation_swap($permutation->raw, 2,7); 
+ # the raw method is made to use the underlying permutation structure of the permutation object
+ my $value = $permutation->get(2); # returns the third value (starting from 0) of the permutation
+ my @values = $permutation->as_list; # returns all the values of the permutation
+ my @set = $permutation->get([0,1,2,3]); # returns the four first values of the permutation
 
 =head1 DESCRIPTION
 
@@ -164,8 +171,8 @@ Here is a list of all the functions included in this module :
  You have to add the functions you want to use inside the qw/put_funtion_here/ with spaces between each function. 
  You can also write use Math::GSL::CDF qw/:all/ to use all avaible functions of the module. 
  Other tags are also avaible, here is a complete list of all tags for this module.
- For more informations on the functions, we refer you to the GSL offcial documentation: 
- L<http://www.gnu.org/software/gsl/manual/html_node/>
+For more informations on the functions, we refer you to the GSL offcial documentation: 
+L<http://www.gnu.org/software/gsl/manual/html_node/>
 
  Tip : search on google: site:http://www.gnu.org/software/gsl/manual/html_node/ name_of_the_function_you_want
 
