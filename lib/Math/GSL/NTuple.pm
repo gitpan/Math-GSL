@@ -186,6 +186,11 @@ sub ACQUIRE {
 package Math::GSL::NTuple;
 
 
+
+# Intermittent failure happens *after* this
+# END { warn "This is the end" }
+
+
 @EXPORT_OK = qw/
                gsl_ntuple_open 
                gsl_ntuple_create 
@@ -205,9 +210,9 @@ Math::GSL::NTuple - Functions for creating and manipulating ntuples, sets of val
 
 =head1 SYNOPSIS
 
-This module is not yet implemented. Patches Welcome!
+This module is partially implemented. Patches Welcome!
 
-use Math::GSL::NTuple qw /:all/;
+    use Math::GSL::NTuple qw /:all/;
 
 =head1 DESCRIPTION
 

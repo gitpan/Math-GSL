@@ -48,8 +48,6 @@ sub this {
 
 package Math::GSL::Matrix;
 
-*fopen = *Math::GSL::Matrixc::fopen;
-*fclose = *Math::GSL::Matrixc::fclose;
 *gsl_vector_alloc = *Math::GSL::Matrixc::gsl_vector_alloc;
 *gsl_vector_calloc = *Math::GSL::Matrixc::gsl_vector_calloc;
 *gsl_vector_alloc_from_block = *Math::GSL::Matrixc::gsl_vector_alloc_from_block;
@@ -1124,12 +1122,11 @@ package Math::GSL::Matrix;
 
  
 
-no warnings 'redefine';
 use Carp qw/croak/;
 use Math::GSL qw/:all/;
 use Math::GSL::Errno qw/:all/;
 
-@EXPORT_OK = qw/fopen fclose
+@EXPORT_OK = qw/
         gsl_matrix_alloc gsl_matrix_calloc gsl_matrix_alloc_from_block
         gsl_matrix_alloc_from_matrix gsl_vector_alloc_row_from_matrix
         gsl_vector_alloc_col_from_matrix gsl_matrix_free gsl_matrix_submatrix
@@ -1714,13 +1711,13 @@ Here is a list of all the functions included in this module :
 
 =item C<gsl_matrix_set_all($m, $x)> - Set all the elements of the matrix $m to the value $x
 
-=item C<gsl_matrix_fread($fh, $m)> - Read a file which has been written with gsl_matrix_fwrite from the stream $fh opened with the fopen function and stores the data inside the matrix $m
+=item C<gsl_matrix_fread($fh, $m)> - Read a file which has been written with gsl_matrix_fwrite from the stream $fh opened with the gsl_fopen function from the Math::GSL module and stores the data inside the matrix $m
 
-=item C<gsl_matrix_fwrite($fh, $m)> - Write the elements of the matrix $m in binary format to a stream $fh opened with the fopen function
+=item C<gsl_matrix_fwrite($fh, $m)> - Write the elements of the matrix $m in binary format to a stream $fh opened with the gsl_fopen function from the Math::GSL module
 
-=item C<gsl_matrix_fscanf($fh, $m)> - Read a file which has been written with gsl_matrix_fprintf from the stream $fh opened with the fopen function and stores the data inside the matrix $m
+=item C<gsl_matrix_fscanf($fh, $m)> - Read a file which has been written with gsl_matrix_fprintf from the stream $fh opened with the gsl_fopenfunction from the Math::GSL module and stores the data inside the matrix $m
 
-=item C<gsl_matrix_fprintf($fh, $m, $format)> - Write the elements of the matrix $m in the format $format (for example "%f" is the format for double) to a stream $fh opened with the fopen function
+=item C<gsl_matrix_fprintf($fh, $m, $format)> - Write the elements of the matrix $m in the format $format (for example "%f" is the format for double) to a stream $fh opened with the gsl_fopen function from the Math::GSL module
 
 =item C<gsl_matrix_memcpy($dest, $src)> - Copy the elements of the matrix $src to the matrix $dest. The two matrices must have the same size.
 
@@ -2250,13 +2247,13 @@ Tip : search on google: site:http://www.gnu.org/software/gsl/manual/html_node/na
 
  The next program shows how to write a matrix to a file. 
 
- my $out = fopen("test.dat", "wb");
+ my $out = gsl_fopen("test.dat", "wb");
  gsl_matrix_fwrite ($out, $m);
- fclose ($out);
+ gsl_fclose ($out);
 
- my $in = fopen("test.dat", "rb");
+ my $in = gsl_fopen("test.dat", "rb");
  gsl_matrix_fread ($in, $a);
- fclose($in);
+ gsl_fclose($in);
 
  my $k=0;
  for my $i (0..99){

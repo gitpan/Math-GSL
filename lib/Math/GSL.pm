@@ -6,6 +6,7 @@ use warnings;
 use Math::GSL::Machine qw/:all/;
 use Math::GSL::Const qw/:all/;
 use Math::GSL::Errno qw/:all/;
+use Math::GSL::Vector qw/:file/;
 use Carp qw/croak/;
 use Config;
 use Test::More;
@@ -14,7 +15,7 @@ our @EXPORT_OK = qw( ok_similar ok_status  is_similar
                      is_similar_relative verify verify_results 
                      $GSL_MODE_DEFAULT $GSL_PREC_DOUBLE
                      $GSL_PREC_SINGLE $GSL_PREC_APPROX
-                     is_windows gsl_inf
+                     is_windows gsl_inf gsl_fopen gsl_fclose gsl_nan
                    );
 
 our %EXPORT_TAGS = ( 
@@ -23,7 +24,7 @@ our %EXPORT_TAGS = (
 
 our ($GSL_PREC_DOUBLE, $GSL_PREC_SINGLE, $GSL_PREC_APPROX ) = 0..2;
 our $GSL_MODE_DEFAULT = $GSL_PREC_DOUBLE;
-our $VERSION = '0.08';
+our $VERSION = '0.09_01';
 
 =head1 NAME
 
@@ -31,7 +32,7 @@ Math::GSL - Perl interface to the  GNU Scientific Library (GSL)
 
 =head1 VERSION
 
-Version 0.08
+Version 0.09_01
 
 =cut
 
@@ -191,7 +192,7 @@ sub subsystems
         Combination  Histogram    Multimin      Wavelet
         Complex      Histogram2D  Multiroots    Wavelet2D
         Const        Siman        Sum           Sys
-        Integration  NTuple       Sort                  
+        NTuple       Integration  Sort                  
         DHT          Interp       ODEIV         SF 
         Deriv        Linalg       Permutation   Spline
     /;
@@ -299,7 +300,29 @@ sub verify
     }
 }
 
-sub gsl_inf    { is_windows() ?  '1.\#INF' : 'inf' }
+sub gsl_inf
+{ 
+    is_windows() ?  unpack 'd', scalar reverse pack 'H*', '7FF0000000000000' 
+                 : q{inf}
+}
+sub gsl_nan
+{
+    is_windows() ? unpack 'd', scalar reverse pack 'H*', '7FF8000000000000' 
+                 : q{nan}
+             }
+sub gsl_fopen
+{
+    my ($file, $mode) = @_;
+    $mode .= '+b' if (is_windows() and $mode !~ /\+b/);
+    return Math::GSL::Vector::fopen($file, $mode);
+}
+
+sub gsl_fclose
+{
+    my $file = shift;
+    return Math::GSL::Vector::fclose($file);
+}
+
 
 sub _dump_result($)
 {

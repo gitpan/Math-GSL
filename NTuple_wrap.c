@@ -1780,6 +1780,7 @@ XS(_wrap_gsl_ntuple_ntuple_data_set) {
     void *argp1 = 0 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
@@ -1791,10 +1792,16 @@ XS(_wrap_gsl_ntuple_ntuple_data_set) {
     }
     arg1 = (gsl_ntuple *)(argp1);
     {
+      fprintf(stderr,"symname=gsl_ntuple_ntuple_data_set\n");
+      if (ST(1)) 
       arg2 = (double *) ST(1);
     }
+    _saved[0] = ST(1);
     if (arg1) (arg1)->ntuple_data = arg2;
     
+    {
+      //Perl_sv_dump(arg2);
+    }
     
     
     XSRETURN(argvi);
@@ -2014,6 +2021,7 @@ XS(_wrap_gsl_ntuple_select_fn_params_set) {
     void *arg2 = (void *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
+    int res2 ;
     int argvi = 0;
     dXSARGS;
     
@@ -2025,8 +2033,9 @@ XS(_wrap_gsl_ntuple_select_fn_params_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_ntuple_select_fn_params_set" "', argument " "1"" of type '" "gsl_ntuple_select_fn *""'"); 
     }
     arg1 = (gsl_ntuple_select_fn *)(argp1);
-    {
-      arg2 = (double *) ST(1);
+    res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2), 0, SWIG_POINTER_DISOWN);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_ntuple_select_fn_params_set" "', argument " "2"" of type '" "void *""'"); 
     }
     if (arg1) (arg1)->params = arg2;
     
@@ -2184,6 +2193,7 @@ XS(_wrap_gsl_ntuple_value_fn_params_set) {
     void *arg2 = (void *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
+    int res2 ;
     int argvi = 0;
     dXSARGS;
     
@@ -2195,8 +2205,9 @@ XS(_wrap_gsl_ntuple_value_fn_params_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_ntuple_value_fn_params_set" "', argument " "1"" of type '" "gsl_ntuple_value_fn *""'"); 
     }
     arg1 = (gsl_ntuple_value_fn *)(argp1);
-    {
-      arg2 = (double *) ST(1);
+    res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2), 0, SWIG_POINTER_DISOWN);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_ntuple_value_fn_params_set" "', argument " "2"" of type '" "void *""'"); 
     }
     if (arg1) (arg1)->params = arg2;
     
@@ -2295,6 +2306,7 @@ XS(_wrap_gsl_ntuple_open) {
     size_t val3 ;
     int ecode3 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     gsl_ntuple *result = 0 ;
     dXSARGS;
     
@@ -2307,6 +2319,8 @@ XS(_wrap_gsl_ntuple_open) {
     }
     arg1 = (char *)(buf1);
     {
+      fprintf(stderr,"symname=gsl_ntuple_open\n");
+      if (ST(1)) 
       arg2 = (double *) ST(1);
     }
     ecode3 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
@@ -2314,8 +2328,12 @@ XS(_wrap_gsl_ntuple_open) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_ntuple_open" "', argument " "3"" of type '" "size_t""'");
     } 
     arg3 = (size_t)(val3);
+    _saved[0] = ST(1);
     result = (gsl_ntuple *)gsl_ntuple_open(arg1,arg2,arg3);
     ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_ntuple, 0 | SWIG_SHADOW); argvi++ ;
+    {
+      //Perl_sv_dump(arg2);
+    }
     if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
     
     
@@ -2340,6 +2358,7 @@ XS(_wrap_gsl_ntuple_create) {
     size_t val3 ;
     int ecode3 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     gsl_ntuple *result = 0 ;
     dXSARGS;
     
@@ -2352,6 +2371,8 @@ XS(_wrap_gsl_ntuple_create) {
     }
     arg1 = (char *)(buf1);
     {
+      fprintf(stderr,"symname=gsl_ntuple_create\n");
+      if (ST(1)) 
       arg2 = (double *) ST(1);
     }
     ecode3 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
@@ -2359,8 +2380,12 @@ XS(_wrap_gsl_ntuple_create) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_ntuple_create" "', argument " "3"" of type '" "size_t""'");
     } 
     arg3 = (size_t)(val3);
+    _saved[0] = ST(1);
     result = (gsl_ntuple *)gsl_ntuple_create(arg1,arg2,arg3);
     ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_ntuple, 0 | SWIG_SHADOW); argvi++ ;
+    {
+      //Perl_sv_dump(arg2);
+    }
     if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
     
     

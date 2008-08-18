@@ -4936,10 +4936,10 @@ XS(_wrap_gsl_stats_minmax) {
     double *arg3 ;
     size_t arg4 ;
     size_t arg5 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
+    double temp1 ;
+    int res1 = SWIG_TMPOBJ ;
+    double temp2 ;
+    int res2 = SWIG_TMPOBJ ;
     size_t val4 ;
     int ecode4 = 0 ;
     size_t val5 ;
@@ -4947,30 +4947,22 @@ XS(_wrap_gsl_stats_minmax) {
     int argvi = 0;
     dXSARGS;
     
-    if ((items < 5) || (items > 5)) {
-      SWIG_croak("Usage: gsl_stats_minmax(min,max,data,stride,n);");
+    arg1 = &temp1;
+    arg2 = &temp2;
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: gsl_stats_minmax(data,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_minmax" "', argument " "1"" of type '" "double *""'"); 
-    }
-    arg1 = (double *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_stats_minmax" "', argument " "2"" of type '" "double *""'"); 
-    }
-    arg2 = (double *)(argp2);
     {
       AV *tempav;
       I32 len;
       int i;
       SV **tv;
-      if (!SvROK(ST(2)))
-      croak("Math::GSL : ST(2) is not a reference!");
-      if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
-      croak("Math::GSL : ST(2) is not an array ref!");
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
       
-      tempav = (AV*)SvRV(ST(2));
+      tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
       arg3 = (double *) malloc((len+1)*sizeof(double));
       for (i = 0; i <= len; i++) {
@@ -4978,18 +4970,30 @@ XS(_wrap_gsl_stats_minmax) {
         arg3[i] = (double) SvNV(*tv);
       }
     }
-    ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val4);
     if (!SWIG_IsOK(ecode4)) {
       SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_stats_minmax" "', argument " "4"" of type '" "size_t""'");
     } 
     arg4 = (size_t)(val4);
-    ecode5 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
+    ecode5 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(2), &val5);
     if (!SWIG_IsOK(ecode5)) {
       SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "gsl_stats_minmax" "', argument " "5"" of type '" "size_t""'");
     } 
     arg5 = (size_t)(val5);
     gsl_stats_minmax(arg1,arg2,(double const (*))arg3,arg4,arg5);
     
+    if (SWIG_IsTmpObj(res1)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg1)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res1) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg1), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res2)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg2)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res2) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg2), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -5132,10 +5136,10 @@ XS(_wrap_gsl_stats_minmax_index) {
     double *arg3 ;
     size_t arg4 ;
     size_t arg5 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
+    size_t temp1 ;
+    int res1 = SWIG_TMPOBJ ;
+    size_t temp2 ;
+    int res2 = SWIG_TMPOBJ ;
     size_t val4 ;
     int ecode4 = 0 ;
     size_t val5 ;
@@ -5143,30 +5147,22 @@ XS(_wrap_gsl_stats_minmax_index) {
     int argvi = 0;
     dXSARGS;
     
-    if ((items < 5) || (items > 5)) {
-      SWIG_croak("Usage: gsl_stats_minmax_index(min_index,max_index,data,stride,n);");
+    arg1 = &temp1;
+    arg2 = &temp2;
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: gsl_stats_minmax_index(data,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_size_t, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_minmax_index" "', argument " "1"" of type '" "size_t *""'"); 
-    }
-    arg1 = (size_t *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_size_t, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_stats_minmax_index" "', argument " "2"" of type '" "size_t *""'"); 
-    }
-    arg2 = (size_t *)(argp2);
     {
       AV *tempav;
       I32 len;
       int i;
       SV **tv;
-      if (!SvROK(ST(2)))
-      croak("Math::GSL : ST(2) is not a reference!");
-      if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
-      croak("Math::GSL : ST(2) is not an array ref!");
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
       
-      tempav = (AV*)SvRV(ST(2));
+      tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
       arg3 = (double *) malloc((len+1)*sizeof(double));
       for (i = 0; i <= len; i++) {
@@ -5174,18 +5170,30 @@ XS(_wrap_gsl_stats_minmax_index) {
         arg3[i] = (double) SvNV(*tv);
       }
     }
-    ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val4);
     if (!SWIG_IsOK(ecode4)) {
       SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_stats_minmax_index" "', argument " "4"" of type '" "size_t""'");
     } 
     arg4 = (size_t)(val4);
-    ecode5 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
+    ecode5 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(2), &val5);
     if (!SWIG_IsOK(ecode5)) {
       SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "gsl_stats_minmax_index" "', argument " "5"" of type '" "size_t""'");
     } 
     arg5 = (size_t)(val5);
     gsl_stats_minmax_index(arg1,arg2,(double const (*))arg3,arg4,arg5);
     
+    if (SWIG_IsTmpObj(res1)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((*arg1)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res1) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg1), SWIGTYPE_p_size_t, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res2)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((*arg2)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res2) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg2), SWIGTYPE_p_size_t, new_flags); argvi++  ;
+    }
     
     
     
@@ -6903,10 +6911,10 @@ XS(_wrap_gsl_stats_int_minmax_index) {
     int *arg3 ;
     size_t arg4 ;
     size_t arg5 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
+    size_t temp1 ;
+    int res1 = SWIG_TMPOBJ ;
+    size_t temp2 ;
+    int res2 = SWIG_TMPOBJ ;
     void *argp3 = 0 ;
     int res3 = 0 ;
     size_t val4 ;
@@ -6916,36 +6924,40 @@ XS(_wrap_gsl_stats_int_minmax_index) {
     int argvi = 0;
     dXSARGS;
     
-    if ((items < 5) || (items > 5)) {
-      SWIG_croak("Usage: gsl_stats_int_minmax_index(min_index,max_index,data,stride,n);");
+    arg1 = &temp1;
+    arg2 = &temp2;
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: gsl_stats_int_minmax_index(data,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_size_t, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_minmax_index" "', argument " "1"" of type '" "size_t *""'"); 
-    }
-    arg1 = (size_t *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_size_t, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_stats_int_minmax_index" "', argument " "2"" of type '" "size_t *""'"); 
-    }
-    arg2 = (size_t *)(argp2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_int, 0 |  0 );
+    res3 = SWIG_ConvertPtr(ST(0), &argp3,SWIGTYPE_p_int, 0 |  0 );
     if (!SWIG_IsOK(res3)) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_stats_int_minmax_index" "', argument " "3"" of type '" "int const []""'"); 
     } 
     arg3 = (int *)(argp3);
-    ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val4);
     if (!SWIG_IsOK(ecode4)) {
       SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_stats_int_minmax_index" "', argument " "4"" of type '" "size_t""'");
     } 
     arg4 = (size_t)(val4);
-    ecode5 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
+    ecode5 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(2), &val5);
     if (!SWIG_IsOK(ecode5)) {
       SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "gsl_stats_int_minmax_index" "', argument " "5"" of type '" "size_t""'");
     } 
     arg5 = (size_t)(val5);
     gsl_stats_int_minmax_index(arg1,arg2,(int const (*))arg3,arg4,arg5);
     
+    if (SWIG_IsTmpObj(res1)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((*arg1)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res1) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg1), SWIGTYPE_p_size_t, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res2)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((*arg2)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res2) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg2), SWIGTYPE_p_size_t, new_flags); argvi++  ;
+    }
     
     
     
@@ -8675,10 +8687,10 @@ XS(_wrap_gsl_stats_char_minmax_index) {
     char *arg3 ;
     size_t arg4 ;
     size_t arg5 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
+    size_t temp1 ;
+    int res1 = SWIG_TMPOBJ ;
+    size_t temp2 ;
+    int res2 = SWIG_TMPOBJ ;
     int res3 ;
     char *buf3 = 0 ;
     int alloc3 = 0 ;
@@ -8689,36 +8701,40 @@ XS(_wrap_gsl_stats_char_minmax_index) {
     int argvi = 0;
     dXSARGS;
     
-    if ((items < 5) || (items > 5)) {
-      SWIG_croak("Usage: gsl_stats_char_minmax_index(min_index,max_index,data,stride,n);");
+    arg1 = &temp1;
+    arg2 = &temp2;
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: gsl_stats_char_minmax_index(data,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_size_t, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_char_minmax_index" "', argument " "1"" of type '" "size_t *""'"); 
-    }
-    arg1 = (size_t *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_size_t, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_stats_char_minmax_index" "', argument " "2"" of type '" "size_t *""'"); 
-    }
-    arg2 = (size_t *)(argp2);
-    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
+    res3 = SWIG_AsCharPtrAndSize(ST(0), &buf3, NULL, &alloc3);
     if (!SWIG_IsOK(res3)) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_stats_char_minmax_index" "', argument " "3"" of type '" "char const []""'");
     }
     arg3 = (char *)(buf3);
-    ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val4);
     if (!SWIG_IsOK(ecode4)) {
       SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_stats_char_minmax_index" "', argument " "4"" of type '" "size_t""'");
     } 
     arg4 = (size_t)(val4);
-    ecode5 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
+    ecode5 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(2), &val5);
     if (!SWIG_IsOK(ecode5)) {
       SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "gsl_stats_char_minmax_index" "', argument " "5"" of type '" "size_t""'");
     } 
     arg5 = (size_t)(val5);
     gsl_stats_char_minmax_index(arg1,arg2,(char const (*))arg3,arg4,arg5);
     
+    if (SWIG_IsTmpObj(res1)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((*arg1)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res1) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg1), SWIGTYPE_p_size_t, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res2)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((*arg2)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res2) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg2), SWIGTYPE_p_size_t, new_flags); argvi++  ;
+    }
     
     
     if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);

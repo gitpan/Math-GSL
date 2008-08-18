@@ -1,9 +1,14 @@
 %module "Math::GSL::NTuple"
-%include "typemaps.i"
 
-%typemap(in) void * {
-    $1 = (double *) $input;
+%typemap(in) void *ntuple_data {
+    fprintf(stderr,"symname=$symname\n");
+    if ($input) 
+        $1 = (double *) $input;
 };
+
+%typemap(argout) void *ntuple_data {
+    //Perl_sv_dump($1);
+}
 
 %{
     #include "gsl/gsl_ntuple.h"
@@ -11,9 +16,13 @@
 
 %include "gsl/gsl_ntuple.h"
 
-//%apply double * OUTPUT { 
 
 %perlcode %{
+
+# Intermittent failure happens *after* this
+# END { warn "This is the end" }
+
+
 @EXPORT_OK = qw/
                gsl_ntuple_open 
                gsl_ntuple_create 
@@ -33,9 +42,9 @@ Math::GSL::NTuple - Functions for creating and manipulating ntuples, sets of val
 
 =head1 SYNOPSIS
 
-This module is not yet implemented. Patches Welcome!
+This module is partially implemented. Patches Welcome!
 
-use Math::GSL::NTuple qw /:all/;
+    use Math::GSL::NTuple qw /:all/;
 
 =head1 DESCRIPTION
 

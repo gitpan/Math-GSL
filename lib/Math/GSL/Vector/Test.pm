@@ -2,6 +2,7 @@ package Math::GSL::Vector::Test;
 use base q{Test::Class};
 use Test::More;
 use Math::GSL::Vector qw/:all/;
+use Math::GSL::Complex qw/:all/;
 use Math::GSL qw/:all/;
 use Data::Dumper;
 use Math::GSL::Errno qw/:all/;
@@ -113,9 +114,7 @@ sub GSL_VECTOR_FREAD_FWRITE: Tests {
     my $self = shift;
     map { gsl_vector_set($self->{vector}, $_, $_ ** 2 ) } (0..4); ;
 
-    my $write = is_windows() ? "w + b" : "w";
-    my $read  = is_windows() ? "r + b" : "r";
-    my $fh = fopen("vector", $write);
+    my $fh = gsl_fopen("vector", 'w');
     my $status = gsl_vector_fwrite($fh, $self->{vector} );
     ok( ! $status, 'gsl_vector_fwrite' );
     ok( -f "vector", 'gsl_vector_fwrite' );
@@ -123,13 +122,13 @@ sub GSL_VECTOR_FREAD_FWRITE: Tests {
 
     map { gsl_vector_set($self->{vector}, $_, $_ ** 3 ) } (0..4); 
 
-    $fh = fopen("vector", $read);
+    $fh = gsl_fopen("vector", 'r');
 
     ok_status(gsl_vector_fread($fh, $self->{vector} ));
     is_deeply( [ map { gsl_vector_get($self->{vector}, $_) } (0..4) ],
                [ map { $_ ** 2 } (0..4) ],
              );
-    ok_status(fclose($fh));
+    ok_status(gsl_fclose($fh));
 }
 
 sub GSL_VECTOR_SUBVECTOR : Tests {
@@ -326,21 +325,41 @@ sub GSL_VECTOR_SWAP : Tests {
 sub GSL_VECTOR_FPRINTF_FSCANF : Tests {  
    my $vec1 = Math::GSL::Vector->new([ map { $_ ** 2 } (0..4) ]);
 
-   my $write = is_windows() ? "w + b" : "w";
-   my $read  = is_windows() ? "r + b" : "r";
-   my $fh = fopen("vector", $write);
+   my $fh = gsl_fopen("vector", 'w');
    ok( defined $fh, 'fopen -  write');
    ok_status(gsl_vector_fprintf($fh, $vec1->raw, "%f"));
-   ok_status(fclose($fh));
+   ok_status(gsl_fclose($fh));
 
    my $vec2 = Math::GSL::Vector->new([ map { $_ ** 3 } (0..4) ]);
 
-   $fh = fopen("vector", $read);   
+   $fh = gsl_fopen("vector", 'r');   
    ok( defined $fh, 'fopen  - readonly');
    
    ok_status(gsl_vector_fscanf($fh, $vec2->raw));
 
    ok_similar( [ $vec2->as_list ], [ map { $_ ** 2 } (0..4) ]);
-   ok_status( fclose($fh) ); 
+   ok_status(gsl_fclose($fh) ); 
+}
+
+sub GSL_VECTOR_COMPLEX_ALLOC : Tests {
+  my $vec = gsl_vector_complex_alloc(5);
+  isa_ok($vec, 'Math::GSL::Vector');
+}
+
+sub GSL_VECTOR_COMPLEX_CALLOC : Tests {
+  my $vec = gsl_vector_complex_calloc(5);
+  isa_ok($vec, 'Math::GSL::Vector');
+}
+
+sub GSL_VECTOR_COMPLEX_SET_GET : Tests {
+  my $vec = gsl_vector_complex_calloc(5);
+  my $complex = gsl_complex_rect(2,1);
+  gsl_vector_complex_set($vec, 0, $complex);
+  my $result = gsl_complex_rect(5,5);
+  $result = gsl_vector_complex_get($vec, 0);
+  isa_ok($result, 'Math::GSL::Complex');
+  print Dumper [ $result ];
+  local $TODO = "don't know why the complex returned gsl_vector_complex_get is not usable";
+#  my @got = gsl_parts($result);
 }
 1;

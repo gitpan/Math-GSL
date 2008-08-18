@@ -4380,74 +4380,6 @@ XS(_wrap_gsl_rng_uniform_int) {
 }
 
 
-XS(_wrap_fopen) {
-  {
-    char *arg1 = (char *) 0 ;
-    char *arg2 = (char *) 0 ;
-    int res1 ;
-    char *buf1 = 0 ;
-    int alloc1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    FILE *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: fopen(char *,char *);");
-    }
-    res1 = SWIG_AsCharPtrAndSize(ST(0), &buf1, NULL, &alloc1);
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "fopen" "', argument " "1"" of type '" "char *""'");
-    }
-    arg1 = (char *)(buf1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "fopen" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (FILE *)fopen(arg1,arg2);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_FILE, 0 | 0); argvi++ ;
-    if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_fclose) {
-  {
-    FILE *arg1 = (FILE *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: fclose(FILE *);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_FILE, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "fclose" "', argument " "1"" of type '" "FILE *""'"); 
-    }
-    arg1 = (FILE *)(argp1);
-    result = (int)fclose(arg1);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
@@ -4613,8 +4545,6 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::RNGc::gsl_rng_uniform", _wrap_gsl_rng_uniform},
 {"Math::GSL::RNGc::gsl_rng_uniform_pos", _wrap_gsl_rng_uniform_pos},
 {"Math::GSL::RNGc::gsl_rng_uniform_int", _wrap_gsl_rng_uniform_int},
-{"Math::GSL::RNGc::fopen", _wrap_fopen},
-{"Math::GSL::RNGc::fclose", _wrap_fclose},
 {0,0}
 };
 /* -----------------------------------------------------------------------------

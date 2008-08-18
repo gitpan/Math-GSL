@@ -2209,27 +2209,29 @@ XS(_wrap_gsl_frexp) {
     int *arg2 = (int *) 0 ;
     double val1 ;
     int ecode1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
+    int temp2 ;
+    int res2 = SWIG_TMPOBJ ;
     int argvi = 0;
     double result;
     dXSARGS;
     
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_frexp(x,e);");
+    arg2 = &temp2;
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_frexp(x);");
     }
     ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
     if (!SWIG_IsOK(ecode1)) {
       SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_frexp" "', argument " "1"" of type '" "double""'");
     } 
     arg1 = (double)(val1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_frexp" "', argument " "2"" of type '" "int *""'"); 
-    }
-    arg2 = (int *)(argp2);
     result = (double)gsl_frexp(arg1,arg2);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res2)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((*arg2)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res2) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg2), SWIGTYPE_p_int, new_flags); argvi++  ;
+    }
     
     
     XSRETURN(argvi);

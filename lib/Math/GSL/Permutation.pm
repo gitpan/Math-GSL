@@ -127,7 +127,7 @@ sub ACQUIRE {
 package Math::GSL::Permutation;
 
  
-@EXPORT_OK = qw/fopen fclose
+@EXPORT_OK = qw/
                 gsl_permutation_alloc 
                 gsl_permutation_calloc 
                 gsl_permutation_init 
@@ -221,13 +221,13 @@ Here is a list of all the functions included in this module :
 
 =item gsl_permutation_memcpy($dest, $src) - copy the permutation $src into the permutation $dest, the two permutations must have the same lenght and return 0 if the operation suceeded, 1 otherwise 
 
-=item gsl_permutation_fread($stream, $p) -  This function reads into the permutation $p from the open stream $stream (opened with the fopen function) in binary format. The permutation $p must be preallocated with the correct length since the function uses the size of $p to determine how many bytes to read. The function returns 1 if there was a problem reading from the file. The data is assumed to have been written in the native binary format on the same architecture.
+=item gsl_permutation_fread($stream, $p) -  This function reads into the permutation $p from the open stream $stream (opened with the gsl_fopen function from the Math::GSL module) in binary format. The permutation $p must be preallocated with the correct length since the function uses the size of $p to determine how many bytes to read. The function returns 1 if there was a problem reading from the file. The data is assumed to have been written in the native binary format on the same architecture.
 
-=item gsl_permutation_fwrite($stream, $p) - This function writes the elements of the permutation $p to the stream $stream (opened with the fopen function) in binary format. The function returns 1 if there was a problem writing to the file. Since the data is written in the native binary format it may not be portable between different architectures.
+=item gsl_permutation_fwrite($stream, $p) - This function writes the elements of the permutation $p to the stream $stream (opened with the gsl_fopen function from the Math::GSL module) in binary format. The function returns 1 if there was a problem writing to the file. Since the data is written in the native binary format it may not be portable between different architectures.
 
-=item gsl_permutation_fscanf($stream, $p) - This function reads formatted data from the stream $stream into the permutation $p. The permutation $p must be preallocated with the correct length since the function uses the size of $p to determine how many numbers to read. The function returns 1 if there was a problem reading from the file.
+=item gsl_permutation_fscanf($stream, $p) - This function reads formatted data from the stream $stream (opened with the gsl_fopen function from the Math::GSL module) into the permutation $p. The permutation $p must be preallocated with the correct length since the function uses the size of $p to determine how many numbers to read. The function returns 1 if there was a problem reading from the file.
 
-=item gsl_permutation_fprintf($stream, $p, $format) - This function writes the elements of the permutation $p line-by-line to the stream $stream (opened with the fopen function) using the format specifier $format, which should be suitable. "%zu\n" is a suitable format. The function returns 1 if there was a problem writing to the file. 
+=item gsl_permutation_fprintf($stream, $p, $format) - This function writes the elements of the permutation $p line-by-line to the stream $stream (opened with the gsl_fopen function from the Math::GSL module) using the format specifier $format, which should be suitable. "%zu\n" is a suitable format. The function returns 1 if there was a problem writing to the file. 
 
 =item gsl_permutation_size($p) - return the size of the permutation $p 
 
