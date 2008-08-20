@@ -33,7 +33,7 @@ sub GSL_VECTOR_LENGTH: Tests {
 }
 sub GSL_VECTOR_SET_GET: Tests { 
     my $self = shift;
-    ok_status(gsl_vector_set($self->{vector}, 0, 42 ));
+    gsl_vector_set($self->{vector}, 0, 42 );
     my $elem   = gsl_vector_get($self->{vector}, 0);
     ok( $elem == 42, 'gsl_vector_set/gsl_vector_get' );
 }
@@ -69,7 +69,7 @@ sub GSL_VECTOR_ISNEG: Tests {
     map { gsl_vector_set($self->{vector}, $_, -$_ ) } (0..4); 
     ok( !gsl_vector_isneg($self->{vector}),'gsl_vector_neg' );
 
-    ok_status(gsl_vector_set($self->{vector}, 0, -1 ));
+    gsl_vector_set($self->{vector}, 0, -1 );
 
     ok( gsl_vector_isneg($self->{vector}),'gsl_vector_neg' );
 }
@@ -148,13 +148,13 @@ sub GSL_VECTOR_CALLOC : Tests {
 
 sub GSL_VECTOR_SET_ALL : Tests {
    my $vec = Math::GSL::Vector->new(5);
-   ok_status(gsl_vector_set_all($vec->raw, 4));
+   gsl_vector_set_all($vec->raw, 4);
    ok_similar( [ $vec->as_list ], [ (4) x 5 ] );
 }
 
 sub GSL_VECTOR_SET_ZERO : Tests {
    my $self = shift;
-   ok_status(gsl_vector_set_zero($self->{vector}));
+   gsl_vector_set_zero($self->{vector});
    map { is(gsl_vector_get($self->{vector} , $_ ), 0) } (0..4);
 }
 
@@ -358,8 +358,8 @@ sub GSL_VECTOR_COMPLEX_SET_GET : Tests {
   my $result = gsl_complex_rect(5,5);
   $result = gsl_vector_complex_get($vec, 0);
   isa_ok($result, 'Math::GSL::Complex');
-  print Dumper [ $result ];
+  #print Dumper [ $result ];
   local $TODO = "don't know why the complex returned gsl_vector_complex_get is not usable";
-#  my @got = gsl_parts($result);
+  #my @got = gsl_parts($result);
 }
 1;
