@@ -323,7 +323,7 @@ package Math::GSL::Poly;
                 gsl_poly_complex_solve 
                 $GSL_POSZERO $GSL_NEGZERO $GSL_NAN
              /;
-our $GSL_NAN = q{nan};
+our $GSL_NAN = gsl_nan();
 
 %EXPORT_TAGS = ( all => \@EXPORT_OK );
 

@@ -1484,7 +1484,34 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 #endif
 
 
+    static HV * Callbacks = (HV*)NULL;
+    /* this function returns the value 
+        of evaluating the function pointer
+        stored in func with argument x
+    */
+    double callthis(double x , int func, void *params){
+        SV ** sv;
+        double y;
+        dSP;
+
+        //fprintf(stderr, "LOOKUP CALLBACK\n");
+        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
+        if (sv == (SV**)NULL) {
+            fprintf(stderr, "Math::GSL(callthis): %d not in Callbacks!\n", func);
+            return;
+        }
+
+        PUSHMARK(SP);
+        XPUSHs(sv_2mortal(newSVnv((double)x)));
+        PUTBACK;
+        call_sv(*sv, G_SCALAR);
+        y = POPn;
+        return y;
+    }
+
+
     #include "gsl/gsl_odeiv.h"
+    #include "gsl/gsl_types.h"
 
 
 SWIGINTERN int
@@ -3333,8 +3360,6 @@ XS(_wrap_gsl_odeiv_step_apply) {
     int res4 = 0 ;
     void *argp5 = 0 ;
     int res5 = 0 ;
-    void *argp6 = 0 ;
-    int res6 = 0 ;
     void *argp7 = 0 ;
     int res7 = 0 ;
     void *argp8 = 0 ;
@@ -3371,11 +3396,24 @@ XS(_wrap_gsl_odeiv_step_apply) {
       SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_odeiv_step_apply" "', argument " "5"" of type '" "double []""'"); 
     } 
     arg5 = (double *)(argp5);
-    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res6)) {
-      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_odeiv_step_apply" "', argument " "6"" of type '" "double const []""'"); 
-    } 
-    arg6 = (double *)(argp6);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(5)))
+      croak("Math::GSL : ST(5) is not a reference!");
+      if (SvTYPE(SvRV(ST(5))) != SVt_PVAV)
+      croak("Math::GSL : ST(5) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(5));
+      len = av_len(tempav);
+      arg6 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg6[i] = (double) SvNV(*tv);
+      }
+    }
     res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res7)) {
       SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_odeiv_step_apply" "', argument " "7"" of type '" "double []""'"); 
@@ -4091,12 +4129,6 @@ XS(_wrap_gsl_odeiv_control_hadjust) {
     int res1 = 0 ;
     void *argp2 = 0 ;
     int res2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
-    void *argp5 = 0 ;
-    int res5 = 0 ;
     void *argp6 = 0 ;
     int res6 = 0 ;
     int argvi = 0;
@@ -4116,21 +4148,60 @@ XS(_wrap_gsl_odeiv_control_hadjust) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_odeiv_control_hadjust" "', argument " "2"" of type '" "gsl_odeiv_step *""'"); 
     }
     arg2 = (gsl_odeiv_step *)(argp2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_odeiv_control_hadjust" "', argument " "3"" of type '" "double const []""'"); 
-    } 
-    arg3 = (double *)(argp3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_odeiv_control_hadjust" "', argument " "4"" of type '" "double const []""'"); 
-    } 
-    arg4 = (double *)(argp4);
-    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res5)) {
-      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_odeiv_control_hadjust" "', argument " "5"" of type '" "double const []""'"); 
-    } 
-    arg5 = (double *)(argp5);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(2)))
+      croak("Math::GSL : ST(2) is not a reference!");
+      if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
+      croak("Math::GSL : ST(2) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(2));
+      len = av_len(tempav);
+      arg3 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg3[i] = (double) SvNV(*tv);
+      }
+    }
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(3)))
+      croak("Math::GSL : ST(3) is not a reference!");
+      if (SvTYPE(SvRV(ST(3))) != SVt_PVAV)
+      croak("Math::GSL : ST(3) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(3));
+      len = av_len(tempav);
+      arg4 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg4[i] = (double) SvNV(*tv);
+      }
+    }
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(4)))
+      croak("Math::GSL : ST(4) is not a reference!");
+      if (SvTYPE(SvRV(ST(4))) != SVt_PVAV)
+      croak("Math::GSL : ST(4) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(4));
+      len = av_len(tempav);
+      arg5 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg5[i] = (double) SvNV(*tv);
+      }
+    }
     res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res6)) {
       SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_odeiv_control_hadjust" "', argument " "6"" of type '" "double *""'"); 
@@ -4335,8 +4406,6 @@ XS(_wrap_gsl_odeiv_control_scaled_new) {
     int ecode3 = 0 ;
     double val4 ;
     int ecode4 = 0 ;
-    void *argp5 = 0 ;
-    int res5 = 0 ;
     size_t val6 ;
     int ecode6 = 0 ;
     int argvi = 0;
@@ -4366,11 +4435,24 @@ XS(_wrap_gsl_odeiv_control_scaled_new) {
       SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_odeiv_control_scaled_new" "', argument " "4"" of type '" "double""'");
     } 
     arg4 = (double)(val4);
-    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res5)) {
-      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_odeiv_control_scaled_new" "', argument " "5"" of type '" "double const []""'"); 
-    } 
-    arg5 = (double *)(argp5);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(4)))
+      croak("Math::GSL : ST(4) is not a reference!");
+      if (SvTYPE(SvRV(ST(4))) != SVt_PVAV)
+      croak("Math::GSL : ST(4) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(4));
+      len = av_len(tempav);
+      arg5 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg5[i] = (double) SvNV(*tv);
+      }
+    }
     ecode6 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(5), &val6);
     if (!SWIG_IsOK(ecode6)) {
       SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "gsl_odeiv_control_scaled_new" "', argument " "6"" of type '" "size_t""'");

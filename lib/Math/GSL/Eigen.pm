@@ -736,6 +736,123 @@ sub ACQUIRE {
 }
 
 
+############# Class : Math::GSL::Eigen::gsl_complex_long_double ##############
+
+package Math::GSL::Eigen::gsl_complex_long_double;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( Math::GSL::Eigen );
+%OWNER = ();
+%ITERATORS = ();
+*swig_dat_get = *Math::GSL::Eigenc::gsl_complex_long_double_dat_get;
+*swig_dat_set = *Math::GSL::Eigenc::gsl_complex_long_double_dat_set;
+sub new {
+    my $pkg = shift;
+    my $self = Math::GSL::Eigenc::new_gsl_complex_long_double(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        Math::GSL::Eigenc::delete_gsl_complex_long_double($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : Math::GSL::Eigen::gsl_complex ##############
+
+package Math::GSL::Eigen::gsl_complex;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( Math::GSL::Eigen );
+%OWNER = ();
+%ITERATORS = ();
+*swig_dat_get = *Math::GSL::Eigenc::gsl_complex_dat_get;
+*swig_dat_set = *Math::GSL::Eigenc::gsl_complex_dat_set;
+sub new {
+    my $pkg = shift;
+    my $self = Math::GSL::Eigenc::new_gsl_complex(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        Math::GSL::Eigenc::delete_gsl_complex($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : Math::GSL::Eigen::gsl_complex_float ##############
+
+package Math::GSL::Eigen::gsl_complex_float;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( Math::GSL::Eigen );
+%OWNER = ();
+%ITERATORS = ();
+*swig_dat_get = *Math::GSL::Eigenc::gsl_complex_float_dat_get;
+*swig_dat_set = *Math::GSL::Eigenc::gsl_complex_float_dat_set;
+sub new {
+    my $pkg = shift;
+    my $self = Math::GSL::Eigenc::new_gsl_complex_float(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        Math::GSL::Eigenc::delete_gsl_complex_float($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
 # ------- VARIABLE STUBS --------
 
 package Math::GSL::Eigen;

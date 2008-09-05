@@ -152,6 +152,10 @@ sub link_c {
     my @lddlflags = $self->split_like_shell($cf->{lddlflags}); 
     my @shrp = $self->split_like_shell($cf->{shrpenv});
     my @ld = $self->split_like_shell($cf->{ld}) || "gcc";
+
+    # Strip binaries if we are compiling on windows
+    push @ld, "-s" if (is_windows() && $Config{cc} eq 'gcc');
+
     $self->do_system(@shrp, @ld, @lddlflags, @user_libs, '-o', $lib_file,
 		     $obj_file, @$objects, @linker_flags)
       or die "error building $lib_file file from '$obj_file'";
@@ -186,6 +190,8 @@ sub compile_c {
   my @cccdlflags = $self->split_like_shell($cf->{cccdlflags});
 
   my @ccflags  = $self->split_like_shell($cf->{ccflags});
+  push @ccflags, $self->split_like_shell($Config{cppflags});
+
   my @optimize = $self->split_like_shell($cf->{optimize});
 
   # Whoah! There seems to be a bug in gcc 4.1.0 and optimization
@@ -275,13 +281,15 @@ sub try_cflags ($) {
 print "Checking for GSL..";
 my %gsl_pkgcfg = ExtUtils::PkgConfig->find ('gsl');
 
-my $MIN_GSL_VERSION = "1.11";
+my $MIN_GSL_VERSION = "1.8";
 my $gv = $gsl_pkgcfg{'modversion'};
+my $current_minor_version;
 
 if (defined $gv) {
   if ($gv =~ m{\A(\d+(?:\.\d+)+)}) {
     my @current= split /\./, $1;
     my @min= split /\./, $MIN_GSL_VERSION;
+    $current_minor_version = $current[1];
     unless ($current[0] >= $min[0] && $current[1] >= $min[1]) {
 	    printf "
 *** 
@@ -346,6 +354,11 @@ my @Subsystems = sort qw/
             DHT          Interp        ODEIV        Vector
             Deriv        Linalg        Permutation  Spline
 /;
+
+# BSplines appeared in 1.9
+if ($current_minor_version < 9 ) {
+   @Subsystems = grep { ! /BSpline/ } @Subsystems;
+}
 my $cleanup = qq{core *.core Makefile Math-GSL-* tmp* pod2ht*.tmp _build blib *.so *.orig };
 
 my $builder = $class->new( 
@@ -367,7 +380,7 @@ my $builder = $class->new(
         'Test::Exception'       =>    0.21,
         'Test::Class'           =>    0.12,
         version                 =>       0,
-    	perl 			        =>  '5.8.8',
+    	perl 			        =>  '5.8.0',
     },
     sign                  => 0,
     swig_source           => [  

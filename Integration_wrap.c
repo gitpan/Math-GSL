@@ -1476,6 +1476,32 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
     #include "gsl/gsl_integration.h"
 
 
+    static HV * Callbacks = (HV*)NULL;
+    /* this function returns the value 
+        of evaluating the function pointer
+        stored in func with argument x
+    */
+    double callthis(double x , int func, void *params){
+        SV ** sv;
+        double y;
+        dSP;
+
+        //fprintf(stderr, "LOOKUP CALLBACK\n");
+        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
+        if (sv == (SV**)NULL) {
+            fprintf(stderr, "Math::GSL(callthis): %d not in Callbacks!\n", func);
+            return;
+        }
+
+        PUSHMARK(SP);
+        XPUSHs(sv_2mortal(newSVnv((double)x)));
+        PUTBACK;
+        call_sv(*sv, G_SCALAR);
+        y = POPn;
+        return y;
+    }
+
+
 SWIGINTERN int
 SWIG_AsVal_double SWIG_PERL_DECL_ARGS_2(SV *obj, double *val)
 {
@@ -3914,16 +3940,14 @@ XS(_wrap_gsl_integration_qk15) {
     double *arg5 = (double *) 0 ;
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
     int ecode3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
-    void *argp5 = 0 ;
-    int res5 = 0 ;
+    double temp4 ;
+    int res4 = SWIG_TMPOBJ ;
+    double temp5 ;
+    int res5 = SWIG_TMPOBJ ;
     void *argp6 = 0 ;
     int res6 = 0 ;
     void *argp7 = 0 ;
@@ -3931,14 +3955,29 @@ XS(_wrap_gsl_integration_qk15) {
     int argvi = 0;
     dXSARGS;
     
-    if ((items < 7) || (items > 7)) {
-      SWIG_croak("Usage: gsl_integration_qk15(f,a,b,result,abserr,resabs,resasc);");
+    arg4 = &temp4;
+    arg5 = &temp5;
+    if ((items < 5) || (items > 5)) {
+      SWIG_croak("Usage: gsl_integration_qk15(f,a,b,resabs,resasc);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_qk15" "', argument " "1"" of type '" "gsl_function const *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
-    arg1 = (gsl_function *)(argp1);
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_integration_qk15" "', argument " "2"" of type '" "double""'");
@@ -3949,28 +3988,30 @@ XS(_wrap_gsl_integration_qk15) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_integration_qk15" "', argument " "3"" of type '" "double""'");
     } 
     arg3 = (double)(val3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_integration_qk15" "', argument " "4"" of type '" "double *""'"); 
-    }
-    arg4 = (double *)(argp4);
-    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res5)) {
-      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_integration_qk15" "', argument " "5"" of type '" "double *""'"); 
-    }
-    arg5 = (double *)(argp5);
-    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_double, 0 |  0 );
+    res6 = SWIG_ConvertPtr(ST(3), &argp6,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res6)) {
       SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_integration_qk15" "', argument " "6"" of type '" "double *""'"); 
     }
     arg6 = (double *)(argp6);
-    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_double, 0 |  0 );
+    res7 = SWIG_ConvertPtr(ST(4), &argp7,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res7)) {
       SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_integration_qk15" "', argument " "7"" of type '" "double *""'"); 
     }
     arg7 = (double *)(argp7);
     gsl_integration_qk15((gsl_function const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7);
     
+    if (SWIG_IsTmpObj(res4)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res5)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg5)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -4001,16 +4042,14 @@ XS(_wrap_gsl_integration_qk21) {
     double *arg5 = (double *) 0 ;
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
     int ecode3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
-    void *argp5 = 0 ;
-    int res5 = 0 ;
+    double temp4 ;
+    int res4 = SWIG_TMPOBJ ;
+    double temp5 ;
+    int res5 = SWIG_TMPOBJ ;
     void *argp6 = 0 ;
     int res6 = 0 ;
     void *argp7 = 0 ;
@@ -4018,14 +4057,29 @@ XS(_wrap_gsl_integration_qk21) {
     int argvi = 0;
     dXSARGS;
     
-    if ((items < 7) || (items > 7)) {
-      SWIG_croak("Usage: gsl_integration_qk21(f,a,b,result,abserr,resabs,resasc);");
+    arg4 = &temp4;
+    arg5 = &temp5;
+    if ((items < 5) || (items > 5)) {
+      SWIG_croak("Usage: gsl_integration_qk21(f,a,b,resabs,resasc);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_qk21" "', argument " "1"" of type '" "gsl_function const *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
-    arg1 = (gsl_function *)(argp1);
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_integration_qk21" "', argument " "2"" of type '" "double""'");
@@ -4036,28 +4090,30 @@ XS(_wrap_gsl_integration_qk21) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_integration_qk21" "', argument " "3"" of type '" "double""'");
     } 
     arg3 = (double)(val3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_integration_qk21" "', argument " "4"" of type '" "double *""'"); 
-    }
-    arg4 = (double *)(argp4);
-    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res5)) {
-      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_integration_qk21" "', argument " "5"" of type '" "double *""'"); 
-    }
-    arg5 = (double *)(argp5);
-    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_double, 0 |  0 );
+    res6 = SWIG_ConvertPtr(ST(3), &argp6,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res6)) {
       SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_integration_qk21" "', argument " "6"" of type '" "double *""'"); 
     }
     arg6 = (double *)(argp6);
-    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_double, 0 |  0 );
+    res7 = SWIG_ConvertPtr(ST(4), &argp7,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res7)) {
       SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_integration_qk21" "', argument " "7"" of type '" "double *""'"); 
     }
     arg7 = (double *)(argp7);
     gsl_integration_qk21((gsl_function const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7);
     
+    if (SWIG_IsTmpObj(res4)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res5)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg5)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -4088,16 +4144,14 @@ XS(_wrap_gsl_integration_qk31) {
     double *arg5 = (double *) 0 ;
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
     int ecode3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
-    void *argp5 = 0 ;
-    int res5 = 0 ;
+    double temp4 ;
+    int res4 = SWIG_TMPOBJ ;
+    double temp5 ;
+    int res5 = SWIG_TMPOBJ ;
     void *argp6 = 0 ;
     int res6 = 0 ;
     void *argp7 = 0 ;
@@ -4105,14 +4159,29 @@ XS(_wrap_gsl_integration_qk31) {
     int argvi = 0;
     dXSARGS;
     
-    if ((items < 7) || (items > 7)) {
-      SWIG_croak("Usage: gsl_integration_qk31(f,a,b,result,abserr,resabs,resasc);");
+    arg4 = &temp4;
+    arg5 = &temp5;
+    if ((items < 5) || (items > 5)) {
+      SWIG_croak("Usage: gsl_integration_qk31(f,a,b,resabs,resasc);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_qk31" "', argument " "1"" of type '" "gsl_function const *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
-    arg1 = (gsl_function *)(argp1);
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_integration_qk31" "', argument " "2"" of type '" "double""'");
@@ -4123,28 +4192,30 @@ XS(_wrap_gsl_integration_qk31) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_integration_qk31" "', argument " "3"" of type '" "double""'");
     } 
     arg3 = (double)(val3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_integration_qk31" "', argument " "4"" of type '" "double *""'"); 
-    }
-    arg4 = (double *)(argp4);
-    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res5)) {
-      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_integration_qk31" "', argument " "5"" of type '" "double *""'"); 
-    }
-    arg5 = (double *)(argp5);
-    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_double, 0 |  0 );
+    res6 = SWIG_ConvertPtr(ST(3), &argp6,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res6)) {
       SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_integration_qk31" "', argument " "6"" of type '" "double *""'"); 
     }
     arg6 = (double *)(argp6);
-    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_double, 0 |  0 );
+    res7 = SWIG_ConvertPtr(ST(4), &argp7,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res7)) {
       SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_integration_qk31" "', argument " "7"" of type '" "double *""'"); 
     }
     arg7 = (double *)(argp7);
     gsl_integration_qk31((gsl_function const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7);
     
+    if (SWIG_IsTmpObj(res4)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res5)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg5)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -4175,16 +4246,14 @@ XS(_wrap_gsl_integration_qk41) {
     double *arg5 = (double *) 0 ;
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
     int ecode3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
-    void *argp5 = 0 ;
-    int res5 = 0 ;
+    double temp4 ;
+    int res4 = SWIG_TMPOBJ ;
+    double temp5 ;
+    int res5 = SWIG_TMPOBJ ;
     void *argp6 = 0 ;
     int res6 = 0 ;
     void *argp7 = 0 ;
@@ -4192,14 +4261,29 @@ XS(_wrap_gsl_integration_qk41) {
     int argvi = 0;
     dXSARGS;
     
-    if ((items < 7) || (items > 7)) {
-      SWIG_croak("Usage: gsl_integration_qk41(f,a,b,result,abserr,resabs,resasc);");
+    arg4 = &temp4;
+    arg5 = &temp5;
+    if ((items < 5) || (items > 5)) {
+      SWIG_croak("Usage: gsl_integration_qk41(f,a,b,resabs,resasc);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_qk41" "', argument " "1"" of type '" "gsl_function const *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
-    arg1 = (gsl_function *)(argp1);
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_integration_qk41" "', argument " "2"" of type '" "double""'");
@@ -4210,28 +4294,30 @@ XS(_wrap_gsl_integration_qk41) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_integration_qk41" "', argument " "3"" of type '" "double""'");
     } 
     arg3 = (double)(val3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_integration_qk41" "', argument " "4"" of type '" "double *""'"); 
-    }
-    arg4 = (double *)(argp4);
-    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res5)) {
-      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_integration_qk41" "', argument " "5"" of type '" "double *""'"); 
-    }
-    arg5 = (double *)(argp5);
-    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_double, 0 |  0 );
+    res6 = SWIG_ConvertPtr(ST(3), &argp6,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res6)) {
       SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_integration_qk41" "', argument " "6"" of type '" "double *""'"); 
     }
     arg6 = (double *)(argp6);
-    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_double, 0 |  0 );
+    res7 = SWIG_ConvertPtr(ST(4), &argp7,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res7)) {
       SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_integration_qk41" "', argument " "7"" of type '" "double *""'"); 
     }
     arg7 = (double *)(argp7);
     gsl_integration_qk41((gsl_function const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7);
     
+    if (SWIG_IsTmpObj(res4)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res5)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg5)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -4262,16 +4348,14 @@ XS(_wrap_gsl_integration_qk51) {
     double *arg5 = (double *) 0 ;
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
     int ecode3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
-    void *argp5 = 0 ;
-    int res5 = 0 ;
+    double temp4 ;
+    int res4 = SWIG_TMPOBJ ;
+    double temp5 ;
+    int res5 = SWIG_TMPOBJ ;
     void *argp6 = 0 ;
     int res6 = 0 ;
     void *argp7 = 0 ;
@@ -4279,14 +4363,29 @@ XS(_wrap_gsl_integration_qk51) {
     int argvi = 0;
     dXSARGS;
     
-    if ((items < 7) || (items > 7)) {
-      SWIG_croak("Usage: gsl_integration_qk51(f,a,b,result,abserr,resabs,resasc);");
+    arg4 = &temp4;
+    arg5 = &temp5;
+    if ((items < 5) || (items > 5)) {
+      SWIG_croak("Usage: gsl_integration_qk51(f,a,b,resabs,resasc);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_qk51" "', argument " "1"" of type '" "gsl_function const *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
-    arg1 = (gsl_function *)(argp1);
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_integration_qk51" "', argument " "2"" of type '" "double""'");
@@ -4297,28 +4396,30 @@ XS(_wrap_gsl_integration_qk51) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_integration_qk51" "', argument " "3"" of type '" "double""'");
     } 
     arg3 = (double)(val3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_integration_qk51" "', argument " "4"" of type '" "double *""'"); 
-    }
-    arg4 = (double *)(argp4);
-    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res5)) {
-      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_integration_qk51" "', argument " "5"" of type '" "double *""'"); 
-    }
-    arg5 = (double *)(argp5);
-    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_double, 0 |  0 );
+    res6 = SWIG_ConvertPtr(ST(3), &argp6,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res6)) {
       SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_integration_qk51" "', argument " "6"" of type '" "double *""'"); 
     }
     arg6 = (double *)(argp6);
-    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_double, 0 |  0 );
+    res7 = SWIG_ConvertPtr(ST(4), &argp7,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res7)) {
       SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_integration_qk51" "', argument " "7"" of type '" "double *""'"); 
     }
     arg7 = (double *)(argp7);
     gsl_integration_qk51((gsl_function const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7);
     
+    if (SWIG_IsTmpObj(res4)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res5)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg5)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -4349,16 +4450,14 @@ XS(_wrap_gsl_integration_qk61) {
     double *arg5 = (double *) 0 ;
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
     int ecode3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
-    void *argp5 = 0 ;
-    int res5 = 0 ;
+    double temp4 ;
+    int res4 = SWIG_TMPOBJ ;
+    double temp5 ;
+    int res5 = SWIG_TMPOBJ ;
     void *argp6 = 0 ;
     int res6 = 0 ;
     void *argp7 = 0 ;
@@ -4366,14 +4465,29 @@ XS(_wrap_gsl_integration_qk61) {
     int argvi = 0;
     dXSARGS;
     
-    if ((items < 7) || (items > 7)) {
-      SWIG_croak("Usage: gsl_integration_qk61(f,a,b,result,abserr,resabs,resasc);");
+    arg4 = &temp4;
+    arg5 = &temp5;
+    if ((items < 5) || (items > 5)) {
+      SWIG_croak("Usage: gsl_integration_qk61(f,a,b,resabs,resasc);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_qk61" "', argument " "1"" of type '" "gsl_function const *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
-    arg1 = (gsl_function *)(argp1);
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_integration_qk61" "', argument " "2"" of type '" "double""'");
@@ -4384,28 +4498,30 @@ XS(_wrap_gsl_integration_qk61) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_integration_qk61" "', argument " "3"" of type '" "double""'");
     } 
     arg3 = (double)(val3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_integration_qk61" "', argument " "4"" of type '" "double *""'"); 
-    }
-    arg4 = (double *)(argp4);
-    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res5)) {
-      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_integration_qk61" "', argument " "5"" of type '" "double *""'"); 
-    }
-    arg5 = (double *)(argp5);
-    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_double, 0 |  0 );
+    res6 = SWIG_ConvertPtr(ST(3), &argp6,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res6)) {
       SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_integration_qk61" "', argument " "6"" of type '" "double *""'"); 
     }
     arg6 = (double *)(argp6);
-    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_double, 0 |  0 );
+    res7 = SWIG_ConvertPtr(ST(4), &argp7,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res7)) {
       SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_integration_qk61" "', argument " "7"" of type '" "double *""'"); 
     }
     arg7 = (double *)(argp7);
     gsl_integration_qk61((gsl_function const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7);
     
+    if (SWIG_IsTmpObj(res4)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res5)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg5)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -4434,8 +4550,6 @@ XS(_wrap_gsl_integration_qcheb) {
     double arg3 ;
     double *arg4 = (double *) 0 ;
     double *arg5 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -4450,11 +4564,24 @@ XS(_wrap_gsl_integration_qcheb) {
     if ((items < 5) || (items > 5)) {
       SWIG_croak("Usage: gsl_integration_qcheb(f,a,b,cheb12,cheb24);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_qcheb" "', argument " "1"" of type '" "gsl_function *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
-    arg1 = (gsl_function *)(argp1);
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_integration_qcheb" "', argument " "2"" of type '" "double""'");
@@ -4511,26 +4638,18 @@ XS(_wrap_gsl_integration_qk) {
     double *arg13 = (double *) 0 ;
     int val1 ;
     int ecode1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
     void *argp5 = 0 ;
     int res5 = 0 ;
     void *argp6 = 0 ;
     int res6 = 0 ;
-    void *argp7 = 0 ;
-    int res7 = 0 ;
     double val8 ;
     int ecode8 = 0 ;
     double val9 ;
     int ecode9 = 0 ;
-    void *argp10 = 0 ;
-    int res10 = 0 ;
-    void *argp11 = 0 ;
-    int res11 = 0 ;
+    double temp10 ;
+    int res10 = SWIG_TMPOBJ ;
+    double temp11 ;
+    int res11 = SWIG_TMPOBJ ;
     void *argp12 = 0 ;
     int res12 = 0 ;
     void *argp13 = 0 ;
@@ -4538,29 +4657,70 @@ XS(_wrap_gsl_integration_qk) {
     int argvi = 0;
     dXSARGS;
     
-    if ((items < 13) || (items > 13)) {
-      SWIG_croak("Usage: gsl_integration_qk(n,xgk,wg,wgk,fv1,fv2,f,a,b,result,abserr,resabs,resasc);");
+    arg10 = &temp10;
+    arg11 = &temp11;
+    if ((items < 11) || (items > 11)) {
+      SWIG_croak("Usage: gsl_integration_qk(n,xgk,wg,wgk,fv1,fv2,f,a,b,resabs,resasc);");
     }
     ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
     if (!SWIG_IsOK(ecode1)) {
       SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_integration_qk" "', argument " "1"" of type '" "int""'");
     } 
     arg1 = (int)(val1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_integration_qk" "', argument " "2"" of type '" "double const []""'"); 
-    } 
-    arg2 = (double *)(argp2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_integration_qk" "', argument " "3"" of type '" "double const []""'"); 
-    } 
-    arg3 = (double *)(argp3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_integration_qk" "', argument " "4"" of type '" "double const []""'"); 
-    } 
-    arg4 = (double *)(argp4);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(1)))
+      croak("Math::GSL : ST(1) is not a reference!");
+      if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
+      croak("Math::GSL : ST(1) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(1));
+      len = av_len(tempav);
+      arg2 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg2[i] = (double) SvNV(*tv);
+      }
+    }
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(2)))
+      croak("Math::GSL : ST(2) is not a reference!");
+      if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
+      croak("Math::GSL : ST(2) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(2));
+      len = av_len(tempav);
+      arg3 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg3[i] = (double) SvNV(*tv);
+      }
+    }
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(3)))
+      croak("Math::GSL : ST(3) is not a reference!");
+      if (SvTYPE(SvRV(ST(3))) != SVt_PVAV)
+      croak("Math::GSL : ST(3) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(3));
+      len = av_len(tempav);
+      arg4 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg4[i] = (double) SvNV(*tv);
+      }
+    }
     res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res5)) {
       SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_integration_qk" "', argument " "5"" of type '" "double []""'"); 
@@ -4571,11 +4731,24 @@ XS(_wrap_gsl_integration_qk) {
       SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_integration_qk" "', argument " "6"" of type '" "double []""'"); 
     } 
     arg6 = (double *)(argp6);
-    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_gsl_function, 0 |  0 );
-    if (!SWIG_IsOK(res7)) {
-      SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_integration_qk" "', argument " "7"" of type '" "gsl_function const *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(6))) {
+        croak("Math::GSL : f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(6));
+      hv_store( Callbacks, (char*)&ST(6), sizeof(ST(6)), newSVsv(ST(6)), 0 );
+      
+      F.params   = &ST(6);
+      F.function = &callthis;
+      arg7         = &F;
     }
-    arg7 = (gsl_function *)(argp7);
     ecode8 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(7), &val8);
     if (!SWIG_IsOK(ecode8)) {
       SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "gsl_integration_qk" "', argument " "8"" of type '" "double""'");
@@ -4586,28 +4759,30 @@ XS(_wrap_gsl_integration_qk) {
       SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "gsl_integration_qk" "', argument " "9"" of type '" "double""'");
     } 
     arg9 = (double)(val9);
-    res10 = SWIG_ConvertPtr(ST(9), &argp10,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res10)) {
-      SWIG_exception_fail(SWIG_ArgError(res10), "in method '" "gsl_integration_qk" "', argument " "10"" of type '" "double *""'"); 
-    }
-    arg10 = (double *)(argp10);
-    res11 = SWIG_ConvertPtr(ST(10), &argp11,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res11)) {
-      SWIG_exception_fail(SWIG_ArgError(res11), "in method '" "gsl_integration_qk" "', argument " "11"" of type '" "double *""'"); 
-    }
-    arg11 = (double *)(argp11);
-    res12 = SWIG_ConvertPtr(ST(11), &argp12,SWIGTYPE_p_double, 0 |  0 );
+    res12 = SWIG_ConvertPtr(ST(9), &argp12,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res12)) {
       SWIG_exception_fail(SWIG_ArgError(res12), "in method '" "gsl_integration_qk" "', argument " "12"" of type '" "double *""'"); 
     }
     arg12 = (double *)(argp12);
-    res13 = SWIG_ConvertPtr(ST(12), &argp13,SWIGTYPE_p_double, 0 |  0 );
+    res13 = SWIG_ConvertPtr(ST(10), &argp13,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res13)) {
       SWIG_exception_fail(SWIG_ArgError(res13), "in method '" "gsl_integration_qk" "', argument " "13"" of type '" "double *""'"); 
     }
     arg13 = (double *)(argp13);
     gsl_integration_qk(arg1,(double const (*))arg2,(double const (*))arg3,(double const (*))arg4,arg5,arg6,(gsl_function const *)arg7,arg8,arg9,arg10,arg11,arg12,arg13);
     
+    if (SWIG_IsTmpObj(res10)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg10)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res10) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg10), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res11)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg11)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res11) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg11), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -4651,8 +4826,6 @@ XS(_wrap_gsl_integration_qng) {
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
     size_t *arg8 = (size_t *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -4661,24 +4834,39 @@ XS(_wrap_gsl_integration_qng) {
     int ecode4 = 0 ;
     double val5 ;
     int ecode5 = 0 ;
-    void *argp6 = 0 ;
-    int res6 = 0 ;
-    void *argp7 = 0 ;
-    int res7 = 0 ;
+    double temp6 ;
+    int res6 = SWIG_TMPOBJ ;
+    double temp7 ;
+    int res7 = SWIG_TMPOBJ ;
     void *argp8 = 0 ;
     int res8 = 0 ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 8) || (items > 8)) {
-      SWIG_croak("Usage: gsl_integration_qng(f,a,b,epsabs,epsrel,result,abserr,neval);");
+    arg6 = &temp6;
+    arg7 = &temp7;
+    if ((items < 6) || (items > 6)) {
+      SWIG_croak("Usage: gsl_integration_qng(f,a,b,epsabs,epsrel,neval);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_qng" "', argument " "1"" of type '" "gsl_function const *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
-    arg1 = (gsl_function *)(argp1);
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_integration_qng" "', argument " "2"" of type '" "double""'");
@@ -4699,23 +4887,25 @@ XS(_wrap_gsl_integration_qng) {
       SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "gsl_integration_qng" "', argument " "5"" of type '" "double""'");
     } 
     arg5 = (double)(val5);
-    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res6)) {
-      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_integration_qng" "', argument " "6"" of type '" "double *""'"); 
-    }
-    arg6 = (double *)(argp6);
-    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res7)) {
-      SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_integration_qng" "', argument " "7"" of type '" "double *""'"); 
-    }
-    arg7 = (double *)(argp7);
-    res8 = SWIG_ConvertPtr(ST(7), &argp8,SWIGTYPE_p_size_t, 0 |  0 );
+    res8 = SWIG_ConvertPtr(ST(5), &argp8,SWIGTYPE_p_size_t, 0 |  0 );
     if (!SWIG_IsOK(res8)) {
       SWIG_exception_fail(SWIG_ArgError(res8), "in method '" "gsl_integration_qng" "', argument " "8"" of type '" "size_t *""'"); 
     }
     arg8 = (size_t *)(argp8);
     result = (int)gsl_integration_qng((gsl_function const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res6)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg6)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res6) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg6), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res7)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg7)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res7) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg7), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -4751,8 +4941,6 @@ XS(_wrap_gsl_integration_qag) {
     gsl_integration_workspace *arg8 = (gsl_integration_workspace *) 0 ;
     double *arg9 = (double *) 0 ;
     double *arg10 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -4767,22 +4955,37 @@ XS(_wrap_gsl_integration_qag) {
     int ecode7 = 0 ;
     void *argp8 = 0 ;
     int res8 = 0 ;
-    void *argp9 = 0 ;
-    int res9 = 0 ;
-    void *argp10 = 0 ;
-    int res10 = 0 ;
+    double temp9 ;
+    int res9 = SWIG_TMPOBJ ;
+    double temp10 ;
+    int res10 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 10) || (items > 10)) {
-      SWIG_croak("Usage: gsl_integration_qag(f,a,b,epsabs,epsrel,limit,key,workspace,result,abserr);");
+    arg9 = &temp9;
+    arg10 = &temp10;
+    if ((items < 8) || (items > 8)) {
+      SWIG_croak("Usage: gsl_integration_qag(f,a,b,epsabs,epsrel,limit,key,workspace);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_qag" "', argument " "1"" of type '" "gsl_function const *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
-    arg1 = (gsl_function *)(argp1);
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_integration_qag" "', argument " "2"" of type '" "double""'");
@@ -4818,18 +5021,20 @@ XS(_wrap_gsl_integration_qag) {
       SWIG_exception_fail(SWIG_ArgError(res8), "in method '" "gsl_integration_qag" "', argument " "8"" of type '" "gsl_integration_workspace *""'"); 
     }
     arg8 = (gsl_integration_workspace *)(argp8);
-    res9 = SWIG_ConvertPtr(ST(8), &argp9,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res9)) {
-      SWIG_exception_fail(SWIG_ArgError(res9), "in method '" "gsl_integration_qag" "', argument " "9"" of type '" "double *""'"); 
-    }
-    arg9 = (double *)(argp9);
-    res10 = SWIG_ConvertPtr(ST(9), &argp10,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res10)) {
-      SWIG_exception_fail(SWIG_ArgError(res10), "in method '" "gsl_integration_qag" "', argument " "10"" of type '" "double *""'"); 
-    }
-    arg10 = (double *)(argp10);
     result = (int)gsl_integration_qag((gsl_function const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res9)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg9)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res9) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg9), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res10)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg10)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res10) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg10), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -4866,8 +5071,6 @@ XS(_wrap_gsl_integration_qagi) {
     gsl_integration_workspace *arg5 = (gsl_integration_workspace *) 0 ;
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -4876,22 +5079,37 @@ XS(_wrap_gsl_integration_qagi) {
     int ecode4 = 0 ;
     void *argp5 = 0 ;
     int res5 = 0 ;
-    void *argp6 = 0 ;
-    int res6 = 0 ;
-    void *argp7 = 0 ;
-    int res7 = 0 ;
+    double temp6 ;
+    int res6 = SWIG_TMPOBJ ;
+    double temp7 ;
+    int res7 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 7) || (items > 7)) {
-      SWIG_croak("Usage: gsl_integration_qagi(f,epsabs,epsrel,limit,workspace,result,abserr);");
+    arg6 = &temp6;
+    arg7 = &temp7;
+    if ((items < 5) || (items > 5)) {
+      SWIG_croak("Usage: gsl_integration_qagi(f,epsabs,epsrel,limit,workspace);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_qagi" "', argument " "1"" of type '" "gsl_function *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
-    arg1 = (gsl_function *)(argp1);
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_integration_qagi" "', argument " "2"" of type '" "double""'");
@@ -4912,18 +5130,20 @@ XS(_wrap_gsl_integration_qagi) {
       SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_integration_qagi" "', argument " "5"" of type '" "gsl_integration_workspace *""'"); 
     }
     arg5 = (gsl_integration_workspace *)(argp5);
-    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res6)) {
-      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_integration_qagi" "', argument " "6"" of type '" "double *""'"); 
-    }
-    arg6 = (double *)(argp6);
-    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res7)) {
-      SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_integration_qagi" "', argument " "7"" of type '" "double *""'"); 
-    }
-    arg7 = (double *)(argp7);
     result = (int)gsl_integration_qagi(arg1,arg2,arg3,arg4,arg5,arg6,arg7);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res6)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg6)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res6) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg6), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res7)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg7)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res7) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg7), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -4955,8 +5175,6 @@ XS(_wrap_gsl_integration_qagiu) {
     gsl_integration_workspace *arg6 = (gsl_integration_workspace *) 0 ;
     double *arg7 = (double *) 0 ;
     double *arg8 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -4967,22 +5185,37 @@ XS(_wrap_gsl_integration_qagiu) {
     int ecode5 = 0 ;
     void *argp6 = 0 ;
     int res6 = 0 ;
-    void *argp7 = 0 ;
-    int res7 = 0 ;
-    void *argp8 = 0 ;
-    int res8 = 0 ;
+    double temp7 ;
+    int res7 = SWIG_TMPOBJ ;
+    double temp8 ;
+    int res8 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 8) || (items > 8)) {
-      SWIG_croak("Usage: gsl_integration_qagiu(f,a,epsabs,epsrel,limit,workspace,result,abserr);");
+    arg7 = &temp7;
+    arg8 = &temp8;
+    if ((items < 6) || (items > 6)) {
+      SWIG_croak("Usage: gsl_integration_qagiu(f,a,epsabs,epsrel,limit,workspace);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_qagiu" "', argument " "1"" of type '" "gsl_function *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
-    arg1 = (gsl_function *)(argp1);
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_integration_qagiu" "', argument " "2"" of type '" "double""'");
@@ -5008,18 +5241,20 @@ XS(_wrap_gsl_integration_qagiu) {
       SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_integration_qagiu" "', argument " "6"" of type '" "gsl_integration_workspace *""'"); 
     }
     arg6 = (gsl_integration_workspace *)(argp6);
-    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res7)) {
-      SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_integration_qagiu" "', argument " "7"" of type '" "double *""'"); 
-    }
-    arg7 = (double *)(argp7);
-    res8 = SWIG_ConvertPtr(ST(7), &argp8,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res8)) {
-      SWIG_exception_fail(SWIG_ArgError(res8), "in method '" "gsl_integration_qagiu" "', argument " "8"" of type '" "double *""'"); 
-    }
-    arg8 = (double *)(argp8);
     result = (int)gsl_integration_qagiu(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res7)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg7)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res7) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg7), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res8)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg8)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res8) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg8), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -5053,8 +5288,6 @@ XS(_wrap_gsl_integration_qagil) {
     gsl_integration_workspace *arg6 = (gsl_integration_workspace *) 0 ;
     double *arg7 = (double *) 0 ;
     double *arg8 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -5065,22 +5298,37 @@ XS(_wrap_gsl_integration_qagil) {
     int ecode5 = 0 ;
     void *argp6 = 0 ;
     int res6 = 0 ;
-    void *argp7 = 0 ;
-    int res7 = 0 ;
-    void *argp8 = 0 ;
-    int res8 = 0 ;
+    double temp7 ;
+    int res7 = SWIG_TMPOBJ ;
+    double temp8 ;
+    int res8 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 8) || (items > 8)) {
-      SWIG_croak("Usage: gsl_integration_qagil(f,b,epsabs,epsrel,limit,workspace,result,abserr);");
+    arg7 = &temp7;
+    arg8 = &temp8;
+    if ((items < 6) || (items > 6)) {
+      SWIG_croak("Usage: gsl_integration_qagil(f,b,epsabs,epsrel,limit,workspace);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_qagil" "', argument " "1"" of type '" "gsl_function *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
-    arg1 = (gsl_function *)(argp1);
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_integration_qagil" "', argument " "2"" of type '" "double""'");
@@ -5106,18 +5354,20 @@ XS(_wrap_gsl_integration_qagil) {
       SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_integration_qagil" "', argument " "6"" of type '" "gsl_integration_workspace *""'"); 
     }
     arg6 = (gsl_integration_workspace *)(argp6);
-    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res7)) {
-      SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_integration_qagil" "', argument " "7"" of type '" "double *""'"); 
-    }
-    arg7 = (double *)(argp7);
-    res8 = SWIG_ConvertPtr(ST(7), &argp8,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res8)) {
-      SWIG_exception_fail(SWIG_ArgError(res8), "in method '" "gsl_integration_qagil" "', argument " "8"" of type '" "double *""'"); 
-    }
-    arg8 = (double *)(argp8);
     result = (int)gsl_integration_qagil(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res7)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg7)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res7) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg7), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res8)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg8)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res8) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg8), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -5152,8 +5402,6 @@ XS(_wrap_gsl_integration_qags) {
     gsl_integration_workspace *arg7 = (gsl_integration_workspace *) 0 ;
     double *arg8 = (double *) 0 ;
     double *arg9 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -5166,22 +5414,37 @@ XS(_wrap_gsl_integration_qags) {
     int ecode6 = 0 ;
     void *argp7 = 0 ;
     int res7 = 0 ;
-    void *argp8 = 0 ;
-    int res8 = 0 ;
-    void *argp9 = 0 ;
-    int res9 = 0 ;
+    double temp8 ;
+    int res8 = SWIG_TMPOBJ ;
+    double temp9 ;
+    int res9 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 9) || (items > 9)) {
-      SWIG_croak("Usage: gsl_integration_qags(f,a,b,epsabs,epsrel,limit,workspace,result,abserr);");
+    arg8 = &temp8;
+    arg9 = &temp9;
+    if ((items < 7) || (items > 7)) {
+      SWIG_croak("Usage: gsl_integration_qags(f,a,b,epsabs,epsrel,limit,workspace);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_qags" "', argument " "1"" of type '" "gsl_function const *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
-    arg1 = (gsl_function *)(argp1);
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_integration_qags" "', argument " "2"" of type '" "double""'");
@@ -5212,18 +5475,20 @@ XS(_wrap_gsl_integration_qags) {
       SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_integration_qags" "', argument " "7"" of type '" "gsl_integration_workspace *""'"); 
     }
     arg7 = (gsl_integration_workspace *)(argp7);
-    res8 = SWIG_ConvertPtr(ST(7), &argp8,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res8)) {
-      SWIG_exception_fail(SWIG_ArgError(res8), "in method '" "gsl_integration_qags" "', argument " "8"" of type '" "double *""'"); 
-    }
-    arg8 = (double *)(argp8);
-    res9 = SWIG_ConvertPtr(ST(8), &argp9,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res9)) {
-      SWIG_exception_fail(SWIG_ArgError(res9), "in method '" "gsl_integration_qags" "', argument " "9"" of type '" "double *""'"); 
-    }
-    arg9 = (double *)(argp9);
     result = (int)gsl_integration_qags((gsl_function const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res8)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg8)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res8) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg8), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res9)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg9)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res9) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg9), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -5260,8 +5525,6 @@ XS(_wrap_gsl_integration_qagp) {
     gsl_integration_workspace *arg7 = (gsl_integration_workspace *) 0 ;
     double *arg8 = (double *) 0 ;
     double *arg9 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     void *argp2 = 0 ;
     int res2 = 0 ;
     size_t val3 ;
@@ -5274,22 +5537,37 @@ XS(_wrap_gsl_integration_qagp) {
     int ecode6 = 0 ;
     void *argp7 = 0 ;
     int res7 = 0 ;
-    void *argp8 = 0 ;
-    int res8 = 0 ;
-    void *argp9 = 0 ;
-    int res9 = 0 ;
+    double temp8 ;
+    int res8 = SWIG_TMPOBJ ;
+    double temp9 ;
+    int res9 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 9) || (items > 9)) {
-      SWIG_croak("Usage: gsl_integration_qagp(f,pts,npts,epsabs,epsrel,limit,workspace,result,abserr);");
+    arg8 = &temp8;
+    arg9 = &temp9;
+    if ((items < 7) || (items > 7)) {
+      SWIG_croak("Usage: gsl_integration_qagp(f,pts,npts,epsabs,epsrel,limit,workspace);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_qagp" "', argument " "1"" of type '" "gsl_function const *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
-    arg1 = (gsl_function *)(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_integration_qagp" "', argument " "2"" of type '" "double *""'"); 
@@ -5320,18 +5598,20 @@ XS(_wrap_gsl_integration_qagp) {
       SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_integration_qagp" "', argument " "7"" of type '" "gsl_integration_workspace *""'"); 
     }
     arg7 = (gsl_integration_workspace *)(argp7);
-    res8 = SWIG_ConvertPtr(ST(7), &argp8,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res8)) {
-      SWIG_exception_fail(SWIG_ArgError(res8), "in method '" "gsl_integration_qagp" "', argument " "8"" of type '" "double *""'"); 
-    }
-    arg8 = (double *)(argp8);
-    res9 = SWIG_ConvertPtr(ST(8), &argp9,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res9)) {
-      SWIG_exception_fail(SWIG_ArgError(res9), "in method '" "gsl_integration_qagp" "', argument " "9"" of type '" "double *""'"); 
-    }
-    arg9 = (double *)(argp9);
     result = (int)gsl_integration_qagp((gsl_function const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res8)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg8)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res8) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg8), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res9)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg9)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res9) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg9), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -5369,8 +5649,6 @@ XS(_wrap_gsl_integration_qawc) {
     gsl_integration_workspace *arg8 = (gsl_integration_workspace *) 0 ;
     double *arg9 = (double *) 0 ;
     double *arg10 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -5385,22 +5663,37 @@ XS(_wrap_gsl_integration_qawc) {
     int ecode7 = 0 ;
     void *argp8 = 0 ;
     int res8 = 0 ;
-    void *argp9 = 0 ;
-    int res9 = 0 ;
-    void *argp10 = 0 ;
-    int res10 = 0 ;
+    double temp9 ;
+    int res9 = SWIG_TMPOBJ ;
+    double temp10 ;
+    int res10 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 10) || (items > 10)) {
-      SWIG_croak("Usage: gsl_integration_qawc(f,a,b,c,epsabs,epsrel,limit,workspace,result,abserr);");
+    arg9 = &temp9;
+    arg10 = &temp10;
+    if ((items < 8) || (items > 8)) {
+      SWIG_croak("Usage: gsl_integration_qawc(f,a,b,c,epsabs,epsrel,limit,workspace);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_qawc" "', argument " "1"" of type '" "gsl_function *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
-    arg1 = (gsl_function *)(argp1);
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_integration_qawc" "', argument " "2"" of type '" "double""'");
@@ -5436,18 +5729,20 @@ XS(_wrap_gsl_integration_qawc) {
       SWIG_exception_fail(SWIG_ArgError(res8), "in method '" "gsl_integration_qawc" "', argument " "8"" of type '" "gsl_integration_workspace *""'"); 
     }
     arg8 = (gsl_integration_workspace *)(argp8);
-    res9 = SWIG_ConvertPtr(ST(8), &argp9,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res9)) {
-      SWIG_exception_fail(SWIG_ArgError(res9), "in method '" "gsl_integration_qawc" "', argument " "9"" of type '" "double *""'"); 
-    }
-    arg9 = (double *)(argp9);
-    res10 = SWIG_ConvertPtr(ST(9), &argp10,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res10)) {
-      SWIG_exception_fail(SWIG_ArgError(res10), "in method '" "gsl_integration_qawc" "', argument " "10"" of type '" "double *""'"); 
-    }
-    arg10 = (double *)(argp10);
     result = (int)gsl_integration_qawc(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res9)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg9)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res9) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg9), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res10)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg10)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res10) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg10), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -5487,8 +5782,6 @@ XS(_wrap_gsl_integration_qaws) {
     gsl_integration_workspace *arg8 = (gsl_integration_workspace *) 0 ;
     double *arg9 = (double *) 0 ;
     double *arg10 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -5503,22 +5796,37 @@ XS(_wrap_gsl_integration_qaws) {
     int ecode7 = 0 ;
     void *argp8 = 0 ;
     int res8 = 0 ;
-    void *argp9 = 0 ;
-    int res9 = 0 ;
-    void *argp10 = 0 ;
-    int res10 = 0 ;
+    double temp9 ;
+    int res9 = SWIG_TMPOBJ ;
+    double temp10 ;
+    int res10 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 10) || (items > 10)) {
-      SWIG_croak("Usage: gsl_integration_qaws(f,a,b,t,epsabs,epsrel,limit,workspace,result,abserr);");
+    arg9 = &temp9;
+    arg10 = &temp10;
+    if ((items < 8) || (items > 8)) {
+      SWIG_croak("Usage: gsl_integration_qaws(f,a,b,t,epsabs,epsrel,limit,workspace);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_qaws" "', argument " "1"" of type '" "gsl_function *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
-    arg1 = (gsl_function *)(argp1);
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_integration_qaws" "', argument " "2"" of type '" "double""'");
@@ -5554,18 +5862,20 @@ XS(_wrap_gsl_integration_qaws) {
       SWIG_exception_fail(SWIG_ArgError(res8), "in method '" "gsl_integration_qaws" "', argument " "8"" of type '" "gsl_integration_workspace *""'"); 
     }
     arg8 = (gsl_integration_workspace *)(argp8);
-    res9 = SWIG_ConvertPtr(ST(8), &argp9,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res9)) {
-      SWIG_exception_fail(SWIG_ArgError(res9), "in method '" "gsl_integration_qaws" "', argument " "9"" of type '" "double *""'"); 
-    }
-    arg9 = (double *)(argp9);
-    res10 = SWIG_ConvertPtr(ST(9), &argp10,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res10)) {
-      SWIG_exception_fail(SWIG_ArgError(res10), "in method '" "gsl_integration_qaws" "', argument " "10"" of type '" "double *""'"); 
-    }
-    arg10 = (double *)(argp10);
     result = (int)gsl_integration_qaws(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res9)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg9)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res9) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg9), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res10)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg10)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res10) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg10), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -5604,8 +5914,6 @@ XS(_wrap_gsl_integration_qawo) {
     gsl_integration_qawo_table *arg7 = (gsl_integration_qawo_table *) 0 ;
     double *arg8 = (double *) 0 ;
     double *arg9 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -5618,22 +5926,37 @@ XS(_wrap_gsl_integration_qawo) {
     int res6 = 0 ;
     void *argp7 = 0 ;
     int res7 = 0 ;
-    void *argp8 = 0 ;
-    int res8 = 0 ;
-    void *argp9 = 0 ;
-    int res9 = 0 ;
+    double temp8 ;
+    int res8 = SWIG_TMPOBJ ;
+    double temp9 ;
+    int res9 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 9) || (items > 9)) {
-      SWIG_croak("Usage: gsl_integration_qawo(f,a,epsabs,epsrel,limit,workspace,wf,result,abserr);");
+    arg8 = &temp8;
+    arg9 = &temp9;
+    if ((items < 7) || (items > 7)) {
+      SWIG_croak("Usage: gsl_integration_qawo(f,a,epsabs,epsrel,limit,workspace,wf);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_qawo" "', argument " "1"" of type '" "gsl_function *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
-    arg1 = (gsl_function *)(argp1);
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_integration_qawo" "', argument " "2"" of type '" "double""'");
@@ -5664,18 +5987,20 @@ XS(_wrap_gsl_integration_qawo) {
       SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_integration_qawo" "', argument " "7"" of type '" "gsl_integration_qawo_table *""'"); 
     }
     arg7 = (gsl_integration_qawo_table *)(argp7);
-    res8 = SWIG_ConvertPtr(ST(7), &argp8,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res8)) {
-      SWIG_exception_fail(SWIG_ArgError(res8), "in method '" "gsl_integration_qawo" "', argument " "8"" of type '" "double *""'"); 
-    }
-    arg8 = (double *)(argp8);
-    res9 = SWIG_ConvertPtr(ST(8), &argp9,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res9)) {
-      SWIG_exception_fail(SWIG_ArgError(res9), "in method '" "gsl_integration_qawo" "', argument " "9"" of type '" "double *""'"); 
-    }
-    arg9 = (double *)(argp9);
     result = (int)gsl_integration_qawo(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res8)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg8)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res8) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg8), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res9)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg9)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res9) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg9), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -5712,8 +6037,6 @@ XS(_wrap_gsl_integration_qawf) {
     gsl_integration_qawo_table *arg7 = (gsl_integration_qawo_table *) 0 ;
     double *arg8 = (double *) 0 ;
     double *arg9 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -5726,22 +6049,37 @@ XS(_wrap_gsl_integration_qawf) {
     int res6 = 0 ;
     void *argp7 = 0 ;
     int res7 = 0 ;
-    void *argp8 = 0 ;
-    int res8 = 0 ;
-    void *argp9 = 0 ;
-    int res9 = 0 ;
+    double temp8 ;
+    int res8 = SWIG_TMPOBJ ;
+    double temp9 ;
+    int res9 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 9) || (items > 9)) {
-      SWIG_croak("Usage: gsl_integration_qawf(f,a,epsabs,limit,workspace,cycle_workspace,wf,result,abserr);");
+    arg8 = &temp8;
+    arg9 = &temp9;
+    if ((items < 7) || (items > 7)) {
+      SWIG_croak("Usage: gsl_integration_qawf(f,a,epsabs,limit,workspace,cycle_workspace,wf);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_qawf" "', argument " "1"" of type '" "gsl_function *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
-    arg1 = (gsl_function *)(argp1);
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_integration_qawf" "', argument " "2"" of type '" "double""'");
@@ -5772,18 +6110,20 @@ XS(_wrap_gsl_integration_qawf) {
       SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_integration_qawf" "', argument " "7"" of type '" "gsl_integration_qawo_table *""'"); 
     }
     arg7 = (gsl_integration_qawo_table *)(argp7);
-    res8 = SWIG_ConvertPtr(ST(7), &argp8,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res8)) {
-      SWIG_exception_fail(SWIG_ArgError(res8), "in method '" "gsl_integration_qawf" "', argument " "8"" of type '" "double *""'"); 
-    }
-    arg8 = (double *)(argp8);
-    res9 = SWIG_ConvertPtr(ST(8), &argp9,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res9)) {
-      SWIG_exception_fail(SWIG_ArgError(res9), "in method '" "gsl_integration_qawf" "', argument " "9"" of type '" "double *""'"); 
-    }
-    arg9 = (double *)(argp9);
     result = (int)gsl_integration_qawf(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res8)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg8)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res8) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg8), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res9)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg9)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res9) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg9), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     

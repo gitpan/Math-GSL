@@ -1473,6 +1473,32 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 #endif
 
 
+    static HV * Callbacks = (HV*)NULL;
+    /* this function returns the value 
+        of evaluating the function pointer
+        stored in func with argument x
+    */
+    double callthis(double x , int func, void *params){
+        SV ** sv;
+        double y;
+        dSP;
+
+        //fprintf(stderr, "LOOKUP CALLBACK\n");
+        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
+        if (sv == (SV**)NULL) {
+            fprintf(stderr, "Math::GSL(callthis): %d not in Callbacks!\n", func);
+            return;
+        }
+
+        PUSHMARK(SP);
+        XPUSHs(sv_2mortal(newSVnv((double)x)));
+        PUTBACK;
+        call_sv(*sv, G_SCALAR);
+        y = POPn;
+        return y;
+    }
+
+
     #include "gsl/gsl_permute.h"
     #include "gsl/gsl_permute_double.h"
     #include "gsl/gsl_permute_int.h"
@@ -1719,8 +1745,6 @@ XS(_wrap_gsl_permute) {
     double *arg2 = (double *) 0 ;
     size_t arg3 ;
     size_t arg4 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val3 ;
     int ecode3 = 0 ;
     size_t val4 ;
@@ -1732,11 +1756,24 @@ XS(_wrap_gsl_permute) {
     if ((items < 4) || (items > 4)) {
       SWIG_croak("Usage: gsl_permute(p,data,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_size_t, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_permute" "', argument " "1"" of type '" "size_t const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (size_t *)(argp1);
     {
       AV *tempav;
       I32 len;
@@ -1788,8 +1825,6 @@ XS(_wrap_gsl_permute_inverse) {
     double *arg2 = (double *) 0 ;
     size_t arg3 ;
     size_t arg4 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val3 ;
     int ecode3 = 0 ;
     size_t val4 ;
@@ -1801,11 +1836,24 @@ XS(_wrap_gsl_permute_inverse) {
     if ((items < 4) || (items > 4)) {
       SWIG_croak("Usage: gsl_permute_inverse(p,data,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_size_t, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_permute_inverse" "', argument " "1"" of type '" "size_t const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (size_t *)(argp1);
     {
       AV *tempav;
       I32 len;
@@ -1857,8 +1905,6 @@ XS(_wrap_gsl_permute_int) {
     int *arg2 = (int *) 0 ;
     size_t arg3 ;
     size_t arg4 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     void *argp2 = 0 ;
     int res2 = 0 ;
     size_t val3 ;
@@ -1872,11 +1918,24 @@ XS(_wrap_gsl_permute_int) {
     if ((items < 4) || (items > 4)) {
       SWIG_croak("Usage: gsl_permute_int(p,data,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_size_t, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_permute_int" "', argument " "1"" of type '" "size_t const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (size_t *)(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_int, 0 |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_permute_int" "', argument " "2"" of type '" "int *""'"); 
@@ -1915,8 +1974,6 @@ XS(_wrap_gsl_permute_int_inverse) {
     int *arg2 = (int *) 0 ;
     size_t arg3 ;
     size_t arg4 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     void *argp2 = 0 ;
     int res2 = 0 ;
     size_t val3 ;
@@ -1930,11 +1987,24 @@ XS(_wrap_gsl_permute_int_inverse) {
     if ((items < 4) || (items > 4)) {
       SWIG_croak("Usage: gsl_permute_int_inverse(p,data,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_size_t, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_permute_int_inverse" "', argument " "1"" of type '" "size_t const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (size_t *)(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_int, 0 |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_permute_int_inverse" "', argument " "2"" of type '" "int *""'"); 

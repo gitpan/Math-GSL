@@ -458,22 +458,6 @@ package Math::GSL::SF;
 *gsl_sf_log_1plusx = *Math::GSL::SFc::gsl_sf_log_1plusx;
 *gsl_sf_log_1plusx_mx_e = *Math::GSL::SFc::gsl_sf_log_1plusx_mx_e;
 *gsl_sf_log_1plusx_mx = *Math::GSL::SFc::gsl_sf_log_1plusx_mx;
-*gsl_sf_mathieu_a_array = *Math::GSL::SFc::gsl_sf_mathieu_a_array;
-*gsl_sf_mathieu_b_array = *Math::GSL::SFc::gsl_sf_mathieu_b_array;
-*gsl_sf_mathieu_a = *Math::GSL::SFc::gsl_sf_mathieu_a;
-*gsl_sf_mathieu_b = *Math::GSL::SFc::gsl_sf_mathieu_b;
-*gsl_sf_mathieu_a_coeff = *Math::GSL::SFc::gsl_sf_mathieu_a_coeff;
-*gsl_sf_mathieu_b_coeff = *Math::GSL::SFc::gsl_sf_mathieu_b_coeff;
-*gsl_sf_mathieu_alloc = *Math::GSL::SFc::gsl_sf_mathieu_alloc;
-*gsl_sf_mathieu_free = *Math::GSL::SFc::gsl_sf_mathieu_free;
-*gsl_sf_mathieu_ce = *Math::GSL::SFc::gsl_sf_mathieu_ce;
-*gsl_sf_mathieu_se = *Math::GSL::SFc::gsl_sf_mathieu_se;
-*gsl_sf_mathieu_ce_array = *Math::GSL::SFc::gsl_sf_mathieu_ce_array;
-*gsl_sf_mathieu_se_array = *Math::GSL::SFc::gsl_sf_mathieu_se_array;
-*gsl_sf_mathieu_Mc = *Math::GSL::SFc::gsl_sf_mathieu_Mc;
-*gsl_sf_mathieu_Ms = *Math::GSL::SFc::gsl_sf_mathieu_Ms;
-*gsl_sf_mathieu_Mc_array = *Math::GSL::SFc::gsl_sf_mathieu_Mc_array;
-*gsl_sf_mathieu_Ms_array = *Math::GSL::SFc::gsl_sf_mathieu_Ms_array;
 *gsl_sf_pow_int_e = *Math::GSL::SFc::gsl_sf_pow_int_e;
 *gsl_sf_pow_int = *Math::GSL::SFc::gsl_sf_pow_int;
 *gsl_sf_psi_int_e = *Math::GSL::SFc::gsl_sf_psi_int_e;
@@ -541,75 +525,6 @@ package Math::GSL::SF;
 *gsl_sf_eta_int = *Math::GSL::SFc::gsl_sf_eta_int;
 *gsl_sf_eta_e = *Math::GSL::SFc::gsl_sf_eta_e;
 *gsl_sf_eta = *Math::GSL::SFc::gsl_sf_eta;
-
-############# Class : Math::GSL::SF::gsl_sf_mathieu_workspace ##############
-
-package Math::GSL::SF::gsl_sf_mathieu_workspace;
-use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( Math::GSL::SF );
-%OWNER = ();
-%ITERATORS = ();
-*swig_size_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_size_get;
-*swig_size_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_size_set;
-*swig_even_order_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_even_order_get;
-*swig_even_order_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_even_order_set;
-*swig_odd_order_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_odd_order_get;
-*swig_odd_order_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_odd_order_set;
-*swig_extra_values_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_extra_values_get;
-*swig_extra_values_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_extra_values_set;
-*swig_qa_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_qa_get;
-*swig_qa_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_qa_set;
-*swig_qb_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_qb_get;
-*swig_qb_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_qb_set;
-*swig_aa_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_aa_get;
-*swig_aa_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_aa_set;
-*swig_bb_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_bb_get;
-*swig_bb_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_bb_set;
-*swig_dd_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_dd_get;
-*swig_dd_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_dd_set;
-*swig_ee_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_ee_get;
-*swig_ee_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_ee_set;
-*swig_tt_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_tt_get;
-*swig_tt_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_tt_set;
-*swig_e2_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_e2_get;
-*swig_e2_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_e2_set;
-*swig_zz_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_zz_get;
-*swig_zz_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_zz_set;
-*swig_eval_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_eval_get;
-*swig_eval_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_eval_set;
-*swig_evec_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_evec_get;
-*swig_evec_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_evec_set;
-*swig_wmat_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_wmat_get;
-*swig_wmat_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_wmat_set;
-sub new {
-    my $pkg = shift;
-    my $self = Math::GSL::SFc::new_gsl_sf_mathieu_workspace(@_);
-    bless $self, $pkg if defined($self);
-}
-
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        Math::GSL::SFc::delete_gsl_sf_mathieu_workspace($self);
-        delete $OWNER{$self};
-    }
-}
-
-sub DISOWN {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    delete $OWNER{$ptr};
-}
-
-sub ACQUIRE {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    $OWNER{$ptr} = 1;
-}
-
 
 ############# Class : Math::GSL::SF::gsl_sf_result_struct ##############
 
@@ -699,6 +614,8 @@ sub ACQUIRE {
 
 package Math::GSL::SF;
 
+*GSL_VERSION = *Math::GSL::SFc::GSL_VERSION;
+*gsl_version = *Math::GSL::SFc::gsl_version;
 *GSL_PREC_DOUBLE = *Math::GSL::SFc::GSL_PREC_DOUBLE;
 *GSL_PREC_SINGLE = *Math::GSL::SFc::GSL_PREC_SINGLE;
 *GSL_PREC_APPROX = *Math::GSL::SFc::GSL_PREC_APPROX;
@@ -706,7 +623,6 @@ package Math::GSL::SF;
 *GSL_SF_GAMMA_XMAX = *Math::GSL::SFc::GSL_SF_GAMMA_XMAX;
 *GSL_SF_FACT_NMAX = *Math::GSL::SFc::GSL_SF_FACT_NMAX;
 *GSL_SF_DOUBLEFACT_NMAX = *Math::GSL::SFc::GSL_SF_DOUBLEFACT_NMAX;
-*GSL_SF_MATHIEU_COEFF = *Math::GSL::SFc::GSL_SF_MATHIEU_COEFF;
 
 
 @EXPORT_airy = qw/

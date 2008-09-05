@@ -1,3 +1,77 @@
-use Math::GSL::Deriv::Test;
-Test::Class->runtests;
+package Math::GSL::Deriv::Test;
+use Math::GSL::Test qw/:all/;
+use base 'Test::Class';
+use Test::More 'no_plan';
+use Math::GSL qw/:all/;
+use Math::GSL::Deriv qw/:all/;
+use Math::GSL::Errno qw/:all/;
+use Test::Exception;
+use Data::Dumper;
+use strict;
+use warnings;
 
+BEGIN{ gsl_set_error_handler_off() };
+
+sub make_fixture : Test(setup) {
+    my $self = shift;
+    $self->{gsl_func} = Math::GSL::Deriv::gsl_function_struct->new;
+}
+
+sub teardown : Test(teardown) {
+}
+
+sub TEST_FUNCTION_STRUCT : Tests {
+    my $self = shift;
+
+    isa_ok( $self->{gsl_func},'Math::GSL::Deriv::gsl_function_struct');
+}
+
+sub TEST_DERIV_CENTRAL_DIES : Tests { 
+    my ($x,$h)=(10,0.01);
+    throws_ok( sub {
+               gsl_deriv_central( 'IAMNOTACODEREF', $x, $h); 
+           },qr/not a reference value/, 'gsl_deriv_central borks when first arg is not a coderef');
+}
+
+sub TEST_DERIV_CENTRAL : Tests { 
+    my ($x,$h)=(10,0.01);
+    my $self = shift;
+    my ($status, $result);
+
+    ($status, $result) = gsl_deriv_central ( sub { $_[0] ** 3 }, $x, $h,); 
+    ok_status($status);
+    my $res = abs($result->[0]-3*$x**2);
+    ok( $res < $result->[1] , sprintf ("gsl_deriv_forward: res=%.18f, abserr=%.18f",$res, $result->[1] ));
+}
+
+sub TEST_DERIV_FORWARD : Tests { 
+    my ($x,$h)=(10,0.01);
+    my $self = shift;
+    my ($status, $result);
+
+    ($status, $result) = gsl_deriv_forward ( sub { 2 * $_[0] ** 2 }, $x, $h,); 
+    ok_status($status);
+    my $res = abs($result->[0]-4*$x);
+    ok( $res < $result->[1] , sprintf ("gsl_deriv_forward: res=%.18f, abserr=%.18f",$res, $result->[1] ));
+}
+
+sub TEST_DERIV_BACKWARD : Tests { 
+    my ($x,$h)=(10,0.01);
+    my $self = shift;
+    my ($status, $result);
+
+    ($status, $result) = gsl_deriv_backward ( sub { log $_[0] }, $x, $h,); 
+    ok_status($status);
+    my $res = abs($result->[0]-1/$x);
+    ok( $res < $result->[1] , sprintf ("gsl_deriv_backward: res=%.18f, abserr=%.18f",$res, $result->[1] ));
+}
+
+sub TEST_DERIV_CENTRAL_CALLS_THE_SUB : Tests { 
+    my ($x,$h)=(10,0.01);
+    my $self = shift;
+
+    throws_ok( sub {
+                gsl_deriv_central ( sub { die "CALL ME BACK!"} , $x, $h)
+            }, qr/CALL ME BACK/, 'gsl_deriv_central can call anon sub' );
+}
+Test::Class->runtests;

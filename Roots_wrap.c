@@ -1476,6 +1476,32 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 #endif
 
 
+    static HV * Callbacks = (HV*)NULL;
+    /* this function returns the value 
+        of evaluating the function pointer
+        stored in func with argument x
+    */
+    double callthis(double x , int func, void *params){
+        SV ** sv;
+        double y;
+        dSP;
+
+        //fprintf(stderr, "LOOKUP CALLBACK\n");
+        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
+        if (sv == (SV**)NULL) {
+            fprintf(stderr, "Math::GSL(callthis): %d not in Callbacks!\n", func);
+            return;
+        }
+
+        PUSHMARK(SP);
+        XPUSHs(sv_2mortal(newSVnv((double)x)));
+        PUTBACK;
+        call_sv(*sv, G_SCALAR);
+        y = POPn;
+        return y;
+    }
+
+
     #include "gsl/gsl_types.h"
     #include "gsl/gsl_roots.h"
 
@@ -2252,8 +2278,6 @@ XS(_wrap_gsl_root_fsolver_function_set) {
     gsl_function *arg2 = (gsl_function *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
     int argvi = 0;
     dXSARGS;
     
@@ -2265,11 +2289,24 @@ XS(_wrap_gsl_root_fsolver_function_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_root_fsolver_function_set" "', argument " "1"" of type '" "gsl_root_fsolver *""'"); 
     }
     arg1 = (gsl_root_fsolver *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_gsl_function, SWIG_POINTER_DISOWN |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_root_fsolver_function_set" "', argument " "2"" of type '" "gsl_function *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(1))) {
+        croak("Math::GSL : function is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(1));
+      hv_store( Callbacks, (char*)&ST(1), sizeof(ST(1)), newSVsv(ST(1)), 0 );
+      
+      F.params   = &ST(1);
+      F.function = &callthis;
+      arg2         = &F;
     }
-    arg2 = (gsl_function *)(argp2);
     if (arg1) (arg1)->function = arg2;
     
     
@@ -3289,8 +3326,6 @@ XS(_wrap_gsl_root_fsolver_set) {
     double arg4 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
     double val3 ;
     int ecode3 = 0 ;
     double val4 ;
@@ -3307,11 +3342,24 @@ XS(_wrap_gsl_root_fsolver_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_root_fsolver_set" "', argument " "1"" of type '" "gsl_root_fsolver *""'"); 
     }
     arg1 = (gsl_root_fsolver *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_gsl_function, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_root_fsolver_set" "', argument " "2"" of type '" "gsl_function *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(1))) {
+        croak("Math::GSL : f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(1));
+      hv_store( Callbacks, (char*)&ST(1), sizeof(ST(1)), newSVsv(ST(1)), 0 );
+      
+      F.params   = &ST(1);
+      F.function = &callthis;
+      arg2         = &F;
     }
-    arg2 = (gsl_function *)(argp2);
     ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_root_fsolver_set" "', argument " "3"" of type '" "double""'");

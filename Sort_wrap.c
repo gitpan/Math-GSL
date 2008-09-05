@@ -1473,6 +1473,32 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 #endif
 
 
+    static HV * Callbacks = (HV*)NULL;
+    /* this function returns the value 
+        of evaluating the function pointer
+        stored in func with argument x
+    */
+    double callthis(double x , int func, void *params){
+        SV ** sv;
+        double y;
+        dSP;
+
+        //fprintf(stderr, "LOOKUP CALLBACK\n");
+        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
+        if (sv == (SV**)NULL) {
+            fprintf(stderr, "Math::GSL(callthis): %d not in Callbacks!\n", func);
+            return;
+        }
+
+        PUSHMARK(SP);
+        XPUSHs(sv_2mortal(newSVnv((double)x)));
+        PUTBACK;
+        call_sv(*sv, G_SCALAR);
+        y = POPn;
+        return y;
+    }
+
+
     #include "gsl/gsl_nan.h"
     #include "gsl/gsl_sort.h"
     #include "gsl/gsl_sort_double.h"
@@ -1793,23 +1819,35 @@ XS(_wrap_gsl_sort_index) {
     double *arg2 = (double *) 0 ;
     size_t arg3 ;
     size_t arg4 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val3 ;
     int ecode3 = 0 ;
     size_t val4 ;
     int ecode4 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 4) || (items > 4)) {
       SWIG_croak("Usage: gsl_sort_index(p,data,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_size_t, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sort_index" "', argument " "1"" of type '" "size_t *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (size_t *)(argp1);
     {
       AV *tempav;
       I32 len;
@@ -1838,8 +1876,20 @@ XS(_wrap_gsl_sort_index) {
       SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_sort_index" "', argument " "4"" of type '" "size_t""'");
     } 
     arg4 = (size_t)(val4);
+    _saved[0] = ST(0);
     gsl_sort_index(arg1,(double const *)arg2,arg3,arg4);
     
+    {
+      int i=0;
+      AV* tempav = newAV();
+      while( i < arg4 ) {
+        av_push(tempav, newSVnv((size_t) arg1[i]));
+        i++;
+      }
+      
+      ST(argvi) = sv_2mortal( newRV_noinc( (SV*) tempav) );
+      argvi++;
+    }
     
     
     
@@ -1864,13 +1914,12 @@ XS(_wrap_gsl_sort_smallest) {
     size_t arg5 ;
     size_t val2 ;
     int ecode2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
     size_t val4 ;
     int ecode4 = 0 ;
     size_t val5 ;
     int ecode5 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     int result;
     dXSARGS;
     
@@ -1900,11 +1949,24 @@ XS(_wrap_gsl_sort_smallest) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sort_smallest" "', argument " "2"" of type '" "size_t""'");
     } 
     arg2 = (size_t)(val2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_sort_smallest" "', argument " "3"" of type '" "double const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(2)))
+      croak("Math::GSL : ST(2) is not a reference!");
+      if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
+      croak("Math::GSL : ST(2) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(2));
+      len = av_len(tempav);
+      arg3 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg3[i] = (double) SvNV(*tv);
+      }
     }
-    arg3 = (double *)(argp3);
     ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
     if (!SWIG_IsOK(ecode4)) {
       SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_sort_smallest" "', argument " "4"" of type '" "size_t""'");
@@ -1915,8 +1977,20 @@ XS(_wrap_gsl_sort_smallest) {
       SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "gsl_sort_smallest" "', argument " "5"" of type '" "size_t""'");
     } 
     arg5 = (size_t)(val5);
+    _saved[0] = ST(0);
     result = (int)gsl_sort_smallest(arg1,arg2,(double const *)arg3,arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    {
+      int i=0;
+      AV* tempav = newAV();
+      while( i < arg2 ) {
+        av_push(tempav, newSVnv((double) arg1[i]));
+        i++;
+      }
+      
+      ST(argvi) = sv_2mortal( newRV_noinc( (SV*) tempav) );
+      argvi++;
+    }
     
     
     
@@ -1941,38 +2015,61 @@ XS(_wrap_gsl_sort_smallest_index) {
     double *arg3 = (double *) 0 ;
     size_t arg4 ;
     size_t arg5 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
     size_t val4 ;
     int ecode4 = 0 ;
     size_t val5 ;
     int ecode5 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     int result;
     dXSARGS;
     
     if ((items < 5) || (items > 5)) {
       SWIG_croak("Usage: gsl_sort_smallest_index(p,k,src,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_size_t, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sort_smallest_index" "', argument " "1"" of type '" "size_t *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (size_t *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sort_smallest_index" "', argument " "2"" of type '" "size_t""'");
     } 
     arg2 = (size_t)(val2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_sort_smallest_index" "', argument " "3"" of type '" "double const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(2)))
+      croak("Math::GSL : ST(2) is not a reference!");
+      if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
+      croak("Math::GSL : ST(2) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(2));
+      len = av_len(tempav);
+      arg3 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg3[i] = (double) SvNV(*tv);
+      }
     }
-    arg3 = (double *)(argp3);
     ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
     if (!SWIG_IsOK(ecode4)) {
       SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_sort_smallest_index" "', argument " "4"" of type '" "size_t""'");
@@ -1983,8 +2080,20 @@ XS(_wrap_gsl_sort_smallest_index) {
       SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "gsl_sort_smallest_index" "', argument " "5"" of type '" "size_t""'");
     } 
     arg5 = (size_t)(val5);
+    _saved[0] = ST(0);
     result = (int)gsl_sort_smallest_index(arg1,arg2,(double const *)arg3,arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    {
+      int i=0;
+      AV* tempav = newAV();
+      while( i < arg2 ) {
+        av_push(tempav, newSVnv((size_t) arg1[i]));
+        i++;
+      }
+      
+      ST(argvi) = sv_2mortal( newRV_noinc( (SV*) tempav) );
+      argvi++;
+    }
     
     
     
@@ -2011,13 +2120,12 @@ XS(_wrap_gsl_sort_largest) {
     size_t arg5 ;
     size_t val2 ;
     int ecode2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
     size_t val4 ;
     int ecode4 = 0 ;
     size_t val5 ;
     int ecode5 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     int result;
     dXSARGS;
     
@@ -2047,11 +2155,24 @@ XS(_wrap_gsl_sort_largest) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sort_largest" "', argument " "2"" of type '" "size_t""'");
     } 
     arg2 = (size_t)(val2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_sort_largest" "', argument " "3"" of type '" "double const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(2)))
+      croak("Math::GSL : ST(2) is not a reference!");
+      if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
+      croak("Math::GSL : ST(2) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(2));
+      len = av_len(tempav);
+      arg3 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg3[i] = (double) SvNV(*tv);
+      }
     }
-    arg3 = (double *)(argp3);
     ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
     if (!SWIG_IsOK(ecode4)) {
       SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_sort_largest" "', argument " "4"" of type '" "size_t""'");
@@ -2062,8 +2183,20 @@ XS(_wrap_gsl_sort_largest) {
       SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "gsl_sort_largest" "', argument " "5"" of type '" "size_t""'");
     } 
     arg5 = (size_t)(val5);
+    _saved[0] = ST(0);
     result = (int)gsl_sort_largest(arg1,arg2,(double const *)arg3,arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    {
+      int i=0;
+      AV* tempav = newAV();
+      while( i < arg2 ) {
+        av_push(tempav, newSVnv((double) arg1[i]));
+        i++;
+      }
+      
+      ST(argvi) = sv_2mortal( newRV_noinc( (SV*) tempav) );
+      argvi++;
+    }
     
     
     
@@ -2088,38 +2221,61 @@ XS(_wrap_gsl_sort_largest_index) {
     double *arg3 = (double *) 0 ;
     size_t arg4 ;
     size_t arg5 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
     size_t val4 ;
     int ecode4 = 0 ;
     size_t val5 ;
     int ecode5 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     int result;
     dXSARGS;
     
     if ((items < 5) || (items > 5)) {
       SWIG_croak("Usage: gsl_sort_largest_index(p,k,src,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_size_t, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sort_largest_index" "', argument " "1"" of type '" "size_t *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (size_t *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sort_largest_index" "', argument " "2"" of type '" "size_t""'");
     } 
     arg2 = (size_t)(val2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_sort_largest_index" "', argument " "3"" of type '" "double const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(2)))
+      croak("Math::GSL : ST(2) is not a reference!");
+      if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
+      croak("Math::GSL : ST(2) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(2));
+      len = av_len(tempav);
+      arg3 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg3[i] = (double) SvNV(*tv);
+      }
     }
-    arg3 = (double *)(argp3);
     ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
     if (!SWIG_IsOK(ecode4)) {
       SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_sort_largest_index" "', argument " "4"" of type '" "size_t""'");
@@ -2130,8 +2286,20 @@ XS(_wrap_gsl_sort_largest_index) {
       SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "gsl_sort_largest_index" "', argument " "5"" of type '" "size_t""'");
     } 
     arg5 = (size_t)(val5);
+    _saved[0] = ST(0);
     result = (int)gsl_sort_largest_index(arg1,arg2,(double const *)arg3,arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    {
+      int i=0;
+      AV* tempav = newAV();
+      while( i < arg2 ) {
+        av_push(tempav, newSVnv((size_t) arg1[i]));
+        i++;
+      }
+      
+      ST(argvi) = sv_2mortal( newRV_noinc( (SV*) tempav) );
+      argvi++;
+    }
     
     
     
@@ -2202,8 +2370,6 @@ XS(_wrap_gsl_sort_int_index) {
     int *arg2 = (int *) 0 ;
     size_t arg3 ;
     size_t arg4 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     void *argp2 = 0 ;
     int res2 = 0 ;
     size_t val3 ;
@@ -2216,11 +2382,24 @@ XS(_wrap_gsl_sort_int_index) {
     if ((items < 4) || (items > 4)) {
       SWIG_croak("Usage: gsl_sort_int_index(p,data,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_size_t, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sort_int_index" "', argument " "1"" of type '" "size_t *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (size_t *)(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_int, 0 |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_sort_int_index" "', argument " "2"" of type '" "int const *""'"); 
@@ -2328,8 +2507,6 @@ XS(_wrap_gsl_sort_int_smallest_index) {
     int *arg3 = (int *) 0 ;
     size_t arg4 ;
     size_t arg5 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     void *argp3 = 0 ;
@@ -2345,11 +2522,24 @@ XS(_wrap_gsl_sort_int_smallest_index) {
     if ((items < 5) || (items > 5)) {
       SWIG_croak("Usage: gsl_sort_int_smallest_index(p,k,src,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_size_t, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sort_int_smallest_index" "', argument " "1"" of type '" "size_t *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (size_t *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sort_int_smallest_index" "', argument " "2"" of type '" "size_t""'");
@@ -2464,8 +2654,6 @@ XS(_wrap_gsl_sort_int_largest_index) {
     int *arg3 = (int *) 0 ;
     size_t arg4 ;
     size_t arg5 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     void *argp3 = 0 ;
@@ -2481,11 +2669,24 @@ XS(_wrap_gsl_sort_int_largest_index) {
     if ((items < 5) || (items > 5)) {
       SWIG_croak("Usage: gsl_sort_int_largest_index(p,k,src,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_size_t, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sort_int_largest_index" "', argument " "1"" of type '" "size_t *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (size_t *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sort_int_largest_index" "', argument " "2"" of type '" "size_t""'");
@@ -2741,24 +2942,36 @@ XS(_wrap_gsl_sort_vector_smallest_index) {
     size_t *arg1 = (size_t *) 0 ;
     size_t arg2 ;
     gsl_vector *arg3 = (gsl_vector *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     void *argp3 = 0 ;
     int res3 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     int result;
     dXSARGS;
     
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_sort_vector_smallest_index(p,k,v);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_size_t, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sort_vector_smallest_index" "', argument " "1"" of type '" "size_t *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (size_t *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sort_vector_smallest_index" "', argument " "2"" of type '" "size_t""'");
@@ -2769,8 +2982,20 @@ XS(_wrap_gsl_sort_vector_smallest_index) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_sort_vector_smallest_index" "', argument " "3"" of type '" "gsl_vector const *""'"); 
     }
     arg3 = (gsl_vector *)(argp3);
+    _saved[0] = ST(0);
     result = (int)gsl_sort_vector_smallest_index(arg1,arg2,(gsl_vector const *)arg3);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    {
+      int i=0;
+      AV* tempav = newAV();
+      while( i < arg2 ) {
+        av_push(tempav, newSVnv((double) arg1[i]));
+        i++;
+      }
+      
+      ST(argvi) = sv_2mortal( newRV_noinc( (SV*) tempav) );
+      argvi++;
+    }
     
     
     
@@ -2789,24 +3014,36 @@ XS(_wrap_gsl_sort_vector_largest_index) {
     size_t *arg1 = (size_t *) 0 ;
     size_t arg2 ;
     gsl_vector *arg3 = (gsl_vector *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     void *argp3 = 0 ;
     int res3 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     int result;
     dXSARGS;
     
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_sort_vector_largest_index(p,k,v);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_size_t, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sort_vector_largest_index" "', argument " "1"" of type '" "size_t *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (size_t *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sort_vector_largest_index" "', argument " "2"" of type '" "size_t""'");
@@ -2817,8 +3054,20 @@ XS(_wrap_gsl_sort_vector_largest_index) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_sort_vector_largest_index" "', argument " "3"" of type '" "gsl_vector const *""'"); 
     }
     arg3 = (gsl_vector *)(argp3);
+    _saved[0] = ST(0);
     result = (int)gsl_sort_vector_largest_index(arg1,arg2,(gsl_vector const *)arg3);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    {
+      int i=0;
+      AV* tempav = newAV();
+      while( i < arg2 ) {
+        av_push(tempav, newSVnv((double) arg1[i]));
+        i++;
+      }
+      
+      ST(argvi) = sv_2mortal( newRV_noinc( (SV*) tempav) );
+      argvi++;
+    }
     
     
     
@@ -2998,8 +3247,6 @@ XS(_wrap_gsl_sort_vector_int_smallest_index) {
     size_t *arg1 = (size_t *) 0 ;
     size_t arg2 ;
     gsl_vector_int *arg3 = (gsl_vector_int *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     void *argp3 = 0 ;
@@ -3011,11 +3258,24 @@ XS(_wrap_gsl_sort_vector_int_smallest_index) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_sort_vector_int_smallest_index(p,k,v);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_size_t, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sort_vector_int_smallest_index" "', argument " "1"" of type '" "size_t *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (size_t *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sort_vector_int_smallest_index" "', argument " "2"" of type '" "size_t""'");
@@ -3046,8 +3306,6 @@ XS(_wrap_gsl_sort_vector_int_largest_index) {
     size_t *arg1 = (size_t *) 0 ;
     size_t arg2 ;
     gsl_vector_int *arg3 = (gsl_vector_int *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     void *argp3 = 0 ;
@@ -3059,11 +3317,24 @@ XS(_wrap_gsl_sort_vector_int_largest_index) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_sort_vector_int_largest_index(p,k,v);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_size_t, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sort_vector_int_largest_index" "', argument " "1"" of type '" "size_t *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : ST(0) is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : ST(0) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (size_t *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sort_vector_int_largest_index" "', argument " "2"" of type '" "size_t""'");

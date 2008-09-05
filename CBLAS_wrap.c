@@ -1468,6 +1468,32 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 #endif
 
 
+    static HV * Callbacks = (HV*)NULL;
+    /* this function returns the value 
+        of evaluating the function pointer
+        stored in func with argument x
+    */
+    double callthis(double x , int func, void *params){
+        SV ** sv;
+        double y;
+        dSP;
+
+        //fprintf(stderr, "LOOKUP CALLBACK\n");
+        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
+        if (sv == (SV**)NULL) {
+            fprintf(stderr, "Math::GSL(callthis): %d not in Callbacks!\n", func);
+            return;
+        }
+
+        PUSHMARK(SP);
+        XPUSHs(sv_2mortal(newSVnv((double)x)));
+        PUTBACK;
+        call_sv(*sv, G_SCALAR);
+        y = POPn;
+        return y;
+    }
+
+
     #include "gsl/gsl_cblas.h"
 
 
@@ -1780,8 +1806,8 @@ XS(_wrap_cblas_sdsdot) {
     } 
     arg2 = (float)(val2);
     if (!(SWIG_IsOK((res3 = SWIG_ConvertPtr(ST(2),SWIG_as_voidptrptr(&arg3),SWIGTYPE_p_float,0))))) {
-      float val; 
-      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(2), &val);
+      double val; 
+      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_sdsdot" "', argument " "3"" of type '" "float""'");
       }
@@ -1855,8 +1881,8 @@ XS(_wrap_cblas_dsdot) {
     } 
     arg1 = (int)(val1);
     if (!(SWIG_IsOK((res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2),SWIGTYPE_p_float,0))))) {
-      float val; 
-      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(1), &val);
+      double val; 
+      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_dsdot" "', argument " "2"" of type '" "float""'");
       }
@@ -1928,8 +1954,8 @@ XS(_wrap_cblas_sdot) {
     } 
     arg1 = (int)(val1);
     if (!(SWIG_IsOK((res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2),SWIGTYPE_p_float,0))))) {
-      float val; 
-      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(1), &val);
+      double val; 
+      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_sdot" "', argument " "2"" of type '" "float""'");
       }
@@ -2001,8 +2027,8 @@ XS(_wrap_cblas_ddot) {
     } 
     arg1 = (int)(val1);
     if (!(SWIG_IsOK((res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2),SWIGTYPE_p_double,0))))) {
-      double val; 
-      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val);
+      float val; 
+      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(1), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_ddot" "', argument " "2"" of type '" "double""'");
       }
@@ -2352,8 +2378,8 @@ XS(_wrap_cblas_snrm2) {
     } 
     arg1 = (int)(val1);
     if (!(SWIG_IsOK((res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2),SWIGTYPE_p_float,0))))) {
-      float val; 
-      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(1), &val);
+      double val; 
+      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_snrm2" "', argument " "2"" of type '" "float""'");
       }
@@ -2405,8 +2431,8 @@ XS(_wrap_cblas_sasum) {
     } 
     arg1 = (int)(val1);
     if (!(SWIG_IsOK((res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2),SWIGTYPE_p_float,0))))) {
-      float val; 
-      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(1), &val);
+      double val; 
+      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_sasum" "', argument " "2"" of type '" "float""'");
       }
@@ -2458,8 +2484,8 @@ XS(_wrap_cblas_dnrm2) {
     } 
     arg1 = (int)(val1);
     if (!(SWIG_IsOK((res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2),SWIGTYPE_p_double,0))))) {
-      double val; 
-      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val);
+      float val; 
+      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(1), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_dnrm2" "', argument " "2"" of type '" "double""'");
       }
@@ -2511,8 +2537,8 @@ XS(_wrap_cblas_dasum) {
     } 
     arg1 = (int)(val1);
     if (!(SWIG_IsOK((res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2),SWIGTYPE_p_double,0))))) {
-      double val; 
-      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val);
+      float val; 
+      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(1), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_dasum" "', argument " "2"" of type '" "double""'");
       }
@@ -2748,8 +2774,8 @@ XS(_wrap_cblas_isamax) {
     } 
     arg1 = (int)(val1);
     if (!(SWIG_IsOK((res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2),SWIGTYPE_p_float,0))))) {
-      float val; 
-      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(1), &val);
+      double val; 
+      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_isamax" "', argument " "2"" of type '" "float""'");
       }
@@ -2801,8 +2827,8 @@ XS(_wrap_cblas_idamax) {
     } 
     arg1 = (int)(val1);
     if (!(SWIG_IsOK((res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2),SWIGTYPE_p_double,0))))) {
-      double val; 
-      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val);
+      float val; 
+      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(1), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_idamax" "', argument " "2"" of type '" "double""'");
       }
@@ -3018,8 +3044,8 @@ XS(_wrap_cblas_scopy) {
     } 
     arg1 = (int)(val1);
     if (!(SWIG_IsOK((res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2),SWIGTYPE_p_float,0))))) {
-      float val; 
-      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(1), &val);
+      double val; 
+      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_scopy" "', argument " "2"" of type '" "float""'");
       }
@@ -3098,8 +3124,8 @@ XS(_wrap_cblas_saxpy) {
     } 
     arg2 = (float)(val2);
     if (!(SWIG_IsOK((res3 = SWIG_ConvertPtr(ST(2),SWIG_as_voidptrptr(&arg3),SWIGTYPE_p_float,0))))) {
-      float val; 
-      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(2), &val);
+      double val; 
+      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_saxpy" "', argument " "3"" of type '" "float""'");
       }
@@ -3239,8 +3265,8 @@ XS(_wrap_cblas_dcopy) {
     } 
     arg1 = (int)(val1);
     if (!(SWIG_IsOK((res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2),SWIGTYPE_p_double,0))))) {
-      double val; 
-      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val);
+      float val; 
+      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(1), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_dcopy" "', argument " "2"" of type '" "double""'");
       }
@@ -3319,8 +3345,8 @@ XS(_wrap_cblas_daxpy) {
     } 
     arg2 = (double)(val2);
     if (!(SWIG_IsOK((res3 = SWIG_ConvertPtr(ST(2),SWIG_as_voidptrptr(&arg3),SWIGTYPE_p_double,0))))) {
-      double val; 
-      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val);
+      float val; 
+      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(2), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_daxpy" "', argument " "3"" of type '" "double""'");
       }
@@ -4688,8 +4714,6 @@ XS(_wrap_cblas_sgemv) {
     int ecode4 = 0 ;
     float val5 ;
     int ecode5 = 0 ;
-    void *argp6 = 0 ;
-    int res6 = 0 ;
     int val7 ;
     int ecode7 = 0 ;
     float temp8 ;
@@ -4733,19 +4757,32 @@ XS(_wrap_cblas_sgemv) {
       SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "cblas_sgemv" "', argument " "5"" of type '" "float""'");
     } 
     arg5 = (float)(val5);
-    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res6)) {
-      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "cblas_sgemv" "', argument " "6"" of type '" "float const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(5)))
+      croak("Math::GSL : ST(5) is not a reference!");
+      if (SvTYPE(SvRV(ST(5))) != SVt_PVAV)
+      croak("Math::GSL : ST(5) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(5));
+      len = av_len(tempav);
+      arg6 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg6[i] = (double) SvNV(*tv);
+      }
     }
-    arg6 = (float *)(argp6);
     ecode7 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(6), &val7);
     if (!SWIG_IsOK(ecode7)) {
       SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "cblas_sgemv" "', argument " "7"" of type '" "int""'");
     } 
     arg7 = (int)(val7);
     if (!(SWIG_IsOK((res8 = SWIG_ConvertPtr(ST(7),SWIG_as_voidptrptr(&arg8),SWIGTYPE_p_float,0))))) {
-      float val; 
-      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(7), &val);
+      double val; 
+      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(7), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_sgemv" "', argument " "8"" of type '" "float""'");
       }
@@ -4836,8 +4873,6 @@ XS(_wrap_cblas_sgbmv) {
     int ecode6 = 0 ;
     float val7 ;
     int ecode7 = 0 ;
-    void *argp8 = 0 ;
-    int res8 = 0 ;
     int val9 ;
     int ecode9 = 0 ;
     float temp10 ;
@@ -4891,19 +4926,32 @@ XS(_wrap_cblas_sgbmv) {
       SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "cblas_sgbmv" "', argument " "7"" of type '" "float""'");
     } 
     arg7 = (float)(val7);
-    res8 = SWIG_ConvertPtr(ST(7), &argp8,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res8)) {
-      SWIG_exception_fail(SWIG_ArgError(res8), "in method '" "cblas_sgbmv" "', argument " "8"" of type '" "float const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(7)))
+      croak("Math::GSL : ST(7) is not a reference!");
+      if (SvTYPE(SvRV(ST(7))) != SVt_PVAV)
+      croak("Math::GSL : ST(7) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(7));
+      len = av_len(tempav);
+      arg8 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg8[i] = (double) SvNV(*tv);
+      }
     }
-    arg8 = (float *)(argp8);
     ecode9 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(8), &val9);
     if (!SWIG_IsOK(ecode9)) {
       SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "cblas_sgbmv" "', argument " "9"" of type '" "int""'");
     } 
     arg9 = (int)(val9);
     if (!(SWIG_IsOK((res10 = SWIG_ConvertPtr(ST(9),SWIG_as_voidptrptr(&arg10),SWIGTYPE_p_float,0))))) {
-      float val; 
-      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(9), &val);
+      double val; 
+      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(9), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_sgbmv" "', argument " "10"" of type '" "float""'");
       }
@@ -4989,8 +5037,6 @@ XS(_wrap_cblas_strmv) {
     int ecode4 = 0 ;
     int val5 ;
     int ecode5 = 0 ;
-    void *argp6 = 0 ;
-    int res6 = 0 ;
     int val7 ;
     int ecode7 = 0 ;
     void *argp8 = 0 ;
@@ -5028,11 +5074,24 @@ XS(_wrap_cblas_strmv) {
       SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "cblas_strmv" "', argument " "5"" of type '" "int""'");
     } 
     arg5 = (int)(val5);
-    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res6)) {
-      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "cblas_strmv" "', argument " "6"" of type '" "float const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(5)))
+      croak("Math::GSL : ST(5) is not a reference!");
+      if (SvTYPE(SvRV(ST(5))) != SVt_PVAV)
+      croak("Math::GSL : ST(5) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(5));
+      len = av_len(tempav);
+      arg6 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg6[i] = (double) SvNV(*tv);
+      }
     }
-    arg6 = (float *)(argp6);
     ecode7 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(6), &val7);
     if (!SWIG_IsOK(ecode7)) {
       SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "cblas_strmv" "', argument " "7"" of type '" "int""'");
@@ -5099,8 +5158,6 @@ XS(_wrap_cblas_stbmv) {
     int ecode5 = 0 ;
     int val6 ;
     int ecode6 = 0 ;
-    void *argp7 = 0 ;
-    int res7 = 0 ;
     int val8 ;
     int ecode8 = 0 ;
     void *argp9 = 0 ;
@@ -5143,11 +5200,24 @@ XS(_wrap_cblas_stbmv) {
       SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "cblas_stbmv" "', argument " "6"" of type '" "int""'");
     } 
     arg6 = (int)(val6);
-    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res7)) {
-      SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "cblas_stbmv" "', argument " "7"" of type '" "float const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(6)))
+      croak("Math::GSL : ST(6) is not a reference!");
+      if (SvTYPE(SvRV(ST(6))) != SVt_PVAV)
+      croak("Math::GSL : ST(6) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(6));
+      len = av_len(tempav);
+      arg7 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg7[i] = (double) SvNV(*tv);
+      }
     }
-    arg7 = (float *)(argp7);
     ecode8 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(7), &val8);
     if (!SWIG_IsOK(ecode8)) {
       SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "cblas_stbmv" "', argument " "8"" of type '" "int""'");
@@ -5310,8 +5380,6 @@ XS(_wrap_cblas_strsv) {
     int ecode4 = 0 ;
     int val5 ;
     int ecode5 = 0 ;
-    void *argp6 = 0 ;
-    int res6 = 0 ;
     int val7 ;
     int ecode7 = 0 ;
     void *argp8 = 0 ;
@@ -5349,11 +5417,24 @@ XS(_wrap_cblas_strsv) {
       SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "cblas_strsv" "', argument " "5"" of type '" "int""'");
     } 
     arg5 = (int)(val5);
-    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res6)) {
-      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "cblas_strsv" "', argument " "6"" of type '" "float const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(5)))
+      croak("Math::GSL : ST(5) is not a reference!");
+      if (SvTYPE(SvRV(ST(5))) != SVt_PVAV)
+      croak("Math::GSL : ST(5) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(5));
+      len = av_len(tempav);
+      arg6 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg6[i] = (double) SvNV(*tv);
+      }
     }
-    arg6 = (float *)(argp6);
     ecode7 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(6), &val7);
     if (!SWIG_IsOK(ecode7)) {
       SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "cblas_strsv" "', argument " "7"" of type '" "int""'");
@@ -5420,8 +5501,6 @@ XS(_wrap_cblas_stbsv) {
     int ecode5 = 0 ;
     int val6 ;
     int ecode6 = 0 ;
-    void *argp7 = 0 ;
-    int res7 = 0 ;
     int val8 ;
     int ecode8 = 0 ;
     void *argp9 = 0 ;
@@ -5464,11 +5543,24 @@ XS(_wrap_cblas_stbsv) {
       SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "cblas_stbsv" "', argument " "6"" of type '" "int""'");
     } 
     arg6 = (int)(val6);
-    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res7)) {
-      SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "cblas_stbsv" "', argument " "7"" of type '" "float const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(6)))
+      croak("Math::GSL : ST(6) is not a reference!");
+      if (SvTYPE(SvRV(ST(6))) != SVt_PVAV)
+      croak("Math::GSL : ST(6) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(6));
+      len = av_len(tempav);
+      arg7 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg7[i] = (double) SvNV(*tv);
+      }
     }
-    arg7 = (float *)(argp7);
     ecode8 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(7), &val8);
     if (!SWIG_IsOK(ecode8)) {
       SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "cblas_stbsv" "', argument " "8"" of type '" "int""'");
@@ -5690,8 +5782,8 @@ XS(_wrap_cblas_dgemv) {
     } 
     arg7 = (int)(val7);
     if (!(SWIG_IsOK((res8 = SWIG_ConvertPtr(ST(7),SWIG_as_voidptrptr(&arg8),SWIGTYPE_p_double,0))))) {
-      double val; 
-      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(7), &val);
+      float val; 
+      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(7), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_dgemv" "', argument " "8"" of type '" "double""'");
       }
@@ -5848,8 +5940,8 @@ XS(_wrap_cblas_dgbmv) {
     } 
     arg9 = (int)(val9);
     if (!(SWIG_IsOK((res10 = SWIG_ConvertPtr(ST(9),SWIG_as_voidptrptr(&arg10),SWIGTYPE_p_double,0))))) {
-      double val; 
-      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(9), &val);
+      float val; 
+      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(9), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_dgbmv" "', argument " "10"" of type '" "double""'");
       }
@@ -8361,8 +8453,6 @@ XS(_wrap_cblas_ssymv) {
     int ecode3 = 0 ;
     float val4 ;
     int ecode4 = 0 ;
-    void *argp5 = 0 ;
-    int res5 = 0 ;
     int val6 ;
     int ecode6 = 0 ;
     float temp7 ;
@@ -8401,19 +8491,32 @@ XS(_wrap_cblas_ssymv) {
       SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "cblas_ssymv" "', argument " "4"" of type '" "float""'");
     } 
     arg4 = (float)(val4);
-    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res5)) {
-      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "cblas_ssymv" "', argument " "5"" of type '" "float const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(4)))
+      croak("Math::GSL : ST(4) is not a reference!");
+      if (SvTYPE(SvRV(ST(4))) != SVt_PVAV)
+      croak("Math::GSL : ST(4) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(4));
+      len = av_len(tempav);
+      arg5 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg5[i] = (double) SvNV(*tv);
+      }
     }
-    arg5 = (float *)(argp5);
     ecode6 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(5), &val6);
     if (!SWIG_IsOK(ecode6)) {
       SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "cblas_ssymv" "', argument " "6"" of type '" "int""'");
     } 
     arg6 = (int)(val6);
     if (!(SWIG_IsOK((res7 = SWIG_ConvertPtr(ST(6),SWIG_as_voidptrptr(&arg7),SWIGTYPE_p_float,0))))) {
-      float val; 
-      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(6), &val);
+      double val; 
+      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(6), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_ssymv" "', argument " "7"" of type '" "float""'");
       }
@@ -8496,8 +8599,6 @@ XS(_wrap_cblas_ssbmv) {
     int ecode4 = 0 ;
     float val5 ;
     int ecode5 = 0 ;
-    void *argp6 = 0 ;
-    int res6 = 0 ;
     int val7 ;
     int ecode7 = 0 ;
     float temp8 ;
@@ -8541,19 +8642,32 @@ XS(_wrap_cblas_ssbmv) {
       SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "cblas_ssbmv" "', argument " "5"" of type '" "float""'");
     } 
     arg5 = (float)(val5);
-    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res6)) {
-      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "cblas_ssbmv" "', argument " "6"" of type '" "float const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(5)))
+      croak("Math::GSL : ST(5) is not a reference!");
+      if (SvTYPE(SvRV(ST(5))) != SVt_PVAV)
+      croak("Math::GSL : ST(5) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(5));
+      len = av_len(tempav);
+      arg6 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg6[i] = (double) SvNV(*tv);
+      }
     }
-    arg6 = (float *)(argp6);
     ecode7 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(6), &val7);
     if (!SWIG_IsOK(ecode7)) {
       SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "cblas_ssbmv" "', argument " "7"" of type '" "int""'");
     } 
     arg7 = (int)(val7);
     if (!(SWIG_IsOK((res8 = SWIG_ConvertPtr(ST(7),SWIG_as_voidptrptr(&arg8),SWIGTYPE_p_float,0))))) {
-      float val; 
-      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(7), &val);
+      double val; 
+      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(7), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_ssbmv" "', argument " "8"" of type '" "float""'");
       }
@@ -8678,8 +8792,8 @@ XS(_wrap_cblas_sspmv) {
     }
     arg5 = (float *)(argp5);
     if (!(SWIG_IsOK((res6 = SWIG_ConvertPtr(ST(5),SWIG_as_voidptrptr(&arg6),SWIGTYPE_p_float,0))))) {
-      float val; 
-      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(5), &val);
+      double val; 
+      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(5), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_sspmv" "', argument " "6"" of type '" "float""'");
       }
@@ -8795,8 +8909,8 @@ XS(_wrap_cblas_sger) {
     } 
     arg4 = (float)(val4);
     if (!(SWIG_IsOK((res5 = SWIG_ConvertPtr(ST(4),SWIG_as_voidptrptr(&arg5),SWIGTYPE_p_float,0))))) {
-      float val; 
-      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(4), &val);
+      double val; 
+      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(4), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_sger" "', argument " "5"" of type '" "float""'");
       }
@@ -8911,8 +9025,8 @@ XS(_wrap_cblas_ssyr) {
     } 
     arg4 = (float)(val4);
     if (!(SWIG_IsOK((res5 = SWIG_ConvertPtr(ST(4),SWIG_as_voidptrptr(&arg5),SWIGTYPE_p_float,0))))) {
-      float val; 
-      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(4), &val);
+      double val; 
+      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(4), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_ssyr" "', argument " "5"" of type '" "float""'");
       }
@@ -9010,8 +9124,8 @@ XS(_wrap_cblas_sspr) {
     } 
     arg4 = (float)(val4);
     if (!(SWIG_IsOK((res5 = SWIG_ConvertPtr(ST(4),SWIG_as_voidptrptr(&arg5),SWIGTYPE_p_float,0))))) {
-      float val; 
-      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(4), &val);
+      double val; 
+      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(4), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_sspr" "', argument " "5"" of type '" "float""'");
       }
@@ -9111,8 +9225,8 @@ XS(_wrap_cblas_ssyr2) {
     } 
     arg4 = (float)(val4);
     if (!(SWIG_IsOK((res5 = SWIG_ConvertPtr(ST(4),SWIG_as_voidptrptr(&arg5),SWIGTYPE_p_float,0))))) {
-      float val; 
-      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(4), &val);
+      double val; 
+      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(4), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_ssyr2" "', argument " "5"" of type '" "float""'");
       }
@@ -9230,8 +9344,8 @@ XS(_wrap_cblas_sspr2) {
     } 
     arg4 = (float)(val4);
     if (!(SWIG_IsOK((res5 = SWIG_ConvertPtr(ST(4),SWIG_as_voidptrptr(&arg5),SWIGTYPE_p_float,0))))) {
-      float val; 
-      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(4), &val);
+      double val; 
+      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(4), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_sspr2" "', argument " "5"" of type '" "float""'");
       }
@@ -9358,8 +9472,8 @@ XS(_wrap_cblas_dsymv) {
     } 
     arg6 = (int)(val6);
     if (!(SWIG_IsOK((res7 = SWIG_ConvertPtr(ST(6),SWIG_as_voidptrptr(&arg7),SWIGTYPE_p_double,0))))) {
-      double val; 
-      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(6), &val);
+      float val; 
+      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(6), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_dsymv" "', argument " "7"" of type '" "double""'");
       }
@@ -9498,8 +9612,8 @@ XS(_wrap_cblas_dsbmv) {
     } 
     arg7 = (int)(val7);
     if (!(SWIG_IsOK((res8 = SWIG_ConvertPtr(ST(7),SWIG_as_voidptrptr(&arg8),SWIGTYPE_p_double,0))))) {
-      double val; 
-      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(7), &val);
+      float val; 
+      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(7), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_dsbmv" "', argument " "8"" of type '" "double""'");
       }
@@ -9624,8 +9738,8 @@ XS(_wrap_cblas_dspmv) {
     }
     arg5 = (double *)(argp5);
     if (!(SWIG_IsOK((res6 = SWIG_ConvertPtr(ST(5),SWIG_as_voidptrptr(&arg6),SWIGTYPE_p_double,0))))) {
-      double val; 
-      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(5), &val);
+      float val; 
+      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(5), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_dspmv" "', argument " "6"" of type '" "double""'");
       }
@@ -9741,8 +9855,8 @@ XS(_wrap_cblas_dger) {
     } 
     arg4 = (double)(val4);
     if (!(SWIG_IsOK((res5 = SWIG_ConvertPtr(ST(4),SWIG_as_voidptrptr(&arg5),SWIGTYPE_p_double,0))))) {
-      double val; 
-      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(4), &val);
+      float val; 
+      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(4), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_dger" "', argument " "5"" of type '" "double""'");
       }
@@ -9857,8 +9971,8 @@ XS(_wrap_cblas_dsyr) {
     } 
     arg4 = (double)(val4);
     if (!(SWIG_IsOK((res5 = SWIG_ConvertPtr(ST(4),SWIG_as_voidptrptr(&arg5),SWIGTYPE_p_double,0))))) {
-      double val; 
-      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(4), &val);
+      float val; 
+      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(4), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_dsyr" "', argument " "5"" of type '" "double""'");
       }
@@ -9956,8 +10070,8 @@ XS(_wrap_cblas_dspr) {
     } 
     arg4 = (double)(val4);
     if (!(SWIG_IsOK((res5 = SWIG_ConvertPtr(ST(4),SWIG_as_voidptrptr(&arg5),SWIGTYPE_p_double,0))))) {
-      double val; 
-      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(4), &val);
+      float val; 
+      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(4), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_dspr" "', argument " "5"" of type '" "double""'");
       }
@@ -10057,8 +10171,8 @@ XS(_wrap_cblas_dsyr2) {
     } 
     arg4 = (double)(val4);
     if (!(SWIG_IsOK((res5 = SWIG_ConvertPtr(ST(4),SWIG_as_voidptrptr(&arg5),SWIGTYPE_p_double,0))))) {
-      double val; 
-      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(4), &val);
+      float val; 
+      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(4), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_dsyr2" "', argument " "5"" of type '" "double""'");
       }
@@ -10176,8 +10290,8 @@ XS(_wrap_cblas_dspr2) {
     } 
     arg4 = (double)(val4);
     if (!(SWIG_IsOK((res5 = SWIG_ConvertPtr(ST(4),SWIG_as_voidptrptr(&arg5),SWIGTYPE_p_double,0))))) {
-      double val; 
-      int ecode = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(4), &val);
+      float val; 
+      int ecode = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(4), &val);
       if (!SWIG_IsOK(ecode)) {
         SWIG_exception_fail(SWIG_ArgError(ecode), "in method '" "cblas_dspr2" "', argument " "5"" of type '" "double""'");
       }
@@ -12168,25 +12282,22 @@ XS(_wrap_cblas_sgemm) {
     int ecode6 = 0 ;
     float val7 ;
     int ecode7 = 0 ;
-    void *argp8 = 0 ;
-    int res8 = 0 ;
     int val9 ;
     int ecode9 = 0 ;
-    void *argp10 = 0 ;
-    int res10 = 0 ;
     int val11 ;
     int ecode11 = 0 ;
     float val12 ;
     int ecode12 = 0 ;
-    void *argp13 = 0 ;
-    int res13 = 0 ;
+    float temp13 ;
+    int res13 = SWIG_TMPOBJ ;
     int val14 ;
     int ecode14 = 0 ;
     int argvi = 0;
     dXSARGS;
     
-    if ((items < 14) || (items > 14)) {
-      SWIG_croak("Usage: cblas_sgemm(Order,TransA,TransB,M,N,K,alpha,A,lda,B,ldb,beta,C,ldc);");
+    arg13 = &temp13;
+    if ((items < 13) || (items > 13)) {
+      SWIG_croak("Usage: cblas_sgemm(Order,TransA,TransB,M,N,K,alpha,A,lda,B,ldb,beta,ldc);");
     }
     ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
     if (!SWIG_IsOK(ecode1)) {
@@ -12223,21 +12334,47 @@ XS(_wrap_cblas_sgemm) {
       SWIG_exception_fail(SWIG_ArgError(ecode7), "in method '" "cblas_sgemm" "', argument " "7"" of type '" "float""'");
     } 
     arg7 = (float)(val7);
-    res8 = SWIG_ConvertPtr(ST(7), &argp8,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res8)) {
-      SWIG_exception_fail(SWIG_ArgError(res8), "in method '" "cblas_sgemm" "', argument " "8"" of type '" "float const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(7)))
+      croak("Math::GSL : ST(7) is not a reference!");
+      if (SvTYPE(SvRV(ST(7))) != SVt_PVAV)
+      croak("Math::GSL : ST(7) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(7));
+      len = av_len(tempav);
+      arg8 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg8[i] = (double) SvNV(*tv);
+      }
     }
-    arg8 = (float *)(argp8);
     ecode9 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(8), &val9);
     if (!SWIG_IsOK(ecode9)) {
       SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "cblas_sgemm" "', argument " "9"" of type '" "int""'");
     } 
     arg9 = (int)(val9);
-    res10 = SWIG_ConvertPtr(ST(9), &argp10,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res10)) {
-      SWIG_exception_fail(SWIG_ArgError(res10), "in method '" "cblas_sgemm" "', argument " "10"" of type '" "float const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(9)))
+      croak("Math::GSL : ST(9) is not a reference!");
+      if (SvTYPE(SvRV(ST(9))) != SVt_PVAV)
+      croak("Math::GSL : ST(9) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(9));
+      len = av_len(tempav);
+      arg10 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg10[i] = (double) SvNV(*tv);
+      }
     }
-    arg10 = (float *)(argp10);
     ecode11 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(10), &val11);
     if (!SWIG_IsOK(ecode11)) {
       SWIG_exception_fail(SWIG_ArgError(ecode11), "in method '" "cblas_sgemm" "', argument " "11"" of type '" "int""'");
@@ -12248,18 +12385,19 @@ XS(_wrap_cblas_sgemm) {
       SWIG_exception_fail(SWIG_ArgError(ecode12), "in method '" "cblas_sgemm" "', argument " "12"" of type '" "float""'");
     } 
     arg12 = (float)(val12);
-    res13 = SWIG_ConvertPtr(ST(12), &argp13,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res13)) {
-      SWIG_exception_fail(SWIG_ArgError(res13), "in method '" "cblas_sgemm" "', argument " "13"" of type '" "float *""'"); 
-    }
-    arg13 = (float *)(argp13);
-    ecode14 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(13), &val14);
+    ecode14 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(12), &val14);
     if (!SWIG_IsOK(ecode14)) {
       SWIG_exception_fail(SWIG_ArgError(ecode14), "in method '" "cblas_sgemm" "', argument " "14"" of type '" "int""'");
     } 
     arg14 = (int)(val14);
     cblas_sgemm(arg1,arg2,arg3,arg4,arg5,arg6,arg7,(float const *)arg8,arg9,(float const *)arg10,arg11,arg12,arg13,arg14);
     
+    if (SWIG_IsTmpObj(res13)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg13)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res13) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg13), SWIGTYPE_p_float, new_flags); argvi++  ;
+    }
     
     
     
@@ -12322,25 +12460,22 @@ XS(_wrap_cblas_ssymm) {
     int ecode5 = 0 ;
     float val6 ;
     int ecode6 = 0 ;
-    void *argp7 = 0 ;
-    int res7 = 0 ;
     int val8 ;
     int ecode8 = 0 ;
-    void *argp9 = 0 ;
-    int res9 = 0 ;
     int val10 ;
     int ecode10 = 0 ;
     float val11 ;
     int ecode11 = 0 ;
-    void *argp12 = 0 ;
-    int res12 = 0 ;
+    float temp12 ;
+    int res12 = SWIG_TMPOBJ ;
     int val13 ;
     int ecode13 = 0 ;
     int argvi = 0;
     dXSARGS;
     
-    if ((items < 13) || (items > 13)) {
-      SWIG_croak("Usage: cblas_ssymm(Order,Side,Uplo,M,N,alpha,A,lda,B,ldb,beta,C,ldc);");
+    arg12 = &temp12;
+    if ((items < 12) || (items > 12)) {
+      SWIG_croak("Usage: cblas_ssymm(Order,Side,Uplo,M,N,alpha,A,lda,B,ldb,beta,ldc);");
     }
     ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
     if (!SWIG_IsOK(ecode1)) {
@@ -12372,21 +12507,47 @@ XS(_wrap_cblas_ssymm) {
       SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "cblas_ssymm" "', argument " "6"" of type '" "float""'");
     } 
     arg6 = (float)(val6);
-    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res7)) {
-      SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "cblas_ssymm" "', argument " "7"" of type '" "float const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(6)))
+      croak("Math::GSL : ST(6) is not a reference!");
+      if (SvTYPE(SvRV(ST(6))) != SVt_PVAV)
+      croak("Math::GSL : ST(6) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(6));
+      len = av_len(tempav);
+      arg7 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg7[i] = (double) SvNV(*tv);
+      }
     }
-    arg7 = (float *)(argp7);
     ecode8 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(7), &val8);
     if (!SWIG_IsOK(ecode8)) {
       SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "cblas_ssymm" "', argument " "8"" of type '" "int""'");
     } 
     arg8 = (int)(val8);
-    res9 = SWIG_ConvertPtr(ST(8), &argp9,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res9)) {
-      SWIG_exception_fail(SWIG_ArgError(res9), "in method '" "cblas_ssymm" "', argument " "9"" of type '" "float const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(8)))
+      croak("Math::GSL : ST(8) is not a reference!");
+      if (SvTYPE(SvRV(ST(8))) != SVt_PVAV)
+      croak("Math::GSL : ST(8) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(8));
+      len = av_len(tempav);
+      arg9 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg9[i] = (double) SvNV(*tv);
+      }
     }
-    arg9 = (float *)(argp9);
     ecode10 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(9), &val10);
     if (!SWIG_IsOK(ecode10)) {
       SWIG_exception_fail(SWIG_ArgError(ecode10), "in method '" "cblas_ssymm" "', argument " "10"" of type '" "int""'");
@@ -12397,18 +12558,19 @@ XS(_wrap_cblas_ssymm) {
       SWIG_exception_fail(SWIG_ArgError(ecode11), "in method '" "cblas_ssymm" "', argument " "11"" of type '" "float""'");
     } 
     arg11 = (float)(val11);
-    res12 = SWIG_ConvertPtr(ST(11), &argp12,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res12)) {
-      SWIG_exception_fail(SWIG_ArgError(res12), "in method '" "cblas_ssymm" "', argument " "12"" of type '" "float *""'"); 
-    }
-    arg12 = (float *)(argp12);
-    ecode13 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(12), &val13);
+    ecode13 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(11), &val13);
     if (!SWIG_IsOK(ecode13)) {
       SWIG_exception_fail(SWIG_ArgError(ecode13), "in method '" "cblas_ssymm" "', argument " "13"" of type '" "int""'");
     } 
     arg13 = (int)(val13);
     cblas_ssymm(arg1,arg2,arg3,arg4,arg5,arg6,(float const *)arg7,arg8,(float const *)arg9,arg10,arg11,arg12,arg13);
     
+    if (SWIG_IsTmpObj(res12)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg12)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res12) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg12), SWIGTYPE_p_float, new_flags); argvi++  ;
+    }
     
     
     
@@ -12467,21 +12629,20 @@ XS(_wrap_cblas_ssyrk) {
     int ecode5 = 0 ;
     float val6 ;
     int ecode6 = 0 ;
-    void *argp7 = 0 ;
-    int res7 = 0 ;
     int val8 ;
     int ecode8 = 0 ;
     float val9 ;
     int ecode9 = 0 ;
-    void *argp10 = 0 ;
-    int res10 = 0 ;
+    float temp10 ;
+    int res10 = SWIG_TMPOBJ ;
     int val11 ;
     int ecode11 = 0 ;
     int argvi = 0;
     dXSARGS;
     
-    if ((items < 11) || (items > 11)) {
-      SWIG_croak("Usage: cblas_ssyrk(Order,Uplo,Trans,N,K,alpha,A,lda,beta,C,ldc);");
+    arg10 = &temp10;
+    if ((items < 10) || (items > 10)) {
+      SWIG_croak("Usage: cblas_ssyrk(Order,Uplo,Trans,N,K,alpha,A,lda,beta,ldc);");
     }
     ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
     if (!SWIG_IsOK(ecode1)) {
@@ -12513,11 +12674,24 @@ XS(_wrap_cblas_ssyrk) {
       SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "cblas_ssyrk" "', argument " "6"" of type '" "float""'");
     } 
     arg6 = (float)(val6);
-    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res7)) {
-      SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "cblas_ssyrk" "', argument " "7"" of type '" "float const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(6)))
+      croak("Math::GSL : ST(6) is not a reference!");
+      if (SvTYPE(SvRV(ST(6))) != SVt_PVAV)
+      croak("Math::GSL : ST(6) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(6));
+      len = av_len(tempav);
+      arg7 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg7[i] = (double) SvNV(*tv);
+      }
     }
-    arg7 = (float *)(argp7);
     ecode8 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(7), &val8);
     if (!SWIG_IsOK(ecode8)) {
       SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "cblas_ssyrk" "', argument " "8"" of type '" "int""'");
@@ -12528,18 +12702,19 @@ XS(_wrap_cblas_ssyrk) {
       SWIG_exception_fail(SWIG_ArgError(ecode9), "in method '" "cblas_ssyrk" "', argument " "9"" of type '" "float""'");
     } 
     arg9 = (float)(val9);
-    res10 = SWIG_ConvertPtr(ST(9), &argp10,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res10)) {
-      SWIG_exception_fail(SWIG_ArgError(res10), "in method '" "cblas_ssyrk" "', argument " "10"" of type '" "float *""'"); 
-    }
-    arg10 = (float *)(argp10);
-    ecode11 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(10), &val11);
+    ecode11 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(9), &val11);
     if (!SWIG_IsOK(ecode11)) {
       SWIG_exception_fail(SWIG_ArgError(ecode11), "in method '" "cblas_ssyrk" "', argument " "11"" of type '" "int""'");
     } 
     arg11 = (int)(val11);
     cblas_ssyrk(arg1,arg2,arg3,arg4,arg5,arg6,(float const *)arg7,arg8,arg9,arg10,arg11);
     
+    if (SWIG_IsTmpObj(res10)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg10)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res10) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg10), SWIGTYPE_p_float, new_flags); argvi++  ;
+    }
     
     
     
@@ -12596,25 +12771,22 @@ XS(_wrap_cblas_ssyr2k) {
     int ecode5 = 0 ;
     float val6 ;
     int ecode6 = 0 ;
-    void *argp7 = 0 ;
-    int res7 = 0 ;
     int val8 ;
     int ecode8 = 0 ;
-    void *argp9 = 0 ;
-    int res9 = 0 ;
     int val10 ;
     int ecode10 = 0 ;
     float val11 ;
     int ecode11 = 0 ;
-    void *argp12 = 0 ;
-    int res12 = 0 ;
+    float temp12 ;
+    int res12 = SWIG_TMPOBJ ;
     int val13 ;
     int ecode13 = 0 ;
     int argvi = 0;
     dXSARGS;
     
-    if ((items < 13) || (items > 13)) {
-      SWIG_croak("Usage: cblas_ssyr2k(Order,Uplo,Trans,N,K,alpha,A,lda,B,ldb,beta,C,ldc);");
+    arg12 = &temp12;
+    if ((items < 12) || (items > 12)) {
+      SWIG_croak("Usage: cblas_ssyr2k(Order,Uplo,Trans,N,K,alpha,A,lda,B,ldb,beta,ldc);");
     }
     ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
     if (!SWIG_IsOK(ecode1)) {
@@ -12646,21 +12818,47 @@ XS(_wrap_cblas_ssyr2k) {
       SWIG_exception_fail(SWIG_ArgError(ecode6), "in method '" "cblas_ssyr2k" "', argument " "6"" of type '" "float""'");
     } 
     arg6 = (float)(val6);
-    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res7)) {
-      SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "cblas_ssyr2k" "', argument " "7"" of type '" "float const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(6)))
+      croak("Math::GSL : ST(6) is not a reference!");
+      if (SvTYPE(SvRV(ST(6))) != SVt_PVAV)
+      croak("Math::GSL : ST(6) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(6));
+      len = av_len(tempav);
+      arg7 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg7[i] = (double) SvNV(*tv);
+      }
     }
-    arg7 = (float *)(argp7);
     ecode8 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(7), &val8);
     if (!SWIG_IsOK(ecode8)) {
       SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "cblas_ssyr2k" "', argument " "8"" of type '" "int""'");
     } 
     arg8 = (int)(val8);
-    res9 = SWIG_ConvertPtr(ST(8), &argp9,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res9)) {
-      SWIG_exception_fail(SWIG_ArgError(res9), "in method '" "cblas_ssyr2k" "', argument " "9"" of type '" "float const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(8)))
+      croak("Math::GSL : ST(8) is not a reference!");
+      if (SvTYPE(SvRV(ST(8))) != SVt_PVAV)
+      croak("Math::GSL : ST(8) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(8));
+      len = av_len(tempav);
+      arg9 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg9[i] = (double) SvNV(*tv);
+      }
     }
-    arg9 = (float *)(argp9);
     ecode10 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(9), &val10);
     if (!SWIG_IsOK(ecode10)) {
       SWIG_exception_fail(SWIG_ArgError(ecode10), "in method '" "cblas_ssyr2k" "', argument " "10"" of type '" "int""'");
@@ -12671,18 +12869,19 @@ XS(_wrap_cblas_ssyr2k) {
       SWIG_exception_fail(SWIG_ArgError(ecode11), "in method '" "cblas_ssyr2k" "', argument " "11"" of type '" "float""'");
     } 
     arg11 = (float)(val11);
-    res12 = SWIG_ConvertPtr(ST(11), &argp12,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res12)) {
-      SWIG_exception_fail(SWIG_ArgError(res12), "in method '" "cblas_ssyr2k" "', argument " "12"" of type '" "float *""'"); 
-    }
-    arg12 = (float *)(argp12);
-    ecode13 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(12), &val13);
+    ecode13 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(11), &val13);
     if (!SWIG_IsOK(ecode13)) {
       SWIG_exception_fail(SWIG_ArgError(ecode13), "in method '" "cblas_ssyr2k" "', argument " "13"" of type '" "int""'");
     } 
     arg13 = (int)(val13);
     cblas_ssyr2k(arg1,arg2,arg3,arg4,arg5,arg6,(float const *)arg7,arg8,(float const *)arg9,arg10,arg11,arg12,arg13);
     
+    if (SWIG_IsTmpObj(res12)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg12)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res12) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg12), SWIGTYPE_p_float, new_flags); argvi++  ;
+    }
     
     
     
@@ -12746,8 +12945,6 @@ XS(_wrap_cblas_strmm) {
     int ecode7 = 0 ;
     float val8 ;
     int ecode8 = 0 ;
-    void *argp9 = 0 ;
-    int res9 = 0 ;
     int val10 ;
     int ecode10 = 0 ;
     void *argp11 = 0 ;
@@ -12800,11 +12997,24 @@ XS(_wrap_cblas_strmm) {
       SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "cblas_strmm" "', argument " "8"" of type '" "float""'");
     } 
     arg8 = (float)(val8);
-    res9 = SWIG_ConvertPtr(ST(8), &argp9,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res9)) {
-      SWIG_exception_fail(SWIG_ArgError(res9), "in method '" "cblas_strmm" "', argument " "9"" of type '" "float const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(8)))
+      croak("Math::GSL : ST(8) is not a reference!");
+      if (SvTYPE(SvRV(ST(8))) != SVt_PVAV)
+      croak("Math::GSL : ST(8) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(8));
+      len = av_len(tempav);
+      arg9 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg9[i] = (double) SvNV(*tv);
+      }
     }
-    arg9 = (float *)(argp9);
     ecode10 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(9), &val10);
     if (!SWIG_IsOK(ecode10)) {
       SWIG_exception_fail(SWIG_ArgError(ecode10), "in method '" "cblas_strmm" "', argument " "10"" of type '" "int""'");
@@ -12883,8 +13093,6 @@ XS(_wrap_cblas_strsm) {
     int ecode7 = 0 ;
     float val8 ;
     int ecode8 = 0 ;
-    void *argp9 = 0 ;
-    int res9 = 0 ;
     int val10 ;
     int ecode10 = 0 ;
     void *argp11 = 0 ;
@@ -12937,11 +13145,24 @@ XS(_wrap_cblas_strsm) {
       SWIG_exception_fail(SWIG_ArgError(ecode8), "in method '" "cblas_strsm" "', argument " "8"" of type '" "float""'");
     } 
     arg8 = (float)(val8);
-    res9 = SWIG_ConvertPtr(ST(8), &argp9,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res9)) {
-      SWIG_exception_fail(SWIG_ArgError(res9), "in method '" "cblas_strsm" "', argument " "9"" of type '" "float const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(8)))
+      croak("Math::GSL : ST(8) is not a reference!");
+      if (SvTYPE(SvRV(ST(8))) != SVt_PVAV)
+      croak("Math::GSL : ST(8) is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(8));
+      len = av_len(tempav);
+      arg9 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg9[i] = (double) SvNV(*tv);
+      }
     }
-    arg9 = (float *)(argp9);
     ecode10 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(9), &val10);
     if (!SWIG_IsOK(ecode10)) {
       SWIG_exception_fail(SWIG_ArgError(ecode10), "in method '" "cblas_strsm" "', argument " "10"" of type '" "int""'");

@@ -1475,13 +1475,28 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 
 
     static HV * Callbacks = (HV*)NULL;
-    typedef struct callback_t
-    {  
-        SV * obj;
-    };
-    double xsquared(double x,void *params){
-        fprintf(stderr,"static xsquared!!\n");
-        return x * x;
+    /* this function returns the value 
+        of evaluating the function pointer
+        stored in func with argument x
+    */
+    double callthis(double x , int func, void *params){
+        SV ** sv;
+        double y;
+        dSP;
+
+        //fprintf(stderr, "LOOKUP CALLBACK\n");
+        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
+        if (sv == (SV**)NULL) {
+            fprintf(stderr, "Math::GSL(callthis): %d not in Callbacks!\n", func);
+            return;
+        }
+
+        PUSHMARK(SP);
+        XPUSHs(sv_2mortal(newSVnv((double)x)));
+        PUTBACK;
+        call_sv(*sv, G_SCALAR);
+        y = POPn;
+        return y;
     }
 
 
@@ -2311,25 +2326,22 @@ XS(_wrap_gsl_deriv_central) {
       SWIG_croak("Usage: gsl_deriv_central(f,x,h);");
     }
     {
-      fprintf(stderr,"typemap in!\n");
       gsl_function F;
       int count;
-      F.params = 0;
-      F.function = &xsquared;
-      SV * callback;
+      SV ** callback;
+      double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : not a reference value!");
+        croak("Math::GSL : f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
-      fprintf(stderr,"input =%d\n", (int)ST(0));
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
       hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
       
-      //Perl_sv_dump( ST(0) );
-      //call_sv((SV*)ST(0), G_SCALAR);
-      // how to register callback ?
-      arg1 = &F;
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -2345,55 +2357,30 @@ XS(_wrap_gsl_deriv_central) {
     result = (int)gsl_deriv_central((struct gsl_function_struct const *)arg1,arg2,arg3,arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     {
-      fprintf(stderr,"typemap argout!\n");
       SV ** sv;
-      double x;
+      AV* av = newAV();
       
       sv = hv_fetch(Callbacks, (char*)&_saved[0], sizeof(_saved[0]), FALSE );
       if (sv == (SV**)NULL)
-      croak("Math::GSL : Missing callback!\n");
+      croak("Math::GSL(argout) : Missing callback!\n");
       dSP;
-      ENTER;
-      SAVETMPS;
       
       PUSHMARK(SP);
       // these are the arguments passed to the callback
-      // this is currently passing in the memory address of the callback
-      XPUSHs(sv_2mortal(newSViv((int)_saved[0])));
-      //XPUSHs(sv_2mortal(_saved[0]));
-      //XPUSHs(newSVsv(_saved[0]));
-      //XPUSHs(sv_2mortal(newSViv(42)));
-      //XPUSHs(sv_2mortal(newSVnv((double) (*(_saved[0])->function)()    )));
+      XPUSHs(sv_2mortal(newSViv((int)arg2)));
       PUTBACK;
-      
-      fprintf(stderr, "\nCALLBACK!\n");
       
       /* This actually calls the perl subroutine */
       call_sv(*sv, G_SCALAR);    
       
-      //x = POPn;
-      //ST(argvi) =  &x;
-      //fprintf(stderr, "argout:x = %.8f\n", x);
+      av_push(av, newSVnv((double) *arg4));
+      av_push(av, newSVnv((double) *arg5));
+      ST(argvi) = sv_2mortal( newRV_noinc( (SV*) av) );
       if (argvi >= items) {
         EXTEND(SP,1);              
       }
       argvi++;
-      //XPUSHs(sv_2mortal(newSVnv(x)));
       
-      FREETMPS;
-      LEAVE;
-    }
-    if (SWIG_IsTmpObj(res4)) {
-      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
-    } else {
-      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
-      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
-    }
-    if (SWIG_IsTmpObj(res5)) {
-      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg5)); argvi++  ;
-    } else {
-      int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
-      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
     
     
@@ -2438,25 +2425,22 @@ XS(_wrap_gsl_deriv_backward) {
       SWIG_croak("Usage: gsl_deriv_backward(f,x,h);");
     }
     {
-      fprintf(stderr,"typemap in!\n");
       gsl_function F;
       int count;
-      F.params = 0;
-      F.function = &xsquared;
-      SV * callback;
+      SV ** callback;
+      double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : not a reference value!");
+        croak("Math::GSL : f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
-      fprintf(stderr,"input =%d\n", (int)ST(0));
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
       hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
       
-      //Perl_sv_dump( ST(0) );
-      //call_sv((SV*)ST(0), G_SCALAR);
-      // how to register callback ?
-      arg1 = &F;
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -2472,55 +2456,30 @@ XS(_wrap_gsl_deriv_backward) {
     result = (int)gsl_deriv_backward((struct gsl_function_struct const *)arg1,arg2,arg3,arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     {
-      fprintf(stderr,"typemap argout!\n");
       SV ** sv;
-      double x;
+      AV* av = newAV();
       
       sv = hv_fetch(Callbacks, (char*)&_saved[0], sizeof(_saved[0]), FALSE );
       if (sv == (SV**)NULL)
-      croak("Math::GSL : Missing callback!\n");
+      croak("Math::GSL(argout) : Missing callback!\n");
       dSP;
-      ENTER;
-      SAVETMPS;
       
       PUSHMARK(SP);
       // these are the arguments passed to the callback
-      // this is currently passing in the memory address of the callback
-      XPUSHs(sv_2mortal(newSViv((int)_saved[0])));
-      //XPUSHs(sv_2mortal(_saved[0]));
-      //XPUSHs(newSVsv(_saved[0]));
-      //XPUSHs(sv_2mortal(newSViv(42)));
-      //XPUSHs(sv_2mortal(newSVnv((double) (*(_saved[0])->function)()    )));
+      XPUSHs(sv_2mortal(newSViv((int)arg2)));
       PUTBACK;
-      
-      fprintf(stderr, "\nCALLBACK!\n");
       
       /* This actually calls the perl subroutine */
       call_sv(*sv, G_SCALAR);    
       
-      //x = POPn;
-      //ST(argvi) =  &x;
-      //fprintf(stderr, "argout:x = %.8f\n", x);
+      av_push(av, newSVnv((double) *arg4));
+      av_push(av, newSVnv((double) *arg5));
+      ST(argvi) = sv_2mortal( newRV_noinc( (SV*) av) );
       if (argvi >= items) {
         EXTEND(SP,1);              
       }
       argvi++;
-      //XPUSHs(sv_2mortal(newSVnv(x)));
       
-      FREETMPS;
-      LEAVE;
-    }
-    if (SWIG_IsTmpObj(res4)) {
-      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
-    } else {
-      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
-      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
-    }
-    if (SWIG_IsTmpObj(res5)) {
-      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg5)); argvi++  ;
-    } else {
-      int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
-      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
     
     
@@ -2565,25 +2524,22 @@ XS(_wrap_gsl_deriv_forward) {
       SWIG_croak("Usage: gsl_deriv_forward(f,x,h);");
     }
     {
-      fprintf(stderr,"typemap in!\n");
       gsl_function F;
       int count;
-      F.params = 0;
-      F.function = &xsquared;
-      SV * callback;
+      SV ** callback;
+      double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : not a reference value!");
+        croak("Math::GSL : f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
-      fprintf(stderr,"input =%d\n", (int)ST(0));
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
       hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
       
-      //Perl_sv_dump( ST(0) );
-      //call_sv((SV*)ST(0), G_SCALAR);
-      // how to register callback ?
-      arg1 = &F;
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -2599,55 +2555,30 @@ XS(_wrap_gsl_deriv_forward) {
     result = (int)gsl_deriv_forward((struct gsl_function_struct const *)arg1,arg2,arg3,arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     {
-      fprintf(stderr,"typemap argout!\n");
       SV ** sv;
-      double x;
+      AV* av = newAV();
       
       sv = hv_fetch(Callbacks, (char*)&_saved[0], sizeof(_saved[0]), FALSE );
       if (sv == (SV**)NULL)
-      croak("Math::GSL : Missing callback!\n");
+      croak("Math::GSL(argout) : Missing callback!\n");
       dSP;
-      ENTER;
-      SAVETMPS;
       
       PUSHMARK(SP);
       // these are the arguments passed to the callback
-      // this is currently passing in the memory address of the callback
-      XPUSHs(sv_2mortal(newSViv((int)_saved[0])));
-      //XPUSHs(sv_2mortal(_saved[0]));
-      //XPUSHs(newSVsv(_saved[0]));
-      //XPUSHs(sv_2mortal(newSViv(42)));
-      //XPUSHs(sv_2mortal(newSVnv((double) (*(_saved[0])->function)()    )));
+      XPUSHs(sv_2mortal(newSViv((int)arg2)));
       PUTBACK;
-      
-      fprintf(stderr, "\nCALLBACK!\n");
       
       /* This actually calls the perl subroutine */
       call_sv(*sv, G_SCALAR);    
       
-      //x = POPn;
-      //ST(argvi) =  &x;
-      //fprintf(stderr, "argout:x = %.8f\n", x);
+      av_push(av, newSVnv((double) *arg4));
+      av_push(av, newSVnv((double) *arg5));
+      ST(argvi) = sv_2mortal( newRV_noinc( (SV*) av) );
       if (argvi >= items) {
         EXTEND(SP,1);              
       }
       argvi++;
-      //XPUSHs(sv_2mortal(newSVnv(x)));
       
-      FREETMPS;
-      LEAVE;
-    }
-    if (SWIG_IsTmpObj(res4)) {
-      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
-    } else {
-      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
-      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
-    }
-    if (SWIG_IsTmpObj(res5)) {
-      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg5)); argvi++  ;
-    } else {
-      int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
-      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
     
     
