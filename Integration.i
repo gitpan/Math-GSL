@@ -58,7 +58,7 @@ Math::GSL::Integration - Routines for performing numerical integration (quadratu
 
 This module is not yet implemented. Patches Welcome!
 
-use Math::GSL::Integration qw /:all/;
+    use Math::GSL::Integration qw /:all/;
 
 =head1 DESCRIPTION
 
@@ -66,23 +66,31 @@ Here is a list of all the functions in this module :
 
 =over 
 
-=item * C<gsl_integration_workspace_alloc >
+=item * C<gsl_integration_workspace_alloc($n)> - This function allocates a workspace sufficient to hold $n double precision intervals, their integration results and error estimates.
 
-=item * C<gsl_integration_workspace_free >
+=item * C<gsl_integration_workspace_free($w)> - This function frees the memory associated with the workspace $w.
 
-=item * C<gsl_integration_qaws_table_alloc >
+=item * C<gsl_integration_qaws_table_alloc($alpha, $beta, $mu, $nu)> - This function allocates space for a gsl_integration_qaws_table struct describing a singular weight function W(x) with the parameters ($alpha, $beta, $mu, $nu), W(x) = (x-a)^alpha (b-x)^beta log^mu (x-a) log^nu (b-x) where $alpha > -1, $beta > -1, and $mu = 0, 1, $nu = 0, 1. The weight function can take four different forms depending on the values of $mu and $nu,
 
-=item * C<gsl_integration_qaws_table_set >
+              W(x) = (x-a)^alpha (b-x)^beta                   (mu = 0, nu = 0)
+              W(x) = (x-a)^alpha (b-x)^beta log(x-a)          (mu = 1, nu = 0)
+              W(x) = (x-a)^alpha (b-x)^beta log(b-x)          (mu = 0, nu = 1)
+              W(x) = (x-a)^alpha (b-x)^beta log(x-a) log(b-x) (mu = 1, nu = 1)
 
-=item * C<gsl_integration_qaws_table_free >
+The singular points (a,b) do not have to be specified until the integral is computed, where they are the endpoints of the integration range.
+The function returns a pointer to the newly allocated table gsl_integration_qaws_table if no errors were detected, and 0 in the case of error. 
 
-=item * C<gsl_integration_qawo_table_alloc >
+=item * C<gsl_integration_qaws_table_set($t, $alpha, $beta, $mu, $nu)> - This function modifies the parameters ($alpha, $beta, $mu, $nu) of an existing gsl_integration_qaws_table struct $t.
 
-=item * C<gsl_integration_qawo_table_set >
+=item * C<gsl_integration_qaws_table_free($t)> - This function frees all the memory associated with the gsl_integration_qaws_table struct $t.
 
-=item * C<gsl_integration_qawo_table_set_length >
+=item * C<gsl_integration_qawo_table_alloc($omega, $L, $sine, $n)>
 
-=item * C<gsl_integration_qawo_table_free >
+=item * C<gsl_integration_qawo_table_set($t, $omega, $L, $sine, $n)> - This function changes the parameters omega, L and sine of the existing workspace $t.
+
+=item * C<gsl_integration_qawo_table_set_length($t, $L)> - This function allows the length parameter $L of the workspace $t to be changed.
+
+=item * C<gsl_integration_qawo_table_free($t)> - This function frees all the memory associated with the workspace $t.
 
 =item * C<gsl_integration_qk15 >
 
@@ -110,7 +118,19 @@ Here is a list of all the functions in this module :
 
 =item * C<gsl_integration_qagil >
 
-=item * C<gsl_integration_qags >
+=item * C<gsl_integration_qags($func,$a,$b,$epsabs,$epsrel,$limit,$workspace)>
+
+    ($status, $result, $abserr) = gsl_integration_qags (
+                            sub { 1/$_[0]} , 
+                            1, 10, 0, 1e-7, 1000,
+                            $workspace,
+                        );
+
+ This function applies the Gauss-Kronrod 21-point integration rule
+ adaptively until an estimate of the integral of $func over ($a,$b) is
+ achieved within the desired absolute and relative error limits,
+ $epsabs and $epsrel. 
+
 
 =item * C<gsl_integration_qagp >
 
@@ -144,6 +164,20 @@ This module also includes the following constants :
 
 =item * $GSL_INTEG_GAUSS61 
 
+=back
+
+The following errors constants are part of the Math::GSL::Errno module and can be returned by the gsl_integration functions :
+
+=over
+
+=item * $GSL_EMAXITER - the maximum number of subdivisions was exceeded.
+
+=item * $GSL_EROUND - cannot reach tolerance because of roundoff error, or roundoff error was detected in the extrapolation table. 
+
+=item * GSL_ESING - a non-integrable singularity or other bad integrand behavior was found in the integration interval.
+
+=item * GSL_EDIVERGE - the integral is divergent, or too slowly convergent to be integrated numerically. 
+ 
 =back
 
 For more informations on the functions, we refer you to the GSL offcial
