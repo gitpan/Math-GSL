@@ -3392,9 +3392,9 @@ XS(_wrap_gsl_odeiv_step_apply) {
       int i;
       SV **tv;
       if (!SvROK(ST(5)))
-      croak("Math::GSL : ST(5) is not a reference!");
+      croak("Math::GSL : $dydt_in is not a reference!");
       if (SvTYPE(SvRV(ST(5))) != SVt_PVAV)
-      croak("Math::GSL : ST(5) is not an array ref!");
+      croak("Math::GSL : $dydt_in is not an array ref!");
       
       tempav = (AV*)SvRV(ST(5));
       len = av_len(tempav);
@@ -4152,9 +4152,9 @@ XS(_wrap_gsl_odeiv_control_hadjust) {
       int i;
       SV **tv;
       if (!SvROK(ST(2)))
-      croak("Math::GSL : ST(2) is not a reference!");
+      croak("Math::GSL : $y is not a reference!");
       if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
-      croak("Math::GSL : ST(2) is not an array ref!");
+      croak("Math::GSL : $y is not an array ref!");
       
       tempav = (AV*)SvRV(ST(2));
       len = av_len(tempav);
@@ -4170,9 +4170,9 @@ XS(_wrap_gsl_odeiv_control_hadjust) {
       int i;
       SV **tv;
       if (!SvROK(ST(3)))
-      croak("Math::GSL : ST(3) is not a reference!");
+      croak("Math::GSL : $yerr is not a reference!");
       if (SvTYPE(SvRV(ST(3))) != SVt_PVAV)
-      croak("Math::GSL : ST(3) is not an array ref!");
+      croak("Math::GSL : $yerr is not an array ref!");
       
       tempav = (AV*)SvRV(ST(3));
       len = av_len(tempav);
@@ -4188,9 +4188,9 @@ XS(_wrap_gsl_odeiv_control_hadjust) {
       int i;
       SV **tv;
       if (!SvROK(ST(4)))
-      croak("Math::GSL : ST(4) is not a reference!");
+      croak("Math::GSL : $dydt is not a reference!");
       if (SvTYPE(SvRV(ST(4))) != SVt_PVAV)
-      croak("Math::GSL : ST(4) is not an array ref!");
+      croak("Math::GSL : $dydt is not an array ref!");
       
       tempav = (AV*)SvRV(ST(4));
       len = av_len(tempav);
@@ -4439,9 +4439,9 @@ XS(_wrap_gsl_odeiv_control_scaled_new) {
       int i;
       SV **tv;
       if (!SvROK(ST(4)))
-      croak("Math::GSL : ST(4) is not a reference!");
+      croak("Math::GSL : $scale_abs is not a reference!");
       if (SvTYPE(SvRV(ST(4))) != SVt_PVAV)
-      croak("Math::GSL : ST(4) is not an array ref!");
+      croak("Math::GSL : $scale_abs is not an array ref!");
       
       tempav = (AV*)SvRV(ST(4));
       len = av_len(tempav);

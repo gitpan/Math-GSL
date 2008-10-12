@@ -2310,7 +2310,7 @@ XS(_wrap_gsl_deriv_central) {
       double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : f is not a reference value!");
+        croak("Math::GSL : $f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -2336,7 +2336,7 @@ XS(_wrap_gsl_deriv_central) {
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     {
       SV ** sv;
-      AV* av = newAV();
+      //AV* av = newAV();
       
       sv = hv_fetch(Callbacks, (char*)&_saved[0], sizeof(_saved[0]), FALSE );
       if (sv == (SV**)NULL)
@@ -2351,13 +2351,18 @@ XS(_wrap_gsl_deriv_central) {
       /* This actually calls the perl subroutine */
       call_sv(*sv, G_SCALAR);    
       
-      av_push(av, newSVnv((double) *arg4));
-      av_push(av, newSVnv((double) *arg5));
-      ST(argvi) = sv_2mortal( newRV_noinc( (SV*) av) );
+      //av_push(av, newSVnv((double) *arg4));
+      //av_push(av, newSVnv((double) *arg5));
+      //ST(argvi) = sv_2mortal( newRV_noinc( (SV*) av) );
+      ST(argvi) = sv_newmortal();
+      sv_setnv(ST(argvi), (double) *arg4);
+      argvi++;
+      sv_setnv(ST(argvi), (double) *arg5);
+      argvi++;
+      
       if (argvi >= items) {
         EXTEND(SP,1);              
       }
-      argvi++;
       
     }
     
@@ -2409,7 +2414,7 @@ XS(_wrap_gsl_deriv_backward) {
       double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : f is not a reference value!");
+        croak("Math::GSL : $f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -2435,7 +2440,7 @@ XS(_wrap_gsl_deriv_backward) {
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     {
       SV ** sv;
-      AV* av = newAV();
+      //AV* av = newAV();
       
       sv = hv_fetch(Callbacks, (char*)&_saved[0], sizeof(_saved[0]), FALSE );
       if (sv == (SV**)NULL)
@@ -2450,13 +2455,18 @@ XS(_wrap_gsl_deriv_backward) {
       /* This actually calls the perl subroutine */
       call_sv(*sv, G_SCALAR);    
       
-      av_push(av, newSVnv((double) *arg4));
-      av_push(av, newSVnv((double) *arg5));
-      ST(argvi) = sv_2mortal( newRV_noinc( (SV*) av) );
+      //av_push(av, newSVnv((double) *arg4));
+      //av_push(av, newSVnv((double) *arg5));
+      //ST(argvi) = sv_2mortal( newRV_noinc( (SV*) av) );
+      ST(argvi) = sv_newmortal();
+      sv_setnv(ST(argvi), (double) *arg4);
+      argvi++;
+      sv_setnv(ST(argvi), (double) *arg5);
+      argvi++;
+      
       if (argvi >= items) {
         EXTEND(SP,1);              
       }
-      argvi++;
       
     }
     
@@ -2508,7 +2518,7 @@ XS(_wrap_gsl_deriv_forward) {
       double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : f is not a reference value!");
+        croak("Math::GSL : $f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -2534,7 +2544,7 @@ XS(_wrap_gsl_deriv_forward) {
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     {
       SV ** sv;
-      AV* av = newAV();
+      //AV* av = newAV();
       
       sv = hv_fetch(Callbacks, (char*)&_saved[0], sizeof(_saved[0]), FALSE );
       if (sv == (SV**)NULL)
@@ -2549,13 +2559,18 @@ XS(_wrap_gsl_deriv_forward) {
       /* This actually calls the perl subroutine */
       call_sv(*sv, G_SCALAR);    
       
-      av_push(av, newSVnv((double) *arg4));
-      av_push(av, newSVnv((double) *arg5));
-      ST(argvi) = sv_2mortal( newRV_noinc( (SV*) av) );
+      //av_push(av, newSVnv((double) *arg4));
+      //av_push(av, newSVnv((double) *arg5));
+      //ST(argvi) = sv_2mortal( newRV_noinc( (SV*) av) );
+      ST(argvi) = sv_newmortal();
+      sv_setnv(ST(argvi), (double) *arg4);
+      argvi++;
+      sv_setnv(ST(argvi), (double) *arg5);
+      argvi++;
+      
       if (argvi >= items) {
         EXTEND(SP,1);              
       }
-      argvi++;
       
     }
     

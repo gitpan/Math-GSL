@@ -29,6 +29,7 @@ int fclose(FILE *);
 
 %perlcode %{
 use Scalar::Util 'blessed';
+use Data::Dumper;
 use Carp qw/croak/;
 use overload 
     '*'      => \&_multiplication,
@@ -140,7 +141,10 @@ Get the underlying GSL vector object created by SWIG, useful for using gsl_vecto
 
 =cut
 
-sub raw { (shift)->{_vector} }
+sub raw { 
+    my $self = shift;
+    return $self->{_vector};
+}
 
 =head2 min()
 
@@ -213,7 +217,7 @@ You can also enter an array of indices to receive their corresponding values:
 
 sub get {
     my ($self, $indices) = @_;
-    return  map {  gsl_vector_get($self->{_vector}, $_ ) } @$indices ;
+    return  map {  gsl_vector_get($self->raw, $_ ) } @$indices ;
 }
 
 =head2  set() 

@@ -61,6 +61,13 @@ package Math::GSL::Monte;
 *gsl_monte_vegas_alloc = *Math::GSL::Montec::gsl_monte_vegas_alloc;
 *gsl_monte_vegas_init = *Math::GSL::Montec::gsl_monte_vegas_init;
 *gsl_monte_vegas_free = *Math::GSL::Montec::gsl_monte_vegas_free;
+*gsl_error = *Math::GSL::Montec::gsl_error;
+*gsl_stream_printf = *Math::GSL::Montec::gsl_stream_printf;
+*gsl_strerror = *Math::GSL::Montec::gsl_strerror;
+*gsl_set_error_handler = *Math::GSL::Montec::gsl_set_error_handler;
+*gsl_set_error_handler_off = *Math::GSL::Montec::gsl_set_error_handler_off;
+*gsl_set_stream_handler = *Math::GSL::Montec::gsl_set_stream_handler;
+*gsl_set_stream = *Math::GSL::Montec::gsl_set_stream;
 
 ############# Class : Math::GSL::Monte::gsl_monte_function_struct ##############
 
@@ -333,6 +340,41 @@ package Math::GSL::Monte;
 *GSL_VEGAS_MODE_IMPORTANCE = *Math::GSL::Montec::GSL_VEGAS_MODE_IMPORTANCE;
 *GSL_VEGAS_MODE_IMPORTANCE_ONLY = *Math::GSL::Montec::GSL_VEGAS_MODE_IMPORTANCE_ONLY;
 *GSL_VEGAS_MODE_STRATIFIED = *Math::GSL::Montec::GSL_VEGAS_MODE_STRATIFIED;
+*GSL_SUCCESS = *Math::GSL::Montec::GSL_SUCCESS;
+*GSL_FAILURE = *Math::GSL::Montec::GSL_FAILURE;
+*GSL_CONTINUE = *Math::GSL::Montec::GSL_CONTINUE;
+*GSL_EDOM = *Math::GSL::Montec::GSL_EDOM;
+*GSL_ERANGE = *Math::GSL::Montec::GSL_ERANGE;
+*GSL_EFAULT = *Math::GSL::Montec::GSL_EFAULT;
+*GSL_EINVAL = *Math::GSL::Montec::GSL_EINVAL;
+*GSL_EFAILED = *Math::GSL::Montec::GSL_EFAILED;
+*GSL_EFACTOR = *Math::GSL::Montec::GSL_EFACTOR;
+*GSL_ESANITY = *Math::GSL::Montec::GSL_ESANITY;
+*GSL_ENOMEM = *Math::GSL::Montec::GSL_ENOMEM;
+*GSL_EBADFUNC = *Math::GSL::Montec::GSL_EBADFUNC;
+*GSL_ERUNAWAY = *Math::GSL::Montec::GSL_ERUNAWAY;
+*GSL_EMAXITER = *Math::GSL::Montec::GSL_EMAXITER;
+*GSL_EZERODIV = *Math::GSL::Montec::GSL_EZERODIV;
+*GSL_EBADTOL = *Math::GSL::Montec::GSL_EBADTOL;
+*GSL_ETOL = *Math::GSL::Montec::GSL_ETOL;
+*GSL_EUNDRFLW = *Math::GSL::Montec::GSL_EUNDRFLW;
+*GSL_EOVRFLW = *Math::GSL::Montec::GSL_EOVRFLW;
+*GSL_ELOSS = *Math::GSL::Montec::GSL_ELOSS;
+*GSL_EROUND = *Math::GSL::Montec::GSL_EROUND;
+*GSL_EBADLEN = *Math::GSL::Montec::GSL_EBADLEN;
+*GSL_ENOTSQR = *Math::GSL::Montec::GSL_ENOTSQR;
+*GSL_ESING = *Math::GSL::Montec::GSL_ESING;
+*GSL_EDIVERGE = *Math::GSL::Montec::GSL_EDIVERGE;
+*GSL_EUNSUP = *Math::GSL::Montec::GSL_EUNSUP;
+*GSL_EUNIMPL = *Math::GSL::Montec::GSL_EUNIMPL;
+*GSL_ECACHE = *Math::GSL::Montec::GSL_ECACHE;
+*GSL_ETABLE = *Math::GSL::Montec::GSL_ETABLE;
+*GSL_ENOPROG = *Math::GSL::Montec::GSL_ENOPROG;
+*GSL_ENOPROGJ = *Math::GSL::Montec::GSL_ENOPROGJ;
+*GSL_ETOLF = *Math::GSL::Montec::GSL_ETOLF;
+*GSL_ETOLX = *Math::GSL::Montec::GSL_ETOLX;
+*GSL_ETOLG = *Math::GSL::Montec::GSL_ETOLG;
+*GSL_EOF = *Math::GSL::Montec::GSL_EOF;
 
 @EXPORT_OK = qw/
                gsl_monte_miser_integrate 

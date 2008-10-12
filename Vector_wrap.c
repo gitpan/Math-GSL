@@ -4415,9 +4415,9 @@ XS(_wrap_gsl_vector_complex_data_set) {
       int i;
       SV **tv;
       if (!SvROK(ST(1)))
-      croak("Math::GSL : ST(1) is not a reference!");
+      croak("Math::GSL : $data is not a reference!");
       if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
-      croak("Math::GSL : ST(1) is not an array ref!");
+      croak("Math::GSL : $data is not an array ref!");
       
       tempav = (AV*)SvRV(ST(1));
       len = av_len(tempav);
@@ -5089,9 +5089,9 @@ XS(_wrap_gsl_vector_complex_view_array) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $base is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $base is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -5141,9 +5141,9 @@ XS(_wrap_gsl_vector_complex_view_array_with_stride) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $base is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $base is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -5197,9 +5197,9 @@ XS(_wrap_gsl_vector_complex_const_view_array) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $base is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $base is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -5249,9 +5249,9 @@ XS(_wrap_gsl_vector_complex_const_view_array_with_stride) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $base is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $base is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -6435,9 +6435,9 @@ XS(_wrap_gsl_vector_data_set) {
       int i;
       SV **tv;
       if (!SvROK(ST(1)))
-      croak("Math::GSL : ST(1) is not a reference!");
+      croak("Math::GSL : $data is not a reference!");
       if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
-      croak("Math::GSL : ST(1) is not an array ref!");
+      croak("Math::GSL : $data is not an array ref!");
       
       tempav = (AV*)SvRV(ST(1));
       len = av_len(tempav);
@@ -7109,9 +7109,9 @@ XS(_wrap_gsl_vector_view_array) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $v is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $v is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -7161,9 +7161,9 @@ XS(_wrap_gsl_vector_view_array_with_stride) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $base is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $base is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -7217,9 +7217,9 @@ XS(_wrap_gsl_vector_const_view_array) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $v is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $v is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -7269,9 +7269,9 @@ XS(_wrap_gsl_vector_const_view_array_with_stride) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $base is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $base is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);

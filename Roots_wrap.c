@@ -2274,7 +2274,7 @@ XS(_wrap_gsl_root_fsolver_function_set) {
       double x;
       
       if (!SvROK(ST(1))) {
-        croak("Math::GSL : function is not a reference value!");
+        croak("Math::GSL : $function is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -3020,8 +3020,6 @@ XS(_wrap_gsl_root_fdfsolver_fdf_set) {
     gsl_function_fdf *arg2 = (gsl_function_fdf *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
     int argvi = 0;
     dXSARGS;
     
@@ -3033,11 +3031,10 @@ XS(_wrap_gsl_root_fdfsolver_fdf_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_root_fdfsolver_fdf_set" "', argument " "1"" of type '" "gsl_root_fdfsolver *""'"); 
     }
     arg1 = (gsl_root_fdfsolver *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_gsl_function_fdf, SWIG_POINTER_DISOWN |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_root_fdfsolver_fdf_set" "', argument " "2"" of type '" "gsl_function_fdf *""'"); 
+    {
+      fprintf(stderr, 'FDF_FUNC');    
+      
     }
-    arg2 = (gsl_function_fdf *)(argp2);
     if (arg1) (arg1)->fdf = arg2;
     
     
@@ -3342,7 +3339,7 @@ XS(_wrap_gsl_root_fsolver_set) {
       double x;
       
       if (!SvROK(ST(1))) {
-        croak("Math::GSL : f is not a reference value!");
+        croak("Math::GSL : $f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -3556,8 +3553,6 @@ XS(_wrap_gsl_root_fdfsolver_set) {
     int result;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
     double val3 ;
     int ecode3 = 0 ;
     int argvi = 0;
@@ -3571,11 +3566,10 @@ XS(_wrap_gsl_root_fdfsolver_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_root_fdfsolver_set" "', argument " "1"" of type '" "gsl_root_fdfsolver *""'"); 
     }
     arg1 = (gsl_root_fdfsolver *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_gsl_function_fdf, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_root_fdfsolver_set" "', argument " "2"" of type '" "gsl_function_fdf *""'"); 
+    {
+      fprintf(stderr, 'FDF_FUNC');    
+      
     }
-    arg2 = (gsl_function_fdf *)(argp2);
     ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_root_fdfsolver_set" "', argument " "3"" of type '" "double""'");

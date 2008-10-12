@@ -2067,9 +2067,9 @@ XS(_wrap_gsl_spline_init) {
       int i;
       SV **tv;
       if (!SvROK(ST(1)))
-      croak("Math::GSL : ST(1) is not a reference!");
+      croak("Math::GSL : $xa is not a reference!");
       if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
-      croak("Math::GSL : ST(1) is not an array ref!");
+      croak("Math::GSL : $xa is not an array ref!");
       
       tempav = (AV*)SvRV(ST(1));
       len = av_len(tempav);
@@ -2085,9 +2085,9 @@ XS(_wrap_gsl_spline_init) {
       int i;
       SV **tv;
       if (!SvROK(ST(2)))
-      croak("Math::GSL : ST(2) is not a reference!");
+      croak("Math::GSL : $ya is not a reference!");
       if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
-      croak("Math::GSL : ST(2) is not an array ref!");
+      croak("Math::GSL : $ya is not an array ref!");
       
       tempav = (AV*)SvRV(ST(2));
       len = av_len(tempav);

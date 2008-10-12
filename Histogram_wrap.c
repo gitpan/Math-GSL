@@ -2736,9 +2736,9 @@ XS(_wrap_gsl_histogram_set_ranges) {
       int i;
       SV **tv;
       if (!SvROK(ST(1)))
-      croak("Math::GSL : ST(1) is not a reference!");
+      croak("Math::GSL : $range is not a reference!");
       if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
-      croak("Math::GSL : ST(1) is not an array ref!");
+      croak("Math::GSL : $range is not an array ref!");
       
       tempav = (AV*)SvRV(ST(1));
       len = av_len(tempav);

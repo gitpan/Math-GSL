@@ -2097,9 +2097,9 @@ XS(_wrap_gsl_fft_complex_radix2_forward) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $data is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $data is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -2156,9 +2156,9 @@ XS(_wrap_gsl_fft_complex_radix2_backward) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $data is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $data is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -2215,9 +2215,9 @@ XS(_wrap_gsl_fft_complex_radix2_inverse) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $data is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $data is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -2277,9 +2277,9 @@ XS(_wrap_gsl_fft_complex_radix2_transform) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $data is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $data is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -2343,9 +2343,9 @@ XS(_wrap_gsl_fft_complex_radix2_dif_forward) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $data is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $data is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -2402,9 +2402,9 @@ XS(_wrap_gsl_fft_complex_radix2_dif_backward) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $data is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $data is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -2461,9 +2461,9 @@ XS(_wrap_gsl_fft_complex_radix2_dif_inverse) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $data is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $data is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -2523,9 +2523,9 @@ XS(_wrap_gsl_fft_complex_radix2_dif_transform) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $data is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $data is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -3309,9 +3309,9 @@ XS(_wrap_gsl_fft_complex_forward) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $data is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $data is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -3388,9 +3388,9 @@ XS(_wrap_gsl_fft_complex_backward) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $data is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $data is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -3467,9 +3467,9 @@ XS(_wrap_gsl_fft_complex_inverse) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $data is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $data is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -3549,9 +3549,9 @@ XS(_wrap_gsl_fft_complex_transform) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $data is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $data is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -3630,9 +3630,9 @@ XS(_wrap_gsl_fft_halfcomplex_radix2_backward) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $data is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $data is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -3703,9 +3703,9 @@ XS(_wrap_gsl_fft_halfcomplex_radix2_inverse) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $data is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $data is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -3776,9 +3776,9 @@ XS(_wrap_gsl_fft_halfcomplex_radix2_transform) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $data is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $data is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -4298,9 +4298,9 @@ XS(_wrap_gsl_fft_halfcomplex_backward) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $data is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $data is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -4391,9 +4391,9 @@ XS(_wrap_gsl_fft_halfcomplex_inverse) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $data is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $data is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -4484,9 +4484,9 @@ XS(_wrap_gsl_fft_halfcomplex_transform) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $data is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $data is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -4573,9 +4573,9 @@ XS(_wrap_gsl_fft_halfcomplex_unpack) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $halfcomplex_coefficient is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $halfcomplex_coefficient is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -4642,9 +4642,9 @@ XS(_wrap_gsl_fft_halfcomplex_radix2_unpack) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $halfcomplex_coefficient is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $halfcomplex_coefficient is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -4709,9 +4709,9 @@ XS(_wrap_gsl_fft_real_radix2_transform) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $data is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $data is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -5464,9 +5464,9 @@ XS(_wrap_gsl_fft_real_transform) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $data is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $data is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -5553,9 +5553,9 @@ XS(_wrap_gsl_fft_real_unpack) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $real_coefficient is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $real_coefficient is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);

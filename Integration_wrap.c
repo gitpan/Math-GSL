@@ -1408,14 +1408,20 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 
 #define SWIGTYPE_p_char swig_types[0]
 #define SWIGTYPE_p_double swig_types[1]
-#define SWIGTYPE_p_f_p_q_const__gsl_function_double_double_p_double_p_double_p_double_p_double__void swig_types[2]
-#define SWIGTYPE_p_gsl_function swig_types[3]
-#define SWIGTYPE_p_gsl_integration_qawo_table swig_types[4]
-#define SWIGTYPE_p_gsl_integration_qaws_table swig_types[5]
-#define SWIGTYPE_p_gsl_integration_workspace swig_types[6]
-#define SWIGTYPE_p_size_t swig_types[7]
-static swig_type_info *swig_types[9];
-static swig_module_info swig_module = {swig_types, 8, 0, 0, 0, 0};
+#define SWIGTYPE_p_f_double_a___double_p_void__int swig_types[2]
+#define SWIGTYPE_p_f_double_p_void__double swig_types[3]
+#define SWIGTYPE_p_f_double_p_void_p_double_p_double__void swig_types[4]
+#define SWIGTYPE_p_f_p_q_const__struct_gsl_function_struct_double_double_p_double_p_double_p_double_p_double__void swig_types[5]
+#define SWIGTYPE_p_gsl_function_fdf_struct swig_types[6]
+#define SWIGTYPE_p_gsl_function_struct swig_types[7]
+#define SWIGTYPE_p_gsl_function_vec_struct swig_types[8]
+#define SWIGTYPE_p_gsl_integration_qawo_table swig_types[9]
+#define SWIGTYPE_p_gsl_integration_qaws_table swig_types[10]
+#define SWIGTYPE_p_gsl_integration_workspace swig_types[11]
+#define SWIGTYPE_p_size_t swig_types[12]
+#define SWIGTYPE_p_void swig_types[13]
+static swig_type_info *swig_types[15];
+static swig_module_info swig_module = {swig_types, 14, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1448,9 +1454,6 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 #endif
 
 
-    #include "gsl/gsl_integration.h"
-
-
     static HV * Callbacks = (HV*)NULL;
     /* this function returns the value 
         of evaluating the function pointer
@@ -1475,6 +1478,10 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
         y = POPn;
         return y;
     }
+
+
+    #include "gsl/gsl_integration.h"
+    #include "gsl/gsl_math.h"
 
 
 SWIGINTERN int
@@ -3956,7 +3963,7 @@ XS(_wrap_gsl_integration_qk15) {
       double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : f is not a reference value!");
+        croak("Math::GSL : $f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -3987,7 +3994,7 @@ XS(_wrap_gsl_integration_qk15) {
       SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_integration_qk15" "', argument " "7"" of type '" "double *""'"); 
     }
     arg7 = (double *)(argp7);
-    gsl_integration_qk15((gsl_function const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7);
+    gsl_integration_qk15((struct gsl_function_struct const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7);
     
     if (SWIG_IsTmpObj(res4)) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
@@ -4058,7 +4065,7 @@ XS(_wrap_gsl_integration_qk21) {
       double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : f is not a reference value!");
+        croak("Math::GSL : $f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -4089,7 +4096,7 @@ XS(_wrap_gsl_integration_qk21) {
       SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_integration_qk21" "', argument " "7"" of type '" "double *""'"); 
     }
     arg7 = (double *)(argp7);
-    gsl_integration_qk21((gsl_function const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7);
+    gsl_integration_qk21((struct gsl_function_struct const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7);
     
     if (SWIG_IsTmpObj(res4)) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
@@ -4160,7 +4167,7 @@ XS(_wrap_gsl_integration_qk31) {
       double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : f is not a reference value!");
+        croak("Math::GSL : $f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -4191,7 +4198,7 @@ XS(_wrap_gsl_integration_qk31) {
       SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_integration_qk31" "', argument " "7"" of type '" "double *""'"); 
     }
     arg7 = (double *)(argp7);
-    gsl_integration_qk31((gsl_function const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7);
+    gsl_integration_qk31((struct gsl_function_struct const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7);
     
     if (SWIG_IsTmpObj(res4)) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
@@ -4262,7 +4269,7 @@ XS(_wrap_gsl_integration_qk41) {
       double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : f is not a reference value!");
+        croak("Math::GSL : $f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -4293,7 +4300,7 @@ XS(_wrap_gsl_integration_qk41) {
       SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_integration_qk41" "', argument " "7"" of type '" "double *""'"); 
     }
     arg7 = (double *)(argp7);
-    gsl_integration_qk41((gsl_function const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7);
+    gsl_integration_qk41((struct gsl_function_struct const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7);
     
     if (SWIG_IsTmpObj(res4)) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
@@ -4364,7 +4371,7 @@ XS(_wrap_gsl_integration_qk51) {
       double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : f is not a reference value!");
+        croak("Math::GSL : $f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -4395,7 +4402,7 @@ XS(_wrap_gsl_integration_qk51) {
       SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_integration_qk51" "', argument " "7"" of type '" "double *""'"); 
     }
     arg7 = (double *)(argp7);
-    gsl_integration_qk51((gsl_function const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7);
+    gsl_integration_qk51((struct gsl_function_struct const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7);
     
     if (SWIG_IsTmpObj(res4)) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
@@ -4466,7 +4473,7 @@ XS(_wrap_gsl_integration_qk61) {
       double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : f is not a reference value!");
+        croak("Math::GSL : $f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -4497,7 +4504,7 @@ XS(_wrap_gsl_integration_qk61) {
       SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_integration_qk61" "', argument " "7"" of type '" "double *""'"); 
     }
     arg7 = (double *)(argp7);
-    gsl_integration_qk61((gsl_function const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7);
+    gsl_integration_qk61((struct gsl_function_struct const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7);
     
     if (SWIG_IsTmpObj(res4)) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
@@ -4560,7 +4567,7 @@ XS(_wrap_gsl_integration_qcheb) {
       double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : f is not a reference value!");
+        croak("Math::GSL : $f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -4662,9 +4669,9 @@ XS(_wrap_gsl_integration_qk) {
       int i;
       SV **tv;
       if (!SvROK(ST(1)))
-      croak("Math::GSL : ST(1) is not a reference!");
+      croak("Math::GSL : $xgk is not a reference!");
       if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
-      croak("Math::GSL : ST(1) is not an array ref!");
+      croak("Math::GSL : $xgk is not an array ref!");
       
       tempav = (AV*)SvRV(ST(1));
       len = av_len(tempav);
@@ -4680,9 +4687,9 @@ XS(_wrap_gsl_integration_qk) {
       int i;
       SV **tv;
       if (!SvROK(ST(2)))
-      croak("Math::GSL : ST(2) is not a reference!");
+      croak("Math::GSL : $wg is not a reference!");
       if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
-      croak("Math::GSL : ST(2) is not an array ref!");
+      croak("Math::GSL : $wg is not an array ref!");
       
       tempav = (AV*)SvRV(ST(2));
       len = av_len(tempav);
@@ -4698,9 +4705,9 @@ XS(_wrap_gsl_integration_qk) {
       int i;
       SV **tv;
       if (!SvROK(ST(3)))
-      croak("Math::GSL : ST(3) is not a reference!");
+      croak("Math::GSL : $wgk is not a reference!");
       if (SvTYPE(SvRV(ST(3))) != SVt_PVAV)
-      croak("Math::GSL : ST(3) is not an array ref!");
+      croak("Math::GSL : $wgk is not an array ref!");
       
       tempav = (AV*)SvRV(ST(3));
       len = av_len(tempav);
@@ -4727,7 +4734,7 @@ XS(_wrap_gsl_integration_qk) {
       double x;
       
       if (!SvROK(ST(6))) {
-        croak("Math::GSL : f is not a reference value!");
+        croak("Math::GSL : $f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -4758,7 +4765,7 @@ XS(_wrap_gsl_integration_qk) {
       SWIG_exception_fail(SWIG_ArgError(res13), "in method '" "gsl_integration_qk" "', argument " "13"" of type '" "double *""'"); 
     }
     arg13 = (double *)(argp13);
-    gsl_integration_qk(arg1,(double const (*))arg2,(double const (*))arg3,(double const (*))arg4,arg5,arg6,(gsl_function const *)arg7,arg8,arg9,arg10,arg11,arg12,arg13);
+    gsl_integration_qk(arg1,(double const (*))arg2,(double const (*))arg3,(double const (*))arg4,arg5,arg6,(struct gsl_function_struct const *)arg7,arg8,arg9,arg10,arg11,arg12,arg13);
     
     if (SWIG_IsTmpObj(res10)) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg10)); argvi++  ;
@@ -4846,7 +4853,7 @@ XS(_wrap_gsl_integration_qng) {
       double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : f is not a reference value!");
+        croak("Math::GSL : $f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -4877,7 +4884,7 @@ XS(_wrap_gsl_integration_qng) {
       SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "gsl_integration_qng" "', argument " "5"" of type '" "double""'");
     } 
     arg5 = (double)(val5);
-    result = (int)gsl_integration_qng((gsl_function const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8);
+    result = (int)gsl_integration_qng((struct gsl_function_struct const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     if (SWIG_IsTmpObj(res6)) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg6)); argvi++  ;
@@ -4966,7 +4973,7 @@ XS(_wrap_gsl_integration_qag) {
       double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : f is not a reference value!");
+        croak("Math::GSL : $f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -5012,7 +5019,7 @@ XS(_wrap_gsl_integration_qag) {
       SWIG_exception_fail(SWIG_ArgError(res8), "in method '" "gsl_integration_qag" "', argument " "8"" of type '" "gsl_integration_workspace *""'"); 
     }
     arg8 = (gsl_integration_workspace *)(argp8);
-    result = (int)gsl_integration_qag((gsl_function const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10);
+    result = (int)gsl_integration_qag((struct gsl_function_struct const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9,arg10);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     if (SWIG_IsTmpObj(res9)) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg9)); argvi++  ;
@@ -5090,7 +5097,7 @@ XS(_wrap_gsl_integration_qagi) {
       double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : f is not a reference value!");
+        croak("Math::GSL : $f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -5196,7 +5203,7 @@ XS(_wrap_gsl_integration_qagiu) {
       double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : f is not a reference value!");
+        croak("Math::GSL : $f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -5309,7 +5316,7 @@ XS(_wrap_gsl_integration_qagil) {
       double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : f is not a reference value!");
+        croak("Math::GSL : $f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -5425,7 +5432,7 @@ XS(_wrap_gsl_integration_qags) {
       double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : f is not a reference value!");
+        croak("Math::GSL : $f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -5466,7 +5473,7 @@ XS(_wrap_gsl_integration_qags) {
       SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_integration_qags" "', argument " "7"" of type '" "gsl_integration_workspace *""'"); 
     }
     arg7 = (gsl_integration_workspace *)(argp7);
-    result = (int)gsl_integration_qags((gsl_function const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9);
+    result = (int)gsl_integration_qags((struct gsl_function_struct const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     if (SWIG_IsTmpObj(res8)) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg8)); argvi++  ;
@@ -5548,7 +5555,7 @@ XS(_wrap_gsl_integration_qagp) {
       double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : f is not a reference value!");
+        croak("Math::GSL : $f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -5589,7 +5596,7 @@ XS(_wrap_gsl_integration_qagp) {
       SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_integration_qagp" "', argument " "7"" of type '" "gsl_integration_workspace *""'"); 
     }
     arg7 = (gsl_integration_workspace *)(argp7);
-    result = (int)gsl_integration_qagp((gsl_function const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9);
+    result = (int)gsl_integration_qagp((struct gsl_function_struct const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     if (SWIG_IsTmpObj(res8)) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg8)); argvi++  ;
@@ -5674,7 +5681,7 @@ XS(_wrap_gsl_integration_qawc) {
       double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : f is not a reference value!");
+        croak("Math::GSL : $f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -5807,7 +5814,7 @@ XS(_wrap_gsl_integration_qaws) {
       double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : f is not a reference value!");
+        croak("Math::GSL : $f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -5937,7 +5944,7 @@ XS(_wrap_gsl_integration_qawo) {
       double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : f is not a reference value!");
+        croak("Math::GSL : $f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -6060,7 +6067,7 @@ XS(_wrap_gsl_integration_qawf) {
       double x;
       
       if (!SvROK(ST(0))) {
-        croak("Math::GSL : f is not a reference value!");
+        croak("Math::GSL : $f is not a reference value!");
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
@@ -6140,47 +6147,802 @@ XS(_wrap_gsl_integration_qawf) {
 }
 
 
+XS(_wrap_gsl_max) {
+  {
+    double arg1 ;
+    double arg2 ;
+    double result;
+    double val1 ;
+    int ecode1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_max(a,b);");
+    }
+    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_max" "', argument " "1"" of type '" "double""'");
+    } 
+    arg1 = (double)(val1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_max" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    result = (double)gsl_max(arg1,arg2);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_min) {
+  {
+    double arg1 ;
+    double arg2 ;
+    double result;
+    double val1 ;
+    int ecode1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_min(a,b);");
+    }
+    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_min" "', argument " "1"" of type '" "double""'");
+    } 
+    arg1 = (double)(val1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_min" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    result = (double)gsl_min(arg1,arg2);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_function_struct_function_set) {
+  {
+    struct gsl_function_struct *arg1 = (struct gsl_function_struct *) 0 ;
+    double (*arg2)(double,void *) = (double (*)(double,void *)) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_function_struct_function_set(self,function);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function_struct, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_function_struct_function_set" "', argument " "1"" of type '" "struct gsl_function_struct *""'"); 
+    }
+    arg1 = (struct gsl_function_struct *)(argp1);
+    {
+      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_double_p_void__double);
+      if (!SWIG_IsOK(res)) {
+        SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_function_struct_function_set" "', argument " "2"" of type '" "double (*)(double,void *)""'"); 
+      }
+    }
+    if (arg1) (arg1)->function = arg2;
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_function_struct_function_get) {
+  {
+    struct gsl_function_struct *arg1 = (struct gsl_function_struct *) 0 ;
+    double (*result)(double,void *) = 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_function_struct_function_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function_struct, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_function_struct_function_get" "', argument " "1"" of type '" "struct gsl_function_struct *""'"); 
+    }
+    arg1 = (struct gsl_function_struct *)(argp1);
+    result = (double (*)(double,void *)) ((arg1)->function);
+    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_double_p_void__double); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_function_struct_params_set) {
+  {
+    struct gsl_function_struct *arg1 = (struct gsl_function_struct *) 0 ;
+    void *arg2 = (void *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_function_struct_params_set(self,params);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function_struct, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_function_struct_params_set" "', argument " "1"" of type '" "struct gsl_function_struct *""'"); 
+    }
+    arg1 = (struct gsl_function_struct *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2), 0, SWIG_POINTER_DISOWN);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_function_struct_params_set" "', argument " "2"" of type '" "void *""'"); 
+    }
+    if (arg1) (arg1)->params = arg2;
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_function_struct_params_get) {
+  {
+    struct gsl_function_struct *arg1 = (struct gsl_function_struct *) 0 ;
+    void *result = 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_function_struct_params_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function_struct, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_function_struct_params_get" "', argument " "1"" of type '" "struct gsl_function_struct *""'"); 
+    }
+    arg1 = (struct gsl_function_struct *)(argp1);
+    result = (void *) ((arg1)->params);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_void, 0 | 0); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_gsl_function_struct) {
+  {
+    struct gsl_function_struct *result = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 0) || (items > 0)) {
+      SWIG_croak("Usage: new_gsl_function_struct();");
+    }
+    result = (struct gsl_function_struct *)(struct gsl_function_struct *) calloc(1, sizeof(struct gsl_function_struct));
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_function_struct, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_delete_gsl_function_struct) {
+  {
+    struct gsl_function_struct *arg1 = (struct gsl_function_struct *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: delete_gsl_function_struct(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function_struct, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_gsl_function_struct" "', argument " "1"" of type '" "struct gsl_function_struct *""'"); 
+    }
+    arg1 = (struct gsl_function_struct *)(argp1);
+    free((char *) arg1);
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_function_fdf_struct_f_set) {
+  {
+    struct gsl_function_fdf_struct *arg1 = (struct gsl_function_fdf_struct *) 0 ;
+    double (*arg2)(double,void *) = (double (*)(double,void *)) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_function_fdf_struct_f_set(self,f);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function_fdf_struct, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_function_fdf_struct_f_set" "', argument " "1"" of type '" "struct gsl_function_fdf_struct *""'"); 
+    }
+    arg1 = (struct gsl_function_fdf_struct *)(argp1);
+    {
+      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_double_p_void__double);
+      if (!SWIG_IsOK(res)) {
+        SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_function_fdf_struct_f_set" "', argument " "2"" of type '" "double (*)(double,void *)""'"); 
+      }
+    }
+    if (arg1) (arg1)->f = arg2;
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_function_fdf_struct_f_get) {
+  {
+    struct gsl_function_fdf_struct *arg1 = (struct gsl_function_fdf_struct *) 0 ;
+    double (*result)(double,void *) = 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_function_fdf_struct_f_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function_fdf_struct, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_function_fdf_struct_f_get" "', argument " "1"" of type '" "struct gsl_function_fdf_struct *""'"); 
+    }
+    arg1 = (struct gsl_function_fdf_struct *)(argp1);
+    result = (double (*)(double,void *)) ((arg1)->f);
+    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_double_p_void__double); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_function_fdf_struct_df_set) {
+  {
+    struct gsl_function_fdf_struct *arg1 = (struct gsl_function_fdf_struct *) 0 ;
+    double (*arg2)(double,void *) = (double (*)(double,void *)) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_function_fdf_struct_df_set(self,df);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function_fdf_struct, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_function_fdf_struct_df_set" "', argument " "1"" of type '" "struct gsl_function_fdf_struct *""'"); 
+    }
+    arg1 = (struct gsl_function_fdf_struct *)(argp1);
+    {
+      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_double_p_void__double);
+      if (!SWIG_IsOK(res)) {
+        SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_function_fdf_struct_df_set" "', argument " "2"" of type '" "double (*)(double,void *)""'"); 
+      }
+    }
+    if (arg1) (arg1)->df = arg2;
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_function_fdf_struct_df_get) {
+  {
+    struct gsl_function_fdf_struct *arg1 = (struct gsl_function_fdf_struct *) 0 ;
+    double (*result)(double,void *) = 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_function_fdf_struct_df_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function_fdf_struct, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_function_fdf_struct_df_get" "', argument " "1"" of type '" "struct gsl_function_fdf_struct *""'"); 
+    }
+    arg1 = (struct gsl_function_fdf_struct *)(argp1);
+    result = (double (*)(double,void *)) ((arg1)->df);
+    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_double_p_void__double); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_function_fdf_struct_fdf_set) {
+  {
+    struct gsl_function_fdf_struct *arg1 = (struct gsl_function_fdf_struct *) 0 ;
+    void (*arg2)(double,void *,double *,double *) = (void (*)(double,void *,double *,double *)) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_function_fdf_struct_fdf_set(self,fdf);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function_fdf_struct, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_function_fdf_struct_fdf_set" "', argument " "1"" of type '" "struct gsl_function_fdf_struct *""'"); 
+    }
+    arg1 = (struct gsl_function_fdf_struct *)(argp1);
+    {
+      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_double_p_void_p_double_p_double__void);
+      if (!SWIG_IsOK(res)) {
+        SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_function_fdf_struct_fdf_set" "', argument " "2"" of type '" "void (*)(double,void *,double *,double *)""'"); 
+      }
+    }
+    if (arg1) (arg1)->fdf = arg2;
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_function_fdf_struct_fdf_get) {
+  {
+    struct gsl_function_fdf_struct *arg1 = (struct gsl_function_fdf_struct *) 0 ;
+    void (*result)(double,void *,double *,double *) = 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_function_fdf_struct_fdf_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function_fdf_struct, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_function_fdf_struct_fdf_get" "', argument " "1"" of type '" "struct gsl_function_fdf_struct *""'"); 
+    }
+    arg1 = (struct gsl_function_fdf_struct *)(argp1);
+    result = (void (*)(double,void *,double *,double *)) ((arg1)->fdf);
+    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_double_p_void_p_double_p_double__void); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_function_fdf_struct_params_set) {
+  {
+    struct gsl_function_fdf_struct *arg1 = (struct gsl_function_fdf_struct *) 0 ;
+    void *arg2 = (void *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_function_fdf_struct_params_set(self,params);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function_fdf_struct, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_function_fdf_struct_params_set" "', argument " "1"" of type '" "struct gsl_function_fdf_struct *""'"); 
+    }
+    arg1 = (struct gsl_function_fdf_struct *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2), 0, SWIG_POINTER_DISOWN);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_function_fdf_struct_params_set" "', argument " "2"" of type '" "void *""'"); 
+    }
+    if (arg1) (arg1)->params = arg2;
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_function_fdf_struct_params_get) {
+  {
+    struct gsl_function_fdf_struct *arg1 = (struct gsl_function_fdf_struct *) 0 ;
+    void *result = 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_function_fdf_struct_params_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function_fdf_struct, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_function_fdf_struct_params_get" "', argument " "1"" of type '" "struct gsl_function_fdf_struct *""'"); 
+    }
+    arg1 = (struct gsl_function_fdf_struct *)(argp1);
+    result = (void *) ((arg1)->params);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_void, 0 | 0); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_gsl_function_fdf_struct) {
+  {
+    struct gsl_function_fdf_struct *result = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 0) || (items > 0)) {
+      SWIG_croak("Usage: new_gsl_function_fdf_struct();");
+    }
+    result = (struct gsl_function_fdf_struct *)(struct gsl_function_fdf_struct *) calloc(1, sizeof(struct gsl_function_fdf_struct));
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_function_fdf_struct, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_delete_gsl_function_fdf_struct) {
+  {
+    struct gsl_function_fdf_struct *arg1 = (struct gsl_function_fdf_struct *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: delete_gsl_function_fdf_struct(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function_fdf_struct, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_gsl_function_fdf_struct" "', argument " "1"" of type '" "struct gsl_function_fdf_struct *""'"); 
+    }
+    arg1 = (struct gsl_function_fdf_struct *)(argp1);
+    free((char *) arg1);
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_function_vec_struct_function_set) {
+  {
+    struct gsl_function_vec_struct *arg1 = (struct gsl_function_vec_struct *) 0 ;
+    int (*arg2)(double,double [],void *) = (int (*)(double,double [],void *)) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_function_vec_struct_function_set(self,function);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function_vec_struct, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_function_vec_struct_function_set" "', argument " "1"" of type '" "struct gsl_function_vec_struct *""'"); 
+    }
+    arg1 = (struct gsl_function_vec_struct *)(argp1);
+    {
+      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_double_a___double_p_void__int);
+      if (!SWIG_IsOK(res)) {
+        SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_function_vec_struct_function_set" "', argument " "2"" of type '" "int (*)(double,double [],void *)""'"); 
+      }
+    }
+    if (arg1) (arg1)->function = arg2;
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_function_vec_struct_function_get) {
+  {
+    struct gsl_function_vec_struct *arg1 = (struct gsl_function_vec_struct *) 0 ;
+    int (*result)(double,double [],void *) = 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_function_vec_struct_function_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function_vec_struct, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_function_vec_struct_function_get" "', argument " "1"" of type '" "struct gsl_function_vec_struct *""'"); 
+    }
+    arg1 = (struct gsl_function_vec_struct *)(argp1);
+    result = (int (*)(double,double [],void *)) ((arg1)->function);
+    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_double_a___double_p_void__int); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_function_vec_struct_params_set) {
+  {
+    struct gsl_function_vec_struct *arg1 = (struct gsl_function_vec_struct *) 0 ;
+    void *arg2 = (void *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int res2 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_function_vec_struct_params_set(self,params);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function_vec_struct, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_function_vec_struct_params_set" "', argument " "1"" of type '" "struct gsl_function_vec_struct *""'"); 
+    }
+    arg1 = (struct gsl_function_vec_struct *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2), 0, SWIG_POINTER_DISOWN);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_function_vec_struct_params_set" "', argument " "2"" of type '" "void *""'"); 
+    }
+    if (arg1) (arg1)->params = arg2;
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_function_vec_struct_params_get) {
+  {
+    struct gsl_function_vec_struct *arg1 = (struct gsl_function_vec_struct *) 0 ;
+    void *result = 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_function_vec_struct_params_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function_vec_struct, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_function_vec_struct_params_get" "', argument " "1"" of type '" "struct gsl_function_vec_struct *""'"); 
+    }
+    arg1 = (struct gsl_function_vec_struct *)(argp1);
+    result = (void *) ((arg1)->params);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_void, 0 | 0); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_gsl_function_vec_struct) {
+  {
+    struct gsl_function_vec_struct *result = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 0) || (items > 0)) {
+      SWIG_croak("Usage: new_gsl_function_vec_struct();");
+    }
+    result = (struct gsl_function_vec_struct *)(struct gsl_function_vec_struct *) calloc(1, sizeof(struct gsl_function_vec_struct));
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_function_vec_struct, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_delete_gsl_function_vec_struct) {
+  {
+    struct gsl_function_vec_struct *arg1 = (struct gsl_function_vec_struct *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: delete_gsl_function_vec_struct(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function_vec_struct, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_gsl_function_vec_struct" "', argument " "1"" of type '" "struct gsl_function_vec_struct *""'"); 
+    }
+    arg1 = (struct gsl_function_vec_struct *)(argp1);
+    free((char *) arg1);
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_f_p_q_const__gsl_function_double_double_p_double_p_double_p_double_p_double__void = {"_p_f_p_q_const__gsl_function_double_double_p_double_p_double_p_double_p_double__void", "void (*)(gsl_function const *,double,double,double *,double *,double *,double *)|gsl_integration_rule *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_gsl_function = {"_p_gsl_function", "gsl_function *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_f_double_a___double_p_void__int = {"_p_f_double_a___double_p_void__int", "int (*)(double,double [],void *)", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_f_double_p_void__double = {"_p_f_double_p_void__double", "double (*)(double,void *)", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_f_double_p_void_p_double_p_double__void = {"_p_f_double_p_void_p_double_p_double__void", "void (*)(double,void *,double *,double *)", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_f_p_q_const__struct_gsl_function_struct_double_double_p_double_p_double_p_double_p_double__void = {"_p_f_p_q_const__struct_gsl_function_struct_double_double_p_double_p_double_p_double_p_double__void", "void (*)(struct gsl_function_struct const *,double,double,double *,double *,double *,double *)|gsl_integration_rule *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_gsl_function_fdf_struct = {"_p_gsl_function_fdf_struct", "struct gsl_function_fdf_struct *|gsl_function_fdf *", 0, 0, (void*)"Math::GSL::Integration::gsl_function_fdf_struct", 0};
+static swig_type_info _swigt__p_gsl_function_struct = {"_p_gsl_function_struct", "struct gsl_function_struct *|gsl_function *", 0, 0, (void*)"Math::GSL::Integration::gsl_function_struct", 0};
+static swig_type_info _swigt__p_gsl_function_vec_struct = {"_p_gsl_function_vec_struct", "struct gsl_function_vec_struct *|gsl_function_vec *", 0, 0, (void*)"Math::GSL::Integration::gsl_function_vec_struct", 0};
 static swig_type_info _swigt__p_gsl_integration_qawo_table = {"_p_gsl_integration_qawo_table", "gsl_integration_qawo_table *", 0, 0, (void*)"Math::GSL::Integration::gsl_integration_qawo_table", 0};
 static swig_type_info _swigt__p_gsl_integration_qaws_table = {"_p_gsl_integration_qaws_table", "gsl_integration_qaws_table *", 0, 0, (void*)"Math::GSL::Integration::gsl_integration_qaws_table", 0};
 static swig_type_info _swigt__p_gsl_integration_workspace = {"_p_gsl_integration_workspace", "gsl_integration_workspace *", 0, 0, (void*)"Math::GSL::Integration::gsl_integration_workspace", 0};
 static swig_type_info _swigt__p_size_t = {"_p_size_t", "size_t *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_void = {"_p_void", "void *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_char,
   &_swigt__p_double,
-  &_swigt__p_f_p_q_const__gsl_function_double_double_p_double_p_double_p_double_p_double__void,
-  &_swigt__p_gsl_function,
+  &_swigt__p_f_double_a___double_p_void__int,
+  &_swigt__p_f_double_p_void__double,
+  &_swigt__p_f_double_p_void_p_double_p_double__void,
+  &_swigt__p_f_p_q_const__struct_gsl_function_struct_double_double_p_double_p_double_p_double_p_double__void,
+  &_swigt__p_gsl_function_fdf_struct,
+  &_swigt__p_gsl_function_struct,
+  &_swigt__p_gsl_function_vec_struct,
   &_swigt__p_gsl_integration_qawo_table,
   &_swigt__p_gsl_integration_qaws_table,
   &_swigt__p_gsl_integration_workspace,
   &_swigt__p_size_t,
+  &_swigt__p_void,
 };
 
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_f_p_q_const__gsl_function_double_double_p_double_p_double_p_double_p_double__void[] = {  {&_swigt__p_f_p_q_const__gsl_function_double_double_p_double_p_double_p_double_p_double__void, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_gsl_function[] = {  {&_swigt__p_gsl_function, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_f_double_a___double_p_void__int[] = {  {&_swigt__p_f_double_a___double_p_void__int, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_f_double_p_void__double[] = {  {&_swigt__p_f_double_p_void__double, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_f_double_p_void_p_double_p_double__void[] = {  {&_swigt__p_f_double_p_void_p_double_p_double__void, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_f_p_q_const__struct_gsl_function_struct_double_double_p_double_p_double_p_double_p_double__void[] = {  {&_swigt__p_f_p_q_const__struct_gsl_function_struct_double_double_p_double_p_double_p_double_p_double__void, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_gsl_function_fdf_struct[] = {  {&_swigt__p_gsl_function_fdf_struct, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_gsl_function_struct[] = {  {&_swigt__p_gsl_function_struct, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_gsl_function_vec_struct[] = {  {&_swigt__p_gsl_function_vec_struct, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_integration_qawo_table[] = {  {&_swigt__p_gsl_integration_qawo_table, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_integration_qaws_table[] = {  {&_swigt__p_gsl_integration_qaws_table, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_integration_workspace[] = {  {&_swigt__p_gsl_integration_workspace, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_size_t[] = {  {&_swigt__p_size_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_void[] = {  {&_swigt__p_void, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_char,
   _swigc__p_double,
-  _swigc__p_f_p_q_const__gsl_function_double_double_p_double_p_double_p_double_p_double__void,
-  _swigc__p_gsl_function,
+  _swigc__p_f_double_a___double_p_void__int,
+  _swigc__p_f_double_p_void__double,
+  _swigc__p_f_double_p_void_p_double_p_double__void,
+  _swigc__p_f_p_q_const__struct_gsl_function_struct_double_double_p_double_p_double_p_double_p_double__void,
+  _swigc__p_gsl_function_fdf_struct,
+  _swigc__p_gsl_function_struct,
+  _swigc__p_gsl_function_vec_struct,
   _swigc__p_gsl_integration_qawo_table,
   _swigc__p_gsl_integration_qaws_table,
   _swigc__p_gsl_integration_workspace,
   _swigc__p_size_t,
+  _swigc__p_void,
 };
 
 
@@ -6280,6 +7042,30 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::Integrationc::gsl_integration_qaws", _wrap_gsl_integration_qaws},
 {"Math::GSL::Integrationc::gsl_integration_qawo", _wrap_gsl_integration_qawo},
 {"Math::GSL::Integrationc::gsl_integration_qawf", _wrap_gsl_integration_qawf},
+{"Math::GSL::Integrationc::gsl_max", _wrap_gsl_max},
+{"Math::GSL::Integrationc::gsl_min", _wrap_gsl_min},
+{"Math::GSL::Integrationc::gsl_function_struct_function_set", _wrap_gsl_function_struct_function_set},
+{"Math::GSL::Integrationc::gsl_function_struct_function_get", _wrap_gsl_function_struct_function_get},
+{"Math::GSL::Integrationc::gsl_function_struct_params_set", _wrap_gsl_function_struct_params_set},
+{"Math::GSL::Integrationc::gsl_function_struct_params_get", _wrap_gsl_function_struct_params_get},
+{"Math::GSL::Integrationc::new_gsl_function_struct", _wrap_new_gsl_function_struct},
+{"Math::GSL::Integrationc::delete_gsl_function_struct", _wrap_delete_gsl_function_struct},
+{"Math::GSL::Integrationc::gsl_function_fdf_struct_f_set", _wrap_gsl_function_fdf_struct_f_set},
+{"Math::GSL::Integrationc::gsl_function_fdf_struct_f_get", _wrap_gsl_function_fdf_struct_f_get},
+{"Math::GSL::Integrationc::gsl_function_fdf_struct_df_set", _wrap_gsl_function_fdf_struct_df_set},
+{"Math::GSL::Integrationc::gsl_function_fdf_struct_df_get", _wrap_gsl_function_fdf_struct_df_get},
+{"Math::GSL::Integrationc::gsl_function_fdf_struct_fdf_set", _wrap_gsl_function_fdf_struct_fdf_set},
+{"Math::GSL::Integrationc::gsl_function_fdf_struct_fdf_get", _wrap_gsl_function_fdf_struct_fdf_get},
+{"Math::GSL::Integrationc::gsl_function_fdf_struct_params_set", _wrap_gsl_function_fdf_struct_params_set},
+{"Math::GSL::Integrationc::gsl_function_fdf_struct_params_get", _wrap_gsl_function_fdf_struct_params_get},
+{"Math::GSL::Integrationc::new_gsl_function_fdf_struct", _wrap_new_gsl_function_fdf_struct},
+{"Math::GSL::Integrationc::delete_gsl_function_fdf_struct", _wrap_delete_gsl_function_fdf_struct},
+{"Math::GSL::Integrationc::gsl_function_vec_struct_function_set", _wrap_gsl_function_vec_struct_function_set},
+{"Math::GSL::Integrationc::gsl_function_vec_struct_function_get", _wrap_gsl_function_vec_struct_function_get},
+{"Math::GSL::Integrationc::gsl_function_vec_struct_params_set", _wrap_gsl_function_vec_struct_params_set},
+{"Math::GSL::Integrationc::gsl_function_vec_struct_params_get", _wrap_gsl_function_vec_struct_params_get},
+{"Math::GSL::Integrationc::new_gsl_function_vec_struct", _wrap_new_gsl_function_vec_struct},
+{"Math::GSL::Integrationc::delete_gsl_function_vec_struct", _wrap_delete_gsl_function_vec_struct},
 {0,0}
 };
 /* -----------------------------------------------------------------------------
@@ -6608,6 +7394,94 @@ XS(SWIG_init) {
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_INTEG_GAUSS61)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
+  /*@SWIG:%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "M_E", TRUE | 0x2);
+    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(2.71828182845904523536028747135)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "M_LOG2E", TRUE | 0x2);
+    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(1.44269504088896340735992468100)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "M_LOG10E", TRUE | 0x2);
+    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(0.43429448190325182765112891892)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "M_SQRT2", TRUE | 0x2);
+    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(1.41421356237309504880168872421)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "M_SQRT1_2", TRUE | 0x2);
+    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(0.70710678118654752440084436210)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "M_SQRT3", TRUE | 0x2);
+    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(1.73205080756887729352744634151)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "M_PI", TRUE | 0x2);
+    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(3.14159265358979323846264338328)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "M_PI_2", TRUE | 0x2);
+    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(1.57079632679489661923132169164)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "M_PI_4", TRUE | 0x2);
+    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(0.78539816339744830961566084582)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "M_SQRTPI", TRUE | 0x2);
+    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(1.77245385090551602729816748334)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "M_2_SQRTPI", TRUE | 0x2);
+    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(1.12837916709551257389615890312)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "M_1_PI", TRUE | 0x2);
+    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(0.31830988618379067153776752675)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "M_2_PI", TRUE | 0x2);
+    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(0.63661977236758134307553505349)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "M_LN10", TRUE | 0x2);
+    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(2.30258509299404568401799145468)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "M_LN2", TRUE | 0x2);
+    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(0.69314718055994530941723212146)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "M_LNPI", TRUE | 0x2);
+    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(1.14472988584940017414342735135)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "M_EULER", TRUE | 0x2);
+    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(0.57721566490153286060651209008)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  SWIG_TypeClientData(SWIGTYPE_p_gsl_function_struct, (void*) "Math::GSL::Integration::gsl_function_struct");
+  SWIG_TypeClientData(SWIGTYPE_p_gsl_function_fdf_struct, (void*) "Math::GSL::Integration::gsl_function_fdf_struct");
+  SWIG_TypeClientData(SWIGTYPE_p_gsl_function_vec_struct, (void*) "Math::GSL::Integration::gsl_function_vec_struct");
   ST(0) = &PL_sv_yes;
   XSRETURN(1);
 }

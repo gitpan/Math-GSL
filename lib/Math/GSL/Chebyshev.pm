@@ -60,6 +60,8 @@ package Math::GSL::Chebyshev;
 *gsl_cheb_eval_mode_e = *Math::GSL::Chebyshevc::gsl_cheb_eval_mode_e;
 *gsl_cheb_calc_deriv = *Math::GSL::Chebyshevc::gsl_cheb_calc_deriv;
 *gsl_cheb_calc_integ = *Math::GSL::Chebyshevc::gsl_cheb_calc_integ;
+*gsl_max = *Math::GSL::Chebyshevc::gsl_max;
+*gsl_min = *Math::GSL::Chebyshevc::gsl_min;
 
 ############# Class : Math::GSL::Chebyshev::gsl_cheb_series_struct ##############
 
@@ -110,10 +112,158 @@ sub ACQUIRE {
 }
 
 
+############# Class : Math::GSL::Chebyshev::gsl_function_struct ##############
+
+package Math::GSL::Chebyshev::gsl_function_struct;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( Math::GSL::Chebyshev );
+%OWNER = ();
+%ITERATORS = ();
+*swig_function_get = *Math::GSL::Chebyshevc::gsl_function_struct_function_get;
+*swig_function_set = *Math::GSL::Chebyshevc::gsl_function_struct_function_set;
+*swig_params_get = *Math::GSL::Chebyshevc::gsl_function_struct_params_get;
+*swig_params_set = *Math::GSL::Chebyshevc::gsl_function_struct_params_set;
+sub new {
+    my $pkg = shift;
+    my $self = Math::GSL::Chebyshevc::new_gsl_function_struct(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        Math::GSL::Chebyshevc::delete_gsl_function_struct($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : Math::GSL::Chebyshev::gsl_function_fdf_struct ##############
+
+package Math::GSL::Chebyshev::gsl_function_fdf_struct;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( Math::GSL::Chebyshev );
+%OWNER = ();
+%ITERATORS = ();
+*swig_f_get = *Math::GSL::Chebyshevc::gsl_function_fdf_struct_f_get;
+*swig_f_set = *Math::GSL::Chebyshevc::gsl_function_fdf_struct_f_set;
+*swig_df_get = *Math::GSL::Chebyshevc::gsl_function_fdf_struct_df_get;
+*swig_df_set = *Math::GSL::Chebyshevc::gsl_function_fdf_struct_df_set;
+*swig_fdf_get = *Math::GSL::Chebyshevc::gsl_function_fdf_struct_fdf_get;
+*swig_fdf_set = *Math::GSL::Chebyshevc::gsl_function_fdf_struct_fdf_set;
+*swig_params_get = *Math::GSL::Chebyshevc::gsl_function_fdf_struct_params_get;
+*swig_params_set = *Math::GSL::Chebyshevc::gsl_function_fdf_struct_params_set;
+sub new {
+    my $pkg = shift;
+    my $self = Math::GSL::Chebyshevc::new_gsl_function_fdf_struct(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        Math::GSL::Chebyshevc::delete_gsl_function_fdf_struct($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : Math::GSL::Chebyshev::gsl_function_vec_struct ##############
+
+package Math::GSL::Chebyshev::gsl_function_vec_struct;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( Math::GSL::Chebyshev );
+%OWNER = ();
+%ITERATORS = ();
+*swig_function_get = *Math::GSL::Chebyshevc::gsl_function_vec_struct_function_get;
+*swig_function_set = *Math::GSL::Chebyshevc::gsl_function_vec_struct_function_set;
+*swig_params_get = *Math::GSL::Chebyshevc::gsl_function_vec_struct_params_get;
+*swig_params_set = *Math::GSL::Chebyshevc::gsl_function_vec_struct_params_set;
+sub new {
+    my $pkg = shift;
+    my $self = Math::GSL::Chebyshevc::new_gsl_function_vec_struct(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        Math::GSL::Chebyshevc::delete_gsl_function_vec_struct($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
 # ------- VARIABLE STUBS --------
 
 package Math::GSL::Chebyshev;
 
+*M_E = *Math::GSL::Chebyshevc::M_E;
+*M_LOG2E = *Math::GSL::Chebyshevc::M_LOG2E;
+*M_LOG10E = *Math::GSL::Chebyshevc::M_LOG10E;
+*M_SQRT2 = *Math::GSL::Chebyshevc::M_SQRT2;
+*M_SQRT1_2 = *Math::GSL::Chebyshevc::M_SQRT1_2;
+*M_SQRT3 = *Math::GSL::Chebyshevc::M_SQRT3;
+*M_PI = *Math::GSL::Chebyshevc::M_PI;
+*M_PI_2 = *Math::GSL::Chebyshevc::M_PI_2;
+*M_PI_4 = *Math::GSL::Chebyshevc::M_PI_4;
+*M_SQRTPI = *Math::GSL::Chebyshevc::M_SQRTPI;
+*M_2_SQRTPI = *Math::GSL::Chebyshevc::M_2_SQRTPI;
+*M_1_PI = *Math::GSL::Chebyshevc::M_1_PI;
+*M_2_PI = *Math::GSL::Chebyshevc::M_2_PI;
+*M_LN10 = *Math::GSL::Chebyshevc::M_LN10;
+*M_LN2 = *Math::GSL::Chebyshevc::M_LN2;
+*M_LNPI = *Math::GSL::Chebyshevc::M_LNPI;
+*M_EULER = *Math::GSL::Chebyshevc::M_EULER;
+*GSL_PREC_DOUBLE = *Math::GSL::Chebyshevc::GSL_PREC_DOUBLE;
+*GSL_PREC_SINGLE = *Math::GSL::Chebyshevc::GSL_PREC_SINGLE;
+*GSL_PREC_APPROX = *Math::GSL::Chebyshevc::GSL_PREC_APPROX;
+*GSL_MODE_DEFAULT = *Math::GSL::Chebyshevc::GSL_MODE_DEFAULT;
 
 @EXPORT_OK = qw/
                gsl_cheb_alloc 
@@ -134,13 +284,20 @@ __END__
 
 =head1 NAME
 
-Math::GSL::Chebyshev - Routines for computing Chebyshev approximations to univariate functions 
+Math::GSL::Chebyshev - Univariate Chebyshev Series Approximation
 
 =head1 SYNOPSIS
 
-This module is not yet implemented. Patches Welcome!
+    use Math::GSL::Chebyshev qw /:all/;
 
-use Math::GSL::Chebyshev qw /:all/;
+    my $cheb             = gsl_cheb_alloc(40);
+    my $function         = sub { sin(cos($_[0])) };
+
+    gsl_cheb_init($cheb, $function, 0, 10);
+
+    my $x                = gsl_cheb_eval($cheb, 5.5 );
+    my ($status,$y,$err) = gsl_cheb_eval_err($cheb, 7.5 );
+    gsl_cheb_free($cheb);
 
 =head1 DESCRIPTION
 
@@ -148,15 +305,35 @@ Here is a list of all the functions in this module :
 
 =over
 
-=item * C<gsl_cheb_alloc >
+=item * C<gsl_cheb_alloc($size)>
 
-=item * C<gsl_cheb_free >
+    my $cheb = gsl_cheb_alloc(50);
 
-=item * C<gsl_cheb_init >
+Allocates a new Chebyshev object with $size sample points.
 
-=item * C<gsl_cheb_eval >
+=item * C<gsl_cheb_free($cheb)>
 
-=item * C<gsl_cheb_eval_err >
+Deallocates memory associated to $cheb. Returns void.
+
+=item * C<gsl_cheb_init($cheb,$function, $lower, $upper)>
+
+    gsl_cheb_init($cheb, sub { sin(cos($_[0])) }, 0, 10 );
+
+Initiate a Chebyshev object with a function and upper and lower bounds.
+Returns void.
+
+=item * C<gsl_cheb_eval($function, $value)>
+
+    my $evaluated = gsl_cheb_eval($cheb, 5 );
+
+Returns a Perl scalar of the Chebyshev object $cheb evaluated at $value.
+
+=item * C<gsl_cheb_eval_err($cheb, $value)>
+
+    my ($status,$evaluated,$err) = gsl_cheb_eval($cheb, 5 );
+
+Returns a list consisting of a GSL status code, the evaluate value and
+the estimated error of the evaluation.
 
 =item * C<gsl_cheb_eval_n >
 
@@ -166,9 +343,19 @@ Here is a list of all the functions in this module :
 
 =item * C<gsl_cheb_eval_mode_e >
 
-=item * C<gsl_cheb_calc_deriv >
+=item * C<gsl_cheb_calc_deriv($deriv,$cheb) >
 
-=item * C<gsl_cheb_calc_integ >
+   my $status = gsl_cheb_calc_deriv( $deriv, $cheb ); 
+
+This will calculate the derivative of $cheb and stores it
+in $deriv, which must be pre-allocated. Returns a GSL status code.
+
+=item * C<gsl_cheb_calc_integ($integ,$cheb) >
+
+   my $status = gsl_cheb_calc_integ( $deriv, $cheb ); 
+
+This will calculate the derivative of $cheb and stores it
+in $deriv, which must be pre-allocated. Returns a GSL status code.
 
 =back
 

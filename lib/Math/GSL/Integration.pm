@@ -77,6 +77,8 @@ package Math::GSL::Integration;
 *gsl_integration_qaws = *Math::GSL::Integrationc::gsl_integration_qaws;
 *gsl_integration_qawo = *Math::GSL::Integrationc::gsl_integration_qawo;
 *gsl_integration_qawf = *Math::GSL::Integrationc::gsl_integration_qawf;
+*gsl_max = *Math::GSL::Integrationc::gsl_max;
+*gsl_min = *Math::GSL::Integrationc::gsl_min;
 
 ############# Class : Math::GSL::Integration::gsl_integration_workspace ##############
 
@@ -239,6 +241,133 @@ sub ACQUIRE {
 }
 
 
+############# Class : Math::GSL::Integration::gsl_function_struct ##############
+
+package Math::GSL::Integration::gsl_function_struct;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( Math::GSL::Integration );
+%OWNER = ();
+%ITERATORS = ();
+*swig_function_get = *Math::GSL::Integrationc::gsl_function_struct_function_get;
+*swig_function_set = *Math::GSL::Integrationc::gsl_function_struct_function_set;
+*swig_params_get = *Math::GSL::Integrationc::gsl_function_struct_params_get;
+*swig_params_set = *Math::GSL::Integrationc::gsl_function_struct_params_set;
+sub new {
+    my $pkg = shift;
+    my $self = Math::GSL::Integrationc::new_gsl_function_struct(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        Math::GSL::Integrationc::delete_gsl_function_struct($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : Math::GSL::Integration::gsl_function_fdf_struct ##############
+
+package Math::GSL::Integration::gsl_function_fdf_struct;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( Math::GSL::Integration );
+%OWNER = ();
+%ITERATORS = ();
+*swig_f_get = *Math::GSL::Integrationc::gsl_function_fdf_struct_f_get;
+*swig_f_set = *Math::GSL::Integrationc::gsl_function_fdf_struct_f_set;
+*swig_df_get = *Math::GSL::Integrationc::gsl_function_fdf_struct_df_get;
+*swig_df_set = *Math::GSL::Integrationc::gsl_function_fdf_struct_df_set;
+*swig_fdf_get = *Math::GSL::Integrationc::gsl_function_fdf_struct_fdf_get;
+*swig_fdf_set = *Math::GSL::Integrationc::gsl_function_fdf_struct_fdf_set;
+*swig_params_get = *Math::GSL::Integrationc::gsl_function_fdf_struct_params_get;
+*swig_params_set = *Math::GSL::Integrationc::gsl_function_fdf_struct_params_set;
+sub new {
+    my $pkg = shift;
+    my $self = Math::GSL::Integrationc::new_gsl_function_fdf_struct(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        Math::GSL::Integrationc::delete_gsl_function_fdf_struct($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : Math::GSL::Integration::gsl_function_vec_struct ##############
+
+package Math::GSL::Integration::gsl_function_vec_struct;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( Math::GSL::Integration );
+%OWNER = ();
+%ITERATORS = ();
+*swig_function_get = *Math::GSL::Integrationc::gsl_function_vec_struct_function_get;
+*swig_function_set = *Math::GSL::Integrationc::gsl_function_vec_struct_function_set;
+*swig_params_get = *Math::GSL::Integrationc::gsl_function_vec_struct_params_get;
+*swig_params_set = *Math::GSL::Integrationc::gsl_function_vec_struct_params_set;
+sub new {
+    my $pkg = shift;
+    my $self = Math::GSL::Integrationc::new_gsl_function_vec_struct(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        Math::GSL::Integrationc::delete_gsl_function_vec_struct($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
 # ------- VARIABLE STUBS --------
 
 package Math::GSL::Integration;
@@ -251,6 +380,23 @@ package Math::GSL::Integration;
 *GSL_INTEG_GAUSS41 = *Math::GSL::Integrationc::GSL_INTEG_GAUSS41;
 *GSL_INTEG_GAUSS51 = *Math::GSL::Integrationc::GSL_INTEG_GAUSS51;
 *GSL_INTEG_GAUSS61 = *Math::GSL::Integrationc::GSL_INTEG_GAUSS61;
+*M_E = *Math::GSL::Integrationc::M_E;
+*M_LOG2E = *Math::GSL::Integrationc::M_LOG2E;
+*M_LOG10E = *Math::GSL::Integrationc::M_LOG10E;
+*M_SQRT2 = *Math::GSL::Integrationc::M_SQRT2;
+*M_SQRT1_2 = *Math::GSL::Integrationc::M_SQRT1_2;
+*M_SQRT3 = *Math::GSL::Integrationc::M_SQRT3;
+*M_PI = *Math::GSL::Integrationc::M_PI;
+*M_PI_2 = *Math::GSL::Integrationc::M_PI_2;
+*M_PI_4 = *Math::GSL::Integrationc::M_PI_4;
+*M_SQRTPI = *Math::GSL::Integrationc::M_SQRTPI;
+*M_2_SQRTPI = *Math::GSL::Integrationc::M_2_SQRTPI;
+*M_1_PI = *Math::GSL::Integrationc::M_1_PI;
+*M_2_PI = *Math::GSL::Integrationc::M_2_PI;
+*M_LN10 = *Math::GSL::Integrationc::M_LN10;
+*M_LN2 = *Math::GSL::Integrationc::M_LN2;
+*M_LNPI = *Math::GSL::Integrationc::M_LNPI;
+*M_EULER = *Math::GSL::Integrationc::M_EULER;
 
 @EXPORT_OK = qw/
                gsl_integration_workspace_alloc 
@@ -300,67 +446,113 @@ Math::GSL::Integration - Routines for performing numerical integration (quadratu
 
 =head1 SYNOPSIS
 
-This module is not yet implemented. Patches Welcome!
-
     use Math::GSL::Integration qw /:all/;
+
+    my $function = sub { $_[0]**2 } ;
+    my ($lower, $upper ) = (0,1);
+    my ($relerr,$abserr) = (0,1e-7);
+
+    my ($status, $result, $abserr, $num_evals) = gsl_integration_qng ( $function,
+                                                    $lower, $upper, $relerr, $abserr
+                                                 );
 
 =head1 DESCRIPTION
 
-Here is a list of all the functions in this module :
+This module allows you to numerically integrate a Perl subroutine. Depending
+on the properties of your function (singularities, smoothness) and the type
+of integration range (finite, infinite, semi-infinite), you will need to 
+choose a quadrature routine that fits your needs.
+
 
 =over 
 
-=item * C<gsl_integration_workspace_alloc($n)> - This function allocates a workspace sufficient to hold $n double precision intervals, their integration results and error estimates.
+=item * C<gsl_integration_workspace_alloc($n)> 
 
-=item * C<gsl_integration_workspace_free($w)> - This function frees the memory associated with the workspace $w.
+This function allocates a workspace sufficient to hold $n double precision
+intervals, their integration results and error estimates.
 
-=item * C<gsl_integration_qaws_table_alloc($alpha, $beta, $mu, $nu)> - This function allocates space for a gsl_integration_qaws_table struct describing a singular weight function W(x) with the parameters ($alpha, $beta, $mu, $nu), W(x) = (x-a)^alpha (b-x)^beta log^mu (x-a) log^nu (b-x) where $alpha > -1, $beta > -1, and $mu = 0, 1, $nu = 0, 1. The weight function can take four different forms depending on the values of $mu and $nu,
+=item * C<gsl_integration_workspace_free($w)> 
+
+ This function frees the memory associated with the workspace $w.
+
+=item * C<gsl_integration_qaws_table_alloc($alpha, $beta, $mu, $nu)> 
+
+ This function allocates space for a gsl_integration_qaws_table struct
+ describing a singular weight function W(x) with the parameters ($alpha, $beta,
+ $mu, $nu), W(x) = (x-a)^alpha (b-x)^beta log^mu (x-a) log^nu (b-x) where
+ $alpha > -1, $beta > -1, and $mu = 0, 1, $nu = 0, 1. The weight function can
+ take four different forms depending on the values of $mu and $nu,
 
               W(x) = (x-a)^alpha (b-x)^beta                   (mu = 0, nu = 0)
               W(x) = (x-a)^alpha (b-x)^beta log(x-a)          (mu = 1, nu = 0)
               W(x) = (x-a)^alpha (b-x)^beta log(b-x)          (mu = 0, nu = 1)
               W(x) = (x-a)^alpha (b-x)^beta log(x-a) log(b-x) (mu = 1, nu = 1)
 
-The singular points (a,b) do not have to be specified until the integral is computed, where they are the endpoints of the integration range.
-The function returns a pointer to the newly allocated table gsl_integration_qaws_table if no errors were detected, and 0 in the case of error. 
+The singular points (a,b) do not have to be specified until the integral is
+computed, where they are the endpoints of the integration range.  The function
+returns a pointer to the newly allocated table gsl_integration_qaws_table if no
+errors were detected, and 0 in the case of error. 
 
-=item * C<gsl_integration_qaws_table_set($t, $alpha, $beta, $mu, $nu)> - This function modifies the parameters ($alpha, $beta, $mu, $nu) of an existing gsl_integration_qaws_table struct $t.
+=item * C<gsl_integration_qaws_table_set($t, $alpha, $beta, $mu, $nu)> 
 
-=item * C<gsl_integration_qaws_table_free($t)> - This function frees all the memory associated with the gsl_integration_qaws_table struct $t.
+ This function modifies the parameters ($alpha, $beta, $mu, $nu) of an existing
+ gsl_integration_qaws_table struct $t.
+
+=item * C<gsl_integration_qaws_table_free($t)> 
+
+ This function frees all the memory associated with the
+ gsl_integration_qaws_table struct $t.
 
 =item * C<gsl_integration_qawo_table_alloc($omega, $L, $sine, $n)>
 
-=item * C<gsl_integration_qawo_table_set($t, $omega, $L, $sine, $n)> - This function changes the parameters omega, L and sine of the existing workspace $t.
+=item * C<gsl_integration_qawo_table_set($t, $omega, $L, $sine, $n)> 
 
-=item * C<gsl_integration_qawo_table_set_length($t, $L)> - This function allows the length parameter $L of the workspace $t to be changed.
+ This function changes the parameters omega, L and sine of the existing
+ workspace $t.
 
-=item * C<gsl_integration_qawo_table_free($t)> - This function frees all the memory associated with the workspace $t.
+=item * C<gsl_integration_qawo_table_set_length($t, $L)> 
 
-=item * C<gsl_integration_qk15 >
+ This function allows the length parameter $L of the workspace $t to be
+ changed.
 
-=item * C<gsl_integration_qk21 >
+=item * C<gsl_integration_qawo_table_free($t)> 
 
-=item * C<gsl_integration_qk31 >
+ This function frees all the memory associated with the workspace $t.
 
-=item * C<gsl_integration_qk41 >
+=item * C<gsl_integration_qk15($function,$a,$b,$resabs,$resasc) >
 
-=item * C<gsl_integration_qk51 >
+=item * C<gsl_integration_qk21($function,$a,$b,$resabs,$resasc) >
 
-=item * C<gsl_integration_qk61 >
+=item * C<gsl_integration_qk31($function,$a,$b,$resabs,$resasc) >
 
-=item * C<gsl_integration_qcheb >
+=item * C<gsl_integration_qk41($function,$a,$b,$resabs,$resasc) >
+
+=item * C<gsl_integration_qk51($function,$a,$b,$resabs,$resasc) >
+
+=item * C<gsl_integration_qk61($function,$a,$b,$resabs,$resasc) >
+
+=item * C<gsl_integration_qcheb($function, $a, $b, $cheb12, $cheb24) >
 
 =item * C<gsl_integration_qk >
 
-=item * C<gsl_integration_qng >
+=item * C<gsl_integration_qng($function,$a,$b,$epsabs,$epsrel,$num_evals) >
 
-=item * C<gsl_integration_qag >
+This routine QNG (Quadrature Non-Adaptive Gaussian) is inexpensive is the sense
+that it will evaluate the function much fewer times than the adaptive routines.
+Because of this it does not need any workspaces, so it is also more memory
+efficient. It should be perfectly fine for well-behaved functions (smooth and
+nonsingular), but will not be able to get the required accuracy or may not
+converge for more complicated functions.
 
-=item * C<gsl_integration_qagi >
+=item * C<gsl_integration_qag($function,$a,$b,$epsabs,$epsrel,$limit,$key,$workspace) >
 
-=item * C<gsl_integration_qagiu >
+This routine QAG (Quadrature Adaptive Gaussian) ...
 
-=item * C<gsl_integration_qagil >
+=item * C<gsl_integration_qagi($function,$epsabs,$epsrel,$limit,$workspace) >
+
+=item * C<gsl_integration_qagiu($function,$a,$epsabs,$epsrel,$limit,$workspace) >
+
+=item * C<gsl_integration_qagil($function,$b,$epsabs,$epsrel,$limit,$workspace) >
 
 =item * C<gsl_integration_qags($func,$a,$b,$epsabs,$epsrel,$limit,$workspace)>
 
@@ -376,15 +568,15 @@ The function returns a pointer to the newly allocated table gsl_integration_qaws
  $epsabs and $epsrel. 
 
 
-=item * C<gsl_integration_qagp >
+=item * C<gsl_integration_qagp($function, $pts, $npts, $epsbs, $epsrel, $limit, $workspace) >
 
-=item * C<gsl_integration_qawc >
+=item * C<gsl_integration_qawc($function, $a, $b, $c, $epsabs, $epsrel, $limit, $workspace) >
 
-=item * C<gsl_integration_qaws >
+=item * C<gsl_integration_qaws($function, $a, $b, $qaws_table, $epsabs, $epsrel, $limit, $workspace) >
 
-=item * C<gsl_integration_qawo >
+=item * C<gsl_integration_qawo($function, $a, $epsabs, $epsrel, $limit, $workspace, $qawo_table) >
 
-=item * C<gsl_integration_qawf >
+=item * C<gsl_integration_qawf($function, $a, $epsabs, $limit, $workspace, $cycle_workspace, $qawo_table) >
 
 =back
 
@@ -410,25 +602,33 @@ This module also includes the following constants :
 
 =back
 
-The following errors constants are part of the Math::GSL::Errno module and can be returned by the gsl_integration functions :
+The following error constants are part of the Math::GSL::Errno module and can
+be returned by the gsl_integration_* functions :
 
 =over
 
-=item * $GSL_EMAXITER - the maximum number of subdivisions was exceeded.
+=item * $GSL_EMAXITER 
 
-=item * $GSL_EROUND - cannot reach tolerance because of roundoff error, or roundoff error was detected in the extrapolation table. 
+Maximum number of subdivisions was exceeded.
 
-=item * GSL_ESING - a non-integrable singularity or other bad integrand behavior was found in the integration interval.
+=item * $GSL_EROUND 
 
-=item * GSL_EDIVERGE - the integral is divergent, or too slowly convergent to be integrated numerically. 
+Cannot reach tolerance because of roundoff error, or roundoff error was detected in the extrapolation table. 
+
+=item * GSL_ESING 
+
+A non-integrable singularity or other bad integrand behavior was found in the integration interval.
+
+=item * GSL_EDIVERGE 
+
+The integral is divergent, or too slowly convergent to be integrated numerically. 
+
+=back 
  
-=back
+=head1 MORE INFO
 
 For more informations on the functions, we refer you to the GSL offcial
 documentation: L<http://www.gnu.org/software/gsl/manual/html_node/>
-
-Tip : search on google: site:http://www.gnu.org/software/gsl/manual/html_node/ name_of_the_function_you_want
-
 
 =head1 AUTHORS
 

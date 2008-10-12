@@ -64,6 +64,8 @@ package Math::GSL::Min;
 *gsl_min_fminimizer_minimum = *Math::GSL::Minc::gsl_min_fminimizer_minimum;
 *gsl_min_test_interval = *Math::GSL::Minc::gsl_min_test_interval;
 *gsl_min_find_bracket = *Math::GSL::Minc::gsl_min_find_bracket;
+*gsl_max = *Math::GSL::Minc::gsl_max;
+*gsl_min = *Math::GSL::Minc::gsl_min;
 
 ############# Class : Math::GSL::Min::gsl_min_fminimizer_type ##############
 
@@ -165,6 +167,133 @@ sub ACQUIRE {
 }
 
 
+############# Class : Math::GSL::Min::gsl_function_struct ##############
+
+package Math::GSL::Min::gsl_function_struct;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( Math::GSL::Min );
+%OWNER = ();
+%ITERATORS = ();
+*swig_function_get = *Math::GSL::Minc::gsl_function_struct_function_get;
+*swig_function_set = *Math::GSL::Minc::gsl_function_struct_function_set;
+*swig_params_get = *Math::GSL::Minc::gsl_function_struct_params_get;
+*swig_params_set = *Math::GSL::Minc::gsl_function_struct_params_set;
+sub new {
+    my $pkg = shift;
+    my $self = Math::GSL::Minc::new_gsl_function_struct(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        Math::GSL::Minc::delete_gsl_function_struct($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : Math::GSL::Min::gsl_function_fdf_struct ##############
+
+package Math::GSL::Min::gsl_function_fdf_struct;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( Math::GSL::Min );
+%OWNER = ();
+%ITERATORS = ();
+*swig_f_get = *Math::GSL::Minc::gsl_function_fdf_struct_f_get;
+*swig_f_set = *Math::GSL::Minc::gsl_function_fdf_struct_f_set;
+*swig_df_get = *Math::GSL::Minc::gsl_function_fdf_struct_df_get;
+*swig_df_set = *Math::GSL::Minc::gsl_function_fdf_struct_df_set;
+*swig_fdf_get = *Math::GSL::Minc::gsl_function_fdf_struct_fdf_get;
+*swig_fdf_set = *Math::GSL::Minc::gsl_function_fdf_struct_fdf_set;
+*swig_params_get = *Math::GSL::Minc::gsl_function_fdf_struct_params_get;
+*swig_params_set = *Math::GSL::Minc::gsl_function_fdf_struct_params_set;
+sub new {
+    my $pkg = shift;
+    my $self = Math::GSL::Minc::new_gsl_function_fdf_struct(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        Math::GSL::Minc::delete_gsl_function_fdf_struct($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : Math::GSL::Min::gsl_function_vec_struct ##############
+
+package Math::GSL::Min::gsl_function_vec_struct;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( Math::GSL::Min );
+%OWNER = ();
+%ITERATORS = ();
+*swig_function_get = *Math::GSL::Minc::gsl_function_vec_struct_function_get;
+*swig_function_set = *Math::GSL::Minc::gsl_function_vec_struct_function_set;
+*swig_params_get = *Math::GSL::Minc::gsl_function_vec_struct_params_get;
+*swig_params_set = *Math::GSL::Minc::gsl_function_vec_struct_params_set;
+sub new {
+    my $pkg = shift;
+    my $self = Math::GSL::Minc::new_gsl_function_vec_struct(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        Math::GSL::Minc::delete_gsl_function_vec_struct($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
 # ------- VARIABLE STUBS --------
 
 package Math::GSL::Min;
@@ -179,6 +308,23 @@ my %__gsl_min_fminimizer_brent_hash;
 tie %__gsl_min_fminimizer_brent_hash,"Math::GSL::Min::gsl_min_fminimizer_type", $Math::GSL::Minc::gsl_min_fminimizer_brent;
 $gsl_min_fminimizer_brent= \%__gsl_min_fminimizer_brent_hash;
 bless $gsl_min_fminimizer_brent, Math::GSL::Min::gsl_min_fminimizer_type;
+*M_E = *Math::GSL::Minc::M_E;
+*M_LOG2E = *Math::GSL::Minc::M_LOG2E;
+*M_LOG10E = *Math::GSL::Minc::M_LOG10E;
+*M_SQRT2 = *Math::GSL::Minc::M_SQRT2;
+*M_SQRT1_2 = *Math::GSL::Minc::M_SQRT1_2;
+*M_SQRT3 = *Math::GSL::Minc::M_SQRT3;
+*M_PI = *Math::GSL::Minc::M_PI;
+*M_PI_2 = *Math::GSL::Minc::M_PI_2;
+*M_PI_4 = *Math::GSL::Minc::M_PI_4;
+*M_SQRTPI = *Math::GSL::Minc::M_SQRTPI;
+*M_2_SQRTPI = *Math::GSL::Minc::M_2_SQRTPI;
+*M_1_PI = *Math::GSL::Minc::M_1_PI;
+*M_2_PI = *Math::GSL::Minc::M_2_PI;
+*M_LN10 = *Math::GSL::Minc::M_LN10;
+*M_LN2 = *Math::GSL::Minc::M_LN2;
+*M_LNPI = *Math::GSL::Minc::M_LNPI;
+*M_EULER = *Math::GSL::Minc::M_EULER;
 
 
 @EXPORT_OK = qw/
@@ -207,7 +353,7 @@ __END__
 
 =head1 NAME
 
-Math::GSL::Min - Routines for finding minima of arbitrary one-dimensional functions
+Math::GSL::Min - One-dimensional Minimization
 
 =head1 SYNOPSIS
 

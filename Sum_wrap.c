@@ -2377,9 +2377,9 @@ XS(_wrap_gsl_sum_levin_u_accel) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $array is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $array is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -2466,9 +2466,9 @@ XS(_wrap_gsl_sum_levin_u_minmax) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $array is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $array is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -3196,9 +3196,9 @@ XS(_wrap_gsl_sum_levin_utrunc_accel) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $array is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $array is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
@@ -3285,9 +3285,9 @@ XS(_wrap_gsl_sum_levin_utrunc_minmax) {
       int i;
       SV **tv;
       if (!SvROK(ST(0)))
-      croak("Math::GSL : ST(0) is not a reference!");
+      croak("Math::GSL : $array is not a reference!");
       if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : ST(0) is not an array ref!");
+      croak("Math::GSL : $array is not an array ref!");
       
       tempav = (AV*)SvRV(ST(0));
       len = av_len(tempav);
