@@ -2433,6 +2433,7 @@ XS(_wrap_gsl_poly_complex_eval) {
     void *argp3 ;
     int res3 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 3) || (items > 3)) {
@@ -2472,8 +2473,28 @@ XS(_wrap_gsl_poly_complex_eval) {
         arg3 = *((gsl_complex *)(argp3));
       }
     }
+    _saved[0] = ST(2);
     result = gsl_poly_complex_eval((double const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg3));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg3));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg3); 
+      y = GSL_IMAG(arg3);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     
     
     XSRETURN(argvi);
@@ -2496,6 +2517,7 @@ XS(_wrap_gsl_complex_poly_complex_eval) {
     void *argp3 ;
     int res3 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 3) || (items > 3)) {
@@ -2561,8 +2583,28 @@ XS(_wrap_gsl_complex_poly_complex_eval) {
         arg3 = *((gsl_complex *)(argp3));
       }
     }
+    _saved[0] = ST(2);
     result = gsl_complex_poly_complex_eval((gsl_complex const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg3));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg3));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg3); 
+      y = GSL_IMAG(arg3);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     
     
     XSRETURN(argvi);
@@ -3954,6 +3996,7 @@ XS(_wrap_gsl_complex_arg) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -3970,8 +4013,28 @@ XS(_wrap_gsl_complex_arg) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = (double)gsl_complex_arg(arg1);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -3986,6 +4049,7 @@ XS(_wrap_gsl_complex_abs) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -4002,8 +4066,28 @@ XS(_wrap_gsl_complex_abs) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = (double)gsl_complex_abs(arg1);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -4018,6 +4102,7 @@ XS(_wrap_gsl_complex_abs2) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -4034,8 +4119,28 @@ XS(_wrap_gsl_complex_abs2) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = (double)gsl_complex_abs2(arg1);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -4050,6 +4155,7 @@ XS(_wrap_gsl_complex_logabs) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -4066,8 +4172,28 @@ XS(_wrap_gsl_complex_logabs) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = (double)gsl_complex_logabs(arg1);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -4085,6 +4211,7 @@ XS(_wrap_gsl_complex_add) {
     void *argp2 ;
     int res2 = 0 ;
     int argvi = 0;
+    SV * _saved[2] ;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
@@ -4112,8 +4239,48 @@ XS(_wrap_gsl_complex_add) {
         arg2 = *((gsl_complex *)(argp2));
       }
     }
+    _saved[0] = ST(0);
+    _saved[1] = ST(1);
     result = gsl_complex_add(arg1,arg2);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg2));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg2));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg2); 
+      y = GSL_IMAG(arg2);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -4131,6 +4298,7 @@ XS(_wrap_gsl_complex_sub) {
     void *argp2 ;
     int res2 = 0 ;
     int argvi = 0;
+    SV * _saved[2] ;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
@@ -4158,8 +4326,48 @@ XS(_wrap_gsl_complex_sub) {
         arg2 = *((gsl_complex *)(argp2));
       }
     }
+    _saved[0] = ST(0);
+    _saved[1] = ST(1);
     result = gsl_complex_sub(arg1,arg2);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg2));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg2));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg2); 
+      y = GSL_IMAG(arg2);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -4177,6 +4385,7 @@ XS(_wrap_gsl_complex_mul) {
     void *argp2 ;
     int res2 = 0 ;
     int argvi = 0;
+    SV * _saved[2] ;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
@@ -4204,8 +4413,48 @@ XS(_wrap_gsl_complex_mul) {
         arg2 = *((gsl_complex *)(argp2));
       }
     }
+    _saved[0] = ST(0);
+    _saved[1] = ST(1);
     result = gsl_complex_mul(arg1,arg2);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg2));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg2));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg2); 
+      y = GSL_IMAG(arg2);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -4223,6 +4472,7 @@ XS(_wrap_gsl_complex_div) {
     void *argp2 ;
     int res2 = 0 ;
     int argvi = 0;
+    SV * _saved[2] ;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
@@ -4250,8 +4500,48 @@ XS(_wrap_gsl_complex_div) {
         arg2 = *((gsl_complex *)(argp2));
       }
     }
+    _saved[0] = ST(0);
+    _saved[1] = ST(1);
     result = gsl_complex_div(arg1,arg2);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg2));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg2));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg2); 
+      y = GSL_IMAG(arg2);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -4269,6 +4559,7 @@ XS(_wrap_gsl_complex_add_real) {
     double val2 ;
     int ecode2 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
@@ -4290,8 +4581,28 @@ XS(_wrap_gsl_complex_add_real) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_complex_add_real" "', argument " "2"" of type '" "double""'");
     } 
     arg2 = (double)(val2);
+    _saved[0] = ST(0);
     result = gsl_complex_add_real(arg1,arg2);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     
     XSRETURN(argvi);
   fail:
@@ -4311,6 +4622,7 @@ XS(_wrap_gsl_complex_sub_real) {
     double val2 ;
     int ecode2 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
@@ -4332,8 +4644,28 @@ XS(_wrap_gsl_complex_sub_real) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_complex_sub_real" "', argument " "2"" of type '" "double""'");
     } 
     arg2 = (double)(val2);
+    _saved[0] = ST(0);
     result = gsl_complex_sub_real(arg1,arg2);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     
     XSRETURN(argvi);
   fail:
@@ -4353,6 +4685,7 @@ XS(_wrap_gsl_complex_mul_real) {
     double val2 ;
     int ecode2 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
@@ -4374,8 +4707,28 @@ XS(_wrap_gsl_complex_mul_real) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_complex_mul_real" "', argument " "2"" of type '" "double""'");
     } 
     arg2 = (double)(val2);
+    _saved[0] = ST(0);
     result = gsl_complex_mul_real(arg1,arg2);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     
     XSRETURN(argvi);
   fail:
@@ -4395,6 +4748,7 @@ XS(_wrap_gsl_complex_div_real) {
     double val2 ;
     int ecode2 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
@@ -4416,8 +4770,28 @@ XS(_wrap_gsl_complex_div_real) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_complex_div_real" "', argument " "2"" of type '" "double""'");
     } 
     arg2 = (double)(val2);
+    _saved[0] = ST(0);
     result = gsl_complex_div_real(arg1,arg2);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     
     XSRETURN(argvi);
   fail:
@@ -4437,6 +4811,7 @@ XS(_wrap_gsl_complex_add_imag) {
     double val2 ;
     int ecode2 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
@@ -4458,8 +4833,28 @@ XS(_wrap_gsl_complex_add_imag) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_complex_add_imag" "', argument " "2"" of type '" "double""'");
     } 
     arg2 = (double)(val2);
+    _saved[0] = ST(0);
     result = gsl_complex_add_imag(arg1,arg2);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     
     XSRETURN(argvi);
   fail:
@@ -4479,6 +4874,7 @@ XS(_wrap_gsl_complex_sub_imag) {
     double val2 ;
     int ecode2 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
@@ -4500,8 +4896,28 @@ XS(_wrap_gsl_complex_sub_imag) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_complex_sub_imag" "', argument " "2"" of type '" "double""'");
     } 
     arg2 = (double)(val2);
+    _saved[0] = ST(0);
     result = gsl_complex_sub_imag(arg1,arg2);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     
     XSRETURN(argvi);
   fail:
@@ -4521,6 +4937,7 @@ XS(_wrap_gsl_complex_mul_imag) {
     double val2 ;
     int ecode2 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
@@ -4542,8 +4959,28 @@ XS(_wrap_gsl_complex_mul_imag) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_complex_mul_imag" "', argument " "2"" of type '" "double""'");
     } 
     arg2 = (double)(val2);
+    _saved[0] = ST(0);
     result = gsl_complex_mul_imag(arg1,arg2);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     
     XSRETURN(argvi);
   fail:
@@ -4563,6 +5000,7 @@ XS(_wrap_gsl_complex_div_imag) {
     double val2 ;
     int ecode2 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
@@ -4584,8 +5022,28 @@ XS(_wrap_gsl_complex_div_imag) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_complex_div_imag" "', argument " "2"" of type '" "double""'");
     } 
     arg2 = (double)(val2);
+    _saved[0] = ST(0);
     result = gsl_complex_div_imag(arg1,arg2);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     
     XSRETURN(argvi);
   fail:
@@ -4602,6 +5060,7 @@ XS(_wrap_gsl_complex_conjugate) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -4618,8 +5077,28 @@ XS(_wrap_gsl_complex_conjugate) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_conjugate(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -4634,6 +5113,7 @@ XS(_wrap_gsl_complex_inverse) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -4650,8 +5130,28 @@ XS(_wrap_gsl_complex_inverse) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_inverse(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -4666,6 +5166,7 @@ XS(_wrap_gsl_complex_negative) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -4682,8 +5183,28 @@ XS(_wrap_gsl_complex_negative) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_negative(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -4698,6 +5219,7 @@ XS(_wrap_gsl_complex_sqrt) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -4714,8 +5236,28 @@ XS(_wrap_gsl_complex_sqrt) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_sqrt(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -4761,6 +5303,7 @@ XS(_wrap_gsl_complex_pow) {
     void *argp2 ;
     int res2 = 0 ;
     int argvi = 0;
+    SV * _saved[2] ;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
@@ -4788,8 +5331,48 @@ XS(_wrap_gsl_complex_pow) {
         arg2 = *((gsl_complex *)(argp2));
       }
     }
+    _saved[0] = ST(0);
+    _saved[1] = ST(1);
     result = gsl_complex_pow(arg1,arg2);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg2));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg2));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg2); 
+      y = GSL_IMAG(arg2);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -4807,6 +5390,7 @@ XS(_wrap_gsl_complex_pow_real) {
     double val2 ;
     int ecode2 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
@@ -4828,8 +5412,28 @@ XS(_wrap_gsl_complex_pow_real) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_complex_pow_real" "', argument " "2"" of type '" "double""'");
     } 
     arg2 = (double)(val2);
+    _saved[0] = ST(0);
     result = gsl_complex_pow_real(arg1,arg2);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     
     XSRETURN(argvi);
   fail:
@@ -4846,6 +5450,7 @@ XS(_wrap_gsl_complex_exp) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -4862,8 +5467,28 @@ XS(_wrap_gsl_complex_exp) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_exp(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -4878,6 +5503,7 @@ XS(_wrap_gsl_complex_log) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -4894,8 +5520,28 @@ XS(_wrap_gsl_complex_log) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_log(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -4910,6 +5556,7 @@ XS(_wrap_gsl_complex_log10) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -4926,8 +5573,28 @@ XS(_wrap_gsl_complex_log10) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_log10(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -4945,6 +5612,7 @@ XS(_wrap_gsl_complex_log_b) {
     void *argp2 ;
     int res2 = 0 ;
     int argvi = 0;
+    SV * _saved[2] ;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
@@ -4972,8 +5640,48 @@ XS(_wrap_gsl_complex_log_b) {
         arg2 = *((gsl_complex *)(argp2));
       }
     }
+    _saved[0] = ST(0);
+    _saved[1] = ST(1);
     result = gsl_complex_log_b(arg1,arg2);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg2));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg2));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg2); 
+      y = GSL_IMAG(arg2);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -4988,6 +5696,7 @@ XS(_wrap_gsl_complex_sin) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5004,8 +5713,28 @@ XS(_wrap_gsl_complex_sin) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_sin(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -5020,6 +5749,7 @@ XS(_wrap_gsl_complex_cos) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5036,8 +5766,28 @@ XS(_wrap_gsl_complex_cos) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_cos(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -5052,6 +5802,7 @@ XS(_wrap_gsl_complex_sec) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5068,8 +5819,28 @@ XS(_wrap_gsl_complex_sec) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_sec(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -5084,6 +5855,7 @@ XS(_wrap_gsl_complex_csc) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5100,8 +5872,28 @@ XS(_wrap_gsl_complex_csc) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_csc(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -5116,6 +5908,7 @@ XS(_wrap_gsl_complex_tan) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5132,8 +5925,28 @@ XS(_wrap_gsl_complex_tan) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_tan(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -5148,6 +5961,7 @@ XS(_wrap_gsl_complex_cot) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5164,8 +5978,28 @@ XS(_wrap_gsl_complex_cot) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_cot(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -5180,6 +6014,7 @@ XS(_wrap_gsl_complex_arcsin) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5196,8 +6031,28 @@ XS(_wrap_gsl_complex_arcsin) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_arcsin(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -5240,6 +6095,7 @@ XS(_wrap_gsl_complex_arccos) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5256,8 +6112,28 @@ XS(_wrap_gsl_complex_arccos) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_arccos(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -5300,6 +6176,7 @@ XS(_wrap_gsl_complex_arcsec) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5316,8 +6193,28 @@ XS(_wrap_gsl_complex_arcsec) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_arcsec(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -5360,6 +6257,7 @@ XS(_wrap_gsl_complex_arccsc) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5376,8 +6274,28 @@ XS(_wrap_gsl_complex_arccsc) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_arccsc(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -5420,6 +6338,7 @@ XS(_wrap_gsl_complex_arctan) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5436,8 +6355,28 @@ XS(_wrap_gsl_complex_arctan) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_arctan(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -5452,6 +6391,7 @@ XS(_wrap_gsl_complex_arccot) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5468,8 +6408,28 @@ XS(_wrap_gsl_complex_arccot) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_arccot(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -5484,6 +6444,7 @@ XS(_wrap_gsl_complex_sinh) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5500,8 +6461,28 @@ XS(_wrap_gsl_complex_sinh) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_sinh(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -5516,6 +6497,7 @@ XS(_wrap_gsl_complex_cosh) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5532,8 +6514,28 @@ XS(_wrap_gsl_complex_cosh) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_cosh(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -5548,6 +6550,7 @@ XS(_wrap_gsl_complex_sech) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5564,8 +6567,28 @@ XS(_wrap_gsl_complex_sech) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_sech(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -5580,6 +6603,7 @@ XS(_wrap_gsl_complex_csch) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5596,8 +6620,28 @@ XS(_wrap_gsl_complex_csch) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_csch(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -5612,6 +6656,7 @@ XS(_wrap_gsl_complex_tanh) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5628,8 +6673,28 @@ XS(_wrap_gsl_complex_tanh) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_tanh(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -5644,6 +6709,7 @@ XS(_wrap_gsl_complex_coth) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5660,8 +6726,28 @@ XS(_wrap_gsl_complex_coth) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_coth(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -5676,6 +6762,7 @@ XS(_wrap_gsl_complex_arcsinh) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5692,8 +6779,28 @@ XS(_wrap_gsl_complex_arcsinh) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_arcsinh(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -5708,6 +6815,7 @@ XS(_wrap_gsl_complex_arccosh) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5724,8 +6832,28 @@ XS(_wrap_gsl_complex_arccosh) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_arccosh(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -5768,6 +6896,7 @@ XS(_wrap_gsl_complex_arcsech) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5784,8 +6913,28 @@ XS(_wrap_gsl_complex_arcsech) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_arcsech(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -5800,6 +6949,7 @@ XS(_wrap_gsl_complex_arccsch) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5816,8 +6966,28 @@ XS(_wrap_gsl_complex_arccsch) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_arccsch(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -5832,6 +7002,7 @@ XS(_wrap_gsl_complex_arctanh) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5848,8 +7019,28 @@ XS(_wrap_gsl_complex_arctanh) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_arctanh(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
@@ -5892,6 +7083,7 @@ XS(_wrap_gsl_complex_arccoth) {
     void *argp1 ;
     int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
@@ -5908,8 +7100,28 @@ XS(_wrap_gsl_complex_arccoth) {
         arg1 = *((gsl_complex *)(argp1));
       }
     }
+    _saved[0] = ST(0);
     result = gsl_complex_arccoth(arg1);
     ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    {
+      AV* tempav = newAV();
+      double x,y;
+      if (argvi >= items) {
+        EXTEND(sp,1);              
+      }
+      //fprintf(stderr,"--> %g <--\n", GSL_REAL(arg1));
+      //fprintf(stderr,"--> %g <--\n", GSL_IMAG(arg1));
+      
+      ST(argvi) = sv_newmortal();
+      
+      x = GSL_REAL(arg1); 
+      y = GSL_IMAG(arg1);
+      
+      /* the next 2 lines blow up
+          sv_setnv(ST(argvi), x);
+          argvi++;
+          */
+    }
     XSRETURN(argvi);
   fail:
     SWIG_croak_null();
