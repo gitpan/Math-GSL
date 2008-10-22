@@ -1446,6 +1446,32 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 #endif
 
 
+    static HV * Callbacks = (HV*)NULL;
+    /* this function returns the value 
+        of evaluating the function pointer
+        stored in func with argument x
+    */
+    double callthis(double x , int func, void *params){
+        SV ** sv;
+        double y;
+        dSP;
+
+        //fprintf(stderr, "LOOKUP CALLBACK\n");
+        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
+        if (sv == (SV**)NULL) {
+            fprintf(stderr, "Math::GSL(callthis): %d not in Callbacks!\n", func);
+            return;
+        }
+
+        PUSHMARK(SP);
+        XPUSHs(sv_2mortal(newSVnv((double)x)));
+        PUTBACK;
+        call_sv(*sv, G_SCALAR);
+        y = POPn;
+        return y;
+    }
+
+
     #include "gsl/gsl_types.h"
     #include "gsl/gsl_wavelet2d.h"
 
@@ -1616,8 +1642,6 @@ XS(_wrap_gsl_wavelet2d_transform) {
     int result;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
     size_t val3 ;
     int ecode3 = 0 ;
     size_t val4 ;
@@ -1639,11 +1663,24 @@ XS(_wrap_gsl_wavelet2d_transform) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_wavelet2d_transform" "', argument " "1"" of type '" "gsl_wavelet const *""'"); 
     }
     arg1 = (gsl_wavelet *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_wavelet2d_transform" "', argument " "2"" of type '" "double *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(1)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(1));
+      len = av_len(tempav);
+      arg2 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg2[i] = (double) SvNV(*tv);
+      }
     }
-    arg2 = (double *)(argp2);
     ecode3 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_wavelet2d_transform" "', argument " "3"" of type '" "size_t""'");
@@ -1707,8 +1744,6 @@ XS(_wrap_gsl_wavelet2d_transform_forward) {
     int result;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
     size_t val3 ;
     int ecode3 = 0 ;
     size_t val4 ;
@@ -1728,11 +1763,24 @@ XS(_wrap_gsl_wavelet2d_transform_forward) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_wavelet2d_transform_forward" "', argument " "1"" of type '" "gsl_wavelet const *""'"); 
     }
     arg1 = (gsl_wavelet *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_wavelet2d_transform_forward" "', argument " "2"" of type '" "double *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(1)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(1));
+      len = av_len(tempav);
+      arg2 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg2[i] = (double) SvNV(*tv);
+      }
     }
-    arg2 = (double *)(argp2);
     ecode3 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_wavelet2d_transform_forward" "', argument " "3"" of type '" "size_t""'");
@@ -1785,8 +1833,6 @@ XS(_wrap_gsl_wavelet2d_transform_inverse) {
     int result;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
     size_t val3 ;
     int ecode3 = 0 ;
     size_t val4 ;
@@ -1806,11 +1852,24 @@ XS(_wrap_gsl_wavelet2d_transform_inverse) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_wavelet2d_transform_inverse" "', argument " "1"" of type '" "gsl_wavelet const *""'"); 
     }
     arg1 = (gsl_wavelet *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_wavelet2d_transform_inverse" "', argument " "2"" of type '" "double *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(1)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(1));
+      len = av_len(tempav);
+      arg2 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg2[i] = (double) SvNV(*tv);
+      }
     }
-    arg2 = (double *)(argp2);
     ecode3 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_wavelet2d_transform_inverse" "', argument " "3"" of type '" "size_t""'");
@@ -1864,8 +1923,6 @@ XS(_wrap_gsl_wavelet2d_nstransform) {
     int result;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
     size_t val3 ;
     int ecode3 = 0 ;
     size_t val4 ;
@@ -1887,11 +1944,24 @@ XS(_wrap_gsl_wavelet2d_nstransform) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_wavelet2d_nstransform" "', argument " "1"" of type '" "gsl_wavelet const *""'"); 
     }
     arg1 = (gsl_wavelet *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_wavelet2d_nstransform" "', argument " "2"" of type '" "double *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(1)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(1));
+      len = av_len(tempav);
+      arg2 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg2[i] = (double) SvNV(*tv);
+      }
     }
-    arg2 = (double *)(argp2);
     ecode3 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_wavelet2d_nstransform" "', argument " "3"" of type '" "size_t""'");
@@ -1955,8 +2025,6 @@ XS(_wrap_gsl_wavelet2d_nstransform_forward) {
     int result;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
     size_t val3 ;
     int ecode3 = 0 ;
     size_t val4 ;
@@ -1976,11 +2044,24 @@ XS(_wrap_gsl_wavelet2d_nstransform_forward) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_wavelet2d_nstransform_forward" "', argument " "1"" of type '" "gsl_wavelet const *""'"); 
     }
     arg1 = (gsl_wavelet *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_wavelet2d_nstransform_forward" "', argument " "2"" of type '" "double *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(1)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(1));
+      len = av_len(tempav);
+      arg2 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg2[i] = (double) SvNV(*tv);
+      }
     }
-    arg2 = (double *)(argp2);
     ecode3 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_wavelet2d_nstransform_forward" "', argument " "3"" of type '" "size_t""'");
@@ -2033,8 +2114,6 @@ XS(_wrap_gsl_wavelet2d_nstransform_inverse) {
     int result;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
     size_t val3 ;
     int ecode3 = 0 ;
     size_t val4 ;
@@ -2054,11 +2133,24 @@ XS(_wrap_gsl_wavelet2d_nstransform_inverse) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_wavelet2d_nstransform_inverse" "', argument " "1"" of type '" "gsl_wavelet const *""'"); 
     }
     arg1 = (gsl_wavelet *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_wavelet2d_nstransform_inverse" "', argument " "2"" of type '" "double *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(1)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(1));
+      len = av_len(tempav);
+      arg2 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg2[i] = (double) SvNV(*tv);
+      }
     }
-    arg2 = (double *)(argp2);
     ecode3 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_wavelet2d_nstransform_inverse" "', argument " "3"" of type '" "size_t""'");
