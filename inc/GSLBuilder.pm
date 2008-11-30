@@ -6,9 +6,32 @@ use File::Spec::Functions qw/:ALL/;
 use Data::Dumper;
 use base 'Module::Build';
 
+sub is_release {
+    return -e '.git' ? 0 : 1;
+}
+sub subsystems {   
+    sort qw/
+        Diff         Machine      Statistics    BLAS
+        Eigen        Matrix       Poly          MatrixComplex
+        BSpline      Errno        PowInt        VectorComplex
+        CBLAS        FFT          Min           IEEEUtils
+        CDF          Fit          QRNG
+        Chebyshev    Monte        RNG           Vector
+        Heapsort     Multifit     Randist       Roots     
+        Combination  Histogram    Multimin      Wavelet
+        Complex      Histogram2D  Multiroots    Wavelet2D
+        Const        Siman        Sum           Sys
+        NTuple       Integration  Sort          Test        
+        DHT          Interp       ODEIV         SF 
+        Deriv        Linalg       Permutation   Spline
+    /;
+}
+
 sub process_swig_files {
     my $self = shift;
     my $p = $self->{properties};
+
+
     return unless $p->{swig_source};
     my $files_ref = $p->{swig_source};
     foreach my $file (@$files_ref) {
@@ -22,21 +45,24 @@ sub process_swig_files {
 
 sub process_swig {
     my ($self, $main_swig_file, $deps_ref) = @_;
-    my ($cf, $p) = ($self->{config}, $self->{properties}); # For convenience
+    my ($cf, $p) = ($self->{config}, $self->{properties});
 
     (my $file_base = $main_swig_file) =~ s/\.[^.]+$//;
-    my $c_file = "${file_base}_wrap.c";
+    $file_base =~ s!swig/!!g;
+    my $c_file = catdir('xs',"${file_base}_wrap.c");
 
     my @deps = defined $deps_ref ?  @$deps_ref : (); 
 
-    $self->compile_swig($main_swig_file, $c_file) 
-            unless($self->up_to_date( [$main_swig_file, @deps],$c_file)); 
-
+    # don't bother with swig if this is a CPAN release
+    unless ( is_release() ) {
+        $self->compile_swig($main_swig_file, $c_file) 
+                unless($self->up_to_date( [$main_swig_file, @deps],$c_file)); 
+    }
     # .c -> .o
     my $obj_file = $self->compile_c($c_file);
     $self->add_to_cleanup($obj_file);
 
-    my $archdir = catdir($self->blib,'arch','auto','Math','GSL', $file_base);
+    my $archdir = catdir($self->blib, qw/arch auto Math GSL/, $file_base);
     mkpath $archdir unless -d $archdir;
 
     # .o -> .so
@@ -50,6 +76,10 @@ sub compile_swig {
 
     # File name, minus the suffix
     (my $file_base = $file) =~ s/\.[^.]+$//;
+
+    # get rid of the swig name
+    $file_base =~ s!swig/!!g;
+
     my $pm_file = "${file_base}.pm";
     
     my @swig       = qw/swig/, defined($p->{swig}) ? ($self->split_like_shell($p->{swig})) : ();
@@ -59,14 +89,15 @@ sub compile_swig {
     my $gsldir   = catfile($blib_lib, qw/Math GSL/);
     mkdir $gsldir unless -e $gsldir;
 
+    
     my $from    = catfile($gsldir, $pm_file);
     my $to      = catfile(qw/lib Math GSL/,$pm_file);
     chmod 0644, $from, $to;
 
-    $self->do_system(@swig, '-o', $c_file,
+    $self->do_system(@swig, '-o', $c_file ,
                      '-outdir', $gsldir, 
 		             '-perl5', @swig_flags, $file)
-	    or die "error building $c_file file from '$file'";
+	    or die "error : $! while building ( @swig_flags ) $c_file in $gsl_dir from '$file'";
     print "Copying from: $from, to: $to; it makes the CPAN indexer happy.\n";
     copy($from,$to);
     return $c_file;
@@ -80,6 +111,8 @@ sub link_c {
   my ($cf, $p) = ($self->{config}, $self->{properties}); # For convenience
 
   my $lib_file = catfile($to, File::Basename::basename("$file_base.$Config{dlext}"));
+  # this is so Perl can look for things in the standard directories
+  $lib_file =~ s!swig/!!g;
 
   $self->add_to_cleanup($lib_file);
   my $objects = $p->{objects} || [];
@@ -96,7 +129,7 @@ sub link_c {
     # Strip binaries if we are compiling on windows
     push @ld, "-s" if (is_windows() && $Config{cc} eq 'gcc');
 
-    $self->do_system(@shrp, @ld, @lddlflags, @user_libs, '-o', $lib_file,
+    $self->do_system(@shrp, @ld, @lddlflags, @user_libs, '-o', $lib_file ,
 		     $obj_file, @$objects, @linker_flags)
       or die "error building $lib_file file from '$obj_file'";
   }

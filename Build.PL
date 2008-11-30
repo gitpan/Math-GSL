@@ -1,7 +1,7 @@
 #!/usr/bin/perl -w
-
-# This script has been heavily modified from the Device::Cdio Build.PL 
+# This has been heavily modified from the Device::Cdio Build.PL 
 # Jonathan Leto <jonathan@leto.net>
+
 #    Copyright (C) 2006 Rocky Bernstein <rocky@cpan.org>
 #
 #    This program is free software; you can redistribute it and/or modify
@@ -24,6 +24,7 @@ use Data::Dumper;
 use Module::Build;
 use lib 'inc';
 use GSLBuilder;
+use File::Spec::Functions qw/:ALL/;
 
 BEGIN {
     eval { require ExtUtils::PkgConfig };
@@ -160,31 +161,23 @@ if ( $^O eq 'cygwin'  && $Config{shrpenv} =~ m{\Aenv LD_RUN_PATH=(.*)\Z} ) {
     $swig_flags = '-DNEED_LONG';
 } elsif ( $^O eq 'darwin' ) {
     $ldflags .= ' -bundle -flat_namespace ';
-} elsif ($Config{archname} =~ /x86_64/ ) { 
-    $ldflags .= ' -fPIC '; 
-    $ccflags .= ' -fPIC ';
 }
-my @Subsystems = sort qw/
-            BLAS         Diff          Machine    Statistics
-            Eigen        Matrix        Poly       Wavelet2D
-            BSpline      Errno         PowInt     Wavelet
-            CBLAS        FFT           Min          
-            CDF          Fit           QRNG
-            Chebyshev    Monte         RNG
-            Heapsort     Multifit      Randist      Sum
-            Combination  Histogram     Multimin     Roots      
-            Complex      Histogram2D   Multiroots   SF         
-            Const        Siman         IEEEUtils    Sys
-            Integration  NTuple        Sort                  
-            DHT          Interp        ODEIV        Vector
-            Deriv        Linalg        Permutation  Spline
-/;
+if ($Config{archname} =~ /x86_64/ ) { 
+    $ldflags .= ' -fPIC  -fno-omit-frame-pointer '; 
+    $ccflags .= ' -fPIC  -fno-omit-frame-pointer ';
+}
+
+my @Subsystems = grep { ! /^Test$/ } GSLBuilder::subsystems;
 
 # BSplines appeared in 1.9
 if ($current_minor_version < 9 ) {
    @Subsystems = grep { ! /BSpline/ } @Subsystems;
 }
-my $cleanup = qq{core *.core Makefile Math-GSL-* tmp* pod2ht*.tmp _build blib *.so *.orig };
+my $cleanup = qq{
+                 xs/*_wrap.c core *.core 
+                 swig/*.o Makefile Math-GSL-* tmp* pod2ht*.tmp _build 
+                 lib/Math/GSL/[A-z]+/* blib *.so *.orig 
+                 } . join " ", map { catfile( (qw( lib Math GSL ), "$_.pm") ) } @Subsystems;
 
 my $builder = GSLBuilder->new( 
     module_name         => 'Math::GSL',
@@ -209,7 +202,7 @@ my $builder = GSLBuilder->new(
     },
     sign                  => 0,
     swig_source           => [  
-                                map { [ "$_.i" ] } @Subsystems
+                                map { [ "swig/$_.i", "pod/$_.pod" ] } @Subsystems ,
                              ],
 );
 $builder->add_build_element('swig');

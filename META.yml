@@ -1,12 +1,12 @@
 ---
 name: Math-GSL
-version: 0.14
+version: 0.15_04
 author:
   - 'Jonathan Leto <jonathan@leto.net>'
 abstract: Interface to the GNU Scientific Library using SWIG
 license: gpl
 resources:
-  license: http://www.opensource.org/licenses/gpl-license.php
+  license: http://opensource.org/licenses/gpl-license.php
 requires:
   ExtUtils::PkgConfig: 1.03
   Scalar::Util: 0
@@ -18,7 +18,7 @@ requires:
 provides:
   Math::GSL:
     file: lib/Math/GSL.pm
-    version: 0.14
+    version: 0.15_04
   Math::GSL::BLAS:
     file: lib/Math/GSL/BLAS.pm
   Math::GSL::BLASc:
@@ -153,6 +153,12 @@ provides:
     file: lib/Math/GSL/FFT.pm
   Math::GSL::FFT::gsl_fft_real_workspace:
     file: lib/Math/GSL/FFT.pm
+  Math::GSL::FFT::gsl_function_fdf_struct:
+    file: lib/Math/GSL/FFT.pm
+  Math::GSL::FFT::gsl_function_struct:
+    file: lib/Math/GSL/FFT.pm
+  Math::GSL::FFT::gsl_function_vec_struct:
+    file: lib/Math/GSL/FFT.pm
   Math::GSL::FFTc:
     file: lib/Math/GSL/FFT.pm
   Math::GSL::Fit:
@@ -160,6 +166,8 @@ provides:
   Math::GSL::Fitc:
     file: lib/Math/GSL/Fit.pm
   Math::GSL::Heapsort:
+    file: lib/Math/GSL/Heapsort.pm
+  Math::GSL::Heapsort::gsl_permutation_struct:
     file: lib/Math/GSL/Heapsort.pm
   Math::GSL::Heapsortc:
     file: lib/Math/GSL/Heapsort.pm
@@ -241,6 +249,20 @@ provides:
     file: lib/Math/GSL/Matrix.pm
   Math::GSL::Matrix::gsl_vector:
     file: lib/Math/GSL/Matrix.pm
+  Math::GSL::MatrixComplex:
+    file: lib/Math/GSL/MatrixComplex.pm
+  Math::GSL::MatrixComplex::gsl_complex:
+    file: lib/Math/GSL/MatrixComplex.pm
+  Math::GSL::MatrixComplex::gsl_complex_float:
+    file: lib/Math/GSL/MatrixComplex.pm
+  Math::GSL::MatrixComplex::gsl_complex_long_double:
+    file: lib/Math/GSL/MatrixComplex.pm
+  Math::GSL::MatrixComplex::gsl_matrix_complex:
+    file: lib/Math/GSL/MatrixComplex.pm
+  Math::GSL::MatrixComplex::gsl_vector:
+    file: lib/Math/GSL/MatrixComplex.pm
+  Math::GSL::MatrixComplexc:
+    file: lib/Math/GSL/MatrixComplex.pm
   Math::GSL::Matrixc:
     file: lib/Math/GSL/Matrix.pm
   Math::GSL::Min:
@@ -320,6 +342,10 @@ provides:
   Math::GSL::Multirootsc:
     file: lib/Math/GSL/Multiroots.pm
   Math::GSL::NTuple:
+    file: lib/Math/GSL/NTuple.pm
+  Math::GSL::NTuple::gsl_histogram:
+    file: lib/Math/GSL/NTuple.pm
+  Math::GSL::NTuple::gsl_histogram_pdf:
     file: lib/Math/GSL/NTuple.pm
   Math::GSL::NTuple::gsl_ntuple:
     file: lib/Math/GSL/NTuple.pm
@@ -455,6 +481,20 @@ provides:
     file: lib/Math/GSL/Vector.pm
   Math::GSL::Vector::gsl_vector_int:
     file: lib/Math/GSL/Vector.pm
+  Math::GSL::VectorComplex:
+    file: lib/Math/GSL/VectorComplex.pm
+  Math::GSL::VectorComplex::gsl_complex:
+    file: lib/Math/GSL/VectorComplex.pm
+  Math::GSL::VectorComplex::gsl_complex_float:
+    file: lib/Math/GSL/VectorComplex.pm
+  Math::GSL::VectorComplex::gsl_complex_long_double:
+    file: lib/Math/GSL/VectorComplex.pm
+  Math::GSL::VectorComplex::gsl_vector:
+    file: lib/Math/GSL/VectorComplex.pm
+  Math::GSL::VectorComplex::gsl_vector_complex:
+    file: lib/Math/GSL/VectorComplex.pm
+  Math::GSL::VectorComplexc:
+    file: lib/Math/GSL/VectorComplex.pm
   Math::GSL::Vectorc:
     file: lib/Math/GSL/Vector.pm
   Math::GSL::Wavelet:
@@ -471,7 +511,7 @@ provides:
     file: lib/Math/GSL/Wavelet.pm
   Math::GSL::Waveletc:
     file: lib/Math/GSL/Wavelet.pm
-generated_by: Module::Build version 0.2808
+generated_by: Module::Build version 0.280801
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.2.html
   version: 1.2
