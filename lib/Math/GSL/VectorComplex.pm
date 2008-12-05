@@ -510,6 +510,7 @@ use Carp qw/croak/;
 use Math::GSL::Errno qw/:all/;
 use Math::GSL::BLAS qw/gsl_blas_ddot/;
 use Math::GSL::Complex qw/:all/;
+use Math::GSL::Test qw/is_status_ok/;
 use Math::Complex;
 use overload 
     '*'      => \&_multiplication,
@@ -596,6 +597,8 @@ sub new {
     $this->{_vector} = $vector; 
     bless $this, $class;
 }
+
+
 =head2 raw()
 
 Get the underlying GSL vector object created by SWIG, useful for using gsl_vector_* functions which do not have an OO counterpart.
@@ -661,7 +664,7 @@ Gets the content of a Math::GSL::Vector object as a Perl list.
 
 sub as_list {
     my $self=shift;
-    $self->get( [ 0 .. $self->length - 1  ] );
+    return map { cplxe( gsl_complex_abs($_), gsl_complex_arg($_) ) } $self->get( [ 0 .. $self->length - 1  ] );
 }
 
 =head2  get() 
@@ -682,7 +685,26 @@ You can also enter an array of indices to receive their corresponding values:
 
 sub get {
     my ($self, $indices) = @_;
-    return  map {  gsl_vector_get($self->raw, $_ ) } @$indices ;
+    return  map {  gsl_vector_complex_get($self->raw, $_ ) } @$indices ;
+}
+
+=head2 reverse()
+
+Returns the a vector with the elements in reversed order.
+
+    use Math::Complex;
+    my $v1 = Math::GSL::VectorComplex->new([ 1, 2, 3*i]);
+    my $v2 = $v1->reverse;
+
+=cut
+
+sub reverse {
+    my $self = shift;
+    my $copy = $self->copy();
+    unless ( is_status_ok( gsl_vector_complex_reverse( $copy->raw )) ) {
+        die( __PACKAGE__.": error reversing vector " . gsl_strerror($status) );
+    }
+    return $copy;
 }
 
 =head2  set() 
