@@ -1,11 +1,14 @@
 =head1 Math::GSL Changes
 
-=head1 v0.16 - December ?? 2008
-    - addeded reverse() method to VectorComplex objects with tests and docs
+=head1 v0.16 - December 14 2008 (Happy Snowpocalypse PDX!)
+
+    - Fixed RT#40947: configure_requires ExtUtils::PkgConfig bug
+    - Added reverse() and swap() methods to VectorComplex objects with tests and docs
     - as_list() and get() now work on VectorComplex objects
         as_list() returns a list of Math::Complex objects
         get() returns a list of Math::GSL::Complex objects
     - Math::GSL::Test::ok_status() now takes an optional message argument
+    - Added KNOWN_BUGS
     - Added Math::GSL::Test::is_status_ok()
     - New subsytems: VectorComplex and MatrixComplex
     - Operator overloading for addition and subtraction with vectors
@@ -14,15 +17,18 @@
     - Added copy() method to vectors
     - Improved Vector docs
     - Sped up vector dot products by 15x using BLAS function gsl_blas_ddot
-        NOTE: using gsl_blas_ddot($x->raw,$y->raw) directly is still about 10 times faster 
+        NOTE: using gsl_blas_ddot($x->raw,$y->raw) directly is still about 10 times faster
               than $x * $y due to error checking and function call overhead
     - Separated POD and Perl code out of SWIG interface files, yay for proper syntax
         highlighting
     - Added stub test files for Heapsort, IEEEUtils, Multimin, Siman, Wavelet2D
     - All test files now keep track of how many tests should run
+    - Fix an include bug in Histogram2D which caused the build to fail (Thierry)
+    - Operator overloading for addition, multiplication and subtraction on Matrix objects (Thierry)
 
 
 =head1 v0.14 - October 21 2008
+
     - Chebyshev Series Approximation, with tests and docs
     - Examples and new documentation in Statistics, as well as tests (Thierry)
     - Bugfixes relating to compiling on 64bit Red Hat Linux, reported by Michael Roberge
