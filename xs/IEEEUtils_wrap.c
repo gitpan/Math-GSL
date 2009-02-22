@@ -1476,6 +1476,32 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 #endif
 
 
+    static HV * Callbacks = (HV*)NULL;
+    /* this function returns the value 
+        of evaluating the function pointer
+        stored in func with argument x
+    */
+    double callthis(double x , int func, void *params){
+        SV ** sv;
+        double y;
+        dSP;
+
+        //fprintf(stderr, "LOOKUP CALLBACK\n");
+        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
+        if (sv == (SV**)NULL) {
+            fprintf(stderr, "Math::GSL(callthis): %d not in Callbacks!\n", func);
+            return;
+        }
+
+        PUSHMARK(SP);
+        XPUSHs(sv_2mortal(newSVnv((double)x)));
+        PUTBACK;
+        call_sv(*sv, G_SCALAR);
+        y = POPn;
+        return y;
+    }
+
+
     #include "gsl/gsl_ieee_utils.h"
 
 
@@ -2393,19 +2419,30 @@ XS(_wrap_gsl_ieee_printf_float) {
 XS(_wrap_gsl_ieee_printf_double) {
   {
     double *arg1 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     int argvi = 0;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: gsl_ieee_printf_double(x);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_ieee_printf_double" "', argument " "1"" of type '" "double const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $x is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $x is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (double *)(argp1);
     gsl_ieee_printf_double((double const *)arg1);
     
     
@@ -2460,8 +2497,6 @@ XS(_wrap_gsl_ieee_fprintf_double) {
     double *arg2 = (double *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
     int argvi = 0;
     dXSARGS;
     
@@ -2473,11 +2508,24 @@ XS(_wrap_gsl_ieee_fprintf_double) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_ieee_fprintf_double" "', argument " "1"" of type '" "FILE *""'"); 
     }
     arg1 = (FILE *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_ieee_fprintf_double" "', argument " "2"" of type '" "double const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(1)))
+      croak("Math::GSL : $x is not a reference!");
+      if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
+      croak("Math::GSL : $x is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(1));
+      len = av_len(tempav);
+      arg2 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg2[i] = (double) SvNV(*tv);
+      }
     }
-    arg2 = (double *)(argp2);
     gsl_ieee_fprintf_double(arg1,(double const *)arg2);
     
     
@@ -2532,8 +2580,6 @@ XS(_wrap_gsl_ieee_double_to_rep) {
   {
     double *arg1 = (double *) 0 ;
     gsl_ieee_double_rep *arg2 = (gsl_ieee_double_rep *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     void *argp2 = 0 ;
     int res2 = 0 ;
     int argvi = 0;
@@ -2542,11 +2588,24 @@ XS(_wrap_gsl_ieee_double_to_rep) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: gsl_ieee_double_to_rep(x,r);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_ieee_double_to_rep" "', argument " "1"" of type '" "double const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $x is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $x is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (double) SvNV(*tv);
+      }
     }
-    arg1 = (double *)(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_gsl_ieee_double_rep, 0 |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_ieee_double_to_rep" "', argument " "2"" of type '" "gsl_ieee_double_rep *""'"); 
@@ -2698,7 +2757,7 @@ static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)
 static swig_type_info _swigt__p_float = {"_p_float", "float *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_gsl_ieee_double_rep = {"_p_gsl_ieee_double_rep", "gsl_ieee_double_rep *", 0, 0, (void*)"Math::GSL::IEEEUtils::gsl_ieee_double_rep", 0};
 static swig_type_info _swigt__p_gsl_ieee_float_rep = {"_p_gsl_ieee_float_rep", "gsl_ieee_float_rep *", 0, 0, (void*)"Math::GSL::IEEEUtils::gsl_ieee_float_rep", 0};
-static swig_type_info _swigt__p_int = {"_p_int", "int *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_int = {"_p_int", "int *|size_t *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_FILE,

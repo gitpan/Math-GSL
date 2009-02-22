@@ -1,6 +1,6 @@
 ---
 name: Math-GSL
-version: 0.16
+version: 0.17_01
 author:
   - 'Jonathan Leto <jonathan@leto.net>'
 abstract: Interface to the GNU Scientific Library using SWIG
@@ -20,7 +20,7 @@ requires:
 provides:
   Math::GSL:
     file: lib/Math/GSL.pm
-    version: 0.16
+    version: 0.17_01
   Math::GSL::BLAS:
     file: lib/Math/GSL/BLAS.pm
   Math::GSL::BLASc:
@@ -224,6 +224,12 @@ provides:
   Math::GSL::Interpc:
     file: lib/Math/GSL/Interp.pm
   Math::GSL::Linalg:
+    file: lib/Math/GSL/Linalg.pm
+  Math::GSL::Linalg::gsl_complex:
+    file: lib/Math/GSL/Linalg.pm
+  Math::GSL::Linalg::gsl_complex_float:
+    file: lib/Math/GSL/Linalg.pm
+  Math::GSL::Linalg::gsl_complex_long_double:
     file: lib/Math/GSL/Linalg.pm
   Math::GSL::Linalg::gsl_permutation_struct:
     file: lib/Math/GSL/Linalg.pm

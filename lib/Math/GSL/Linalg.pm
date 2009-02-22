@@ -179,6 +179,65 @@ package Math::GSL::Linalg;
 *gsl_permutation_inversions = *Math::GSL::Linalgc::gsl_permutation_inversions;
 *gsl_permutation_linear_cycles = *Math::GSL::Linalgc::gsl_permutation_linear_cycles;
 *gsl_permutation_canonical_cycles = *Math::GSL::Linalgc::gsl_permutation_canonical_cycles;
+*gsl_complex_rect = *Math::GSL::Linalgc::gsl_complex_rect;
+*gsl_complex_polar = *Math::GSL::Linalgc::gsl_complex_polar;
+*gsl_complex_arg = *Math::GSL::Linalgc::gsl_complex_arg;
+*gsl_complex_abs = *Math::GSL::Linalgc::gsl_complex_abs;
+*gsl_complex_abs2 = *Math::GSL::Linalgc::gsl_complex_abs2;
+*gsl_complex_logabs = *Math::GSL::Linalgc::gsl_complex_logabs;
+*gsl_complex_add = *Math::GSL::Linalgc::gsl_complex_add;
+*gsl_complex_sub = *Math::GSL::Linalgc::gsl_complex_sub;
+*gsl_complex_mul = *Math::GSL::Linalgc::gsl_complex_mul;
+*gsl_complex_div = *Math::GSL::Linalgc::gsl_complex_div;
+*gsl_complex_add_real = *Math::GSL::Linalgc::gsl_complex_add_real;
+*gsl_complex_sub_real = *Math::GSL::Linalgc::gsl_complex_sub_real;
+*gsl_complex_mul_real = *Math::GSL::Linalgc::gsl_complex_mul_real;
+*gsl_complex_div_real = *Math::GSL::Linalgc::gsl_complex_div_real;
+*gsl_complex_add_imag = *Math::GSL::Linalgc::gsl_complex_add_imag;
+*gsl_complex_sub_imag = *Math::GSL::Linalgc::gsl_complex_sub_imag;
+*gsl_complex_mul_imag = *Math::GSL::Linalgc::gsl_complex_mul_imag;
+*gsl_complex_div_imag = *Math::GSL::Linalgc::gsl_complex_div_imag;
+*gsl_complex_conjugate = *Math::GSL::Linalgc::gsl_complex_conjugate;
+*gsl_complex_inverse = *Math::GSL::Linalgc::gsl_complex_inverse;
+*gsl_complex_negative = *Math::GSL::Linalgc::gsl_complex_negative;
+*gsl_complex_sqrt = *Math::GSL::Linalgc::gsl_complex_sqrt;
+*gsl_complex_sqrt_real = *Math::GSL::Linalgc::gsl_complex_sqrt_real;
+*gsl_complex_pow = *Math::GSL::Linalgc::gsl_complex_pow;
+*gsl_complex_pow_real = *Math::GSL::Linalgc::gsl_complex_pow_real;
+*gsl_complex_exp = *Math::GSL::Linalgc::gsl_complex_exp;
+*gsl_complex_log = *Math::GSL::Linalgc::gsl_complex_log;
+*gsl_complex_log10 = *Math::GSL::Linalgc::gsl_complex_log10;
+*gsl_complex_log_b = *Math::GSL::Linalgc::gsl_complex_log_b;
+*gsl_complex_sin = *Math::GSL::Linalgc::gsl_complex_sin;
+*gsl_complex_cos = *Math::GSL::Linalgc::gsl_complex_cos;
+*gsl_complex_sec = *Math::GSL::Linalgc::gsl_complex_sec;
+*gsl_complex_csc = *Math::GSL::Linalgc::gsl_complex_csc;
+*gsl_complex_tan = *Math::GSL::Linalgc::gsl_complex_tan;
+*gsl_complex_cot = *Math::GSL::Linalgc::gsl_complex_cot;
+*gsl_complex_arcsin = *Math::GSL::Linalgc::gsl_complex_arcsin;
+*gsl_complex_arcsin_real = *Math::GSL::Linalgc::gsl_complex_arcsin_real;
+*gsl_complex_arccos = *Math::GSL::Linalgc::gsl_complex_arccos;
+*gsl_complex_arccos_real = *Math::GSL::Linalgc::gsl_complex_arccos_real;
+*gsl_complex_arcsec = *Math::GSL::Linalgc::gsl_complex_arcsec;
+*gsl_complex_arcsec_real = *Math::GSL::Linalgc::gsl_complex_arcsec_real;
+*gsl_complex_arccsc = *Math::GSL::Linalgc::gsl_complex_arccsc;
+*gsl_complex_arccsc_real = *Math::GSL::Linalgc::gsl_complex_arccsc_real;
+*gsl_complex_arctan = *Math::GSL::Linalgc::gsl_complex_arctan;
+*gsl_complex_arccot = *Math::GSL::Linalgc::gsl_complex_arccot;
+*gsl_complex_sinh = *Math::GSL::Linalgc::gsl_complex_sinh;
+*gsl_complex_cosh = *Math::GSL::Linalgc::gsl_complex_cosh;
+*gsl_complex_sech = *Math::GSL::Linalgc::gsl_complex_sech;
+*gsl_complex_csch = *Math::GSL::Linalgc::gsl_complex_csch;
+*gsl_complex_tanh = *Math::GSL::Linalgc::gsl_complex_tanh;
+*gsl_complex_coth = *Math::GSL::Linalgc::gsl_complex_coth;
+*gsl_complex_arcsinh = *Math::GSL::Linalgc::gsl_complex_arcsinh;
+*gsl_complex_arccosh = *Math::GSL::Linalgc::gsl_complex_arccosh;
+*gsl_complex_arccosh_real = *Math::GSL::Linalgc::gsl_complex_arccosh_real;
+*gsl_complex_arcsech = *Math::GSL::Linalgc::gsl_complex_arcsech;
+*gsl_complex_arccsch = *Math::GSL::Linalgc::gsl_complex_arccsch;
+*gsl_complex_arctanh = *Math::GSL::Linalgc::gsl_complex_arctanh;
+*gsl_complex_arctanh_real = *Math::GSL::Linalgc::gsl_complex_arctanh_real;
+*gsl_complex_arccoth = *Math::GSL::Linalgc::gsl_complex_arccoth;
 
 ############# Class : Math::GSL::Linalg::gsl_permutation_struct ##############
 
@@ -221,10 +280,129 @@ sub ACQUIRE {
 }
 
 
+############# Class : Math::GSL::Linalg::gsl_complex_long_double ##############
+
+package Math::GSL::Linalg::gsl_complex_long_double;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( Math::GSL::Linalg );
+%OWNER = ();
+%ITERATORS = ();
+*swig_dat_get = *Math::GSL::Linalgc::gsl_complex_long_double_dat_get;
+*swig_dat_set = *Math::GSL::Linalgc::gsl_complex_long_double_dat_set;
+sub new {
+    my $pkg = shift;
+    my $self = Math::GSL::Linalgc::new_gsl_complex_long_double(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        Math::GSL::Linalgc::delete_gsl_complex_long_double($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : Math::GSL::Linalg::gsl_complex ##############
+
+package Math::GSL::Linalg::gsl_complex;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( Math::GSL::Linalg );
+%OWNER = ();
+%ITERATORS = ();
+*swig_dat_get = *Math::GSL::Linalgc::gsl_complex_dat_get;
+*swig_dat_set = *Math::GSL::Linalgc::gsl_complex_dat_set;
+sub new {
+    my $pkg = shift;
+    my $self = Math::GSL::Linalgc::new_gsl_complex(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        Math::GSL::Linalgc::delete_gsl_complex($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : Math::GSL::Linalg::gsl_complex_float ##############
+
+package Math::GSL::Linalg::gsl_complex_float;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( Math::GSL::Linalg );
+%OWNER = ();
+%ITERATORS = ();
+*swig_dat_get = *Math::GSL::Linalgc::gsl_complex_float_dat_get;
+*swig_dat_set = *Math::GSL::Linalgc::gsl_complex_float_dat_set;
+sub new {
+    my $pkg = shift;
+    my $self = Math::GSL::Linalgc::new_gsl_complex_float(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        Math::GSL::Linalgc::delete_gsl_complex_float($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
 # ------- VARIABLE STUBS --------
 
 package Math::GSL::Linalg;
 
+*GSL_MAJOR_VERSION = *Math::GSL::Linalgc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Linalgc::GSL_MINOR_VERSION;
 *GSL_LINALG_MOD_NONE = *Math::GSL::Linalgc::GSL_LINALG_MOD_NONE;
 *GSL_LINALG_MOD_TRANSPOSE = *Math::GSL::Linalgc::GSL_LINALG_MOD_TRANSPOSE;
 *GSL_LINALG_MOD_CONJUGATE = *Math::GSL::Linalgc::GSL_LINALG_MOD_CONJUGATE;

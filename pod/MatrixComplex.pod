@@ -1,11 +1,38 @@
-%perlcode %{ 
+%perlcode %{
 
+use strict;
 use Carp qw/croak/;
-use Math::GSL qw/:all/;
-use Math::GSL::Errno qw/:all/;
+use Scalar::Util 'blessed';
 use Math::Complex;
+use Data::Dumper;
 
-@EXPORT_OK = qw/
+use Math::GSL           qw/:all/;
+use Math::GSL::Errno    qw/:all/;
+use Math::GSL::Eigen    qw/:all/;
+use Math::GSL::Test     qw/is_similar/;
+use Math::GSL::BLAS     qw/gsl_blas_zgemm/;
+use Math::GSL::CBLAS    qw/$CblasNoTrans/;
+use Math::GSL::Complex  qw/:all/;
+use Math::GSL::Permutation;
+use Math::GSL::VectorComplex qw/:all/;
+
+use Math::GSL::Linalg qw/
+    gsl_linalg_complex_LU_decomp
+    gsl_linalg_complex_LU_det
+    gsl_linalg_complex_LU_lndet
+    gsl_linalg_complex_LU_invert
+/;
+
+use overload
+    '*'      => \&_multiplication,
+    '+'      => \&_addition,
+    '-'      => \&_subtract,
+    '=='     => \&_equal,
+    '!='     => \&_not_equal,
+#    'abs'    => \&_abs,
+    fallback => 1;
+
+our @EXPORT_OK = qw/
                 gsl_matrix_complex_alloc
                 gsl_matrix_complex_calloc
                 gsl_matrix_complex_alloc_from_block
@@ -71,7 +98,90 @@ use Math::Complex;
                 gsl_matrix_complex_set_col
 /;
 
-%EXPORT_TAGS = ( all => \@EXPORT_OK ,  );
+sub _multiplication {
+    my ($left,$right) = @_;
+    my $lcopy = $left->copy;
+
+    if ( blessed $right && $right->isa('Math::GSL::MatrixComplex') ) {
+        if ( $left->cols == $right->cols && $left->rows == $right->rows ) {
+            return _dot_product($left,$right);
+            #gsl_matrix_complex_mul_elements($lcopy->raw, $right->raw);
+        } else {
+            croak "Math::GSL::MatrixComplex - multiplication of elements of matrices must be called with two objects matrices and must have the same number of columns and rows";
+        } 
+    } else {
+        gsl_matrix_complex_scale($lcopy->raw, $right);
+    }
+    return $lcopy;
+}
+
+sub _dot_product {
+    my ($left,$right) = @_;
+
+    croak "Math::GSL::Matrix - incompatible matrices in multiplication"
+        unless ( blessed $right && $right->isa('Math::GSL::MatrixComplex') and $left->rows == $right->cols );
+    my $C = Math::GSL::MatrixComplex->new($left->rows, $right->cols);
+    my $complex = gsl_complex_rect(1,0);
+    gsl_blas_zgemm($CblasNoTrans, $CblasNoTrans, $complex, $left->raw, $right->raw, $complex, $C->raw);
+    return $C;
+}
+
+sub _addition {
+    my ($left, $right) = @_;
+
+    my $lcopy = $left->copy;
+
+    if ( blessed $right && $right->isa('Math::GSL::MatrixComplex') && blessed $left && $left->isa('Math::GSL::MatrixComplex') ) {
+        if ( $left->cols == $right->cols && $left->rows == $right->rows ) {
+            gsl_matrix_complex_add($lcopy->raw, $right->raw);
+        } else {
+            croak "Math::GSL - addition of matrices must be called with two objects matrices and must have the same number of columns and rows";
+        }
+    } else {
+        gsl_matrix_complex_add_constant($lcopy->raw, $right);
+    }
+    return $lcopy;
+}
+
+sub _subtract {
+    my ($left, $right) = @_;
+
+    my $lcopy = $left->copy;
+
+    if ( blessed $right && $right->isa('Math::GSL::MatrixComplex') && blessed $left && $left->isa('Math::GSL::MatrixComplex') ) {
+        if ( $left->cols == $right->cols && $left->rows == $right->rows ) {
+            gsl_matrix_complex_sub($lcopy->raw, $right->raw);
+        } else {
+            croak "Math::GSL - subtraction of matrices must be called with two objects matrices and must have the same number of columns and rows";
+        }
+    } else {
+        gsl_matrix_complex_add_constant($lcopy->raw, $right*-1);
+    }
+    return $lcopy;
+}
+
+sub _equal {
+    my ($left, $right) = @_;
+    return is_similar( [ map { Re $_ } $left->as_list ],
+                       [ map { Re $_ } $right->as_list ]) &&
+           is_similar( [ map { Im $_ } $left->as_list ],
+                       [ map { Im $_ } $right->as_list ]);
+}
+
+sub _not_equal {
+    my ($left, $right) = @_;
+    return !_equal($left,$right);
+}
+
+sub copy {
+    my $self = shift;
+    my $copy = Math::GSL::MatrixComplex->new( $self->rows, $self->cols );
+    if ( gsl_matrix_complex_memcpy($copy->raw, $self->raw) != $GSL_SUCCESS ) {
+        croak "Math::GSL - error copying memory, aborting";
+    }
+    return $copy;
+}
+our %EXPORT_TAGS = ( all => \@EXPORT_OK  );
 
 =head1 NAME
 
@@ -81,8 +191,12 @@ Math::GSL::MatrixComplex - Complex Matrices
 
     use Math::GSL::MatrixComplex qw/:all/;
     my $matrix1 = Math::GSL::MatrixComplex->new(5,5);  # OO interface
-    my $matrix2 = gsl_matrix_complex_alloc(5,5);        # standard interface
+    my $matrix3 = $matrix1 + $matrix1;
+    my $matrix4 = $matrix1 - $matrix1;
+    if($matrix1 == $matrix4) ...
+    if($matrix1 != $matrix3) ...
 
+    my $matrix2 = gsl_matrix_complex_alloc(5,5);        # standard interface
 
 =head1 Objected Oriented Interface to GSL Math::GSL::MatrixComplex
 
@@ -117,7 +231,7 @@ Get the underlying GSL matrix object created by SWIG, useful for using gsl_matri
 
     my $matrix     = Math::GSL::MatrixComplex->new(3,3);
     my $gsl_matrix = $matrix->raw;
-    my $stuff      = gsl_matrix_get($gsl_matrix, 1, 2);
+    my $stuff      = gsl_matrix_complex_get($gsl_matrix, 1, 2);
 
 =cut
 sub raw  { (shift)->{_matrix} }
@@ -139,6 +253,25 @@ Returns the number of columns in the matrix.
 
 sub cols { (shift)->{_cols}   }
 
+=head2 as_vector()
+
+Returns a 1xN or Nx1 matrix as a Math::GSL::VectorComplex object. Dies if called on a matrix that is not a single row or column. Useful for turning the output of C<col()> or C<row()> into a vector, like so:
+
+    my $vector1 = $matrix->col(0)->as_vector;
+    my $vector2 = $matrix->row(1)->as_vector;
+
+=cut
+
+sub as_vector($)
+{
+    my ($self) = @_;
+    croak(__PACKAGE__.'::as_vector() - must be a single row or column matrix') unless ($self->cols == 1 or $self->rows == 1);
+
+    # TODO: there is a faster way to do this
+    return Math::GSL::VectorComplex->new([ $self->as_list ] );
+
+}
+
 =head2  as_list() 
 
 Get the contents of a Math::GSL::Matrix object as a Perl list.
@@ -148,20 +281,18 @@ Get the contents of a Math::GSL::Matrix object as a Perl list.
     my @matrix = $matrix->as_list;
 =cut
 
-
-sub as_list 
+sub as_list($)
 {
     my $self = shift;
-    my $line;
-    my @part;
-    my @total;
-    for($line=0; $line<$self->rows; $line++){
-       @part = map { 
-         gsl_matrix_get($self->raw, $line, $_) 
-       } (0 .. $self->cols-1 );
-       push(@total, @part);
+    my @matrix;
+    for my $row ( 0 .. $self->rows-1) {
+       push @matrix, map { gsl_matrix_complex_get($self->raw, $row, $_) } (0 .. $self->cols-1 );
     }
-    return @total;
+    return map {
+            Math::Complex->make(
+                gsl_real($_),
+                gsl_imag($_))
+            } @matrix;
 }
 
 =head2 row()
@@ -182,12 +313,11 @@ sub row
 
    my $rowmat = Math::GSL::MatrixComplex->new(1,$self->cols);
 
-   my @got; 
    for my $n (0 .. $self->cols-1) {
-    push (@got, gsl_matrix_get($self->raw, $row, $n)); 
+        gsl_matrix_complex_set( $rowmat->raw, 0, $n,
+            gsl_matrix_complex_get($self->raw, $row, $n)
+        );
    }
-    for my $n (0 .. $self->cols-1) {
-	gsl_matrix_set($rowmat->raw, 0, $n, $got[$n]); }	
 
     return $rowmat;
 }
@@ -202,21 +332,18 @@ Returns a col matrix of the column you enter.
 
 =cut
 
-sub col 
+sub col
 {
     my ($self, $col) = @_;
-    croak (__PACKAGE__."::\$matrix->col(\$col) - $col not a valid column") 
-        unless ($col < $self->cols and $col >= 0);  
+    croak (__PACKAGE__."::\$matrix->col(\$col) - $col not a valid column")
+        unless (defined $col && $col < $self->cols and $col >= 0);
 
-    my $colvec = Math::GSL::Vector->new($self->cols);
     my $colmat = Math::GSL::MatrixComplex->new($self->rows, 1);
 
-   my @got; 
-   for my $n (0 .. $self->rows-1) {
-    push (@got, gsl_matrix_get($self->raw, $n, $col)); 
-   }
-    for my $n (0 .. $self->rows-1) {
-	gsl_matrix_set($colmat->raw, $n, 0, $got[$n]); }	
+    map { gsl_matrix_complex_set($colmat->raw, $_, 0,
+            gsl_matrix_complex_get($self->raw, $_, $col),
+            )
+        } (0 .. $self->rows-1);
 
     return $colmat;
 }
@@ -237,13 +364,16 @@ You can also set multiple rows at once with chained calls:
 =cut
 
 sub set_row {
- my ($self, $row, $values) = @_;
- my $length = $#$values;
- die __PACKAGE__.'::new($x, $values) - $values must be a nonempty array reference' if $length == -1;
- die __PACKAGE__.'::set_row($x, $values) - $x must be a valid row number' if ($row < 0 || $row >= $self->rows);
- die __PACKAGE__.'::set_row($x, $values) - $values must contains the same number of elements as there is columns in the matrix' if($length != $self->cols-1);
- map { gsl_matrix_set($self->raw, $row, $_, $values->[$_]) } (0..$length);
- return $self;
+    my ($self, $row, $values) = @_;
+    my $length = $#$values;
+    die __PACKAGE__.'::set_row($x, $values) - $values must be a nonempty array reference' if $length == -1;
+    die __PACKAGE__.'::set_row($x, $values) - $x must be a valid row number' if ($row < 0 || $row >= $self->rows);
+    die __PACKAGE__.'::set_row($x, $values) - $values must contains the same number of elements as there is columns in the matrix' if($length != $self->cols-1);
+    # $values may have Math::Complex objects
+    @$values = map { Math::GSL::Complex::gsl_complex_rect(Re($_), Im($_)) } @$values;
+    # warn Dumper [ @$values ];
+    map { gsl_matrix_complex_set($self->raw, $row, $_, $values->[$_]) } (0..$length);
+    return $self;
 }
 
 =head2 set_col()
@@ -262,18 +392,174 @@ You can also set multiple columns at once with chained calls:
 =cut
 
 sub set_col {
- my ($self, $col, $values) = @_;
- my $length = $#$values;
- die __PACKAGE__.'::new($x, $values) - $values must be a nonempty array reference' if $length == -1;
- die __PACKAGE__.'::set_row($x, $values) - $x must be a valid column number' if ($col < 0 || $col >= $self->cols);
- die __PACKAGE__.'::set_row($x, $values) - $values must contains the same number of elements as there is rowss in the matrix' if($length != $self->rows-1);
- map { gsl_matrix_set($self->raw, $_, $col, $values->[$_]) } (0..$length);
- return $self;
+    my ($self, $col, $values) = @_;
+    my $length = $#$values;
+    die __PACKAGE__.'::set_col($x, $values) - $values must be a nonempty array reference' if $length == -1;
+    die __PACKAGE__.'::set_col($x, $values) - $x must be a valid column number' if ($col < 0 || $col >= $self->cols);
+    die __PACKAGE__.'::set_col($x, $values) - $values must contains the same number of elements as there is rowss in the matrix' if($length != $self->rows-1);
+    # $values may have Math::Complex objects
+    @$values = map { gsl_complex_rect(Re($_), Im($_)) } @$values;
+    map { gsl_matrix_complex_set($self->raw, $_, $col, $values->[$_]) } (0..$length);
+    return $self;
 }
 
-=head1 DESCRIPTION
+=head2 is_square()
 
-The following functions are specific to matrices containing complex numbers : 
+Returns true if a matrix is square, i.e. it has the same number of rows as columns, false otherwise.
+
+=cut
+
+sub is_square($)
+{
+    my $self = shift;
+    return ($self->rows == $self->cols) ? 1 : 0 ;
+}
+
+=head2 det()
+
+Returns the determinant of a matrix (computed by LU decomposition) or dies if called on a non-square matrix.
+
+    my $det = $matrix->det();
+
+=cut
+
+sub det($)
+{
+    my $self = shift;
+    croak(__PACKAGE__."- determinant only exists for square matrices") unless $self->is_square;
+
+    my $p  = Math::GSL::Permutation->new( $self->rows );
+    my $LU = $self->copy;
+
+    my $s = gsl_linalg_complex_LU_decomp($LU->raw, $p->raw);
+
+    # $z is a gsl_complex
+    my $z = gsl_linalg_complex_LU_det($LU->raw, $s );
+    return Math::Complex->make( gsl_real($z), gsl_imag($z) );
+}
+
+=head2 zero()
+
+Set a matrix to the zero matrix.
+
+    $matrix->zero;
+
+=cut
+
+sub zero # brrr!
+{
+    my $self=shift;
+    gsl_matrix_complex_set_zero($self->raw);
+    return $self;
+}
+
+=head2 identity()
+
+Set a matrix to the identity matrix, i.e. one on the diagonal and zero elsewhere.
+
+    my $I = $matrix->identity;
+
+=cut
+
+sub identity
+{
+    my $self=shift;
+    gsl_matrix_complex_set_identity($self->raw);
+    return $self;
+}
+
+=head2 inverse()
+
+Returns the inverse of a matrix or dies when called on a non-square matrix.
+
+    my $inverse = $matrix->inverse;
+
+=cut
+
+sub inverse($)
+{
+    my $self = shift;
+    croak(__PACKAGE__."- inverse only exists for square matrices") unless $self->is_square;
+
+    my $p  = Math::GSL::Permutation->new( $self->rows );
+    my $LU = $self->copy;
+    my $inverse = $self->copy;
+
+    # should check return status
+    gsl_linalg_complex_LU_decomp($LU->raw, $p->raw);
+    gsl_linalg_complex_LU_invert($LU->raw, $p->raw,$inverse->raw);
+
+    return $inverse;
+
+}
+
+=head2 is_hermitian()
+
+Returns true if the matrix is hermitian, false otherwise
+
+    my $test = $matrix->is_hermitian;
+
+=cut
+
+sub is_hermitian()
+{
+    my ($self) = @_;
+    my $test = $self->is_square;
+    my $transpose = $self->copy;
+    gsl_matrix_complex_transpose($transpose->raw);
+    
+    if($test == 1) {
+        for my $row (0..$self->rows - 1) {
+            map { gsl_matrix_complex_set($transpose->raw, $row, $_, gsl_complex_conjugate(gsl_matrix_complex_get($transpose->raw, $row, $_))) } (0..$self->cols - 1);
+        }
+        if($self != $transpose){
+            $test = 0;
+        }
+    }
+    return $test;
+}
+=head2 eigenvalues()
+
+=cut
+
+
+sub eigenvalues($)
+{
+    my $self=shift;
+    my ($r,$c) = ($self->rows,$self->cols);
+    croak "Math::GSL::MatrixComplex : \$matrix->eigenvalues - \$matrix must be square" unless ($r == $c);
+    my $vector = Math::GSL::Vector->new($r);
+    my $eigen  = gsl_eigen_herm_alloc($r);
+
+
+    # GSL has no generalized complex matrix routines
+    # can only continue if the matrix is hermitian
+    croak (__PACKAGE__."::eigenvalues : non-hermitian matrices are not currently supported")  unless $self->is_hermitian;
+    gsl_eigen_herm($self->raw, $vector->raw, $eigen);
+
+    return $vector->as_list;
+}
+
+=head2 lndet()
+
+Returns the natural log of the absolute value of the determinant of a matrix (computed by LU decomposition) or dies if called on a non-square matrix.
+
+    my $lndet = $matrix->lndet();
+
+=cut
+
+sub lndet($)
+{
+    my $self = shift;
+    croak(__PACKAGE__."- log determinant only exists for square matrices") unless $self->is_square;
+
+    my $p  = Math::GSL::Permutation->new( $self->rows );
+    my $LU = $self->copy;
+
+    gsl_linalg_complex_LU_decomp($LU->raw, $p->raw);
+    return gsl_linalg_complex_LU_lndet($LU->raw);
+}
+=head1 DESCRIPTION
 
 =over 1
 

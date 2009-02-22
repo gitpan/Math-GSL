@@ -1,14 +1,18 @@
 package Math::GSL::Matrix::Test;
 use base q{Test::Class};
-use Test::More tests => 209;
+use Test::More tests => 237;
+use strict;
+use warnings;
+
 use Math::GSL           qw/:all/;
 use Math::GSL::Test     qw/:all/;
 use Math::GSL::Matrix   qw/:all/;
 use Math::GSL::Vector   qw/:all/;
 use Math::GSL::Complex  qw/:all/;
 use Math::GSL::Errno    qw/:all/;
+use Test::Exception;
+use Math::Complex;
 use Data::Dumper;
-use strict;
 
 BEGIN{ gsl_set_error_handler_off(); }
 
@@ -509,26 +513,6 @@ sub NEW_SETS_VALUES_TO_ZERO : Tests {
     ok( $sum == 0, 'new sets values to zero');
 }
 
-sub HERMITIAN : Tests {
-    my $matrix    = gsl_matrix_complex_alloc(2,2);
-    my $transpose = gsl_matrix_complex_alloc(2,2);
-    gsl_matrix_complex_set($matrix, 0, 0, gsl_complex_rect(3,0));
-    gsl_matrix_complex_set($matrix, 0, 1, gsl_complex_rect(2,1));
-    gsl_matrix_complex_set($matrix, 1, 0, gsl_complex_rect(2,-1));
-    gsl_matrix_complex_set($matrix, 1, 1, gsl_complex_rect(1,0));
-    gsl_matrix_complex_memcpy($transpose, $matrix);
-    gsl_matrix_complex_transpose($transpose);
-
-    for my $row (0..1) {
-        map { gsl_matrix_complex_set($transpose, $row, $_, gsl_complex_conjugate(gsl_matrix_complex_get($transpose, $row, $_))) } (0..1);
-    }
-
-    my $upper_right = gsl_matrix_complex_get($matrix, 0, 1 );
-    my $lower_left  = gsl_matrix_complex_get($matrix, 1, 0 );
-
-    ok( gsl_complex_eq( gsl_complex_conjugate($upper_right), $lower_left ), 'hermitian' );
-}
-
 sub SET_ROW : Tests {
     my $m = Math::GSL::Matrix->new(3,3);
     $m->set_row(0, [1,2,3]);
@@ -643,29 +627,140 @@ sub GSL_MATRIX_OO_MULTIPLICATION_CONSTANT : Tests {
     ok_similar([$m2->col(1)->as_list], [16,20,24]);
     ok_similar([$m2->col(2)->as_list], [36,32,28]);
     ok_similar([$m2->col(0)->as_list], [0,0,0]);
-    
-    my $m3 = 4 * $m; 
+
+    my $m3 = 4 * $m;
     ok_similar([$m3->col(1)->as_list], [16,20,24]);
     ok_similar([$m3->col(2)->as_list], [36,32,28]);
     ok_similar([$m3->col(0)->as_list], [0,0,0]);
 }
 
-sub GSL_MATRIX_OO_MULTIPLICATION_MATRICES : Tests {
-    my $m = Math::GSL::Matrix->new(3,3);
-    my $m3 = Math::GSL::Matrix->new(3,3);
-    $m->set_col(1, [4,5,6])
-      ->set_col(2, [9,8,7])
-      ->set_col(0, [1,2,3]);
-    $m3->set_col(1, [1,2,3])
-       ->set_col(2, [9,8,7])
-       ->set_col(0, [1,2,3]);
-    my $m2 = $m * $m3;
-    ok_similar([$m->col(0)->as_list], [1,2,3]);
-    ok_similar([$m->col(2)->as_list], [9,8,7]);
-    ok_similar([$m->col(1)->as_list], [4,5,6]);
+sub GSL_MATRIX_EIGENVALUES: Tests(6) {
+    my $matrix = Math::GSL::Matrix->new(2,2)
+                              ->set_row(0, [0,-1] )
+                              ->set_row(1, [1, 0] );
+    my @eigs = $matrix->eigenvalues;
+    ok_similar( [ Re($eigs[0]), Im($eigs[0]) ], [ 0,  1 ] ); #  i
+    ok_similar( [ Re($eigs[1]), Im($eigs[1]) ], [ 0, -1 ] ); # -i
 
-    ok_similar([$m2->col(0)->as_list], [1,4,9]);
-    ok_similar([$m2->col(1)->as_list], [4,10,18]);
-    ok_similar([$m2->col(2)->as_list], [81,64,49]);
+    my $rect = Math::GSL::Matrix->new(2,4);
+    dies_ok( sub { $rect->eigenvalues }, 'eigenvalues for square matrices only' );
+
+    my $matrix2 = Math::GSL::Matrix->new(2,2)
+                              ->set_row(0, [1, 0] )
+                              ->set_row(1, [0, 1] );
+    my @eigs2 = $matrix2->eigenvalues;
+    ok_similar( [ @eigs2 ], [ 1, 1 ] );
+
+    my $matrix3 = Math::GSL::Matrix->new(2,2);
+    ok_similar( [ $matrix3->eigenvalues ], [ 0, 0 ], 'zero matrix eigenvalues = 0');
+
+    my $matrix4 = Math::GSL::Matrix->new(2,2)
+                              ->set_row(0, [1, 3] )
+                              ->set_row(1, [4, 2] );
+    ok_similar( [ $matrix4->eigenvalues ], [ -2, 5 ] );
 }
+
+sub GSL_MATRIX_EIGENPAIR : Tests(11) {
+    my $matrix = Math::GSL::Matrix->new(2,2)
+                              ->set_row(0, [0,-1] )
+                              ->set_row(1, [1, 0] );
+
+    my ($eigenvalues, $eigenvectors) = $matrix->eigenpair;
+    cmp_ok( $#$eigenvalues, '==', $#$eigenvectors, 'same # of values as vectors');
+
+    my ($eig1,$eig2) = @$eigenvalues;
+    isa_ok( $eig1, 'Math::Complex');
+    isa_ok( $eig2, 'Math::Complex');
+
+    ok_similar( [ Re $eig1 ], [ 0 ] );
+    ok_similar( [ Im $eig1 ], [ 1 ] );
+
+    ok_similar( [ Re $eig2 ], [ 0   ] );
+    ok_similar( [ Im $eig2 ], [ -1  ] );
+
+    my ($u,$v)       = @$eigenvectors;
+
+    isa_ok( $u, 'Math::GSL::VectorComplex' );
+    isa_ok( $v, 'Math::GSL::VectorComplex' );
+
+    local $TODO = qq{ VectorComplex->as_list is funky };
+    # we happen to know that these are real eigenvectors
+    my ($u1,$u2)     = map { Re $_ } $u->as_list;
+    my ($v1,$v2)     = map { Re $_ } $v->as_list;
+    my $sqrt2by2     = sqrt(2)/2;
+
+    ok_similar( [ $u1, $u2 ], [ $sqrt2by2, - $sqrt2by2 ] );
+    ok_similar( [ $v1, $v2 ], [ $sqrt2by2,   $sqrt2by2 ] );
+
+}
+
+sub MATRIX_MULTIPLICATION_OVERLOAD : Tests {
+    my $A = Math::GSL::Matrix->new(2,2)
+                             ->set_row(0, [1,3] )
+                             ->set_row(1, [4, 2] );
+    my $B = Math::GSL::Matrix->new(2,2)
+                             ->set_row(0, [2,5] )
+                             ->set_row(1, [1, 3] );
+    my $C = $A * $B;
+    ok_similar([ $C->as_list ], [5, 14, 10, 26 ]);
+}
+
+sub MATRIX_IS_SQUARE : Tests(2) {
+    my $A = Math::GSL::Matrix->new(2,2);
+    ok( $A->is_square, 'is_square true for 2x2' );
+    my $B = Math::GSL::Matrix->new(2,3);
+    ok( ! $B->is_square, 'is_square false for 2x3' );
+}
+
+sub MATRIX_DETERMINANT : Tests(2) {
+    my $A = Math::GSL::Matrix->new(2,2)
+                             ->set_row(0, [1,3] )
+                             ->set_row(1, [4, 2] );
+
+    ok_similar( [ $A->det   ], [ -10 ], '->det() 2x2');
+    ok_similar( [ $A->lndet ], [ log 10 ], '->lndet() 2x2');
+
+}
+
+sub MATRIX_ZERO : Tests(2) {
+    my $A = Math::GSL::Matrix->new(2,2)
+                             ->set_row(0, [1, 3] )
+                             ->set_row(1, [4, 2] );
+    isa_ok($A->zero, 'Math::GSL::Matrix');
+    ok_similar( [ $A->zero->as_list ], [ 0, 0, 0, 0 ] );
+}
+
+sub MATRIX_IDENTITY : Tests(6) {
+    my $A = Math::GSL::Matrix->new(2,2)->identity;
+    isa_ok($A, 'Math::GSL::Matrix');
+    ok_similar([ $A->as_list ], [ 1, 0, 0, 1 ] );
+    ok_similar([ $A->inverse->as_list ], [ 1, 0, 0, 1 ] );
+    ok_similar([ $A->det     ] ,[ 1 ] );
+    ok_similar([ map { Re $_ } $A->eigenvalues ], [ 1, 1 ], 'identity eigs=1' );
+    ok_similar([ map { Im $_ } $A->eigenvalues ], [ 0, 0 ], 'identity eigs=1' );
+}
+
+sub MATRIX_INVERSE : Tests(3) {
+    my $A = Math::GSL::Matrix->new(2,2)
+                             ->set_row(0, [1, 3] )
+                             ->set_row(1, [4, 2] );
+    my $Ainv = $A->inverse;
+    isa_ok( $Ainv, 'Math::GSL::Matrix' );
+    ok_similar([ $Ainv->as_list ] , [ map { -$_/10 } ( 2, -3, -4, 1 ) ] );
+    my $B = Math::GSL::Matrix->new(2,3)
+                             ->set_row(0, [1, 3, 5] )
+                             ->set_row(1, [2, 4, 6] );
+    dies_ok( sub { $B->inverse } , 'inverse of non square matrix dies' );
+}
+
+sub OVERLOAD_EQUAL : Tests(2) {
+    my $A = Math::GSL::Matrix->new(2,2)
+                             ->set_row(0, [1, 3] )
+                             ->set_row(1, [4, 2] );
+    my $B = $A->copy;
+    ok ( $A == $B, 'should be equal');
+    $B->set_row(0, [1,2]);
+    ok ( $A != $B, 'should not be equal');
+}
+
 Test::Class->runtests;

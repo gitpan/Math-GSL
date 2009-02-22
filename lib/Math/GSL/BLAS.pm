@@ -203,6 +203,7 @@ package Math::GSL::BLAS;
                 level2 => [ @EXPORT_OK_level2 ],  
                 level3 => [ @EXPORT_OK_level3 ],  
                );
+
 __END__
 
 =head1 NAME
@@ -211,7 +212,7 @@ Math::GSL::BLAS - Basic Linear Algebra Subprograms
 
 =head1 SYNOPSIS
 
-use Math::GSL::QRNG qw/:all/;
+use Math::GSL::BLAS qw/:all/;
 
 =head1 DESCRIPTION
 
@@ -448,7 +449,7 @@ The functions of this module are divised into 3 levels:
 =back
 
 You have to add the functions you want to use inside the qw /put_funtion_here /. 
-You can also write use Math::GSL::PowInt qw/:all/ to use all avaible functions of the module. 
+You can also write use Math::GSL::BLAS qw/:all/ to use all avaible functions of the module. 
 Other tags are also avaible, here is a complete list of all tags for this module :
 
 =over 3

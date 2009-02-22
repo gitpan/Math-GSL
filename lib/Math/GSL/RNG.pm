@@ -164,6 +164,8 @@ sub ACQUIRE {
 
 package Math::GSL::RNG;
 
+*GSL_MAJOR_VERSION = *Math::GSL::RNGc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::RNGc::GSL_MINOR_VERSION;
 
 my %__gsl_rng_borosh13_hash;
 tie %__gsl_rng_borosh13_hash,"Math::GSL::RNG::gsl_rng_type", $Math::GSL::RNGc::gsl_rng_borosh13;

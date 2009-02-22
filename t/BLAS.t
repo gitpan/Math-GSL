@@ -1,14 +1,16 @@
 package Math::GSL::BLAS::Test;
 use base q{Test::Class};
 use Test::More tests => 99;
+use Math::GSL          qw/:all/;
 use Math::GSL::BLAS    qw/:all/;
 use Math::GSL::Vector  qw/:all/;
 use Math::GSL::Complex qw/:all/;
 use Math::GSL::Matrix  qw/:all/;
 use Math::GSL::CBLAS   qw/:all/;
-use Math::GSL          qw/:all/;
 use Math::GSL::Test    qw/:all/;
 use Math::GSL::Errno   qw/:all/;
+use Math::GSL::MatrixComplex  qw/:all/;
+use Math::GSL::VectorComplex  qw/:all/;
 use Data::Dumper;
 use strict;
 
@@ -105,7 +107,6 @@ sub GSL_BLAS_ZSWAP : Tests {
 
     ok_status(gsl_blas_zswap($vec1, $vec2));
     $c = gsl_vector_complex_get($vec1,0);
-    local $TODO = "Problem with the output of gsl_vector_complex_get";
     ok( defined $c,"gsl_vector_complex_get");  
 
     # goes boom
@@ -629,5 +630,6 @@ sub GSL_BLAS_ZSYR2K : Tests {
     ok_similar([gsl_parts(gsl_matrix_complex_get($C, 0, 1))], [34, 15]);
     ok_similar([gsl_parts(gsl_matrix_complex_get($C, 1, 1))], [24, 4]);
 }
+
 
 Test::Class->runtests;

@@ -1439,7 +1439,7 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_double swig_types[1]
 #define SWIGTYPE_p_gsl_ran_discrete_t swig_types[2]
 #define SWIGTYPE_p_gsl_rng swig_types[3]
-#define SWIGTYPE_p_size_t swig_types[4]
+#define SWIGTYPE_p_int swig_types[4]
 #define SWIGTYPE_p_unsigned_int swig_types[5]
 static swig_type_info *swig_types[7];
 static swig_module_info swig_module = {swig_types, 6, 0, 0, 0, 0};
@@ -1473,6 +1473,32 @@ SWIGEXPORT void SWIG_init (pTHXo_ CV* cv);
 #else
 SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 #endif
+
+
+    static HV * Callbacks = (HV*)NULL;
+    /* this function returns the value 
+        of evaluating the function pointer
+        stored in func with argument x
+    */
+    double callthis(double x , int func, void *params){
+        SV ** sv;
+        double y;
+        dSP;
+
+        //fprintf(stderr, "LOOKUP CALLBACK\n");
+        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
+        if (sv == (SV**)NULL) {
+            fprintf(stderr, "Math::GSL(callthis): %d not in Callbacks!\n", func);
+            return;
+        }
+
+        PUSHMARK(SP);
+        XPUSHs(sv_2mortal(newSVnv((double)x)));
+        PUTBACK;
+        call_sv(*sv, G_SCALAR);
+        y = POPn;
+        return y;
+    }
 
 
 SWIGINTERNINLINE SV *
@@ -2644,8 +2670,6 @@ XS(_wrap_gsl_ran_dirichlet) {
     int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
     void *argp4 = 0 ;
     int res4 = 0 ;
     int argvi = 0;
@@ -2664,11 +2688,24 @@ XS(_wrap_gsl_ran_dirichlet) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_ran_dirichlet" "', argument " "2"" of type '" "size_t""'");
     } 
     arg2 = (size_t)(val2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_ran_dirichlet" "', argument " "3"" of type '" "double const []""'"); 
-    } 
-    arg3 = (double *)(argp3);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(2)))
+      croak("Math::GSL : $alpha is not a reference!");
+      if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
+      croak("Math::GSL : $alpha is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(2));
+      len = av_len(tempav);
+      arg3 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg3[i] = (double) SvNV(*tv);
+      }
+    }
     res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res4)) {
       SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_ran_dirichlet" "', argument " "4"" of type '" "double []""'"); 
@@ -2698,10 +2735,6 @@ XS(_wrap_gsl_ran_dirichlet_pdf) {
     double *arg3 ;
     size_t val1 ;
     int ecode1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
     int argvi = 0;
     double result;
     dXSARGS;
@@ -2714,16 +2747,42 @@ XS(_wrap_gsl_ran_dirichlet_pdf) {
       SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_ran_dirichlet_pdf" "', argument " "1"" of type '" "size_t""'");
     } 
     arg1 = (size_t)(val1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_ran_dirichlet_pdf" "', argument " "2"" of type '" "double const []""'"); 
-    } 
-    arg2 = (double *)(argp2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_ran_dirichlet_pdf" "', argument " "3"" of type '" "double const []""'"); 
-    } 
-    arg3 = (double *)(argp3);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(1)))
+      croak("Math::GSL : $alpha is not a reference!");
+      if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
+      croak("Math::GSL : $alpha is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(1));
+      len = av_len(tempav);
+      arg2 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg2[i] = (double) SvNV(*tv);
+      }
+    }
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(2)))
+      croak("Math::GSL : $theta is not a reference!");
+      if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
+      croak("Math::GSL : $theta is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(2));
+      len = av_len(tempav);
+      arg3 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg3[i] = (double) SvNV(*tv);
+      }
+    }
     result = (double)gsl_ran_dirichlet_pdf(arg1,(double const (*))arg2,(double const (*))arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
     
@@ -2746,10 +2805,6 @@ XS(_wrap_gsl_ran_dirichlet_lnpdf) {
     double *arg3 ;
     size_t val1 ;
     int ecode1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
     int argvi = 0;
     double result;
     dXSARGS;
@@ -2762,16 +2817,42 @@ XS(_wrap_gsl_ran_dirichlet_lnpdf) {
       SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_ran_dirichlet_lnpdf" "', argument " "1"" of type '" "size_t""'");
     } 
     arg1 = (size_t)(val1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_ran_dirichlet_lnpdf" "', argument " "2"" of type '" "double const []""'"); 
-    } 
-    arg2 = (double *)(argp2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_ran_dirichlet_lnpdf" "', argument " "3"" of type '" "double const []""'"); 
-    } 
-    arg3 = (double *)(argp3);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(1)))
+      croak("Math::GSL : $alpha is not a reference!");
+      if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
+      croak("Math::GSL : $alpha is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(1));
+      len = av_len(tempav);
+      arg2 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg2[i] = (double) SvNV(*tv);
+      }
+    }
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(2)))
+      croak("Math::GSL : $theta is not a reference!");
+      if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
+      croak("Math::GSL : $theta is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(2));
+      len = av_len(tempav);
+      arg3 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg3[i] = (double) SvNV(*tv);
+      }
+    }
     result = (double)gsl_ran_dirichlet_lnpdf(arg1,(double const (*))arg2,(double const (*))arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
     
@@ -4482,8 +4563,6 @@ XS(_wrap_gsl_ran_multinomial) {
     int ecode2 = 0 ;
     unsigned int val3 ;
     int ecode3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
     void *argp5 = 0 ;
     int res5 = 0 ;
     int argvi = 0;
@@ -4507,11 +4586,24 @@ XS(_wrap_gsl_ran_multinomial) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_ran_multinomial" "', argument " "3"" of type '" "unsigned int""'");
     } 
     arg3 = (unsigned int)(val3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_ran_multinomial" "', argument " "4"" of type '" "double const []""'"); 
-    } 
-    arg4 = (double *)(argp4);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(3)))
+      croak("Math::GSL : $p is not a reference!");
+      if (SvTYPE(SvRV(ST(3))) != SVt_PVAV)
+      croak("Math::GSL : $p is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(3));
+      len = av_len(tempav);
+      arg4 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg4[i] = (double) SvNV(*tv);
+      }
+    }
     res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_unsigned_int, 0 |  0 );
     if (!SWIG_IsOK(res5)) {
       SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_ran_multinomial" "', argument " "5"" of type '" "unsigned int []""'"); 
@@ -4543,8 +4635,6 @@ XS(_wrap_gsl_ran_multinomial_pdf) {
     unsigned int *arg3 ;
     size_t val1 ;
     int ecode1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
     void *argp3 = 0 ;
     int res3 = 0 ;
     int argvi = 0;
@@ -4559,11 +4649,24 @@ XS(_wrap_gsl_ran_multinomial_pdf) {
       SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_ran_multinomial_pdf" "', argument " "1"" of type '" "size_t""'");
     } 
     arg1 = (size_t)(val1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_ran_multinomial_pdf" "', argument " "2"" of type '" "double const []""'"); 
-    } 
-    arg2 = (double *)(argp2);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(1)))
+      croak("Math::GSL : $p is not a reference!");
+      if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
+      croak("Math::GSL : $p is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(1));
+      len = av_len(tempav);
+      arg2 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg2[i] = (double) SvNV(*tv);
+      }
+    }
     res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_unsigned_int, 0 |  0 );
     if (!SWIG_IsOK(res3)) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_ran_multinomial_pdf" "', argument " "3"" of type '" "unsigned int const []""'"); 
@@ -4591,8 +4694,6 @@ XS(_wrap_gsl_ran_multinomial_lnpdf) {
     unsigned int *arg3 ;
     size_t val1 ;
     int ecode1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
     void *argp3 = 0 ;
     int res3 = 0 ;
     int argvi = 0;
@@ -4607,11 +4708,24 @@ XS(_wrap_gsl_ran_multinomial_lnpdf) {
       SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_ran_multinomial_lnpdf" "', argument " "1"" of type '" "size_t""'");
     } 
     arg1 = (size_t)(val1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_ran_multinomial_lnpdf" "', argument " "2"" of type '" "double const []""'"); 
-    } 
-    arg2 = (double *)(argp2);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(1)))
+      croak("Math::GSL : $p is not a reference!");
+      if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
+      croak("Math::GSL : $p is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(1));
+      len = av_len(tempav);
+      arg2 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg2[i] = (double) SvNV(*tv);
+      }
+    }
     res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_unsigned_int, 0 |  0 );
     if (!SWIG_IsOK(res3)) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_ran_multinomial_lnpdf" "', argument " "3"" of type '" "unsigned int const []""'"); 
@@ -5982,7 +6096,7 @@ XS(_wrap_gsl_ran_discrete_t_K_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_ran_discrete_t_K_get" "', argument " "1"" of type '" "gsl_ran_discrete_t *""'"); 
     }
     arg1 = (gsl_ran_discrete_t *)(argp1);
-    result =  ((arg1)->K);
+    result = (size_t) ((arg1)->K);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -6012,7 +6126,7 @@ XS(_wrap_gsl_ran_discrete_t_A_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_ran_discrete_t_A_set" "', argument " "1"" of type '" "gsl_ran_discrete_t *""'"); 
     }
     arg1 = (gsl_ran_discrete_t *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_size_t, SWIG_POINTER_DISOWN |  0 );
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_int, SWIG_POINTER_DISOWN |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_ran_discrete_t_A_set" "', argument " "2"" of type '" "size_t *""'"); 
     }
@@ -6048,7 +6162,7 @@ XS(_wrap_gsl_ran_discrete_t_A_get) {
     }
     arg1 = (gsl_ran_discrete_t *)(argp1);
     result = (size_t *) ((arg1)->A);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_size_t, 0 | 0); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_int, 0 | 0); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -6258,7 +6372,7 @@ XS(_wrap_gsl_ran_discrete) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_ran_discrete" "', argument " "2"" of type '" "gsl_ran_discrete_t const *""'"); 
     }
     arg2 = (gsl_ran_discrete_t *)(argp2);
-    result = gsl_ran_discrete((gsl_rng const *)arg1,(gsl_ran_discrete_t const *)arg2);
+    result = (size_t)gsl_ran_discrete((gsl_rng const *)arg1,(gsl_ran_discrete_t const *)arg2);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     
@@ -6316,7 +6430,7 @@ static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_gsl_ran_discrete_t = {"_p_gsl_ran_discrete_t", "gsl_ran_discrete_t *", 0, 0, (void*)"Math::GSL::Randist::gsl_ran_discrete_t", 0};
 static swig_type_info _swigt__p_gsl_rng = {"_p_gsl_rng", "gsl_rng *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_size_t = {"_p_size_t", "size_t *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_int = {"_p_int", "int *|size_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_int = {"_p_unsigned_int", "unsigned int *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
@@ -6324,7 +6438,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_double,
   &_swigt__p_gsl_ran_discrete_t,
   &_swigt__p_gsl_rng,
-  &_swigt__p_size_t,
+  &_swigt__p_int,
   &_swigt__p_unsigned_int,
 };
 
@@ -6332,7 +6446,7 @@ static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0,
 static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_ran_discrete_t[] = {  {&_swigt__p_gsl_ran_discrete_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_rng[] = {  {&_swigt__p_gsl_rng, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_size_t[] = {  {&_swigt__p_size_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_int[] = {  {&_swigt__p_unsigned_int, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
@@ -6340,7 +6454,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_double,
   _swigc__p_gsl_ran_discrete_t,
   _swigc__p_gsl_rng,
-  _swigc__p_size_t,
+  _swigc__p_int,
   _swigc__p_unsigned_int,
 };
 

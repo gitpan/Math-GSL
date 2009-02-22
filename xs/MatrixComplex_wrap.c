@@ -1515,6 +1515,22 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
     }
 
 
+SWIGINTERNINLINE SV *
+SWIG_From_long  SWIG_PERL_DECL_ARGS_1(long value)
+{    
+  SV *obj = sv_newmortal();
+  sv_setiv(obj, (IV) value);
+  return obj;
+}
+
+
+SWIGINTERNINLINE SV *
+SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
+{    
+  return SWIG_From_long  SWIG_PERL_CALL_ARGS_1(value);
+}
+
+
     #include "gsl/gsl_matrix.h"
     #include "gsl/gsl_complex.h"
     #include "gsl/gsl_vector_double.h"
@@ -1717,22 +1733,6 @@ SWIG_AsVal_int SWIG_PERL_DECL_ARGS_2(SV * obj, int *val)
     }
   }  
   return res;
-}
-
-
-SWIGINTERNINLINE SV *
-SWIG_From_long  SWIG_PERL_DECL_ARGS_1(long value)
-{    
-  SV *obj = sv_newmortal();
-  sv_setiv(obj, (IV) value);
-  return obj;
-}
-
-
-SWIGINTERNINLINE SV *
-SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
-{    
-  return SWIG_From_long  SWIG_PERL_CALL_ARGS_1(value);
 }
 
 
@@ -8574,6 +8574,16 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   }
   
+  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "GSL_MAJOR_VERSION", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(1)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "GSL_MINOR_VERSION", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(11)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
   SWIG_TypeClientData(SWIGTYPE_p_gsl_complex_long_double, (void*) "Math::GSL::MatrixComplex::gsl_complex_long_double");
   SWIG_TypeClientData(SWIGTYPE_p_gsl_complex, (void*) "Math::GSL::MatrixComplex::gsl_complex");
   SWIG_TypeClientData(SWIGTYPE_p_gsl_complex_float, (void*) "Math::GSL::MatrixComplex::gsl_complex_float");

@@ -501,6 +501,8 @@ sub ACQUIRE {
 
 package Math::GSL::VectorComplex;
 
+*GSL_MAJOR_VERSION = *Math::GSL::VectorComplexc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::VectorComplexc::GSL_MINOR_VERSION;
 *GSL_POSZERO = *Math::GSL::VectorComplexc::GSL_POSZERO;
 *GSL_NEGZERO = *Math::GSL::VectorComplexc::GSL_NEGZERO;
 
@@ -579,7 +581,7 @@ sub new {
     my $this = {};
     my $vector;
 
-    # we expected $values to have Math::Complex objects
+    # we expect $values to have Math::Complex objects
     @$values = map { gsl_complex_rect(Re($_), Im($_)) } @$values;
 
     if ( ref $values eq 'ARRAY' ){
@@ -664,6 +666,7 @@ Gets the content of a Math::GSL::Vector object as a Perl list.
 
 sub as_list {
     my $self=shift;
+    # this is wrong
     return map { cplxe( gsl_complex_abs($_), gsl_complex_arg($_) ) } $self->get( [ 0 .. $self->length - 1  ] );
 }
 
@@ -742,8 +745,9 @@ Returns a copy of the vector, which has the same length and values but resides a
 sub copy {
     my $self = shift;
     my $copy = Math::GSL::VectorComplex->new( $self->length );
-    if ( gsl_vector_complex_memcpy($copy->raw, $self->raw) != $GSL_SUCCESS ) {
-        croak "Math::GSL - error copying memory, aborting";
+    my $status = gsl_vector_complex_memcpy($copy->raw, $self->raw);
+    if ( $status != $GSL_SUCCESS ) {
+        croak "Math::GSL - error copying memory, aborting. $! status=$status";
     }
     return $copy;
 }
@@ -760,7 +764,7 @@ Exchanges the values in the vectors $v with $w by copying.
 
 sub swap() {
     my ($self,$other) = @_;
-    croak "Math::GSL::swap : other object must be a Math::GSL::VectorComplex"
+    croak "Math::GSL::VectorComplex : \$v->swap(\$w) - \$w must be a Math::GSL::VectorComplex"
         unless ref $other eq 'Math::GSL::VectorComplex';
     gsl_vector_complex_swap( $self->raw, $other->raw );
     return $self;

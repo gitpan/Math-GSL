@@ -664,6 +664,8 @@ package Math::GSL::FFT;
 *backward = *Math::GSL::FFTc::backward;
 *gsl_fft_forward = *Math::GSL::FFTc::gsl_fft_forward;
 *gsl_fft_backward = *Math::GSL::FFTc::gsl_fft_backward;
+*GSL_MAJOR_VERSION = *Math::GSL::FFTc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::FFTc::GSL_MINOR_VERSION;
 
 @EXPORT_complex = qw/
                gsl_fft_complex_radix2_forward 

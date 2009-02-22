@@ -1502,16 +1502,6 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
     }
 
 
-    #include "gsl/gsl_nan.h"
-    #include "gsl/gsl_sort.h"
-    #include "gsl/gsl_sort_double.h"
-    #include "gsl/gsl_sort_int.h"
-    #include "gsl/gsl_sort_vector.h"
-    #include "gsl/gsl_sort_vector_double.h"
-    #include "gsl/gsl_sort_vector_int.h"
-    #include "gsl/gsl_permutation.h"
-
-
 SWIGINTERNINLINE SV *
 SWIG_From_long  SWIG_PERL_DECL_ARGS_1(long value)
 {    
@@ -1526,6 +1516,16 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
 {    
   return SWIG_From_long  SWIG_PERL_CALL_ARGS_1(value);
 }
+
+
+    #include "gsl/gsl_nan.h"
+    #include "gsl/gsl_sort.h"
+    #include "gsl/gsl_sort_double.h"
+    #include "gsl/gsl_sort_int.h"
+    #include "gsl/gsl_sort_vector.h"
+    #include "gsl/gsl_sort_vector_double.h"
+    #include "gsl/gsl_sort_vector_int.h"
+    #include "gsl/gsl_permutation.h"
 
 
 SWIGINTERN int
@@ -4748,6 +4748,16 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   }
   
+  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "GSL_MAJOR_VERSION", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(1)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "GSL_MINOR_VERSION", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(11)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "GSL_POSZERO", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)((+0))));

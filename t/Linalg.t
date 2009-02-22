@@ -1,6 +1,6 @@
 package Math::GSL::Linalg::Test;
 use base q{Test::Class};
-use Test::More tests => 53;
+use Test::More tests => 55;
 use Math::GSL              qw/:all/;
 use Math::GSL::BLAS        qw/:all/;
 use Math::GSL::Test        qw/:all/;
@@ -8,10 +8,12 @@ use Math::GSL::CBLAS       qw/:all/;
 use Math::GSL::Errno       qw/:all/;
 use Math::GSL::Linalg      qw/:all/;
 use Math::GSL::Matrix      qw/:all/;
+use Math::GSL::MatrixComplex qw/:all/;
 use Math::GSL::Vector      qw/:all/;
 use Math::GSL::Machine     qw/:all/;
 use Math::GSL::Complex     qw/:all/;
 use Math::GSL::Permutation qw/:all/;
+use Math::Complex;
 use Data::Dumper;
 use strict;
 
@@ -181,6 +183,22 @@ sub GSL_LINALG_LU_INVERT : Tests {
     is_similar(gsl_matrix_get($inverse, 3, 3), 1/40);
 }
 
+sub GSL_LINALG_COMPLEX_LU_DET : Tests(2) {
+    local $TODO = q{ $gsl_det is wrong or Math::Complex conversion is };
+    my $m = Math::GSL::MatrixComplex->new(2,2)
+                                 ->set_row(0, [ 1 , 2 ])
+                                 ->set_row(1, [ 3 , 4*i ]);
+    my $permutation = gsl_permutation_alloc(2);
+    gsl_permutation_init($permutation);
+    my $copy = $m->copy;
+    my ($result, $signum) = gsl_linalg_complex_LU_decomp($copy->raw, $permutation);
+    my $gsl_det = gsl_linalg_complex_LU_det($m->raw, $signum);
+    my $det = Math::Complex->make( gsl_real($gsl_det), gsl_imag($gsl_det) );
+    #warn Dumper [ $det ];
+    ok_similar( [ Re $det ], [ -6 ], 'real');
+    ok_similar( [ Im $det ], [ 4  ], 'imag');
+}
+
 sub GSL_LINALG_LU_DET : Tests {
     my $self = shift;
     map { gsl_matrix_set($self->{matrix}, 0, $_, $_+1) } (0..3);
@@ -338,7 +356,7 @@ sub GSL_LINALG_HESSENBERG_DECOMP_UNPACK_UNPACK_ACCUM_SET_ZERO : Tests {
 
     ok_status( gsl_linalg_hessenberg_set_zero($self->{matrix}) );
     for(my $line = 2; $line<4; $line++) {
-        map { ok_similar(gsl_matrix_get($self->{matrix}, $line, $_), 0, 1e-8, "Set zero") } (0..$line-2);
+        map { ok_similar(gsl_matrix_get($self->{matrix}, $line, $_), 0, "Set zero", 1e-8) } (0..$line-2);
     }
 }
 

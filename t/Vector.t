@@ -1,11 +1,10 @@
 package Math::GSL::Vector::Test;
 use base q{Test::Class};
-use Test::More tests => 121;
+use Test::More tests => 136;
 use Math::GSL          qw/:all/;
 use Math::GSL::Test    qw/:all/;
 use Math::GSL::Errno   qw/:all/;
 use Math::GSL::Vector  qw/:all/;
-use Math::GSL::Complex qw/:all/;
 use Test::Exception;
 use Data::Dumper;
 use strict;
@@ -20,6 +19,11 @@ sub make_fixture : Test(setup) {
 
 sub teardown : Test(teardown) {
     unlink 'vector' if -f 'vector';
+}
+
+sub GSL_VECTOR_RAW : Tests {
+    my $vec = Math::GSL::Vector->new(10);
+    isa_ok($vec->raw, 'Math::GSL::Vector::gsl_vector');
 }
 
 sub GSL_VECTOR_ALLOC : Tests {
@@ -340,32 +344,6 @@ sub GSL_VECTOR_FPRINTF_FSCANF : Tests {
    ok_status(gsl_fclose($fh) ); 
 }
 
-sub GSL_VECTOR_COMPLEX_ALLOC : Tests {
-  my $vec = gsl_vector_complex_alloc(5);
-  isa_ok($vec, 'Math::GSL::Vector');
-}
-
-sub GSL_VECTOR_COMPLEX_CALLOC : Tests {
-  my $vec = gsl_vector_complex_calloc(5);
-  isa_ok($vec, 'Math::GSL::Vector');
-}
-
-sub GSL_VECTOR_RAW : Tests {
-    my $vec = Math::GSL::Vector->new(10);
-    isa_ok($vec->raw, 'Math::GSL::Vector::gsl_vector');
-}
-
-sub GSL_VECTOR_COMPLEX_SET_GET : Tests {
-  my $vec = gsl_vector_complex_calloc(5);
-  my $complex = gsl_complex_rect(2,1);
-  gsl_vector_complex_set($vec, 0, $complex);
-  my $result = gsl_complex_rect(5,5);
-  $result = gsl_vector_complex_get($vec, 0);
-  isa_ok($result, 'Math::GSL::Complex');
-  print Dumper [ $result ];
-  local $TODO = "don't know why the complex returned gsl_vector_complex_get is not usable";
-}
-
 sub GSL_ADDITION : Tests {
   my $vec1 = Math::GSL::Vector->new([1,2,3]);
   my $vec2 = Math::GSL::Vector->new([2,3,4]);
@@ -390,7 +368,7 @@ sub COPY : Tests {
     ok_similar( [ $v1->copy->as_list ], [ $v1->as_list ] );
 
 }
-sub GSL_SUBTRACTION : Tests { 
+sub GSL_SUBTRACTION : Tests(3) {
     my $v1 = Math::GSL::Vector->new( [ 1 .. 5 ]);
     my $v2 = Math::GSL::Vector->new( [ 5 .. 9 ]);
 
@@ -403,7 +381,7 @@ sub GSL_SUBTRACTION : Tests {
     ok_similar( [ $v4->as_list ], [ 2, 1, 0, -1, -2 ] );
 }
 
-sub GSL_MULTIPLICATION : Tests {
+sub GSL_MULTIPLICATION : Tests(6) {
     my $v = Math::GSL::Vector->new([1,2,3]);
     my $v2 = $v * 5;
 
@@ -414,12 +392,64 @@ sub GSL_MULTIPLICATION : Tests {
     my $v3 = 5 * $v;
     ok_similar ( [$v3->as_list], [5,10,15]);
     ok_similar ( [$v->as_list],  [1,2,3]);
-    
+
     my $w = $v3 * 0;
     ok_similar( [ $w->as_list ], [0,0,0], 'right overloaded zero-ify' );
 
     my $z = 0 * $v3;
     ok_similar( [ $w->as_list ], [0,0,0], 'left overloaded zero-ify' );
+}
+
+sub GSL_VECTOR_SWAP_OBJECTS : Tests(3) {
+    my $v = Math::GSL::Vector->new([1,2,3]);
+    my $w = Math::GSL::Vector->new([42,69,18]);
+
+    isa_ok( $v->swap($w), 'Math::GSL::Vector' );
+
+    ok_similar( [ $v->as_list ], [ 42, 69, 18 ] );
+    ok_similar( [ $w->as_list ], [ 1, 2, 3    ] );
+}
+
+sub GSL_VECTOR_REVERSE_OBJECTS : Tests(4) {
+    my @elements = map { int(rand(100)) } (1..10);
+    my $v        = Math::GSL::Vector->new([@elements]);
+
+    ok_similar( [ $v->reverse->as_list ], [ reverse @elements ] );
+    isa_ok($v->reverse, 'Math::GSL::Vector');
+    ok_similar( [ $v->as_list ], [ @elements ] );
+    ok_similar( [ $v->reverse->reverse->as_list ], [ $v->as_list ] );
+}
+
+sub GSL_VECTOR_NORM : Tests(5) {
+    my $v        = Math::GSL::Vector->new([ (0) x 5 ]);
+    ok_similar( $v->norm, 0 , 'zero vector norm = 0' );
+
+    isa_ok( $v->normalize, 'Math::GSL::Vector');
+    my $w = Math::GSL::Vector->new([1,2,3]);
+    my $z = Math::GSL::Vector->new([1,2,-3]);
+    ok_similar( [ $w->norm    ],    [ sqrt(14) ],  '2-norm' );
+    ok_similar( [ $w->norm(1) ],    [ 6        ],  '1-norm' );
+
+    ok_similar( [ $z->norm(1) ],    [ 6        ],  '1-norm with neg. elems.' );
+
+}
+
+sub GSL_VECTOR_NORMALIZE : Tests(4) {
+    my $w = Math::GSL::Vector->new([1,2,3]);
+    isa_ok( $w->normalize, 'Math::GSL::Vector');
+    ok_similar( $w->norm , 1, 'normalize default p=2');
+
+    my $v = Math::GSL::Vector->new([1,2,3]);
+    isa_ok( $v->normalize(3), 'Math::GSL::Vector' );
+    ok_similar ( $v->norm(3), 1, 'normalize p=3');
+}
+
+sub GSL_VECTOR_NORM_OVERLOAD: Tests(2) {
+    my $v = Math::GSL::Vector->new([1,2,3]);
+    my $w = Math::GSL::Vector->new([10,0,1]);
+
+    ok_similar( [ $v->norm ], [ abs $v ], 'abs overload');
+    ok_similar( [ abs $w   ], [ sqrt(101) ], 'abs = norm' )
 }
 
 Test::Class->runtests;

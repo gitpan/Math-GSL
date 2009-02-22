@@ -48,26 +48,6 @@ sub this {
 
 package Math::GSL::Poly;
 
-*gsl_log1p = *Math::GSL::Polyc::gsl_log1p;
-*gsl_expm1 = *Math::GSL::Polyc::gsl_expm1;
-*gsl_hypot = *Math::GSL::Polyc::gsl_hypot;
-*gsl_hypot3 = *Math::GSL::Polyc::gsl_hypot3;
-*gsl_acosh = *Math::GSL::Polyc::gsl_acosh;
-*gsl_asinh = *Math::GSL::Polyc::gsl_asinh;
-*gsl_atanh = *Math::GSL::Polyc::gsl_atanh;
-*gsl_isnan = *Math::GSL::Polyc::gsl_isnan;
-*gsl_isinf = *Math::GSL::Polyc::gsl_isinf;
-*gsl_finite = *Math::GSL::Polyc::gsl_finite;
-*gsl_nan = *Math::GSL::Polyc::gsl_nan;
-*gsl_posinf = *Math::GSL::Polyc::gsl_posinf;
-*gsl_neginf = *Math::GSL::Polyc::gsl_neginf;
-*gsl_fdiv = *Math::GSL::Polyc::gsl_fdiv;
-*gsl_coerce_double = *Math::GSL::Polyc::gsl_coerce_double;
-*gsl_coerce_float = *Math::GSL::Polyc::gsl_coerce_float;
-*gsl_coerce_long_double = *Math::GSL::Polyc::gsl_coerce_long_double;
-*gsl_ldexp = *Math::GSL::Polyc::gsl_ldexp;
-*gsl_frexp = *Math::GSL::Polyc::gsl_frexp;
-*gsl_fcmp = *Math::GSL::Polyc::gsl_fcmp;
 *gsl_poly_eval = *Math::GSL::Polyc::gsl_poly_eval;
 *gsl_poly_complex_eval = *Math::GSL::Polyc::gsl_poly_complex_eval;
 *gsl_complex_poly_complex_eval = *Math::GSL::Polyc::gsl_complex_poly_complex_eval;
@@ -303,6 +283,8 @@ sub ACQUIRE {
 
 package Math::GSL::Poly;
 
+*GSL_MAJOR_VERSION = *Math::GSL::Polyc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Polyc::GSL_MINOR_VERSION;
 *GSL_POSZERO = *Math::GSL::Polyc::GSL_POSZERO;
 *GSL_NEGZERO = *Math::GSL::Polyc::GSL_NEGZERO;
 
@@ -323,7 +305,6 @@ package Math::GSL::Poly;
                 gsl_poly_complex_solve 
                 $GSL_POSZERO $GSL_NEGZERO $GSL_NAN
              /;
-our $GSL_NAN = gsl_nan();
 
 %EXPORT_TAGS = ( all => \@EXPORT_OK );
 

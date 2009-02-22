@@ -1472,6 +1472,32 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 #endif
 
 
+    static HV * Callbacks = (HV*)NULL;
+    /* this function returns the value 
+        of evaluating the function pointer
+        stored in func with argument x
+    */
+    double callthis(double x , int func, void *params){
+        SV ** sv;
+        double y;
+        dSP;
+
+        //fprintf(stderr, "LOOKUP CALLBACK\n");
+        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
+        if (sv == (SV**)NULL) {
+            fprintf(stderr, "Math::GSL(callthis): %d not in Callbacks!\n", func);
+            return;
+        }
+
+        PUSHMARK(SP);
+        XPUSHs(sv_2mortal(newSVnv((double)x)));
+        PUTBACK;
+        call_sv(*sv, G_SCALAR);
+        y = POPn;
+        return y;
+    }
+
+
     #include "gsl/gsl_sys.h"
 
 
@@ -2299,7 +2325,7 @@ XS(_wrap_gsl_fcmp) {
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_int = {"_p_int", "int *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_int = {"_p_int", "int *|size_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_long_double = {"_p_long_double", "long double *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {

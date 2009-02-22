@@ -1442,10 +1442,11 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_f_p_void_unsigned_long__void swig_types[4]
 #define SWIGTYPE_p_gsl_rng swig_types[5]
 #define SWIGTYPE_p_gsl_rng_type swig_types[6]
-#define SWIGTYPE_p_p_gsl_rng_type swig_types[7]
-#define SWIGTYPE_p_void swig_types[8]
-static swig_type_info *swig_types[10];
-static swig_module_info swig_module = {swig_types, 9, 0, 0, 0, 0};
+#define SWIGTYPE_p_int swig_types[7]
+#define SWIGTYPE_p_p_gsl_rng_type swig_types[8]
+#define SWIGTYPE_p_void swig_types[9]
+static swig_type_info *swig_types[11];
+static swig_module_info swig_module = {swig_types, 10, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1476,6 +1477,48 @@ SWIGEXPORT void SWIG_init (pTHXo_ CV* cv);
 #else
 SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 #endif
+
+
+    static HV * Callbacks = (HV*)NULL;
+    /* this function returns the value 
+        of evaluating the function pointer
+        stored in func with argument x
+    */
+    double callthis(double x , int func, void *params){
+        SV ** sv;
+        double y;
+        dSP;
+
+        //fprintf(stderr, "LOOKUP CALLBACK\n");
+        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
+        if (sv == (SV**)NULL) {
+            fprintf(stderr, "Math::GSL(callthis): %d not in Callbacks!\n", func);
+            return;
+        }
+
+        PUSHMARK(SP);
+        XPUSHs(sv_2mortal(newSVnv((double)x)));
+        PUTBACK;
+        call_sv(*sv, G_SCALAR);
+        y = POPn;
+        return y;
+    }
+
+
+SWIGINTERNINLINE SV *
+SWIG_From_long  SWIG_PERL_DECL_ARGS_1(long value)
+{    
+  SV *obj = sv_newmortal();
+  sv_setiv(obj, (IV) value);
+  return obj;
+}
+
+
+SWIGINTERNINLINE SV *
+SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
+{    
+  return SWIG_From_long  SWIG_PERL_CALL_ARGS_1(value);
+}
 
 
     #include "gsl/gsl_rng.h"
@@ -1685,22 +1728,6 @@ SWIGINTERNINLINE SV *
 SWIG_From_size_t  SWIG_PERL_DECL_ARGS_1(size_t value)
 {    
   return SWIG_From_unsigned_SS_long  SWIG_PERL_CALL_ARGS_1((unsigned long)(value));
-}
-
-
-SWIGINTERNINLINE SV *
-SWIG_From_long  SWIG_PERL_DECL_ARGS_1(long value)
-{    
-  SV *obj = sv_newmortal();
-  sv_setiv(obj, (IV) value);
-  return obj;
-}
-
-
-SWIGINTERNINLINE SV *
-SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
-{    
-  return SWIG_From_long  SWIG_PERL_CALL_ARGS_1(value);
 }
 
 
@@ -3404,7 +3431,7 @@ XS(_wrap_gsl_rng_type_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_rng_type_size_get" "', argument " "1"" of type '" "gsl_rng_type *""'"); 
     }
     arg1 = (gsl_rng_type *)(argp1);
-    result =  ((arg1)->size);
+    result = (size_t) ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -4178,7 +4205,7 @@ XS(_wrap_gsl_rng_size) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_rng_size" "', argument " "1"" of type '" "gsl_rng const *""'"); 
     }
     arg1 = (gsl_rng *)(argp1);
-    result = gsl_rng_size((gsl_rng const *)arg1);
+    result = (size_t)gsl_rng_size((gsl_rng const *)arg1);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -4394,6 +4421,7 @@ static swig_type_info _swigt__p_f_p_void__unsigned_long = {"_p_f_p_void__unsigne
 static swig_type_info _swigt__p_f_p_void_unsigned_long__void = {"_p_f_p_void_unsigned_long__void", "void (*)(void *,unsigned long)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_gsl_rng = {"_p_gsl_rng", "gsl_rng *", 0, 0, (void*)"Math::GSL::RNG::gsl_rng", 0};
 static swig_type_info _swigt__p_gsl_rng_type = {"_p_gsl_rng_type", "gsl_rng_type *", 0, 0, (void*)"Math::GSL::RNG::gsl_rng_type", 0};
+static swig_type_info _swigt__p_int = {"_p_int", "int *|size_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_p_gsl_rng_type = {"_p_p_gsl_rng_type", "gsl_rng_type **", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_void = {"_p_void", "void *", 0, 0, (void*)0, 0};
 
@@ -4405,6 +4433,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_f_p_void_unsigned_long__void,
   &_swigt__p_gsl_rng,
   &_swigt__p_gsl_rng_type,
+  &_swigt__p_int,
   &_swigt__p_p_gsl_rng_type,
   &_swigt__p_void,
 };
@@ -4416,6 +4445,7 @@ static swig_cast_info _swigc__p_f_p_void__unsigned_long[] = {  {&_swigt__p_f_p_v
 static swig_cast_info _swigc__p_f_p_void_unsigned_long__void[] = {  {&_swigt__p_f_p_void_unsigned_long__void, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_rng[] = {  {&_swigt__p_gsl_rng, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_rng_type[] = {  {&_swigt__p_gsl_rng_type, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_p_gsl_rng_type[] = {  {&_swigt__p_p_gsl_rng_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_void[] = {  {&_swigt__p_void, 0, 0, 0},{0, 0, 0, 0}};
 
@@ -4427,6 +4457,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_f_p_void_unsigned_long__void,
   _swigc__p_gsl_rng,
   _swigc__p_gsl_rng_type,
+  _swigc__p_int,
   _swigc__p_p_gsl_rng_type,
   _swigc__p_void,
 };
@@ -4843,6 +4874,16 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   }
   
+  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "GSL_MAJOR_VERSION", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(1)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "GSL_MINOR_VERSION", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(11)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
   SWIG_TypeClientData(SWIGTYPE_p_gsl_rng_type, (void*) "Math::GSL::RNG::gsl_rng_type");
   SWIG_TypeClientData(SWIGTYPE_p_gsl_rng, (void*) "Math::GSL::RNG::gsl_rng");
   ST(0) = &PL_sv_yes;

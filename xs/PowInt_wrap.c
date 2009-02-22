@@ -1436,8 +1436,9 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 /* -------- TYPES TABLE (BEGIN) -------- */
 
 #define SWIGTYPE_p_char swig_types[0]
-static swig_type_info *swig_types[2];
-static swig_module_info swig_module = {swig_types, 1, 0, 0, 0, 0};
+#define SWIGTYPE_p_int swig_types[1]
+static swig_type_info *swig_types[3];
+static swig_module_info swig_module = {swig_types, 2, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1468,6 +1469,48 @@ SWIGEXPORT void SWIG_init (pTHXo_ CV* cv);
 #else
 SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 #endif
+
+
+    static HV * Callbacks = (HV*)NULL;
+    /* this function returns the value 
+        of evaluating the function pointer
+        stored in func with argument x
+    */
+    double callthis(double x , int func, void *params){
+        SV ** sv;
+        double y;
+        dSP;
+
+        //fprintf(stderr, "LOOKUP CALLBACK\n");
+        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
+        if (sv == (SV**)NULL) {
+            fprintf(stderr, "Math::GSL(callthis): %d not in Callbacks!\n", func);
+            return;
+        }
+
+        PUSHMARK(SP);
+        XPUSHs(sv_2mortal(newSVnv((double)x)));
+        PUTBACK;
+        call_sv(*sv, G_SCALAR);
+        y = POPn;
+        return y;
+    }
+
+
+SWIGINTERNINLINE SV *
+SWIG_From_long  SWIG_PERL_DECL_ARGS_1(long value)
+{    
+  SV *obj = sv_newmortal();
+  sv_setiv(obj, (IV) value);
+  return obj;
+}
+
+
+SWIGINTERNINLINE SV *
+SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
+{    
+  return SWIG_From_long  SWIG_PERL_CALL_ARGS_1(value);
+}
 
 
     #include "gsl/gsl_pow_int.h"
@@ -1904,15 +1947,19 @@ XS(_wrap_gsl_pow_int) {
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_int = {"_p_int", "int *|size_t *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_char,
+  &_swigt__p_int,
 };
 
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_char,
+  _swigc__p_int,
 };
 
 
@@ -2231,6 +2278,16 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   }
   
+  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "GSL_MAJOR_VERSION", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(1)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "GSL_MINOR_VERSION", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(11)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
   ST(0) = &PL_sv_yes;
   XSRETURN(1);
 }

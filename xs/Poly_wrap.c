@@ -1504,7 +1504,39 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
     }
 
 
+SWIGINTERNINLINE SV *
+SWIG_From_long  SWIG_PERL_DECL_ARGS_1(long value)
+{    
+  SV *obj = sv_newmortal();
+  sv_setiv(obj, (IV) value);
+  return obj;
+}
+
+
+SWIGINTERNINLINE SV *
+SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
+{    
+  return SWIG_From_long  SWIG_PERL_CALL_ARGS_1(value);
+}
+
+
     #include "gsl/gsl_sys.h"
+
+
+    #include "gsl/gsl_nan.h"
+    #include "gsl/gsl_poly.h"
+    #include "gsl/gsl_complex.h"
+    #include "gsl/gsl_complex_math.h"
+
+
+#include <limits.h>
+#if !defined(SWIG_NO_LLONG_MAX)
+# if !defined(LLONG_MAX) && defined(__GNUC__) && defined (__LONG_LONG_MAX__)
+#   define LLONG_MAX __LONG_LONG_MAX__
+#   define LLONG_MIN (-LLONG_MAX - 1LL)
+#   define ULLONG_MAX (LLONG_MAX * 2ULL + 1ULL)
+# endif
+#endif
 
 
 SWIGINTERN int
@@ -1536,65 +1568,7 @@ SWIG_AsVal_double SWIG_PERL_DECL_ARGS_2(SV *obj, double *val)
 }
 
 
-SWIGINTERNINLINE SV *
-SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
-{    
-  SV *obj = sv_newmortal();
-  sv_setnv(obj, value);
-  return obj;
-}
-
-
-SWIGINTERNINLINE SV *
-SWIG_From_long  SWIG_PERL_DECL_ARGS_1(long value)
-{    
-  SV *obj = sv_newmortal();
-  sv_setiv(obj, (IV) value);
-  return obj;
-}
-
-
-SWIGINTERNINLINE SV *
-SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
-{    
-  return SWIG_From_long  SWIG_PERL_CALL_ARGS_1(value);
-}
-
-
 #include <float.h>
-
-
-SWIGINTERN int
-SWIG_AsVal_float SWIG_PERL_DECL_ARGS_2(SV * obj, float *val)
-{
-  double v;
-  int res = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(obj, &v);
-  if (SWIG_IsOK(res)) {
-    if ((v < -FLT_MAX || v > FLT_MAX)) {
-      return SWIG_OverflowError;
-    } else {
-      if (val) *val = (float)(v);
-    }
-  }  
-  return res;
-}
-
-
-SWIGINTERNINLINE SV *
-SWIG_From_float  SWIG_PERL_DECL_ARGS_1(float value)
-{    
-  return SWIG_From_double  SWIG_PERL_CALL_ARGS_1(value);
-}
-
-
-#include <limits.h>
-#if !defined(SWIG_NO_LLONG_MAX)
-# if !defined(LLONG_MAX) && defined(__GNUC__) && defined (__LONG_LONG_MAX__)
-#   define LLONG_MAX __LONG_LONG_MAX__
-#   define LLONG_MIN (-LLONG_MAX - 1LL)
-#   define ULLONG_MAX (LLONG_MAX * 2ULL + 1ULL)
-# endif
-#endif
 
 
 #include <math.h>
@@ -1683,10 +1657,13 @@ SWIG_AsVal_int SWIG_PERL_DECL_ARGS_2(SV * obj, int *val)
 }
 
 
-    #include "gsl/gsl_nan.h"
-    #include "gsl/gsl_poly.h"
-    #include "gsl/gsl_complex.h"
-    #include "gsl/gsl_complex_math.h"
+SWIGINTERNINLINE SV *
+SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
+{    
+  SV *obj = sv_newmortal();
+  sv_setnv(obj, value);
+  return obj;
+}
 
 
 SWIGINTERN int
@@ -1788,620 +1765,6 @@ SWIGCLASS_STATIC int swig_magic_readonly(pTHX_ SV *SWIGUNUSEDPARM(sv), MAGIC *SW
 #ifdef __cplusplus
 extern "C" {
 #endif
-XS(_wrap_gsl_log1p) {
-  {
-    double arg1 ;
-    double val1 ;
-    int ecode1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_log1p(x);");
-    }
-    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_log1p" "', argument " "1"" of type '" "double""'");
-    } 
-    arg1 = (double)(val1);
-    result = (double)gsl_log1p(arg1);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_expm1) {
-  {
-    double arg1 ;
-    double val1 ;
-    int ecode1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_expm1(x);");
-    }
-    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_expm1" "', argument " "1"" of type '" "double""'");
-    } 
-    arg1 = (double)(val1);
-    result = (double)gsl_expm1(arg1);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_hypot) {
-  {
-    double arg1 ;
-    double arg2 ;
-    double val1 ;
-    int ecode1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_hypot(x,y);");
-    }
-    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_hypot" "', argument " "1"" of type '" "double""'");
-    } 
-    arg1 = (double)(val1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_hypot" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    result = (double)gsl_hypot(arg1,arg2);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_hypot3) {
-  {
-    double arg1 ;
-    double arg2 ;
-    double arg3 ;
-    double val1 ;
-    int ecode1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    double val3 ;
-    int ecode3 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: gsl_hypot3(x,y,z);");
-    }
-    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_hypot3" "', argument " "1"" of type '" "double""'");
-    } 
-    arg1 = (double)(val1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_hypot3" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-    if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_hypot3" "', argument " "3"" of type '" "double""'");
-    } 
-    arg3 = (double)(val3);
-    result = (double)gsl_hypot3(arg1,arg2,arg3);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_acosh) {
-  {
-    double arg1 ;
-    double val1 ;
-    int ecode1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_acosh(x);");
-    }
-    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_acosh" "', argument " "1"" of type '" "double""'");
-    } 
-    arg1 = (double)(val1);
-    result = (double)gsl_acosh(arg1);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_asinh) {
-  {
-    double arg1 ;
-    double val1 ;
-    int ecode1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_asinh(x);");
-    }
-    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_asinh" "', argument " "1"" of type '" "double""'");
-    } 
-    arg1 = (double)(val1);
-    result = (double)gsl_asinh(arg1);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_atanh) {
-  {
-    double arg1 ;
-    double val1 ;
-    int ecode1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_atanh(x);");
-    }
-    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_atanh" "', argument " "1"" of type '" "double""'");
-    } 
-    arg1 = (double)(val1);
-    result = (double)gsl_atanh(arg1);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_isnan) {
-  {
-    double arg1 ;
-    double val1 ;
-    int ecode1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_isnan(x);");
-    }
-    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_isnan" "', argument " "1"" of type '" "double""'");
-    } 
-    arg1 = (double)(val1);
-    result = (int)gsl_isnan(arg1);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_isinf) {
-  {
-    double arg1 ;
-    double val1 ;
-    int ecode1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_isinf(x);");
-    }
-    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_isinf" "', argument " "1"" of type '" "double""'");
-    } 
-    arg1 = (double)(val1);
-    result = (int)gsl_isinf(arg1);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_finite) {
-  {
-    double arg1 ;
-    double val1 ;
-    int ecode1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_finite(x);");
-    }
-    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_finite" "', argument " "1"" of type '" "double""'");
-    } 
-    arg1 = (double)(val1);
-    result = (int)gsl_finite(arg1);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_nan) {
-  {
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 0) || (items > 0)) {
-      SWIG_croak("Usage: gsl_nan();");
-    }
-    result = (double)gsl_nan();
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    XSRETURN(argvi);
-  fail:
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_posinf) {
-  {
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 0) || (items > 0)) {
-      SWIG_croak("Usage: gsl_posinf();");
-    }
-    result = (double)gsl_posinf();
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    XSRETURN(argvi);
-  fail:
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_neginf) {
-  {
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 0) || (items > 0)) {
-      SWIG_croak("Usage: gsl_neginf();");
-    }
-    result = (double)gsl_neginf();
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    XSRETURN(argvi);
-  fail:
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_fdiv) {
-  {
-    double arg1 ;
-    double arg2 ;
-    double val1 ;
-    int ecode1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_fdiv(x,y);");
-    }
-    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_fdiv" "', argument " "1"" of type '" "double""'");
-    } 
-    arg1 = (double)(val1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_fdiv" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    result = (double)gsl_fdiv(arg1,arg2);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_coerce_double) {
-  {
-    double arg1 ;
-    double val1 ;
-    int ecode1 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_coerce_double(x);");
-    }
-    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_coerce_double" "', argument " "1"" of type '" "double""'");
-    } 
-    arg1 = (double)(val1);
-    result = (double)gsl_coerce_double(arg1);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_coerce_float) {
-  {
-    float arg1 ;
-    float val1 ;
-    int ecode1 = 0 ;
-    int argvi = 0;
-    float result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_coerce_float(x);");
-    }
-    ecode1 = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_coerce_float" "', argument " "1"" of type '" "float""'");
-    } 
-    arg1 = (float)(val1);
-    result = (float)gsl_coerce_float(arg1);
-    ST(argvi) = SWIG_From_float  SWIG_PERL_CALL_ARGS_1((float)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_coerce_long_double) {
-  {
-    long double arg1 ;
-    void *argp1 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    long double result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_coerce_long_double(x);");
-    }
-    {
-      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_long_double,  0 );
-      if (!SWIG_IsOK(res1)) {
-        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_coerce_long_double" "', argument " "1"" of type '" "long double const""'"); 
-      }  
-      if (!argp1) {
-        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_coerce_long_double" "', argument " "1"" of type '" "long double const""'");
-      } else {
-        arg1 = *((long double *)(argp1));
-      }
-    }
-    result = (long double)gsl_coerce_long_double(arg1);
-    ST(argvi) = SWIG_NewPointerObj((long double *)memcpy((long double *)malloc(sizeof(long double)),&result,sizeof(long double)), SWIGTYPE_p_long_double, SWIG_POINTER_OWN | 0); argvi++ ;
-    XSRETURN(argvi);
-  fail:
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_ldexp) {
-  {
-    double arg1 ;
-    int arg2 ;
-    double val1 ;
-    int ecode1 = 0 ;
-    int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_ldexp(x,e);");
-    }
-    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_ldexp" "', argument " "1"" of type '" "double""'");
-    } 
-    arg1 = (double)(val1);
-    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_ldexp" "', argument " "2"" of type '" "int""'");
-    } 
-    arg2 = (int)(val2);
-    result = (double)gsl_ldexp(arg1,arg2);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_frexp) {
-  {
-    double arg1 ;
-    int *arg2 = (int *) 0 ;
-    double val1 ;
-    int ecode1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_frexp(x,e);");
-    }
-    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_frexp" "', argument " "1"" of type '" "double""'");
-    } 
-    arg1 = (double)(val1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_frexp" "', argument " "2"" of type '" "int *""'"); 
-    }
-    arg2 = (int *)(argp2);
-    result = (double)gsl_frexp(arg1,arg2);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_fcmp) {
-  {
-    double arg1 ;
-    double arg2 ;
-    double arg3 ;
-    double val1 ;
-    int ecode1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    double val3 ;
-    int ecode3 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: gsl_fcmp(x1,x2,epsilon);");
-    }
-    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_fcmp" "', argument " "1"" of type '" "double""'");
-    } 
-    arg1 = (double)(val1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_fcmp" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-    if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_fcmp" "', argument " "3"" of type '" "double""'");
-    } 
-    arg3 = (double)(val3);
-    result = (int)gsl_fcmp(arg1,arg2,arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_gsl_poly_eval) {
   {
     double *arg1 ;
@@ -7222,26 +6585,6 @@ static swig_variable_info swig_variables[] = {
 {0,0,0,0}
 };
 static swig_command_info swig_commands[] = {
-{"Math::GSL::Polyc::gsl_log1p", _wrap_gsl_log1p},
-{"Math::GSL::Polyc::gsl_expm1", _wrap_gsl_expm1},
-{"Math::GSL::Polyc::gsl_hypot", _wrap_gsl_hypot},
-{"Math::GSL::Polyc::gsl_hypot3", _wrap_gsl_hypot3},
-{"Math::GSL::Polyc::gsl_acosh", _wrap_gsl_acosh},
-{"Math::GSL::Polyc::gsl_asinh", _wrap_gsl_asinh},
-{"Math::GSL::Polyc::gsl_atanh", _wrap_gsl_atanh},
-{"Math::GSL::Polyc::gsl_isnan", _wrap_gsl_isnan},
-{"Math::GSL::Polyc::gsl_isinf", _wrap_gsl_isinf},
-{"Math::GSL::Polyc::gsl_finite", _wrap_gsl_finite},
-{"Math::GSL::Polyc::gsl_nan", _wrap_gsl_nan},
-{"Math::GSL::Polyc::gsl_posinf", _wrap_gsl_posinf},
-{"Math::GSL::Polyc::gsl_neginf", _wrap_gsl_neginf},
-{"Math::GSL::Polyc::gsl_fdiv", _wrap_gsl_fdiv},
-{"Math::GSL::Polyc::gsl_coerce_double", _wrap_gsl_coerce_double},
-{"Math::GSL::Polyc::gsl_coerce_float", _wrap_gsl_coerce_float},
-{"Math::GSL::Polyc::gsl_coerce_long_double", _wrap_gsl_coerce_long_double},
-{"Math::GSL::Polyc::gsl_ldexp", _wrap_gsl_ldexp},
-{"Math::GSL::Polyc::gsl_frexp", _wrap_gsl_frexp},
-{"Math::GSL::Polyc::gsl_fcmp", _wrap_gsl_fcmp},
 {"Math::GSL::Polyc::gsl_poly_eval", _wrap_gsl_poly_eval},
 {"Math::GSL::Polyc::gsl_poly_complex_eval", _wrap_gsl_poly_complex_eval},
 {"Math::GSL::Polyc::gsl_complex_poly_complex_eval", _wrap_gsl_complex_poly_complex_eval},
@@ -7626,6 +6969,16 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   }
   
+  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "GSL_MAJOR_VERSION", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(1)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "GSL_MINOR_VERSION", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(11)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "GSL_POSZERO", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)((+0))));

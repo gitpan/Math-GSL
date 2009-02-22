@@ -1438,8 +1438,9 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_char swig_types[0]
 #define SWIGTYPE_p_double swig_types[1]
 #define SWIGTYPE_p_gsl_function swig_types[2]
-static swig_type_info *swig_types[4];
-static swig_module_info swig_module = {swig_types, 3, 0, 0, 0, 0};
+#define SWIGTYPE_p_int swig_types[3]
+static swig_type_info *swig_types[5];
+static swig_module_info swig_module = {swig_types, 4, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1472,6 +1473,32 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 #endif
 
 
+    static HV * Callbacks = (HV*)NULL;
+    /* this function returns the value 
+        of evaluating the function pointer
+        stored in func with argument x
+    */
+    double callthis(double x , int func, void *params){
+        SV ** sv;
+        double y;
+        dSP;
+
+        //fprintf(stderr, "LOOKUP CALLBACK\n");
+        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
+        if (sv == (SV**)NULL) {
+            fprintf(stderr, "Math::GSL(callthis): %d not in Callbacks!\n", func);
+            return;
+        }
+
+        PUSHMARK(SP);
+        XPUSHs(sv_2mortal(newSVnv((double)x)));
+        PUTBACK;
+        call_sv(*sv, G_SCALAR);
+        y = POPn;
+        return y;
+    }
+
+
     #include "gsl/gsl_diff.h"
 
 
@@ -1501,6 +1528,15 @@ SWIG_AsVal_double SWIG_PERL_DECL_ARGS_2(SV *obj, double *val)
     }
   }
   return SWIG_TypeError;
+}
+
+
+SWIGINTERNINLINE SV *
+SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
+{    
+  SV *obj = sv_newmortal();
+  sv_setnv(obj, value);
+  return obj;
 }
 
 
@@ -1554,43 +1590,58 @@ XS(_wrap_gsl_diff_central) {
     double arg2 ;
     double *arg3 = (double *) 0 ;
     double *arg4 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     double val2 ;
     int ecode2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
+    double temp3 ;
+    int res3 = SWIG_TMPOBJ ;
+    double temp4 ;
+    int res4 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 4) || (items > 4)) {
-      SWIG_croak("Usage: gsl_diff_central(f,x,result,abserr);");
+    arg3 = &temp3;
+    arg4 = &temp4;
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_diff_central(f,x);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_diff_central" "', argument " "1"" of type '" "gsl_function const *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : $f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
-    arg1 = (gsl_function *)(argp1);
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_diff_central" "', argument " "2"" of type '" "double""'");
     } 
     arg2 = (double)(val2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_diff_central" "', argument " "3"" of type '" "double *""'"); 
-    }
-    arg3 = (double *)(argp3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_diff_central" "', argument " "4"" of type '" "double *""'"); 
-    }
-    arg4 = (double *)(argp4);
     result = (int)gsl_diff_central((gsl_function const *)arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res3)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg3)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res3) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg3), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res4)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -1612,43 +1663,58 @@ XS(_wrap_gsl_diff_backward) {
     double arg2 ;
     double *arg3 = (double *) 0 ;
     double *arg4 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     double val2 ;
     int ecode2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
+    double temp3 ;
+    int res3 = SWIG_TMPOBJ ;
+    double temp4 ;
+    int res4 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 4) || (items > 4)) {
-      SWIG_croak("Usage: gsl_diff_backward(f,x,result,abserr);");
+    arg3 = &temp3;
+    arg4 = &temp4;
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_diff_backward(f,x);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_diff_backward" "', argument " "1"" of type '" "gsl_function const *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : $f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
-    arg1 = (gsl_function *)(argp1);
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_diff_backward" "', argument " "2"" of type '" "double""'");
     } 
     arg2 = (double)(val2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_diff_backward" "', argument " "3"" of type '" "double *""'"); 
-    }
-    arg3 = (double *)(argp3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_diff_backward" "', argument " "4"" of type '" "double *""'"); 
-    }
-    arg4 = (double *)(argp4);
     result = (int)gsl_diff_backward((gsl_function const *)arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res3)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg3)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res3) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg3), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res4)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -1670,43 +1736,58 @@ XS(_wrap_gsl_diff_forward) {
     double arg2 ;
     double *arg3 = (double *) 0 ;
     double *arg4 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     double val2 ;
     int ecode2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
+    double temp3 ;
+    int res3 = SWIG_TMPOBJ ;
+    double temp4 ;
+    int res4 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 4) || (items > 4)) {
-      SWIG_croak("Usage: gsl_diff_forward(f,x,result,abserr);");
+    arg3 = &temp3;
+    arg4 = &temp4;
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_diff_forward(f,x);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_function, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_diff_forward" "', argument " "1"" of type '" "gsl_function const *""'"); 
+    {
+      gsl_function F;
+      int count;
+      SV ** callback;
+      double x;
+      
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : $f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      F.params   = &ST(0);
+      F.function = &callthis;
+      arg1         = &F;
     }
-    arg1 = (gsl_function *)(argp1);
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_diff_forward" "', argument " "2"" of type '" "double""'");
     } 
     arg2 = (double)(val2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_diff_forward" "', argument " "3"" of type '" "double *""'"); 
-    }
-    arg3 = (double *)(argp3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_diff_forward" "', argument " "4"" of type '" "double *""'"); 
-    }
-    arg4 = (double *)(argp4);
     result = (int)gsl_diff_forward((gsl_function const *)arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res3)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg3)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res3) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg3), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res4)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -1728,21 +1809,25 @@ XS(_wrap_gsl_diff_forward) {
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_gsl_function = {"_p_gsl_function", "gsl_function *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_int = {"_p_int", "int *|size_t *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_char,
   &_swigt__p_double,
   &_swigt__p_gsl_function,
+  &_swigt__p_int,
 };
 
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_function[] = {  {&_swigt__p_gsl_function, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_char,
   _swigc__p_double,
   _swigc__p_gsl_function,
+  _swigc__p_int,
 };
 
 

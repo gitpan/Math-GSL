@@ -233,6 +233,8 @@ sub ACQUIRE {
 
 package Math::GSL::Complex;
 
+*GSL_MAJOR_VERSION = *Math::GSL::Complexc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Complexc::GSL_MINOR_VERSION;
 
 
 @EXPORT_OK = qw(

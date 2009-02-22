@@ -216,6 +216,8 @@ sub ACQUIRE {
 
 package Math::GSL::Interp;
 
+*GSL_MAJOR_VERSION = *Math::GSL::Interpc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Interpc::GSL_MINOR_VERSION;
 
 my %__gsl_interp_linear_hash;
 tie %__gsl_interp_linear_hash,"Math::GSL::Interp::gsl_interp_type", $Math::GSL::Interpc::gsl_interp_linear;

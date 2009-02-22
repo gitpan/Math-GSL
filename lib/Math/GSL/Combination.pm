@@ -113,6 +113,8 @@ sub ACQUIRE {
 
 package Math::GSL::Combination;
 
+*GSL_MAJOR_VERSION = *Math::GSL::Combinationc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Combinationc::GSL_MINOR_VERSION;
 
 @EXPORT_OK = qw/
                gsl_combination_alloc 

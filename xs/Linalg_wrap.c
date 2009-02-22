@@ -1437,18 +1437,22 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 
 #define SWIGTYPE_p_FILE swig_types[0]
 #define SWIGTYPE_p_char swig_types[1]
-#define SWIGTYPE_p_gsl_complex swig_types[2]
-#define SWIGTYPE_p_gsl_linalg_matrix_mod_t swig_types[3]
-#define SWIGTYPE_p_gsl_matrix swig_types[4]
-#define SWIGTYPE_p_gsl_matrix_complex swig_types[5]
-#define SWIGTYPE_p_gsl_mode_t swig_types[6]
-#define SWIGTYPE_p_gsl_permutation_struct swig_types[7]
-#define SWIGTYPE_p_gsl_vector swig_types[8]
-#define SWIGTYPE_p_gsl_vector_complex swig_types[9]
-#define SWIGTYPE_p_int swig_types[10]
-#define SWIGTYPE_p_size_t swig_types[11]
-static swig_type_info *swig_types[13];
-static swig_module_info swig_module = {swig_types, 12, 0, 0, 0, 0};
+#define SWIGTYPE_p_double swig_types[2]
+#define SWIGTYPE_p_float swig_types[3]
+#define SWIGTYPE_p_gsl_complex swig_types[4]
+#define SWIGTYPE_p_gsl_complex_float swig_types[5]
+#define SWIGTYPE_p_gsl_complex_long_double swig_types[6]
+#define SWIGTYPE_p_gsl_linalg_matrix_mod_t swig_types[7]
+#define SWIGTYPE_p_gsl_matrix swig_types[8]
+#define SWIGTYPE_p_gsl_matrix_complex swig_types[9]
+#define SWIGTYPE_p_gsl_mode_t swig_types[10]
+#define SWIGTYPE_p_gsl_permutation_struct swig_types[11]
+#define SWIGTYPE_p_gsl_vector swig_types[12]
+#define SWIGTYPE_p_gsl_vector_complex swig_types[13]
+#define SWIGTYPE_p_int swig_types[14]
+#define SWIGTYPE_p_long_double swig_types[15]
+static swig_type_info *swig_types[17];
+static swig_module_info swig_module = {swig_types, 16, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1481,8 +1485,30 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 #endif
 
 
-    #include "gsl/gsl_linalg.h"
-    #include "gsl/gsl_permutation.h"
+    static HV * Callbacks = (HV*)NULL;
+    /* this function returns the value 
+        of evaluating the function pointer
+        stored in func with argument x
+    */
+    double callthis(double x , int func, void *params){
+        SV ** sv;
+        double y;
+        dSP;
+
+        //fprintf(stderr, "LOOKUP CALLBACK\n");
+        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
+        if (sv == (SV**)NULL) {
+            fprintf(stderr, "Math::GSL(callthis): %d not in Callbacks!\n", func);
+            return;
+        }
+
+        PUSHMARK(SP);
+        XPUSHs(sv_2mortal(newSVnv((double)x)));
+        PUTBACK;
+        call_sv(*sv, G_SCALAR);
+        y = POPn;
+        return y;
+    }
 
 
 SWIGINTERNINLINE SV *
@@ -1499,6 +1525,12 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
 {    
   return SWIG_From_long  SWIG_PERL_CALL_ARGS_1(value);
 }
+
+
+    #include "gsl/gsl_linalg.h"
+    #include "gsl/gsl_permutation.h"
+    #include "gsl/gsl_complex.h"
+    #include "gsl/gsl_complex_math.h"
 
 
 #include <limits.h>
@@ -2002,7 +2034,7 @@ XS(_wrap_gsl_linalg_complex_householder_transform) {
     }
     arg1 = (gsl_vector_complex *)(argp1);
     result = gsl_linalg_complex_householder_transform(arg1);
-    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | 0); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -3612,7 +3644,7 @@ XS(_wrap_gsl_linalg_complex_LU_det) {
     } 
     arg2 = (int)(val2);
     result = gsl_linalg_complex_LU_det(arg1,arg2);
-    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | 0); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
     
     
     XSRETURN(argvi);
@@ -3678,7 +3710,7 @@ XS(_wrap_gsl_linalg_complex_LU_sgndet) {
     } 
     arg2 = (int)(val2);
     result = gsl_linalg_complex_LU_sgndet(arg1,arg2);
-    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | 0); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
     
     
     XSRETURN(argvi);
@@ -7386,7 +7418,7 @@ XS(_wrap_gsl_permutation_struct_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_permutation_struct_size_get" "', argument " "1"" of type '" "struct gsl_permutation_struct *""'"); 
     }
     arg1 = (struct gsl_permutation_struct *)(argp1);
-    result =  ((arg1)->size);
+    result = (size_t) ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -7416,7 +7448,7 @@ XS(_wrap_gsl_permutation_struct_data_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_permutation_struct_data_set" "', argument " "1"" of type '" "struct gsl_permutation_struct *""'"); 
     }
     arg1 = (struct gsl_permutation_struct *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_size_t, SWIG_POINTER_DISOWN |  0 );
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_int, SWIG_POINTER_DISOWN |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_permutation_struct_data_set" "', argument " "2"" of type '" "size_t *""'"); 
     }
@@ -7452,7 +7484,7 @@ XS(_wrap_gsl_permutation_struct_data_get) {
     }
     arg1 = (struct gsl_permutation_struct *)(argp1);
     result = (size_t *) ((arg1)->data);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_size_t, 0 | 0); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_int, 0 | 0); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -7835,7 +7867,7 @@ XS(_wrap_gsl_permutation_size) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_permutation_size" "', argument " "1"" of type '" "gsl_permutation const *""'"); 
     }
     arg1 = (gsl_permutation *)(argp1);
-    result = gsl_permutation_size((struct gsl_permutation_struct const *)arg1);
+    result = (size_t)gsl_permutation_size((struct gsl_permutation_struct const *)arg1);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -7864,7 +7896,7 @@ XS(_wrap_gsl_permutation_data) {
     }
     arg1 = (gsl_permutation *)(argp1);
     result = (size_t *)gsl_permutation_data((struct gsl_permutation_struct const *)arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_size_t, 0 | 0); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_int, 0 | 0); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -7899,7 +7931,7 @@ XS(_wrap_gsl_permutation_get) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_permutation_get" "', argument " "2"" of type '" "size_t""'");
     } 
     arg2 = (size_t)(val2);
-    result = gsl_permutation_get((struct gsl_permutation_struct const *)arg1,arg2);
+    result = (size_t)gsl_permutation_get((struct gsl_permutation_struct const *)arg1,arg2);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     
@@ -8250,7 +8282,7 @@ XS(_wrap_gsl_permutation_inversions) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_permutation_inversions" "', argument " "1"" of type '" "gsl_permutation const *""'"); 
     }
     arg1 = (gsl_permutation *)(argp1);
-    result = gsl_permutation_inversions((struct gsl_permutation_struct const *)arg1);
+    result = (size_t)gsl_permutation_inversions((struct gsl_permutation_struct const *)arg1);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -8278,7 +8310,7 @@ XS(_wrap_gsl_permutation_linear_cycles) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_permutation_linear_cycles" "', argument " "1"" of type '" "gsl_permutation const *""'"); 
     }
     arg1 = (gsl_permutation *)(argp1);
-    result = gsl_permutation_linear_cycles((struct gsl_permutation_struct const *)arg1);
+    result = (size_t)gsl_permutation_linear_cycles((struct gsl_permutation_struct const *)arg1);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -8306,7 +8338,7 @@ XS(_wrap_gsl_permutation_canonical_cycles) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_permutation_canonical_cycles" "', argument " "1"" of type '" "gsl_permutation const *""'"); 
     }
     arg1 = (gsl_permutation *)(argp1);
-    result = gsl_permutation_canonical_cycles((struct gsl_permutation_struct const *)arg1);
+    result = (size_t)gsl_permutation_canonical_cycles((struct gsl_permutation_struct const *)arg1);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -8317,12 +8349,2413 @@ XS(_wrap_gsl_permutation_canonical_cycles) {
 }
 
 
+XS(_wrap_gsl_complex_long_double_dat_set) {
+  {
+    gsl_complex_long_double *arg1 = (gsl_complex_long_double *) 0 ;
+    long double *arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_complex_long_double_dat_set(self,dat);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_complex_long_double, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_long_double_dat_set" "', argument " "1"" of type '" "gsl_complex_long_double *""'"); 
+    }
+    arg1 = (gsl_complex_long_double *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_long_double, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_complex_long_double_dat_set" "', argument " "2"" of type '" "long double [2]""'"); 
+    } 
+    arg2 = (long double *)(argp2);
+    {
+      if (arg2) {
+        size_t ii = 0;
+        for (; ii < (size_t)2; ++ii) arg1->dat[ii] = arg2[ii];
+      } else {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in variable '""dat""' of type '""long double [2]""'");
+      }
+    }
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_long_double_dat_get) {
+  {
+    gsl_complex_long_double *arg1 = (gsl_complex_long_double *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    long double *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_long_double_dat_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_complex_long_double, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_long_double_dat_get" "', argument " "1"" of type '" "gsl_complex_long_double *""'"); 
+    }
+    arg1 = (gsl_complex_long_double *)(argp1);
+    result = (long double *)(long double *) ((arg1)->dat);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_long_double, 0 | 0); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_gsl_complex_long_double) {
+  {
+    int argvi = 0;
+    gsl_complex_long_double *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 0) || (items > 0)) {
+      SWIG_croak("Usage: new_gsl_complex_long_double();");
+    }
+    result = (gsl_complex_long_double *)calloc(1, sizeof(gsl_complex_long_double));
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_complex_long_double, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_delete_gsl_complex_long_double) {
+  {
+    gsl_complex_long_double *arg1 = (gsl_complex_long_double *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: delete_gsl_complex_long_double(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_complex_long_double, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_gsl_complex_long_double" "', argument " "1"" of type '" "gsl_complex_long_double *""'"); 
+    }
+    arg1 = (gsl_complex_long_double *)(argp1);
+    free((char *) arg1);
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_dat_set) {
+  {
+    gsl_complex *arg1 = (gsl_complex *) 0 ;
+    double *arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_complex_dat_set(self,dat);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_complex, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_dat_set" "', argument " "1"" of type '" "gsl_complex *""'"); 
+    }
+    arg1 = (gsl_complex *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_complex_dat_set" "', argument " "2"" of type '" "double [2]""'"); 
+    } 
+    arg2 = (double *)(argp2);
+    {
+      if (arg2) {
+        size_t ii = 0;
+        for (; ii < (size_t)2; ++ii) arg1->dat[ii] = arg2[ii];
+      } else {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in variable '""dat""' of type '""double [2]""'");
+      }
+    }
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_dat_get) {
+  {
+    gsl_complex *arg1 = (gsl_complex *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_dat_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_complex, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_dat_get" "', argument " "1"" of type '" "gsl_complex *""'"); 
+    }
+    arg1 = (gsl_complex *)(argp1);
+    result = (double *)(double *) ((arg1)->dat);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_double, 0 | 0); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_gsl_complex) {
+  {
+    int argvi = 0;
+    gsl_complex *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 0) || (items > 0)) {
+      SWIG_croak("Usage: new_gsl_complex();");
+    }
+    result = (gsl_complex *)calloc(1, sizeof(gsl_complex));
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_complex, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_delete_gsl_complex) {
+  {
+    gsl_complex *arg1 = (gsl_complex *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: delete_gsl_complex(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_complex, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_gsl_complex" "', argument " "1"" of type '" "gsl_complex *""'"); 
+    }
+    arg1 = (gsl_complex *)(argp1);
+    free((char *) arg1);
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_float_dat_set) {
+  {
+    gsl_complex_float *arg1 = (gsl_complex_float *) 0 ;
+    float *arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_complex_float_dat_set(self,dat);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_complex_float, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_float_dat_set" "', argument " "1"" of type '" "gsl_complex_float *""'"); 
+    }
+    arg1 = (gsl_complex_float *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_float, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_complex_float_dat_set" "', argument " "2"" of type '" "float [2]""'"); 
+    } 
+    arg2 = (float *)(argp2);
+    {
+      if (arg2) {
+        size_t ii = 0;
+        for (; ii < (size_t)2; ++ii) arg1->dat[ii] = arg2[ii];
+      } else {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in variable '""dat""' of type '""float [2]""'");
+      }
+    }
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_float_dat_get) {
+  {
+    gsl_complex_float *arg1 = (gsl_complex_float *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    float *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_float_dat_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_complex_float, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_float_dat_get" "', argument " "1"" of type '" "gsl_complex_float *""'"); 
+    }
+    arg1 = (gsl_complex_float *)(argp1);
+    result = (float *)(float *) ((arg1)->dat);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_float, 0 | 0); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_gsl_complex_float) {
+  {
+    int argvi = 0;
+    gsl_complex_float *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 0) || (items > 0)) {
+      SWIG_croak("Usage: new_gsl_complex_float();");
+    }
+    result = (gsl_complex_float *)calloc(1, sizeof(gsl_complex_float));
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_complex_float, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_delete_gsl_complex_float) {
+  {
+    gsl_complex_float *arg1 = (gsl_complex_float *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: delete_gsl_complex_float(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_complex_float, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_gsl_complex_float" "', argument " "1"" of type '" "gsl_complex_float *""'"); 
+    }
+    arg1 = (gsl_complex_float *)(argp1);
+    free((char *) arg1);
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_rect) {
+  {
+    double arg1 ;
+    double arg2 ;
+    double val1 ;
+    int ecode1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_complex_rect(x,y);");
+    }
+    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_complex_rect" "', argument " "1"" of type '" "double""'");
+    } 
+    arg1 = (double)(val1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_complex_rect" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    result = gsl_complex_rect(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_polar) {
+  {
+    double arg1 ;
+    double arg2 ;
+    double val1 ;
+    int ecode1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_complex_polar(r,theta);");
+    }
+    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_complex_polar" "', argument " "1"" of type '" "double""'");
+    } 
+    arg1 = (double)(val1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_complex_polar" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    result = gsl_complex_polar(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_arg) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_arg(z);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_arg" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_arg" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = (double)gsl_complex_arg(arg1);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_abs) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_abs(z);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_abs" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_abs" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = (double)gsl_complex_abs(arg1);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_abs2) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_abs2(z);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_abs2" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_abs2" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = (double)gsl_complex_abs2(arg1);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_logabs) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_logabs(z);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_logabs" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_logabs" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = (double)gsl_complex_logabs(arg1);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_add) {
+  {
+    gsl_complex arg1 ;
+    gsl_complex arg2 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    void *argp2 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_complex_add(a,b);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_add" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_add" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    {
+      res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res2)) {
+        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_complex_add" "', argument " "2"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp2) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_add" "', argument " "2"" of type '" "gsl_complex""'");
+      } else {
+        arg2 = *((gsl_complex *)(argp2));
+      }
+    }
+    result = gsl_complex_add(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_sub) {
+  {
+    gsl_complex arg1 ;
+    gsl_complex arg2 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    void *argp2 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_complex_sub(a,b);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_sub" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_sub" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    {
+      res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res2)) {
+        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_complex_sub" "', argument " "2"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp2) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_sub" "', argument " "2"" of type '" "gsl_complex""'");
+      } else {
+        arg2 = *((gsl_complex *)(argp2));
+      }
+    }
+    result = gsl_complex_sub(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_mul) {
+  {
+    gsl_complex arg1 ;
+    gsl_complex arg2 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    void *argp2 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_complex_mul(a,b);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_mul" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_mul" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    {
+      res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res2)) {
+        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_complex_mul" "', argument " "2"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp2) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_mul" "', argument " "2"" of type '" "gsl_complex""'");
+      } else {
+        arg2 = *((gsl_complex *)(argp2));
+      }
+    }
+    result = gsl_complex_mul(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_div) {
+  {
+    gsl_complex arg1 ;
+    gsl_complex arg2 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    void *argp2 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_complex_div(a,b);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_div" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_div" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    {
+      res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res2)) {
+        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_complex_div" "', argument " "2"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp2) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_div" "', argument " "2"" of type '" "gsl_complex""'");
+      } else {
+        arg2 = *((gsl_complex *)(argp2));
+      }
+    }
+    result = gsl_complex_div(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_add_real) {
+  {
+    gsl_complex arg1 ;
+    double arg2 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_complex_add_real(a,x);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_add_real" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_add_real" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_complex_add_real" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    result = gsl_complex_add_real(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_sub_real) {
+  {
+    gsl_complex arg1 ;
+    double arg2 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_complex_sub_real(a,x);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_sub_real" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_sub_real" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_complex_sub_real" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    result = gsl_complex_sub_real(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_mul_real) {
+  {
+    gsl_complex arg1 ;
+    double arg2 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_complex_mul_real(a,x);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_mul_real" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_mul_real" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_complex_mul_real" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    result = gsl_complex_mul_real(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_div_real) {
+  {
+    gsl_complex arg1 ;
+    double arg2 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_complex_div_real(a,x);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_div_real" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_div_real" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_complex_div_real" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    result = gsl_complex_div_real(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_add_imag) {
+  {
+    gsl_complex arg1 ;
+    double arg2 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_complex_add_imag(a,y);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_add_imag" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_add_imag" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_complex_add_imag" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    result = gsl_complex_add_imag(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_sub_imag) {
+  {
+    gsl_complex arg1 ;
+    double arg2 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_complex_sub_imag(a,y);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_sub_imag" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_sub_imag" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_complex_sub_imag" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    result = gsl_complex_sub_imag(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_mul_imag) {
+  {
+    gsl_complex arg1 ;
+    double arg2 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_complex_mul_imag(a,y);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_mul_imag" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_mul_imag" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_complex_mul_imag" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    result = gsl_complex_mul_imag(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_div_imag) {
+  {
+    gsl_complex arg1 ;
+    double arg2 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_complex_div_imag(a,y);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_div_imag" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_div_imag" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_complex_div_imag" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    result = gsl_complex_div_imag(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_conjugate) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_conjugate(z);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_conjugate" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_conjugate" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_conjugate(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_inverse) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_inverse(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_inverse" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_inverse" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_inverse(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_negative) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_negative(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_negative" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_negative" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_negative(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_sqrt) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_sqrt(z);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_sqrt" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_sqrt" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_sqrt(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_sqrt_real) {
+  {
+    double arg1 ;
+    double val1 ;
+    int ecode1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_sqrt_real(x);");
+    }
+    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_complex_sqrt_real" "', argument " "1"" of type '" "double""'");
+    } 
+    arg1 = (double)(val1);
+    result = gsl_complex_sqrt_real(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_pow) {
+  {
+    gsl_complex arg1 ;
+    gsl_complex arg2 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    void *argp2 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_complex_pow(a,b);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_pow" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_pow" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    {
+      res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res2)) {
+        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_complex_pow" "', argument " "2"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp2) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_pow" "', argument " "2"" of type '" "gsl_complex""'");
+      } else {
+        arg2 = *((gsl_complex *)(argp2));
+      }
+    }
+    result = gsl_complex_pow(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_pow_real) {
+  {
+    gsl_complex arg1 ;
+    double arg2 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_complex_pow_real(a,b);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_pow_real" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_pow_real" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_complex_pow_real" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    result = gsl_complex_pow_real(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_exp) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_exp(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_exp" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_exp" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_exp(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_log) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_log(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_log" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_log" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_log(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_log10) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_log10(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_log10" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_log10" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_log10(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_log_b) {
+  {
+    gsl_complex arg1 ;
+    gsl_complex arg2 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    void *argp2 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_complex_log_b(a,b);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_log_b" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_log_b" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    {
+      res2 = SWIG_ConvertPtr(ST(1), &argp2, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res2)) {
+        SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_complex_log_b" "', argument " "2"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp2) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_log_b" "', argument " "2"" of type '" "gsl_complex""'");
+      } else {
+        arg2 = *((gsl_complex *)(argp2));
+      }
+    }
+    result = gsl_complex_log_b(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_sin) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_sin(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_sin" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_sin" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_sin(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_cos) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_cos(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_cos" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_cos" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_cos(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_sec) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_sec(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_sec" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_sec" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_sec(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_csc) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_csc(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_csc" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_csc" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_csc(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_tan) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_tan(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_tan" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_tan" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_tan(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_cot) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_cot(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_cot" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_cot" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_cot(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_arcsin) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_arcsin(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_arcsin" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_arcsin" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_arcsin(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_arcsin_real) {
+  {
+    double arg1 ;
+    double val1 ;
+    int ecode1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_arcsin_real(a);");
+    }
+    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_complex_arcsin_real" "', argument " "1"" of type '" "double""'");
+    } 
+    arg1 = (double)(val1);
+    result = gsl_complex_arcsin_real(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_arccos) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_arccos(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_arccos" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_arccos" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_arccos(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_arccos_real) {
+  {
+    double arg1 ;
+    double val1 ;
+    int ecode1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_arccos_real(a);");
+    }
+    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_complex_arccos_real" "', argument " "1"" of type '" "double""'");
+    } 
+    arg1 = (double)(val1);
+    result = gsl_complex_arccos_real(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_arcsec) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_arcsec(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_arcsec" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_arcsec" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_arcsec(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_arcsec_real) {
+  {
+    double arg1 ;
+    double val1 ;
+    int ecode1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_arcsec_real(a);");
+    }
+    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_complex_arcsec_real" "', argument " "1"" of type '" "double""'");
+    } 
+    arg1 = (double)(val1);
+    result = gsl_complex_arcsec_real(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_arccsc) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_arccsc(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_arccsc" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_arccsc" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_arccsc(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_arccsc_real) {
+  {
+    double arg1 ;
+    double val1 ;
+    int ecode1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_arccsc_real(a);");
+    }
+    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_complex_arccsc_real" "', argument " "1"" of type '" "double""'");
+    } 
+    arg1 = (double)(val1);
+    result = gsl_complex_arccsc_real(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_arctan) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_arctan(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_arctan" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_arctan" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_arctan(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_arccot) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_arccot(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_arccot" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_arccot" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_arccot(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_sinh) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_sinh(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_sinh" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_sinh" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_sinh(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_cosh) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_cosh(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_cosh" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_cosh" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_cosh(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_sech) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_sech(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_sech" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_sech" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_sech(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_csch) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_csch(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_csch" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_csch" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_csch(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_tanh) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_tanh(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_tanh" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_tanh" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_tanh(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_coth) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_coth(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_coth" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_coth" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_coth(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_arcsinh) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_arcsinh(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_arcsinh" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_arcsinh" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_arcsinh(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_arccosh) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_arccosh(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_arccosh" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_arccosh" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_arccosh(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_arccosh_real) {
+  {
+    double arg1 ;
+    double val1 ;
+    int ecode1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_arccosh_real(a);");
+    }
+    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_complex_arccosh_real" "', argument " "1"" of type '" "double""'");
+    } 
+    arg1 = (double)(val1);
+    result = gsl_complex_arccosh_real(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_arcsech) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_arcsech(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_arcsech" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_arcsech" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_arcsech(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_arccsch) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_arccsch(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_arccsch" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_arccsch" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_arccsch(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_arctanh) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_arctanh(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_arctanh" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_arctanh" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_arctanh(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_arctanh_real) {
+  {
+    double arg1 ;
+    double val1 ;
+    int ecode1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_arctanh_real(a);");
+    }
+    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_complex_arctanh_real" "', argument " "1"" of type '" "double""'");
+    } 
+    arg1 = (double)(val1);
+    result = gsl_complex_arctanh_real(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_complex_arccoth) {
+  {
+    gsl_complex arg1 ;
+    void *argp1 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_complex result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_complex_arccoth(a);");
+    }
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1, SWIGTYPE_p_gsl_complex,  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_complex_arccoth" "', argument " "1"" of type '" "gsl_complex""'"); 
+      }  
+      if (!argp1) {
+        SWIG_exception_fail(SWIG_ValueError, "invalid null reference " "in method '" "gsl_complex_arccoth" "', argument " "1"" of type '" "gsl_complex""'");
+      } else {
+        arg1 = *((gsl_complex *)(argp1));
+      }
+    }
+    result = gsl_complex_arccoth(arg1);
+    ST(argvi) = SWIG_NewPointerObj((gsl_complex *)memcpy((gsl_complex *)malloc(sizeof(gsl_complex)),&result,sizeof(gsl_complex)), SWIGTYPE_p_gsl_complex, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
 static swig_type_info _swigt__p_FILE = {"_p_FILE", "FILE *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_gsl_complex = {"_p_gsl_complex", "gsl_complex *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_float = {"_p_float", "float *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_gsl_complex = {"_p_gsl_complex", "gsl_complex *", 0, 0, (void*)"Math::GSL::Linalg::gsl_complex", 0};
+static swig_type_info _swigt__p_gsl_complex_float = {"_p_gsl_complex_float", "gsl_complex_float *", 0, 0, (void*)"Math::GSL::Linalg::gsl_complex_float", 0};
+static swig_type_info _swigt__p_gsl_complex_long_double = {"_p_gsl_complex_long_double", "gsl_complex_long_double *", 0, 0, (void*)"Math::GSL::Linalg::gsl_complex_long_double", 0};
 static swig_type_info _swigt__p_gsl_linalg_matrix_mod_t = {"_p_gsl_linalg_matrix_mod_t", "enum gsl_linalg_matrix_mod_t *|gsl_linalg_matrix_mod_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_gsl_matrix = {"_p_gsl_matrix", "gsl_matrix *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_gsl_matrix_complex = {"_p_gsl_matrix_complex", "gsl_matrix_complex *", 0, 0, (void*)0, 0};
@@ -8330,13 +10763,17 @@ static swig_type_info _swigt__p_gsl_mode_t = {"_p_gsl_mode_t", "gsl_mode_t *", 0
 static swig_type_info _swigt__p_gsl_permutation_struct = {"_p_gsl_permutation_struct", "gsl_permutation *|struct gsl_permutation_struct *|gsl_permutation_struct *", 0, 0, (void*)"Math::GSL::Linalg::gsl_permutation_struct", 0};
 static swig_type_info _swigt__p_gsl_vector = {"_p_gsl_vector", "gsl_vector *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_gsl_vector_complex = {"_p_gsl_vector_complex", "gsl_vector_complex *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_int = {"_p_int", "int *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_size_t = {"_p_size_t", "size_t *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_int = {"_p_int", "int *|size_t *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_long_double = {"_p_long_double", "long double *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_FILE,
   &_swigt__p_char,
+  &_swigt__p_double,
+  &_swigt__p_float,
   &_swigt__p_gsl_complex,
+  &_swigt__p_gsl_complex_float,
+  &_swigt__p_gsl_complex_long_double,
   &_swigt__p_gsl_linalg_matrix_mod_t,
   &_swigt__p_gsl_matrix,
   &_swigt__p_gsl_matrix_complex,
@@ -8345,12 +10782,16 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_gsl_vector,
   &_swigt__p_gsl_vector_complex,
   &_swigt__p_int,
-  &_swigt__p_size_t,
+  &_swigt__p_long_double,
 };
 
 static swig_cast_info _swigc__p_FILE[] = {  {&_swigt__p_FILE, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_float[] = {  {&_swigt__p_float, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_complex[] = {  {&_swigt__p_gsl_complex, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_gsl_complex_float[] = {  {&_swigt__p_gsl_complex_float, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_gsl_complex_long_double[] = {  {&_swigt__p_gsl_complex_long_double, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_linalg_matrix_mod_t[] = {  {&_swigt__p_gsl_linalg_matrix_mod_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_matrix[] = {  {&_swigt__p_gsl_matrix, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_matrix_complex[] = {  {&_swigt__p_gsl_matrix_complex, 0, 0, 0},{0, 0, 0, 0}};
@@ -8359,12 +10800,16 @@ static swig_cast_info _swigc__p_gsl_permutation_struct[] = {  {&_swigt__p_gsl_pe
 static swig_cast_info _swigc__p_gsl_vector[] = {  {&_swigt__p_gsl_vector, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_vector_complex[] = {  {&_swigt__p_gsl_vector_complex, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_size_t[] = {  {&_swigt__p_size_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_long_double[] = {  {&_swigt__p_long_double, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_FILE,
   _swigc__p_char,
+  _swigc__p_double,
+  _swigc__p_float,
   _swigc__p_gsl_complex,
+  _swigc__p_gsl_complex_float,
+  _swigc__p_gsl_complex_long_double,
   _swigc__p_gsl_linalg_matrix_mod_t,
   _swigc__p_gsl_matrix,
   _swigc__p_gsl_matrix_complex,
@@ -8373,7 +10818,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_gsl_vector,
   _swigc__p_gsl_vector_complex,
   _swigc__p_int,
-  _swigc__p_size_t,
+  _swigc__p_long_double,
 };
 
 
@@ -8526,6 +10971,77 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::Linalgc::gsl_permutation_inversions", _wrap_gsl_permutation_inversions},
 {"Math::GSL::Linalgc::gsl_permutation_linear_cycles", _wrap_gsl_permutation_linear_cycles},
 {"Math::GSL::Linalgc::gsl_permutation_canonical_cycles", _wrap_gsl_permutation_canonical_cycles},
+{"Math::GSL::Linalgc::gsl_complex_long_double_dat_set", _wrap_gsl_complex_long_double_dat_set},
+{"Math::GSL::Linalgc::gsl_complex_long_double_dat_get", _wrap_gsl_complex_long_double_dat_get},
+{"Math::GSL::Linalgc::new_gsl_complex_long_double", _wrap_new_gsl_complex_long_double},
+{"Math::GSL::Linalgc::delete_gsl_complex_long_double", _wrap_delete_gsl_complex_long_double},
+{"Math::GSL::Linalgc::gsl_complex_dat_set", _wrap_gsl_complex_dat_set},
+{"Math::GSL::Linalgc::gsl_complex_dat_get", _wrap_gsl_complex_dat_get},
+{"Math::GSL::Linalgc::new_gsl_complex", _wrap_new_gsl_complex},
+{"Math::GSL::Linalgc::delete_gsl_complex", _wrap_delete_gsl_complex},
+{"Math::GSL::Linalgc::gsl_complex_float_dat_set", _wrap_gsl_complex_float_dat_set},
+{"Math::GSL::Linalgc::gsl_complex_float_dat_get", _wrap_gsl_complex_float_dat_get},
+{"Math::GSL::Linalgc::new_gsl_complex_float", _wrap_new_gsl_complex_float},
+{"Math::GSL::Linalgc::delete_gsl_complex_float", _wrap_delete_gsl_complex_float},
+{"Math::GSL::Linalgc::gsl_complex_rect", _wrap_gsl_complex_rect},
+{"Math::GSL::Linalgc::gsl_complex_polar", _wrap_gsl_complex_polar},
+{"Math::GSL::Linalgc::gsl_complex_arg", _wrap_gsl_complex_arg},
+{"Math::GSL::Linalgc::gsl_complex_abs", _wrap_gsl_complex_abs},
+{"Math::GSL::Linalgc::gsl_complex_abs2", _wrap_gsl_complex_abs2},
+{"Math::GSL::Linalgc::gsl_complex_logabs", _wrap_gsl_complex_logabs},
+{"Math::GSL::Linalgc::gsl_complex_add", _wrap_gsl_complex_add},
+{"Math::GSL::Linalgc::gsl_complex_sub", _wrap_gsl_complex_sub},
+{"Math::GSL::Linalgc::gsl_complex_mul", _wrap_gsl_complex_mul},
+{"Math::GSL::Linalgc::gsl_complex_div", _wrap_gsl_complex_div},
+{"Math::GSL::Linalgc::gsl_complex_add_real", _wrap_gsl_complex_add_real},
+{"Math::GSL::Linalgc::gsl_complex_sub_real", _wrap_gsl_complex_sub_real},
+{"Math::GSL::Linalgc::gsl_complex_mul_real", _wrap_gsl_complex_mul_real},
+{"Math::GSL::Linalgc::gsl_complex_div_real", _wrap_gsl_complex_div_real},
+{"Math::GSL::Linalgc::gsl_complex_add_imag", _wrap_gsl_complex_add_imag},
+{"Math::GSL::Linalgc::gsl_complex_sub_imag", _wrap_gsl_complex_sub_imag},
+{"Math::GSL::Linalgc::gsl_complex_mul_imag", _wrap_gsl_complex_mul_imag},
+{"Math::GSL::Linalgc::gsl_complex_div_imag", _wrap_gsl_complex_div_imag},
+{"Math::GSL::Linalgc::gsl_complex_conjugate", _wrap_gsl_complex_conjugate},
+{"Math::GSL::Linalgc::gsl_complex_inverse", _wrap_gsl_complex_inverse},
+{"Math::GSL::Linalgc::gsl_complex_negative", _wrap_gsl_complex_negative},
+{"Math::GSL::Linalgc::gsl_complex_sqrt", _wrap_gsl_complex_sqrt},
+{"Math::GSL::Linalgc::gsl_complex_sqrt_real", _wrap_gsl_complex_sqrt_real},
+{"Math::GSL::Linalgc::gsl_complex_pow", _wrap_gsl_complex_pow},
+{"Math::GSL::Linalgc::gsl_complex_pow_real", _wrap_gsl_complex_pow_real},
+{"Math::GSL::Linalgc::gsl_complex_exp", _wrap_gsl_complex_exp},
+{"Math::GSL::Linalgc::gsl_complex_log", _wrap_gsl_complex_log},
+{"Math::GSL::Linalgc::gsl_complex_log10", _wrap_gsl_complex_log10},
+{"Math::GSL::Linalgc::gsl_complex_log_b", _wrap_gsl_complex_log_b},
+{"Math::GSL::Linalgc::gsl_complex_sin", _wrap_gsl_complex_sin},
+{"Math::GSL::Linalgc::gsl_complex_cos", _wrap_gsl_complex_cos},
+{"Math::GSL::Linalgc::gsl_complex_sec", _wrap_gsl_complex_sec},
+{"Math::GSL::Linalgc::gsl_complex_csc", _wrap_gsl_complex_csc},
+{"Math::GSL::Linalgc::gsl_complex_tan", _wrap_gsl_complex_tan},
+{"Math::GSL::Linalgc::gsl_complex_cot", _wrap_gsl_complex_cot},
+{"Math::GSL::Linalgc::gsl_complex_arcsin", _wrap_gsl_complex_arcsin},
+{"Math::GSL::Linalgc::gsl_complex_arcsin_real", _wrap_gsl_complex_arcsin_real},
+{"Math::GSL::Linalgc::gsl_complex_arccos", _wrap_gsl_complex_arccos},
+{"Math::GSL::Linalgc::gsl_complex_arccos_real", _wrap_gsl_complex_arccos_real},
+{"Math::GSL::Linalgc::gsl_complex_arcsec", _wrap_gsl_complex_arcsec},
+{"Math::GSL::Linalgc::gsl_complex_arcsec_real", _wrap_gsl_complex_arcsec_real},
+{"Math::GSL::Linalgc::gsl_complex_arccsc", _wrap_gsl_complex_arccsc},
+{"Math::GSL::Linalgc::gsl_complex_arccsc_real", _wrap_gsl_complex_arccsc_real},
+{"Math::GSL::Linalgc::gsl_complex_arctan", _wrap_gsl_complex_arctan},
+{"Math::GSL::Linalgc::gsl_complex_arccot", _wrap_gsl_complex_arccot},
+{"Math::GSL::Linalgc::gsl_complex_sinh", _wrap_gsl_complex_sinh},
+{"Math::GSL::Linalgc::gsl_complex_cosh", _wrap_gsl_complex_cosh},
+{"Math::GSL::Linalgc::gsl_complex_sech", _wrap_gsl_complex_sech},
+{"Math::GSL::Linalgc::gsl_complex_csch", _wrap_gsl_complex_csch},
+{"Math::GSL::Linalgc::gsl_complex_tanh", _wrap_gsl_complex_tanh},
+{"Math::GSL::Linalgc::gsl_complex_coth", _wrap_gsl_complex_coth},
+{"Math::GSL::Linalgc::gsl_complex_arcsinh", _wrap_gsl_complex_arcsinh},
+{"Math::GSL::Linalgc::gsl_complex_arccosh", _wrap_gsl_complex_arccosh},
+{"Math::GSL::Linalgc::gsl_complex_arccosh_real", _wrap_gsl_complex_arccosh_real},
+{"Math::GSL::Linalgc::gsl_complex_arcsech", _wrap_gsl_complex_arcsech},
+{"Math::GSL::Linalgc::gsl_complex_arccsch", _wrap_gsl_complex_arccsch},
+{"Math::GSL::Linalgc::gsl_complex_arctanh", _wrap_gsl_complex_arctanh},
+{"Math::GSL::Linalgc::gsl_complex_arctanh_real", _wrap_gsl_complex_arctanh_real},
+{"Math::GSL::Linalgc::gsl_complex_arccoth", _wrap_gsl_complex_arccoth},
 {0,0}
 };
 /* -----------------------------------------------------------------------------
@@ -8821,6 +11337,16 @@ XS(SWIG_init) {
   }
   
   /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "GSL_MAJOR_VERSION", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(1)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "GSL_MINOR_VERSION", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(11)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "GSL_LINALG_MOD_NONE", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_LINALG_MOD_NONE)));
     SvREADONLY_on(sv);
@@ -8836,6 +11362,9 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   SWIG_TypeClientData(SWIGTYPE_p_gsl_permutation_struct, (void*) "Math::GSL::Linalg::gsl_permutation_struct");
+  SWIG_TypeClientData(SWIGTYPE_p_gsl_complex_long_double, (void*) "Math::GSL::Linalg::gsl_complex_long_double");
+  SWIG_TypeClientData(SWIGTYPE_p_gsl_complex, (void*) "Math::GSL::Linalg::gsl_complex");
+  SWIG_TypeClientData(SWIGTYPE_p_gsl_complex_float, (void*) "Math::GSL::Linalg::gsl_complex_float");
   ST(0) = &PL_sv_yes;
   XSRETURN(1);
 }

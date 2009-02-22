@@ -1441,9 +1441,9 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_f_p_q_const__gsl_vector_p_void_p_gsl_vector__int swig_types[3]
 #define SWIGTYPE_p_f_p_q_const__gsl_vector_p_void_p_gsl_vector_p_gsl_matrix__int swig_types[4]
 #define SWIGTYPE_p_f_p_void__void swig_types[5]
-#define SWIGTYPE_p_f_p_void_p_struct_gsl_multifit_function_fdf_struct_p_gsl_vector_p_gsl_vector_p_gsl_matrix_p_gsl_vector__int swig_types[6]
-#define SWIGTYPE_p_f_p_void_p_struct_gsl_multifit_function_struct_p_gsl_vector_p_gsl_vector_p_gsl_vector__int swig_types[7]
-#define SWIGTYPE_p_f_p_void_size_t_size_t__int swig_types[8]
+#define SWIGTYPE_p_f_p_void_int_int__int swig_types[6]
+#define SWIGTYPE_p_f_p_void_p_struct_gsl_multifit_function_fdf_struct_p_gsl_vector_p_gsl_vector_p_gsl_matrix_p_gsl_vector__int swig_types[7]
+#define SWIGTYPE_p_f_p_void_p_struct_gsl_multifit_function_struct_p_gsl_vector_p_gsl_vector_p_gsl_vector__int swig_types[8]
 #define SWIGTYPE_p_gsl_matrix swig_types[9]
 #define SWIGTYPE_p_gsl_multifit_fdfsolver swig_types[10]
 #define SWIGTYPE_p_gsl_multifit_fdfsolver_type swig_types[11]
@@ -1453,7 +1453,7 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_gsl_multifit_function_struct swig_types[15]
 #define SWIGTYPE_p_gsl_multifit_linear_workspace swig_types[16]
 #define SWIGTYPE_p_gsl_vector swig_types[17]
-#define SWIGTYPE_p_size_t swig_types[18]
+#define SWIGTYPE_p_int swig_types[18]
 #define SWIGTYPE_p_void swig_types[19]
 static swig_type_info *swig_types[21];
 static swig_module_info swig_module = {swig_types, 20, 0, 0, 0, 0};
@@ -1487,6 +1487,32 @@ SWIGEXPORT void SWIG_init (pTHXo_ CV* cv);
 #else
 SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 #endif
+
+
+    static HV * Callbacks = (HV*)NULL;
+    /* this function returns the value 
+        of evaluating the function pointer
+        stored in func with argument x
+    */
+    double callthis(double x , int func, void *params){
+        SV ** sv;
+        double y;
+        dSP;
+
+        //fprintf(stderr, "LOOKUP CALLBACK\n");
+        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
+        if (sv == (SV**)NULL) {
+            fprintf(stderr, "Math::GSL(callthis): %d not in Callbacks!\n", func);
+            return;
+        }
+
+        PUSHMARK(SP);
+        XPUSHs(sv_2mortal(newSVnv((double)x)));
+        PUTBACK;
+        call_sv(*sv, G_SCALAR);
+        y = POPn;
+        return y;
+    }
 
 
     #include "gsl/gsl_types.h"
@@ -1852,7 +1878,7 @@ XS(_wrap_gsl_multifit_linear_workspace_n_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_multifit_linear_workspace_n_get" "', argument " "1"" of type '" "gsl_multifit_linear_workspace *""'"); 
     }
     arg1 = (gsl_multifit_linear_workspace *)(argp1);
-    result =  ((arg1)->n);
+    result = (size_t) ((arg1)->n);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -1917,7 +1943,7 @@ XS(_wrap_gsl_multifit_linear_workspace_p_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_multifit_linear_workspace_p_get" "', argument " "1"" of type '" "gsl_multifit_linear_workspace *""'"); 
     }
     arg1 = (gsl_multifit_linear_workspace *)(argp1);
-    result =  ((arg1)->p);
+    result = (size_t) ((arg1)->p);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -2644,7 +2670,7 @@ XS(_wrap_gsl_multifit_linear_svd) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
     } else {
       int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
-      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_size_t, new_flags); argvi++  ;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_int, new_flags); argvi++  ;
     }
     if (SWIG_IsTmpObj(res7)) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg7)); argvi++  ;
@@ -2844,7 +2870,7 @@ XS(_wrap_gsl_multifit_wlinear_svd) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg5)); argvi++  ;
     } else {
       int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
-      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_size_t, new_flags); argvi++  ;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_int, new_flags); argvi++  ;
     }
     if (SWIG_IsTmpObj(res8)) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg8)); argvi++  ;
@@ -3221,7 +3247,7 @@ XS(_wrap_gsl_multifit_function_struct_n_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_multifit_function_struct_n_get" "', argument " "1"" of type '" "struct gsl_multifit_function_struct *""'"); 
     }
     arg1 = (struct gsl_multifit_function_struct *)(argp1);
-    result =  ((arg1)->n);
+    result = (size_t) ((arg1)->n);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -3286,7 +3312,7 @@ XS(_wrap_gsl_multifit_function_struct_p_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_multifit_function_struct_p_get" "', argument " "1"" of type '" "struct gsl_multifit_function_struct *""'"); 
     }
     arg1 = (struct gsl_multifit_function_struct *)(argp1);
-    result =  ((arg1)->p);
+    result = (size_t) ((arg1)->p);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -3530,7 +3556,7 @@ XS(_wrap_gsl_multifit_fsolver_type_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_multifit_fsolver_type_size_get" "', argument " "1"" of type '" "gsl_multifit_fsolver_type *""'"); 
     }
     arg1 = (gsl_multifit_fsolver_type *)(argp1);
-    result =  ((arg1)->size);
+    result = (size_t) ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -3559,7 +3585,7 @@ XS(_wrap_gsl_multifit_fsolver_type_alloc_set) {
     }
     arg1 = (gsl_multifit_fsolver_type *)(argp1);
     {
-      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_void_size_t_size_t__int);
+      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_void_int_int__int);
       if (!SWIG_IsOK(res)) {
         SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_multifit_fsolver_type_alloc_set" "', argument " "2"" of type '" "int (*)(void *,size_t,size_t)""'"); 
       }
@@ -3595,7 +3621,7 @@ XS(_wrap_gsl_multifit_fsolver_type_alloc_get) {
     }
     arg1 = (gsl_multifit_fsolver_type *)(argp1);
     result = (int (*)(void *,size_t,size_t)) ((arg1)->alloc);
-    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_void_size_t_size_t__int); argvi++ ;
+    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_void_int_int__int); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -4728,7 +4754,7 @@ XS(_wrap_gsl_multifit_function_fdf_struct_n_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_multifit_function_fdf_struct_n_get" "', argument " "1"" of type '" "struct gsl_multifit_function_fdf_struct *""'"); 
     }
     arg1 = (struct gsl_multifit_function_fdf_struct *)(argp1);
-    result =  ((arg1)->n);
+    result = (size_t) ((arg1)->n);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -4793,7 +4819,7 @@ XS(_wrap_gsl_multifit_function_fdf_struct_p_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_multifit_function_fdf_struct_p_get" "', argument " "1"" of type '" "struct gsl_multifit_function_fdf_struct *""'"); 
     }
     arg1 = (struct gsl_multifit_function_fdf_struct *)(argp1);
-    result =  ((arg1)->p);
+    result = (size_t) ((arg1)->p);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -5037,7 +5063,7 @@ XS(_wrap_gsl_multifit_fdfsolver_type_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_multifit_fdfsolver_type_size_get" "', argument " "1"" of type '" "gsl_multifit_fdfsolver_type *""'"); 
     }
     arg1 = (gsl_multifit_fdfsolver_type *)(argp1);
-    result =  ((arg1)->size);
+    result = (size_t) ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -5066,7 +5092,7 @@ XS(_wrap_gsl_multifit_fdfsolver_type_alloc_set) {
     }
     arg1 = (gsl_multifit_fdfsolver_type *)(argp1);
     {
-      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_void_size_t_size_t__int);
+      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_void_int_int__int);
       if (!SWIG_IsOK(res)) {
         SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_multifit_fdfsolver_type_alloc_set" "', argument " "2"" of type '" "int (*)(void *,size_t,size_t)""'"); 
       }
@@ -5102,7 +5128,7 @@ XS(_wrap_gsl_multifit_fdfsolver_type_alloc_get) {
     }
     arg1 = (gsl_multifit_fdfsolver_type *)(argp1);
     result = (int (*)(void *,size_t,size_t)) ((arg1)->alloc);
-    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_void_size_t_size_t__int); argvi++ ;
+    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_void_int_int__int); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -6159,9 +6185,9 @@ static swig_type_info _swigt__p_f_p_q_const__gsl_vector_p_void_p_gsl_matrix__int
 static swig_type_info _swigt__p_f_p_q_const__gsl_vector_p_void_p_gsl_vector__int = {"_p_f_p_q_const__gsl_vector_p_void_p_gsl_vector__int", "int (*)(gsl_vector const *,void *,gsl_vector *)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_p_q_const__gsl_vector_p_void_p_gsl_vector_p_gsl_matrix__int = {"_p_f_p_q_const__gsl_vector_p_void_p_gsl_vector_p_gsl_matrix__int", "int (*)(gsl_vector const *,void *,gsl_vector *,gsl_matrix *)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_p_void__void = {"_p_f_p_void__void", "void (*)(void *)", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_f_p_void_int_int__int = {"_p_f_p_void_int_int__int", "int (*)(void *,size_t,size_t)|int (*)(void *,int,int)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_p_void_p_struct_gsl_multifit_function_fdf_struct_p_gsl_vector_p_gsl_vector_p_gsl_matrix_p_gsl_vector__int = {"_p_f_p_void_p_struct_gsl_multifit_function_fdf_struct_p_gsl_vector_p_gsl_vector_p_gsl_matrix_p_gsl_vector__int", "int (*)(void *,gsl_multifit_function_fdf *,gsl_vector *,gsl_vector *,gsl_matrix *,gsl_vector *)|int (*)(void *,struct gsl_multifit_function_fdf_struct *,gsl_vector *,gsl_vector *,gsl_matrix *,gsl_vector *)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_p_void_p_struct_gsl_multifit_function_struct_p_gsl_vector_p_gsl_vector_p_gsl_vector__int = {"_p_f_p_void_p_struct_gsl_multifit_function_struct_p_gsl_vector_p_gsl_vector_p_gsl_vector__int", "int (*)(void *,gsl_multifit_function *,gsl_vector *,gsl_vector *,gsl_vector *)|int (*)(void *,struct gsl_multifit_function_struct *,gsl_vector *,gsl_vector *,gsl_vector *)", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_f_p_void_size_t_size_t__int = {"_p_f_p_void_size_t_size_t__int", "int (*)(void *,size_t,size_t)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_gsl_matrix = {"_p_gsl_matrix", "gsl_matrix *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_gsl_multifit_fdfsolver = {"_p_gsl_multifit_fdfsolver", "gsl_multifit_fdfsolver *", 0, 0, (void*)"Math::GSL::Multifit::gsl_multifit_fdfsolver", 0};
 static swig_type_info _swigt__p_gsl_multifit_fdfsolver_type = {"_p_gsl_multifit_fdfsolver_type", "gsl_multifit_fdfsolver_type *", 0, 0, (void*)"Math::GSL::Multifit::gsl_multifit_fdfsolver_type", 0};
@@ -6171,7 +6197,7 @@ static swig_type_info _swigt__p_gsl_multifit_function_fdf_struct = {"_p_gsl_mult
 static swig_type_info _swigt__p_gsl_multifit_function_struct = {"_p_gsl_multifit_function_struct", "gsl_multifit_function *|struct gsl_multifit_function_struct *|gsl_multifit_function_struct *", 0, 0, (void*)"Math::GSL::Multifit::gsl_multifit_function_struct", 0};
 static swig_type_info _swigt__p_gsl_multifit_linear_workspace = {"_p_gsl_multifit_linear_workspace", "gsl_multifit_linear_workspace *", 0, 0, (void*)"Math::GSL::Multifit::gsl_multifit_linear_workspace", 0};
 static swig_type_info _swigt__p_gsl_vector = {"_p_gsl_vector", "gsl_vector *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_size_t = {"_p_size_t", "size_t *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_int = {"_p_int", "int *|size_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_void = {"_p_void", "void *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
@@ -6181,9 +6207,9 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_f_p_q_const__gsl_vector_p_void_p_gsl_vector__int,
   &_swigt__p_f_p_q_const__gsl_vector_p_void_p_gsl_vector_p_gsl_matrix__int,
   &_swigt__p_f_p_void__void,
+  &_swigt__p_f_p_void_int_int__int,
   &_swigt__p_f_p_void_p_struct_gsl_multifit_function_fdf_struct_p_gsl_vector_p_gsl_vector_p_gsl_matrix_p_gsl_vector__int,
   &_swigt__p_f_p_void_p_struct_gsl_multifit_function_struct_p_gsl_vector_p_gsl_vector_p_gsl_vector__int,
-  &_swigt__p_f_p_void_size_t_size_t__int,
   &_swigt__p_gsl_matrix,
   &_swigt__p_gsl_multifit_fdfsolver,
   &_swigt__p_gsl_multifit_fdfsolver_type,
@@ -6193,7 +6219,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_gsl_multifit_function_struct,
   &_swigt__p_gsl_multifit_linear_workspace,
   &_swigt__p_gsl_vector,
-  &_swigt__p_size_t,
+  &_swigt__p_int,
   &_swigt__p_void,
 };
 
@@ -6203,9 +6229,9 @@ static swig_cast_info _swigc__p_f_p_q_const__gsl_vector_p_void_p_gsl_matrix__int
 static swig_cast_info _swigc__p_f_p_q_const__gsl_vector_p_void_p_gsl_vector__int[] = {  {&_swigt__p_f_p_q_const__gsl_vector_p_void_p_gsl_vector__int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_p_q_const__gsl_vector_p_void_p_gsl_vector_p_gsl_matrix__int[] = {  {&_swigt__p_f_p_q_const__gsl_vector_p_void_p_gsl_vector_p_gsl_matrix__int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_p_void__void[] = {  {&_swigt__p_f_p_void__void, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_f_p_void_int_int__int[] = {  {&_swigt__p_f_p_void_int_int__int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_p_void_p_struct_gsl_multifit_function_fdf_struct_p_gsl_vector_p_gsl_vector_p_gsl_matrix_p_gsl_vector__int[] = {  {&_swigt__p_f_p_void_p_struct_gsl_multifit_function_fdf_struct_p_gsl_vector_p_gsl_vector_p_gsl_matrix_p_gsl_vector__int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_p_void_p_struct_gsl_multifit_function_struct_p_gsl_vector_p_gsl_vector_p_gsl_vector__int[] = {  {&_swigt__p_f_p_void_p_struct_gsl_multifit_function_struct_p_gsl_vector_p_gsl_vector_p_gsl_vector__int, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_f_p_void_size_t_size_t__int[] = {  {&_swigt__p_f_p_void_size_t_size_t__int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_matrix[] = {  {&_swigt__p_gsl_matrix, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_multifit_fdfsolver[] = {  {&_swigt__p_gsl_multifit_fdfsolver, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_multifit_fdfsolver_type[] = {  {&_swigt__p_gsl_multifit_fdfsolver_type, 0, 0, 0},{0, 0, 0, 0}};
@@ -6215,7 +6241,7 @@ static swig_cast_info _swigc__p_gsl_multifit_function_fdf_struct[] = {  {&_swigt
 static swig_cast_info _swigc__p_gsl_multifit_function_struct[] = {  {&_swigt__p_gsl_multifit_function_struct, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_multifit_linear_workspace[] = {  {&_swigt__p_gsl_multifit_linear_workspace, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_vector[] = {  {&_swigt__p_gsl_vector, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_size_t[] = {  {&_swigt__p_size_t, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_void[] = {  {&_swigt__p_void, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
@@ -6225,9 +6251,9 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_f_p_q_const__gsl_vector_p_void_p_gsl_vector__int,
   _swigc__p_f_p_q_const__gsl_vector_p_void_p_gsl_vector_p_gsl_matrix__int,
   _swigc__p_f_p_void__void,
+  _swigc__p_f_p_void_int_int__int,
   _swigc__p_f_p_void_p_struct_gsl_multifit_function_fdf_struct_p_gsl_vector_p_gsl_vector_p_gsl_matrix_p_gsl_vector__int,
   _swigc__p_f_p_void_p_struct_gsl_multifit_function_struct_p_gsl_vector_p_gsl_vector_p_gsl_vector__int,
-  _swigc__p_f_p_void_size_t_size_t__int,
   _swigc__p_gsl_matrix,
   _swigc__p_gsl_multifit_fdfsolver,
   _swigc__p_gsl_multifit_fdfsolver_type,
@@ -6237,7 +6263,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_gsl_multifit_function_struct,
   _swigc__p_gsl_multifit_linear_workspace,
   _swigc__p_gsl_vector,
-  _swigc__p_size_t,
+  _swigc__p_int,
   _swigc__p_void,
 };
 

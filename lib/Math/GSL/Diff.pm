@@ -58,9 +58,9 @@ package Math::GSL::Diff;
 
 
 @EXPORT_OK = qw/
-               gsl_diff_central 
-               gsl_diff_backward 
-               gsl_diff_forward 
+               gsl_diff_central
+               gsl_diff_backward
+               gsl_diff_forward
              /;
 %EXPORT_TAGS = ( all => [ @EXPORT_OK ] );
 1;

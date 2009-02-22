@@ -142,6 +142,8 @@ sub ACQUIRE {
 
 package Math::GSL::Sort;
 
+*GSL_MAJOR_VERSION = *Math::GSL::Sortc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Sortc::GSL_MINOR_VERSION;
 *GSL_POSZERO = *Math::GSL::Sortc::GSL_POSZERO;
 *GSL_NEGZERO = *Math::GSL::Sortc::GSL_NEGZERO;
 

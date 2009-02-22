@@ -120,6 +120,8 @@ sub ACQUIRE {
 
 package Math::GSL::Heapsort;
 
+*GSL_MAJOR_VERSION = *Math::GSL::Heapsortc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Heapsortc::GSL_MINOR_VERSION;
 
 @EXPORT_OK = qw/
                gsl_heapsort 

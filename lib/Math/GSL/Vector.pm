@@ -722,6 +722,8 @@ sub ACQUIRE {
 
 package Math::GSL::Vector;
 
+*GSL_MAJOR_VERSION = *Math::GSL::Vectorc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Vectorc::GSL_MINOR_VERSION;
 *GSL_POSZERO = *Math::GSL::Vectorc::GSL_POSZERO;
 *GSL_NEGZERO = *Math::GSL::Vectorc::GSL_NEGZERO;
 
@@ -730,11 +732,12 @@ use Data::Dumper;
 use Carp qw/croak/;
 use Math::GSL::Errno qw/:all/;
 use Math::GSL::BLAS qw/gsl_blas_ddot/;
-use overload 
+use overload
     '*'      => \&_multiplication,
     '+'      => \&_addition,
     '-'      => \&_subtract,
-    fallback => 1, 
+    'abs'    => \&_abs,
+    fallback => 1,
 ;
 
 @EXPORT_all  = qw/fopen fclose
@@ -761,16 +764,8 @@ use overload
                  gsl_vector_float_max gsl_vector_float_min gsl_vector_float_minmax gsl_vector_float_max_index gsl_vector_float_min_index
                  gsl_vector_float_minmax_index gsl_vector_float_add gsl_vector_float_sub gsl_vector_float_mul gsl_vector_float_div gsl_vector_float_scale
                  gsl_vector_float_add_constant gsl_vector_float_isnull gsl_vector_float_ispos gsl_vector_float_isneg gsl_vector_float_isnonneg
-                 gsl_vector_complex_alloc gsl_vector_complex_calloc gsl_vector_complex_alloc_from_block gsl_vector_complex_alloc_from_vector
-                 gsl_vector_complex_free gsl_vector_complex_view_array gsl_vector_complex_view_array_with_stride gsl_vector_complex_const_view_array
-                 gsl_vector_complex_const_view_array_with_stride gsl_vector_complex_subvector gsl_vector_complex_subvector_with_stride
-                 gsl_vector_complex_const_subvector gsl_vector_complex_const_subvector_with_stride gsl_vector_complex_real gsl_vector_complex_imag
-                 gsl_vector_complex_const_real gsl_vector_complex_const_imag gsl_vector_complex_get gsl_vector_complex_set
-                 gsl_vector_complex_ptr gsl_vector_complex_const_ptr gsl_vector_complex_set_zero gsl_vector_complex_set_all
-                 gsl_vector_complex_set_basis gsl_vector_complex_fread gsl_vector_complex_fwrite gsl_vector_complex_fscanf
-                 gsl_vector_complex_fprintf gsl_vector_complex_memcpy gsl_vector_complex_reverse gsl_vector_complex_swap
-                 gsl_vector_complex_swap_elements gsl_vector_complex_isnull gsl_vector_complex_ispos gsl_vector_complex_isneg                                      
 /;
+
 @EXPORT_file =qw/ fopen fclose/;
 @EXPORT_OK = (@EXPORT_all, @EXPORT_file);
 %EXPORT_TAGS = ( file => \@EXPORT_file, all => \@EXPORT_all );
@@ -789,7 +784,7 @@ Math::GSL::Vector - Functions concerning vectors
 
     # set the element at index 1 to 9
     # and the element at index 3 to 8
-    $vec3->set([ 1, 3 ], [ 9, 8 ]);   
+    $vec3->set([ 1, 3 ], [ 9, 8 ]);
 
     my @vec = $vec2->as_list;               # return elements as Perl list
 
@@ -806,13 +801,14 @@ Math::GSL::Vector - Functions concerning vectors
 
 Creates a new Vector of the given size.
 
-    my $vector = Math::GSL::Matrix->new(3);
+    my $vector = Math::GSL::Vector->new(3);
 
 You can also create and set directly the values of the vector like this :
 
    my $vector = Math::GSL::Vector->new([2,4,1]);
 
 =cut
+
 sub new {
     my ($class, $values) = @_;
     my $length  = $#$values;
@@ -843,9 +839,41 @@ Get the underlying GSL vector object created by SWIG, useful for using gsl_vecto
 
 =cut
 
-sub raw { 
+sub raw {
     my $self = shift;
     return $self->{_vector};
+}
+
+=head2 swap()
+
+Exchanges the values in the vectors $v with $w by copying.
+
+    my $v = Math::GSL::Vector->new([1..5]);
+    my $w = Math::GSL::Vector->new([3..7]);
+    $v->swap( $w );
+
+=cut
+
+sub swap() {
+    my ($self,$other) = @_;
+    croak "Math::GSL::Vector: \$v->swap(\$w) : \$w must be a Math::GSL::Vector"
+        unless ref $other eq 'Math::GSL::Vector';
+    gsl_vector_swap( $self->raw, $other->raw );
+    return $self;
+}
+
+=head2 reverse()
+
+Reverse the elements in the vector.
+
+    $v->reverse;
+
+=cut
+
+sub reverse() {
+    my $self = shift;
+    gsl_vector_reverse($self->raw);
+    return $self;
 }
 
 =head2 min()
@@ -887,13 +915,58 @@ Returns the number of elements contained in the vector.
 
 sub length { my $self=shift; $self->{_length} }
 
-=head2  as_list() 
+=head2 $v->norm($p)
+
+Returns the p-norm of $v, which defaults to the Euclidean (p=2) norm when no argument is given.
+
+    my $euclidean_distance = $v->norm;
+
+=cut
+
+sub norm($;$)
+{
+    my ($self,$p) = @_;
+    my $norm = 0;
+    $p ||= 2;
+
+    map { $norm += $p == 1 ? abs $_ : $_ ** $p } ($self->as_list);
+    return $norm **  (1 / $p);
+}
+
+=head2 normalize($p)
+
+Divide each element of a vector by it's norm, hence creating a unit vector. Returns the vector for chaining.
+If you just want the value of the norm without changing the vector, use C<norm()>. The default value for C<$p>
+is 2, which gives the familiar Euclidean distance norm.
+
+    my $unit_vector = $vector->normalize(2);
+
+is the same as
+
+    my $unit_vector = $vector->normalize;
+
+=cut
+
+sub normalize($;$)
+{
+    my ($self,$p) = @_;
+    $p ||= 2;
+    my $norm = $self->norm($p);
+    return $self if ($norm == 0);
+
+    my $status = gsl_vector_scale( $self->raw, 1/$norm );
+    croak "Math::GSL::Vector - could not scale vectr" unless $status == $GSL_SUCCESS;
+    return $self;
+}
+
+=head2  as_list()
 
 Gets the content of a Math::GSL::Vector object as a Perl list.
 
     my $vector = Math::GSL::Vector->new(3);
     ...
     my @values = $vector->as_list;
+
 =cut
 
 sub as_list {
@@ -901,7 +974,7 @@ sub as_list {
     $self->get( [ 0 .. $self->length - 1  ] );
 }
 
-=head2  get() 
+=head2  get()
 
 Gets the value of an of a Math::GSL::Vector object.
 
@@ -987,8 +1060,13 @@ sub _subtract {
     }
 }
 
+sub _abs {
+    my $self = shift;
+    $self->norm;
+}
+
 sub _addition {
-    my ($left, $right, $flip) = @_; 
+    my ($left, $right, $flip) = @_;
 
     my $lcopy = $left->copy;
 
@@ -1119,9 +1197,6 @@ Here is a list of all the functions included in this module :
 =item C<gsl_vector_isnonneg($v)> - verify if all the elements the vector $v are not negative, return 0 if it's the case, 1 otherwise.
 
 =back
-
-You have to add the functions you want to use inside the qw /put_funtion_here / with spaces between each function. You can also write use Math::GSL::Complex qw/:all/ to use all avaible functions of the module.
-
 
 Precision on the vector_view type : every modification you'll make on a vector_view will also modify the original vector. 
 For example, the following code will zero the even elements of the vector $v of length $size, while leaving the odd elements untouched :
