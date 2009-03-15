@@ -374,6 +374,8 @@ package Math::GSL::Monte;
 *GSL_ETOLX = *Math::GSL::Montec::GSL_ETOLX;
 *GSL_ETOLG = *Math::GSL::Montec::GSL_ETOLG;
 *GSL_EOF = *Math::GSL::Montec::GSL_EOF;
+*GSL_MAJOR_VERSION = *Math::GSL::Montec::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Montec::GSL_MINOR_VERSION;
 
 @EXPORT_OK = qw/
                gsl_monte_miser_integrate 

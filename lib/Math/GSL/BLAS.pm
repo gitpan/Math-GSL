@@ -159,6 +159,8 @@ package Math::GSL::BLAS;
 
 package Math::GSL::BLAS;
 
+*GSL_MAJOR_VERSION = *Math::GSL::BLASc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::BLASc::GSL_MINOR_VERSION;
 
 
 @EXPORT_OK_level1 = qw/

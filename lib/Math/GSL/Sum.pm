@@ -169,6 +169,8 @@ sub ACQUIRE {
 
 package Math::GSL::Sum;
 
+*GSL_MAJOR_VERSION = *Math::GSL::Sumc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Sumc::GSL_MINOR_VERSION;
 
 @EXPORT_OK = qw/
                gsl_sum_levin_u_alloc 

@@ -190,6 +190,8 @@ sub ACQUIRE {
 
 package Math::GSL::Randist;
 
+*GSL_MAJOR_VERSION = *Math::GSL::Randistc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Randistc::GSL_MINOR_VERSION;
 
 
 our @EXPORT_OK = qw/gsl_ran_bernoulli gsl_ran_bernoulli_pdf gsl_ran_beta 

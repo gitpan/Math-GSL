@@ -1,8 +1,7 @@
 package Math::GSL::SF::Test;
 use Math::GSL::Test qw/:all/;
 use base q{Test::Class};
-use Test::More tests => 1108;
-use Math::GSL          qw/:all/;
+use Test::More tests => 1109;
 use Math::GSL::Const   qw/:all/;
 use Math::GSL::Errno   qw/:all/;
 use Math::GSL::SF      qw/:all/;
@@ -13,21 +12,19 @@ use Data::Dumper;
 use strict;
 use warnings;
 
-BEGIN{ gsl_set_error_handler_off(); }
-my $factor = 100;
-my $TOL1 = $factor*16.0*$GSL_DBL_EPSILON;
+BEGIN { gsl_set_error_handler_off() }
+
+my $factor    = 100;
+my $TOL1      = $factor*16.0*$GSL_DBL_EPSILON;
 my $SQRT_TOL0 = 2.0*$GSL_SQRT_DBL_EPSILON;
-my $DELTA = 1.2246467991473531772e-16;
-my $w = 0.8*$GSL_LOG_DBL_MAX;
-my $y = 0.2*$GSL_DBL_MAX;
+my $DELTA     = 1.2246467991473531772e-16;
+my $w         = 0.8*$GSL_LOG_DBL_MAX;
+my $y         = 0.2*$GSL_DBL_MAX;
 
 sub make_fixture : Test(setup) {
-    my $w = 0.8*$GSL_LOG_DBL_MAX;
-    my $y = 0.2*$GSL_DBL_MAX;
 }
 sub teardown : Test(teardown) {
 }
-
 
 sub TEST_THE_KITCHEN_SINK : Tests {
     my $results = { 
@@ -1141,18 +1138,17 @@ sub TEST_THE_KITCHEN_SINK : Tests {
     verify_results($results, 'Math::GSL::SF');
 
 }
-sub TEST_NAN_STRING : Tests
+sub TEST_NAN_STRING : Tests(1)
 {
     my $self = shift;
-    return if is_windows();
     my $results = {
-        'gsl_sf_gamma_e(-1,$r)'                                 => 'nan',
+        'gsl_sf_gamma_e(-1,$r)'                                 => $GSL_NAN,
     };
     verify_results($results, 'Math::GSL::SF');
-}    
-sub TEST_NAN : Tests 
+}
+
+sub TEST_NAN : Tests(18)
 {
-    my $self = shift;
     my $results = {
         'gsl_sf_coupling_3j_e(-1, 1, 2, 1, -1, 0,$r)'	        => $GSL_NAN,
         'gsl_sf_coupling_3j_e(1, -1, 2, 1, -1, 0,$r)'	        => $GSL_NAN,
@@ -1175,19 +1171,17 @@ sub TEST_NAN : Tests
     };
     verify_results($results, 'Math::GSL::SF');
 }
-sub TEST_FISHY_RESULTS
+sub TEST_ZZZ_OLD_BUGS : Test(1)
 {
-    local $TODO = 'fishy results';
-    verify_results( {
-                        'gsl_sf_expint_En_e(3,300.0,$r)'	=> .699131143349179084e-133,
-                    }, 'Math::GSL::SF');
+    my $r= Math::GSL::SF::gsl_sf_result_struct->new;
+    ok_similar( [ gsl_sf_expint_En_e(3,300.0,$r) ] , [ 1.6608815083360041367294736e-133 ] );
 }
-sub TEST_J0_RESULT_STRUCT: Tests {
+
+sub TEST_J0_RESULT_STRUCT: Tests(2) {
     my $result = Math::GSL::SF::gsl_sf_result_struct->new;
     my ($status) = gsl_sf_bessel_J0_e(2.0,$result); 
     ok( defined $result->{err}, '$result->{err}' );
     ok( is_similar($result->{val}, gsl_sf_bessel_J0(2.0), $result->{err}) , '$result->{val}' );
-};
-
+}
 
 Test::Class->runtests;

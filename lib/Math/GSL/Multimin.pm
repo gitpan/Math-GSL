@@ -364,6 +364,8 @@ sub ACQUIRE {
 
 package Math::GSL::Multimin;
 
+*GSL_MAJOR_VERSION = *Math::GSL::Multiminc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Multiminc::GSL_MINOR_VERSION;
 
 my %__gsl_multimin_fdfminimizer_steepest_descent_hash;
 tie %__gsl_multimin_fdfminimizer_steepest_descent_hash,"Math::GSL::Multimin::gsl_multimin_fdfminimizer_type", $Math::GSL::Multiminc::gsl_multimin_fdfminimizer_steepest_descent;

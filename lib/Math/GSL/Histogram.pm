@@ -179,6 +179,8 @@ sub ACQUIRE {
 
 package Math::GSL::Histogram;
 
+*GSL_MAJOR_VERSION = *Math::GSL::Histogramc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Histogramc::GSL_MINOR_VERSION;
 
 @EXPORT_OK = qw/
                gsl_histogram_alloc 

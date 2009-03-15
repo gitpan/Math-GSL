@@ -1487,6 +1487,22 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 #endif
 
 
+SWIGINTERNINLINE SV *
+SWIG_From_long  SWIG_PERL_DECL_ARGS_1(long value)
+{    
+  SV *obj = sv_newmortal();
+  sv_setiv(obj, (IV) value);
+  return obj;
+}
+
+
+SWIGINTERNINLINE SV *
+SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
+{    
+  return SWIG_From_long  SWIG_PERL_CALL_ARGS_1(value);
+}
+
+
     static HV * Callbacks = (HV*)NULL;
     /* this function returns the value 
         of evaluating the function pointer
@@ -1650,22 +1666,6 @@ SWIGINTERNINLINE SV *
 SWIG_From_size_t  SWIG_PERL_DECL_ARGS_1(size_t value)
 {    
   return SWIG_From_unsigned_SS_long  SWIG_PERL_CALL_ARGS_1((unsigned long)(value));
-}
-
-
-SWIGINTERNINLINE SV *
-SWIG_From_long  SWIG_PERL_DECL_ARGS_1(long value)
-{    
-  SV *obj = sv_newmortal();
-  sv_setiv(obj, (IV) value);
-  return obj;
-}
-
-
-SWIGINTERNINLINE SV *
-SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
-{    
-  return SWIG_From_long  SWIG_PERL_CALL_ARGS_1(value);
 }
 
 
@@ -5510,6 +5510,16 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   }
   
+  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "GSL_MAJOR_VERSION", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(1)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "GSL_MINOR_VERSION", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(11)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
   SWIG_TypeClientData(SWIGTYPE_p_gsl_multiroot_function_struct, (void*) "Math::GSL::Multiroots::gsl_multiroot_function_struct");
   SWIG_TypeClientData(SWIGTYPE_p_gsl_multiroot_fsolver_type, (void*) "Math::GSL::Multiroots::gsl_multiroot_fsolver_type");
   SWIG_TypeClientData(SWIGTYPE_p_gsl_multiroot_fsolver, (void*) "Math::GSL::Multiroots::gsl_multiroot_fsolver");

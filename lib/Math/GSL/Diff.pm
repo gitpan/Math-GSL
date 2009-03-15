@@ -56,6 +56,8 @@ package Math::GSL::Diff;
 
 package Math::GSL::Diff;
 
+*GSL_MAJOR_VERSION = *Math::GSL::Diffc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Diffc::GSL_MINOR_VERSION;
 
 @EXPORT_OK = qw/
                gsl_diff_central

@@ -185,6 +185,8 @@ sub ACQUIRE {
 
 package Math::GSL::Deriv;
 
+*GSL_MAJOR_VERSION = *Math::GSL::Derivc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Derivc::GSL_MINOR_VERSION;
 *M_E = *Math::GSL::Derivc::M_E;
 *M_LOG2E = *Math::GSL::Derivc::M_LOG2E;
 *M_LOG10E = *Math::GSL::Derivc::M_LOG10E;

@@ -59,6 +59,8 @@ package Math::GSL::Fit;
 
 package Math::GSL::Fit;
 
+*GSL_MAJOR_VERSION = *Math::GSL::Fitc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Fitc::GSL_MINOR_VERSION;
 
 @EXPORT_OK = qw/
                gsl_fit_linear 

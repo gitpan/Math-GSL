@@ -1439,10 +1439,9 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_double swig_types[1]
 #define SWIGTYPE_p_gsl_sf_result_e10_struct swig_types[2]
 #define SWIGTYPE_p_gsl_sf_result_struct swig_types[3]
-#define SWIGTYPE_p_int swig_types[4]
-#define SWIGTYPE_p_unsigned_int swig_types[5]
-static swig_type_info *swig_types[7];
-static swig_module_info swig_module = {swig_types, 6, 0, 0, 0, 0};
+#define SWIGTYPE_p_unsigned_int swig_types[4]
+static swig_type_info *swig_types[6];
+static swig_module_info swig_module = {swig_types, 5, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1473,32 +1472,6 @@ SWIGEXPORT void SWIG_init (pTHXo_ CV* cv);
 #else
 SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 #endif
-
-
-    static HV * Callbacks = (HV*)NULL;
-    /* this function returns the value 
-        of evaluating the function pointer
-        stored in func with argument x
-    */
-    double callthis(double x , int func, void *params){
-        SV ** sv;
-        double y;
-        dSP;
-
-        //fprintf(stderr, "LOOKUP CALLBACK\n");
-        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
-        if (sv == (SV**)NULL) {
-            fprintf(stderr, "Math::GSL(callthis): %d not in Callbacks!\n", func);
-            return;
-        }
-
-        PUSHMARK(SP);
-        XPUSHs(sv_2mortal(newSVnv((double)x)));
-        PUTBACK;
-        call_sv(*sv, G_SCALAR);
-        y = POPn;
-        return y;
-    }
 
 
     #include "gsl/gsl_types.h"
@@ -6053,6 +6026,8 @@ XS(_wrap_gsl_sf_bessel_sequence_Jnu_e) {
     int ecode2 = 0 ;
     size_t val3 ;
     int ecode3 = 0 ;
+    void *argp4 = 0 ;
+    int res4 = 0 ;
     int argvi = 0;
     int result;
     dXSARGS;
@@ -6075,24 +6050,11 @@ XS(_wrap_gsl_sf_bessel_sequence_Jnu_e) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_sf_bessel_sequence_Jnu_e" "', argument " "3"" of type '" "size_t""'");
     } 
     arg3 = (size_t)(val3);
-    {
-      AV *tempav;
-      I32 len;
-      int i;
-      SV **tv;
-      if (!SvROK(ST(3)))
-      croak("Math::GSL : $v is not a reference!");
-      if (SvTYPE(SvRV(ST(3))) != SVt_PVAV)
-      croak("Math::GSL : $v is not an array ref!");
-      
-      tempav = (AV*)SvRV(ST(3));
-      len = av_len(tempav);
-      arg4 = (double *) malloc((len+1)*sizeof(double));
-      for (i = 0; i <= len; i++) {
-        tv = av_fetch(tempav, i, 0);
-        arg4[i] = (double) SvNV(*tv);
-      }
+    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
+    if (!SWIG_IsOK(res4)) {
+      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_sf_bessel_sequence_Jnu_e" "', argument " "4"" of type '" "double *""'"); 
     }
+    arg4 = (double *)(argp4);
     result = (int)gsl_sf_bessel_sequence_Jnu_e(arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
@@ -22706,7 +22668,6 @@ static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_gsl_sf_result_e10_struct = {"_p_gsl_sf_result_e10_struct", "gsl_sf_result_e10 *|struct gsl_sf_result_e10_struct *|gsl_sf_result_e10_struct *", 0, 0, (void*)"Math::GSL::SF::gsl_sf_result_e10_struct", 0};
 static swig_type_info _swigt__p_gsl_sf_result_struct = {"_p_gsl_sf_result_struct", "gsl_sf_result *|struct gsl_sf_result_struct *|gsl_sf_result_struct *", 0, 0, (void*)"Math::GSL::SF::gsl_sf_result_struct", 0};
-static swig_type_info _swigt__p_int = {"_p_int", "int *|size_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_int = {"_p_unsigned_int", "unsigned int *|gsl_mode_t *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
@@ -22714,7 +22675,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_double,
   &_swigt__p_gsl_sf_result_e10_struct,
   &_swigt__p_gsl_sf_result_struct,
-  &_swigt__p_int,
   &_swigt__p_unsigned_int,
 };
 
@@ -22722,7 +22682,6 @@ static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0,
 static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_sf_result_e10_struct[] = {  {&_swigt__p_gsl_sf_result_e10_struct, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_sf_result_struct[] = {  {&_swigt__p_gsl_sf_result_struct, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_int[] = {  {&_swigt__p_unsigned_int, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
@@ -22730,7 +22689,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_double,
   _swigc__p_gsl_sf_result_e10_struct,
   _swigc__p_gsl_sf_result_struct,
-  _swigc__p_int,
   _swigc__p_unsigned_int,
 };
 

@@ -297,6 +297,8 @@ sub ACQUIRE {
 
 package Math::GSL::Min;
 
+*GSL_MAJOR_VERSION = *Math::GSL::Minc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Minc::GSL_MINOR_VERSION;
 
 my %__gsl_min_fminimizer_goldensection_hash;
 tie %__gsl_min_fminimizer_goldensection_hash,"Math::GSL::Min::gsl_min_fminimizer_type", $Math::GSL::Minc::gsl_min_fminimizer_goldensection;

@@ -424,6 +424,8 @@ sub ACQUIRE {
 
 package Math::GSL::Multifit;
 
+*GSL_MAJOR_VERSION = *Math::GSL::Multifitc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Multifitc::GSL_MINOR_VERSION;
 
 my %__gsl_multifit_fdfsolver_lmder_hash;
 tie %__gsl_multifit_fdfsolver_lmder_hash,"Math::GSL::Multifit::gsl_multifit_fdfsolver_type", $Math::GSL::Multifitc::gsl_multifit_fdfsolver_lmder;

@@ -360,6 +360,8 @@ sub ACQUIRE {
 
 package Math::GSL::Multiroots;
 
+*GSL_MAJOR_VERSION = *Math::GSL::Multirootsc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Multirootsc::GSL_MINOR_VERSION;
 
 my %__gsl_multiroot_fsolver_dnewton_hash;
 tie %__gsl_multiroot_fsolver_dnewton_hash,"Math::GSL::Multiroots::gsl_multiroot_fsolver_type", $Math::GSL::Multirootsc::gsl_multiroot_fsolver_dnewton;

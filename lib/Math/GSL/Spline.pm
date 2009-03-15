@@ -111,6 +111,8 @@ sub ACQUIRE {
 
 package Math::GSL::Spline;
 
+*GSL_MAJOR_VERSION = *Math::GSL::Splinec::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Splinec::GSL_MINOR_VERSION;
 
 @EXPORT_OK = qw/
                gsl_spline_alloc 

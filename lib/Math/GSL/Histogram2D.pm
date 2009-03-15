@@ -194,6 +194,8 @@ sub ACQUIRE {
 
 package Math::GSL::Histogram2D;
 
+*GSL_MAJOR_VERSION = *Math::GSL::Histogram2Dc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Histogram2Dc::GSL_MINOR_VERSION;
 
 @EXPORT_OK = qw/
                gsl_histogram2d_alloc 

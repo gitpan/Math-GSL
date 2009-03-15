@@ -131,11 +131,11 @@ sub verify_results
                 printf "unexpected error of %.18g\n", $res-$eps if ($res-$eps>0);
             }
             if (gsl_isnan($x)) {
-                    ok( gsl_isnan($expected), "'$expected'?='$x'" );
+                    ok( gsl_isnan($expected), sprintf("'$expected'?='$x' (%16b ?= %16b)", $expected, $x) );
             } elsif(gsl_isinf($x)) { 
-                    ok( gsl_isinf($expected), "'$expected'?='$x'" );
+                    ok( gsl_isinf($expected), sprintf("'$expected'?='$x' (%16b ?= %16b)", $expected, $x) );
             } else {
-                ok( $res <= $eps, "$code ?= $x,\nres= +-$res, eps=$eps" );    
+                    cmp_ok( $res,'<=', $eps, "$code ?= $x,\nres= +-$res, eps=$eps" );
             }
         }
     }
@@ -201,10 +201,9 @@ sub ok_status {
     my ($got, $expected, $msg ) = @_;
     local $Test::Builder::Level = $Test::Builder::Level + 1;
     $expected ||= $GSL_SUCCESS;
-    my $strerr = gsl_strerror(int($got));
-    $msg       = $msg ? "$msg: " . $strerr : $strerr;
+    my $strerr = $got ? gsl_strerror(int($got)) : '';
 
-    ok( defined $got && $got == $expected, $msg );
+    ok( defined $got && $got == $expected, $msg ? "$msg: " .$strerr : $strerr );
 }
 
 =head2 is_status_ok($status)

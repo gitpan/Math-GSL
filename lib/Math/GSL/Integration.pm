@@ -371,6 +371,8 @@ sub ACQUIRE {
 
 package Math::GSL::Integration;
 
+*GSL_MAJOR_VERSION = *Math::GSL::Integrationc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Integrationc::GSL_MINOR_VERSION;
 *GSL_INTEG_COSINE = *Math::GSL::Integrationc::GSL_INTEG_COSINE;
 *GSL_INTEG_SINE = *Math::GSL::Integrationc::GSL_INTEG_SINE;
 *GSL_INTEG_GAUSS15 = *Math::GSL::Integrationc::GSL_INTEG_GAUSS15;
