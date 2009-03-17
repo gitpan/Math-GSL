@@ -1508,6 +1508,7 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
     */
     double callthis(double x , int func, void *params){
         SV ** sv;
+        unsigned int count;
         double y;
         dSP;
 
@@ -1520,10 +1521,21 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
 
         PUSHMARK(SP);
         XPUSHs(sv_2mortal(newSVnv((double)x)));
-        PUTBACK;
-        call_sv(*sv, G_SCALAR);
+        PUTBACK;                                /* make local stack pointer global */
+
+        count = call_sv(*sv, G_SCALAR);
+        SPAGAIN;
+
+        if (count != 1)
+                croak("Expected to call subroutine in scalar context!");
+
+        PUTBACK;                                /* make local stack pointer global */
+         
         y = POPn;
         return y;
+    }
+    double callmonte(double x[], size_t dim, void *params ){
+        fprintf(stderr, "callmonte!!!");
     }
 
 

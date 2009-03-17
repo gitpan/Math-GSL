@@ -336,6 +336,8 @@ sub ACQUIRE {
 
 package Math::GSL::Monte;
 
+*GSL_MAJOR_VERSION = *Math::GSL::Montec::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Montec::GSL_MINOR_VERSION;
 *GSL_VEGAS_MODE_IMPORTANCE = *Math::GSL::Montec::GSL_VEGAS_MODE_IMPORTANCE;
 *GSL_VEGAS_MODE_IMPORTANCE_ONLY = *Math::GSL::Montec::GSL_VEGAS_MODE_IMPORTANCE_ONLY;
 *GSL_VEGAS_MODE_STRATIFIED = *Math::GSL::Montec::GSL_VEGAS_MODE_STRATIFIED;
@@ -374,8 +376,6 @@ package Math::GSL::Monte;
 *GSL_ETOLX = *Math::GSL::Montec::GSL_ETOLX;
 *GSL_ETOLG = *Math::GSL::Montec::GSL_ETOLG;
 *GSL_EOF = *Math::GSL::Montec::GSL_EOF;
-*GSL_MAJOR_VERSION = *Math::GSL::Montec::GSL_MAJOR_VERSION;
-*GSL_MINOR_VERSION = *Math::GSL::Montec::GSL_MINOR_VERSION;
 
 @EXPORT_OK = qw/
                gsl_monte_miser_integrate 

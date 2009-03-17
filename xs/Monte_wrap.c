@@ -1482,6 +1482,60 @@ SWIGEXPORT void SWIG_init (CV *cv, CPerlObj *);
 #endif
 
 
+SWIGINTERNINLINE SV *
+SWIG_From_long  SWIG_PERL_DECL_ARGS_1(long value)
+{    
+  SV *obj = sv_newmortal();
+  sv_setiv(obj, (IV) value);
+  return obj;
+}
+
+
+SWIGINTERNINLINE SV *
+SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
+{    
+  return SWIG_From_long  SWIG_PERL_CALL_ARGS_1(value);
+}
+
+
+    static HV * Callbacks = (HV*)NULL;
+    /* this function returns the value 
+        of evaluating the function pointer
+        stored in func with argument x
+    */
+    double callthis(double x , int func, void *params){
+        SV ** sv;
+        unsigned int count;
+        double y;
+        dSP;
+
+        //fprintf(stderr, "LOOKUP CALLBACK\n");
+        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
+        if (sv == (SV**)NULL) {
+            fprintf(stderr, "Math::GSL(callthis): %d not in Callbacks!\n", func);
+            return;
+        }
+
+        PUSHMARK(SP);
+        XPUSHs(sv_2mortal(newSVnv((double)x)));
+        PUTBACK;                                /* make local stack pointer global */
+
+        count = call_sv(*sv, G_SCALAR);
+        SPAGAIN;
+
+        if (count != 1)
+                croak("Expected to call subroutine in scalar context!");
+
+        PUTBACK;                                /* make local stack pointer global */
+         
+        y = POPn;
+        return y;
+    }
+    double callmonte(double x[], size_t dim, void *params ){
+        fprintf(stderr, "callmonte!!!");
+    }
+
+
 SWIGINTERN int
 SWIG_AsVal_double SWIG_PERL_DECL_ARGS_2(SV *obj, double *val)
 {
@@ -1690,22 +1744,6 @@ SWIG_AsVal_int SWIG_PERL_DECL_ARGS_2(SV * obj, int *val)
 }
 
 
-SWIGINTERNINLINE SV *
-SWIG_From_long  SWIG_PERL_DECL_ARGS_1(long value)
-{    
-  SV *obj = sv_newmortal();
-  sv_setiv(obj, (IV) value);
-  return obj;
-}
-
-
-SWIGINTERNINLINE SV *
-SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
-{    
-  return SWIG_From_long  SWIG_PERL_CALL_ARGS_1(value);
-}
-
-
 SWIGINTERN int
 SWIG_AsVal_unsigned_SS_int SWIG_PERL_DECL_ARGS_2(SV * obj, unsigned int *val)
 {
@@ -1798,32 +1836,6 @@ SWIG_FromCharPtr(const char *cptr)
 { 
   return SWIG_FromCharPtrAndSize(cptr, (cptr ? strlen(cptr) : 0));
 }
-
-
-    static HV * Callbacks = (HV*)NULL;
-    /* this function returns the value 
-        of evaluating the function pointer
-        stored in func with argument x
-    */
-    double callthis(double x , int func, void *params){
-        SV ** sv;
-        double y;
-        dSP;
-
-        //fprintf(stderr, "LOOKUP CALLBACK\n");
-        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
-        if (sv == (SV**)NULL) {
-            fprintf(stderr, "Math::GSL(callthis): %d not in Callbacks!\n", func);
-            return;
-        }
-
-        PUSHMARK(SP);
-        XPUSHs(sv_2mortal(newSVnv((double)x)));
-        PUTBACK;
-        call_sv(*sv, G_SCALAR);
-        y = POPn;
-        return y;
-    }
 
 
     #include "gsl/gsl_monte.h"
@@ -3650,12 +3662,6 @@ XS(_wrap_gsl_monte_miser_integrate) {
     gsl_monte_miser_state *arg7 = (gsl_monte_miser_state *) 0 ;
     double *arg8 = (double *) 0 ;
     double *arg9 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
     size_t val4 ;
     int ecode4 = 0 ;
     size_t val5 ;
@@ -3664,32 +3670,73 @@ XS(_wrap_gsl_monte_miser_integrate) {
     int res6 = 0 ;
     void *argp7 = 0 ;
     int res7 = 0 ;
-    void *argp8 = 0 ;
-    int res8 = 0 ;
-    void *argp9 = 0 ;
-    int res9 = 0 ;
+    double temp8 ;
+    int res8 = SWIG_TMPOBJ ;
+    double temp9 ;
+    int res9 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 9) || (items > 9)) {
-      SWIG_croak("Usage: gsl_monte_miser_integrate(f,xl,xh,dim,calls,r,state,result,abserr);");
+    arg8 = &temp8;
+    arg9 = &temp9;
+    if ((items < 7) || (items > 7)) {
+      SWIG_croak("Usage: gsl_monte_miser_integrate(f,xl,xh,dim,calls,r,state);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_monte_function_struct, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_monte_miser_integrate" "', argument " "1"" of type '" "gsl_monte_function *""'"); 
+    {
+      gsl_monte_function MF;
+      int count;
+      SV ** callback;
+      double x;
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : $f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      fprintf(stderr,"STORE $f gsl_monte_function CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      MF.params  = &ST(0);
+      MF.dim     = 1; // XXX
+      MF.f       = &callmonte;
+      arg1         = &MF;
     }
-    arg1 = (gsl_monte_function *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_monte_miser_integrate" "', argument " "2"" of type '" "double const []""'"); 
-    } 
-    arg2 = (double *)(argp2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_monte_miser_integrate" "', argument " "3"" of type '" "double const []""'"); 
-    } 
-    arg3 = (double *)(argp3);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(1)))
+      croak("Math::GSL : $xl is not a reference!");
+      if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
+      croak("Math::GSL : $xl is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(1));
+      len = av_len(tempav);
+      arg2 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg2[i] = (double) SvNV(*tv);
+      }
+    }
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(2)))
+      croak("Math::GSL : $xh is not a reference!");
+      if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
+      croak("Math::GSL : $xh is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(2));
+      len = av_len(tempav);
+      arg3 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg3[i] = (double) SvNV(*tv);
+      }
+    }
     ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
     if (!SWIG_IsOK(ecode4)) {
       SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_monte_miser_integrate" "', argument " "4"" of type '" "size_t""'");
@@ -3710,18 +3757,20 @@ XS(_wrap_gsl_monte_miser_integrate) {
       SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_monte_miser_integrate" "', argument " "7"" of type '" "gsl_monte_miser_state *""'"); 
     }
     arg7 = (gsl_monte_miser_state *)(argp7);
-    res8 = SWIG_ConvertPtr(ST(7), &argp8,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res8)) {
-      SWIG_exception_fail(SWIG_ArgError(res8), "in method '" "gsl_monte_miser_integrate" "', argument " "8"" of type '" "double *""'"); 
-    }
-    arg8 = (double *)(argp8);
-    res9 = SWIG_ConvertPtr(ST(8), &argp9,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res9)) {
-      SWIG_exception_fail(SWIG_ArgError(res9), "in method '" "gsl_monte_miser_integrate" "', argument " "9"" of type '" "double *""'"); 
-    }
-    arg9 = (double *)(argp9);
     result = (int)gsl_monte_miser_integrate(arg1,(double const (*))arg2,(double const (*))arg3,arg4,arg5,arg6,arg7,arg8,arg9);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res8)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg8)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res8) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg8), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res9)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg9)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res9) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg9), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -4016,12 +4065,6 @@ XS(_wrap_gsl_monte_plain_integrate) {
     gsl_monte_plain_state *arg7 = (gsl_monte_plain_state *) 0 ;
     double *arg8 = (double *) 0 ;
     double *arg9 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
     size_t val4 ;
     int ecode4 = 0 ;
     size_t val5 ;
@@ -4030,32 +4073,73 @@ XS(_wrap_gsl_monte_plain_integrate) {
     int res6 = 0 ;
     void *argp7 = 0 ;
     int res7 = 0 ;
-    void *argp8 = 0 ;
-    int res8 = 0 ;
-    void *argp9 = 0 ;
-    int res9 = 0 ;
+    double temp8 ;
+    int res8 = SWIG_TMPOBJ ;
+    double temp9 ;
+    int res9 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 9) || (items > 9)) {
-      SWIG_croak("Usage: gsl_monte_plain_integrate(f,xl,xu,dim,calls,r,state,result,abserr);");
+    arg8 = &temp8;
+    arg9 = &temp9;
+    if ((items < 7) || (items > 7)) {
+      SWIG_croak("Usage: gsl_monte_plain_integrate(f,xl,xu,dim,calls,r,state);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_monte_function_struct, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_monte_plain_integrate" "', argument " "1"" of type '" "gsl_monte_function const *""'"); 
+    {
+      gsl_monte_function MF;
+      int count;
+      SV ** callback;
+      double x;
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : $f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      fprintf(stderr,"STORE $f gsl_monte_function CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      MF.params  = &ST(0);
+      MF.dim     = 1; // XXX
+      MF.f       = &callmonte;
+      arg1         = &MF;
     }
-    arg1 = (gsl_monte_function *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_monte_plain_integrate" "', argument " "2"" of type '" "double const []""'"); 
-    } 
-    arg2 = (double *)(argp2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_monte_plain_integrate" "', argument " "3"" of type '" "double const []""'"); 
-    } 
-    arg3 = (double *)(argp3);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(1)))
+      croak("Math::GSL : $xl is not a reference!");
+      if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
+      croak("Math::GSL : $xl is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(1));
+      len = av_len(tempav);
+      arg2 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg2[i] = (double) SvNV(*tv);
+      }
+    }
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(2)))
+      croak("Math::GSL : $xu is not a reference!");
+      if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
+      croak("Math::GSL : $xu is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(2));
+      len = av_len(tempav);
+      arg3 = (double *) malloc((len+1)*sizeof(double));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg3[i] = (double) SvNV(*tv);
+      }
+    }
     ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
     if (!SWIG_IsOK(ecode4)) {
       SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_monte_plain_integrate" "', argument " "4"" of type '" "size_t""'");
@@ -4076,18 +4160,20 @@ XS(_wrap_gsl_monte_plain_integrate) {
       SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_monte_plain_integrate" "', argument " "7"" of type '" "gsl_monte_plain_state *""'"); 
     }
     arg7 = (gsl_monte_plain_state *)(argp7);
-    res8 = SWIG_ConvertPtr(ST(7), &argp8,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res8)) {
-      SWIG_exception_fail(SWIG_ArgError(res8), "in method '" "gsl_monte_plain_integrate" "', argument " "8"" of type '" "double *""'"); 
-    }
-    arg8 = (double *)(argp8);
-    res9 = SWIG_ConvertPtr(ST(8), &argp9,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res9)) {
-      SWIG_exception_fail(SWIG_ArgError(res9), "in method '" "gsl_monte_plain_integrate" "', argument " "9"" of type '" "double *""'"); 
-    }
-    arg9 = (double *)(argp9);
     result = (int)gsl_monte_plain_integrate((struct gsl_monte_function_struct const *)arg1,(double const (*))arg2,(double const (*))arg3,arg4,arg5,arg6,arg7,arg8,arg9);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res8)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg8)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res8) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg8), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res9)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg9)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res9) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg9), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -6202,8 +6288,6 @@ XS(_wrap_gsl_monte_vegas_integrate) {
     gsl_monte_vegas_state *arg7 = (gsl_monte_vegas_state *) 0 ;
     double *arg8 = (double *) 0 ;
     double *arg9 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     void *argp2 = 0 ;
     int res2 = 0 ;
     void *argp3 = 0 ;
@@ -6216,22 +6300,37 @@ XS(_wrap_gsl_monte_vegas_integrate) {
     int res6 = 0 ;
     void *argp7 = 0 ;
     int res7 = 0 ;
-    void *argp8 = 0 ;
-    int res8 = 0 ;
-    void *argp9 = 0 ;
-    int res9 = 0 ;
+    double temp8 ;
+    int res8 = SWIG_TMPOBJ ;
+    double temp9 ;
+    int res9 = SWIG_TMPOBJ ;
     int argvi = 0;
     int result;
     dXSARGS;
     
-    if ((items < 9) || (items > 9)) {
-      SWIG_croak("Usage: gsl_monte_vegas_integrate(f,xl,xu,dim,calls,r,state,result,abserr);");
+    arg8 = &temp8;
+    arg9 = &temp9;
+    if ((items < 7) || (items > 7)) {
+      SWIG_croak("Usage: gsl_monte_vegas_integrate(f,xl,xu,dim,calls,r,state);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_monte_function_struct, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_monte_vegas_integrate" "', argument " "1"" of type '" "gsl_monte_function *""'"); 
+    {
+      gsl_monte_function MF;
+      int count;
+      SV ** callback;
+      double x;
+      if (!SvROK(ST(0))) {
+        croak("Math::GSL : $f is not a reference value!");
+      }
+      if (Callbacks == (HV*)NULL)
+      Callbacks = newHV();
+      fprintf(stderr,"STORE $f gsl_monte_function CALLBACK: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      
+      MF.params  = &ST(0);
+      MF.dim     = 1; // XXX
+      MF.f       = &callmonte;
+      arg1         = &MF;
     }
-    arg1 = (gsl_monte_function *)(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_monte_vegas_integrate" "', argument " "2"" of type '" "double []""'"); 
@@ -6262,18 +6361,20 @@ XS(_wrap_gsl_monte_vegas_integrate) {
       SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_monte_vegas_integrate" "', argument " "7"" of type '" "gsl_monte_vegas_state *""'"); 
     }
     arg7 = (gsl_monte_vegas_state *)(argp7);
-    res8 = SWIG_ConvertPtr(ST(7), &argp8,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res8)) {
-      SWIG_exception_fail(SWIG_ArgError(res8), "in method '" "gsl_monte_vegas_integrate" "', argument " "8"" of type '" "double *""'"); 
-    }
-    arg8 = (double *)(argp8);
-    res9 = SWIG_ConvertPtr(ST(8), &argp9,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res9)) {
-      SWIG_exception_fail(SWIG_ArgError(res9), "in method '" "gsl_monte_vegas_integrate" "', argument " "9"" of type '" "double *""'"); 
-    }
-    arg9 = (double *)(argp9);
     result = (int)gsl_monte_vegas_integrate(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8,arg9);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res8)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg8)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res8) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg8), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res9)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg9)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res9) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg9), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
     
     
     
@@ -7142,6 +7243,16 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   }
   
+  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "GSL_MAJOR_VERSION", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(1)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "GSL_MINOR_VERSION", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(11)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
   SWIG_TypeClientData(SWIGTYPE_p_gsl_monte_function_struct, (void*) "Math::GSL::Monte::gsl_monte_function_struct");
   SWIG_TypeClientData(SWIGTYPE_p_gsl_monte_miser_state, (void*) "Math::GSL::Monte::gsl_monte_miser_state");
   SWIG_TypeClientData(SWIGTYPE_p_gsl_monte_plain_state, (void*) "Math::GSL::Monte::gsl_monte_plain_state");
@@ -7334,16 +7445,6 @@ XS(SWIG_init) {
   /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "GSL_EOF", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_EOF)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_MAJOR_VERSION", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(1)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_MINOR_VERSION", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(11)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   ST(0) = &PL_sv_yes;

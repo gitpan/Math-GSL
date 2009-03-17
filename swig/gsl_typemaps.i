@@ -46,6 +46,7 @@
     */
     double callthis(double x , int func, void *params){
         SV ** sv;
+        unsigned int count;
         double y;
         dSP;
 
@@ -58,14 +59,24 @@
 
         PUSHMARK(SP);
         XPUSHs(sv_2mortal(newSVnv((double)x)));
-        PUTBACK;
-        call_sv(*sv, G_SCALAR);
+        PUTBACK;                                /* make local stack pointer global */
+
+        count = call_sv(*sv, G_SCALAR);
+        SPAGAIN;
+
+        if (count != 1)
+                croak("Expected to call subroutine in scalar context!");
+
+        PUTBACK;                                /* make local stack pointer global */
+         
         y = POPn;
         return y;
     }
+    double callmonte(double x[], size_t dim, void *params ){
+        fprintf(stderr, "callmonte!!!");
+    }
 %}
 %typemap(in) gsl_monte_function * {
-    croak("FOOBAR!");
     gsl_monte_function MF;
     int count;
     SV ** callback;
@@ -75,13 +86,15 @@
     }
     if (Callbacks == (HV*)NULL)
         Callbacks = newHV();
-    fprintf(stderr,"STORE gsl_monte_function CALLBACK: %d\n", (int)$input);
+    fprintf(stderr,"STORE $$1_name gsl_monte_function CALLBACK: %d\n", (int)$input);
     hv_store( Callbacks, (char*)&$input, sizeof($input), newSVsv($input), 0 );
 
-    MF.params   = &$input;
-    MF.function = &callthis;
+    MF.params  = &$input;
+    MF.dim     = 1; // XXX
+    MF.f       = &callmonte;
     $1         = &MF;
 };
+
 %typemap(in) gsl_function * {
     gsl_function F;
     int count;
