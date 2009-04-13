@@ -122,6 +122,8 @@ package Math::GSL::Heapsort;
 
 *GSL_MAJOR_VERSION = *Math::GSL::Heapsortc::GSL_MAJOR_VERSION;
 *GSL_MINOR_VERSION = *Math::GSL::Heapsortc::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::Heapsortc::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::Heapsortc::GSL_NEGZERO;
 
 @EXPORT_OK = qw/
                gsl_heapsort 

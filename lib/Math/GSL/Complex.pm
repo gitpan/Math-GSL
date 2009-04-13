@@ -235,6 +235,8 @@ package Math::GSL::Complex;
 
 *GSL_MAJOR_VERSION = *Math::GSL::Complexc::GSL_MAJOR_VERSION;
 *GSL_MINOR_VERSION = *Math::GSL::Complexc::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::Complexc::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::Complexc::GSL_NEGZERO;
 
 
 @EXPORT_OK = qw(

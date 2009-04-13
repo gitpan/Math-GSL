@@ -184,6 +184,8 @@ package Math::GSL::Const;
 
 *GSL_MAJOR_VERSION = *Math::GSL::Constc::GSL_MAJOR_VERSION;
 *GSL_MINOR_VERSION = *Math::GSL::Constc::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::Constc::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::Constc::GSL_NEGZERO;
 *M_E = *Math::GSL::Constc::M_E;
 *M_LOG2E = *Math::GSL::Constc::M_LOG2E;
 *M_LOG10E = *Math::GSL::Constc::M_LOG10E;

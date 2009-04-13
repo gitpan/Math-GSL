@@ -141,6 +141,8 @@ package Math::GSL::CDF;
 
 *GSL_MAJOR_VERSION = *Math::GSL::CDFc::GSL_MAJOR_VERSION;
 *GSL_MINOR_VERSION = *Math::GSL::CDFc::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::CDFc::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::CDFc::GSL_NEGZERO;
 
 
 our @EXPORT_OK = qw/ gsl_cdf_ugaussian_P gsl_cdf_ugaussian_Q gsl_cdf_ugaussian_Pinv 

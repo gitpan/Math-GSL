@@ -108,6 +108,8 @@ package Math::GSL::Siman;
 
 *GSL_MAJOR_VERSION = *Math::GSL::Simanc::GSL_MAJOR_VERSION;
 *GSL_MINOR_VERSION = *Math::GSL::Simanc::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::Simanc::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::Simanc::GSL_NEGZERO;
 
 @EXPORT_OK = qw/
                gsl_siman_solve 

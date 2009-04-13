@@ -1499,11 +1499,14 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
 }
 
 
-    static HV * Callbacks = (HV*)NULL;
-    /* this function returns the value 
-        of evaluating the function pointer
-        stored in func with argument x
-    */
+    #include "gsl/gsl_nan.h"
+
+
+    static HV * Callbacks = (HV*)NULL;  // Hash of callbacks, stored by memory address
+    SV * Last_Call        = (SV*)NULL;  // last used callback, used as fudge for systems with MULTIPLICITY
+
+    /* this function returns the value of evaluating the function pointer stored in func with argument x */
+
     double callthis(double x , int func, void *params){
         SV ** sv;
         unsigned int count;
@@ -1513,8 +1516,14 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
         //fprintf(stderr, "LOOKUP CALLBACK\n");
         sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
         if (sv == (SV**)NULL) {
-            fprintf(stderr, "Math::GSL(callthis): %d not in Callbacks!\n", func);
-            return;
+                  fprintf(stderr, 'not found in Callbacks');
+                  if (Last_Call != (SV*)NULL) {
+                        fprintf(stderr, 'retrieving last_call');
+                        SvSetSV((SV*) sv, (SV*)Last_Call ); // Ya don't have to go home, but ya can't stay here
+                  } else {
+                        fprintf(stderr, "Math::GSL(callthis): %s (%d) not in Callbacks!\n", (char*) func, func);
+                        return GSL_NAN;
+                  }
         }
 
         PUSHMARK(SP);
@@ -1528,7 +1537,7 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
                 croak("Expected to call subroutine in scalar context!");
 
         PUTBACK;                                /* make local stack pointer global */
-         
+
         y = POPn;
         return y;
     }
@@ -2224,7 +2233,6 @@ XS(_wrap_gsl_min_fminimizer_function_set) {
     {
       gsl_function F;
       int count;
-      SV ** callback;
       double x;
       
       if (!SvROK(ST(1))) {
@@ -2232,8 +2240,15 @@ XS(_wrap_gsl_min_fminimizer_function_set) {
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(1));
-      hv_store( Callbacks, (char*)&ST(1), sizeof(ST(1)), newSVsv(ST(1)), 0 );
+      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(1));
+      hv_store( Callbacks, (char*)&ST(1), sizeof(ST(1)), newSVsv(ST(1)) , 0 );
+      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(1));
+      
+      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
+      Last_Call = newSV(sizeof(ST(1)));
+      
+      SvSetSV( (SV*) Last_Call, newSVsv(ST(1)) ); // Store the last used callback, in case we cannot find it by address
+      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(1));
       
       F.params   = &ST(1);
       F.function = &callthis;
@@ -2863,7 +2878,6 @@ XS(_wrap_gsl_min_fminimizer_set) {
     {
       gsl_function F;
       int count;
-      SV ** callback;
       double x;
       
       if (!SvROK(ST(1))) {
@@ -2871,8 +2885,15 @@ XS(_wrap_gsl_min_fminimizer_set) {
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(1));
-      hv_store( Callbacks, (char*)&ST(1), sizeof(ST(1)), newSVsv(ST(1)), 0 );
+      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(1));
+      hv_store( Callbacks, (char*)&ST(1), sizeof(ST(1)), newSVsv(ST(1)) , 0 );
+      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(1));
+      
+      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
+      Last_Call = newSV(sizeof(ST(1)));
+      
+      SvSetSV( (SV*) Last_Call, newSVsv(ST(1)) ); // Store the last used callback, in case we cannot find it by address
+      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(1));
       
       F.params   = &ST(1);
       F.function = &callthis;
@@ -2951,7 +2972,6 @@ XS(_wrap_gsl_min_fminimizer_set_with_values) {
     {
       gsl_function F;
       int count;
-      SV ** callback;
       double x;
       
       if (!SvROK(ST(1))) {
@@ -2959,8 +2979,15 @@ XS(_wrap_gsl_min_fminimizer_set_with_values) {
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(1));
-      hv_store( Callbacks, (char*)&ST(1), sizeof(ST(1)), newSVsv(ST(1)), 0 );
+      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(1));
+      hv_store( Callbacks, (char*)&ST(1), sizeof(ST(1)), newSVsv(ST(1)) , 0 );
+      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(1));
+      
+      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
+      Last_Call = newSV(sizeof(ST(1)));
+      
+      SvSetSV( (SV*) Last_Call, newSVsv(ST(1)) ); // Store the last used callback, in case we cannot find it by address
+      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(1));
       
       F.params   = &ST(1);
       F.function = &callthis;
@@ -3365,7 +3392,6 @@ XS(_wrap_gsl_min_find_bracket) {
     {
       gsl_function F;
       int count;
-      SV ** callback;
       double x;
       
       if (!SvROK(ST(0))) {
@@ -3373,8 +3399,15 @@ XS(_wrap_gsl_min_find_bracket) {
       }
       if (Callbacks == (HV*)NULL)
       Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK: %d\n", (int)ST(0));
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
+      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(0));
+      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)) , 0 );
+      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(0));
+      
+      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
+      Last_Call = newSV(sizeof(ST(0)));
+      
+      SvSetSV( (SV*) Last_Call, newSVsv(ST(0)) ); // Store the last used callback, in case we cannot find it by address
+      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(0));
       
       F.params   = &ST(0);
       F.function = &callthis;
@@ -4613,6 +4646,16 @@ XS(SWIG_init) {
   /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "GSL_MINOR_VERSION", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(11)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "GSL_POSZERO", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)((+0))));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "GSL_NEGZERO", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)((-0))));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   SWIG_TypeClientData(SWIGTYPE_p_gsl_min_fminimizer_type, (void*) "Math::GSL::Min::gsl_min_fminimizer_type");

@@ -1122,6 +1122,8 @@ package Math::GSL::Matrix;
 
 *GSL_MAJOR_VERSION = *Math::GSL::Matrixc::GSL_MAJOR_VERSION;
 *GSL_MINOR_VERSION = *Math::GSL::Matrixc::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::Matrixc::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::Matrixc::GSL_NEGZERO;
 
 
 use strict;

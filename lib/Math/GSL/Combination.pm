@@ -115,6 +115,8 @@ package Math::GSL::Combination;
 
 *GSL_MAJOR_VERSION = *Math::GSL::Combinationc::GSL_MAJOR_VERSION;
 *GSL_MINOR_VERSION = *Math::GSL::Combinationc::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::Combinationc::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::Combinationc::GSL_NEGZERO;
 
 @EXPORT_OK = qw/
                gsl_combination_alloc 

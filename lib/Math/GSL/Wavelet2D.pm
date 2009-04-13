@@ -67,6 +67,8 @@ package Math::GSL::Wavelet2D;
 
 *GSL_MAJOR_VERSION = *Math::GSL::Wavelet2Dc::GSL_MAJOR_VERSION;
 *GSL_MINOR_VERSION = *Math::GSL::Wavelet2Dc::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::Wavelet2Dc::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::Wavelet2Dc::GSL_NEGZERO;
 
 
 @EXPORT_OK = qw/

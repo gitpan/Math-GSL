@@ -75,6 +75,8 @@ package Math::GSL::Sys;
 
 *GSL_MAJOR_VERSION = *Math::GSL::Sysc::GSL_MAJOR_VERSION;
 *GSL_MINOR_VERSION = *Math::GSL::Sysc::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::Sysc::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::Sysc::GSL_NEGZERO;
 
 our @EXPORT = qw();
 our @EXPORT_OK = qw/

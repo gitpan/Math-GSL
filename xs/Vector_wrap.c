@@ -1506,11 +1506,14 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
 }
 
 
-    static HV * Callbacks = (HV*)NULL;
-    /* this function returns the value 
-        of evaluating the function pointer
-        stored in func with argument x
-    */
+    #include "gsl/gsl_nan.h"
+
+
+    static HV * Callbacks = (HV*)NULL;  // Hash of callbacks, stored by memory address
+    SV * Last_Call        = (SV*)NULL;  // last used callback, used as fudge for systems with MULTIPLICITY
+
+    /* this function returns the value of evaluating the function pointer stored in func with argument x */
+
     double callthis(double x , int func, void *params){
         SV ** sv;
         unsigned int count;
@@ -1520,8 +1523,14 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
         //fprintf(stderr, "LOOKUP CALLBACK\n");
         sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
         if (sv == (SV**)NULL) {
-            fprintf(stderr, "Math::GSL(callthis): %d not in Callbacks!\n", func);
-            return;
+                  fprintf(stderr, 'not found in Callbacks');
+                  if (Last_Call != (SV*)NULL) {
+                        fprintf(stderr, 'retrieving last_call');
+                        SvSetSV((SV*) sv, (SV*)Last_Call ); // Ya don't have to go home, but ya can't stay here
+                  } else {
+                        fprintf(stderr, "Math::GSL(callthis): %s (%d) not in Callbacks!\n", (char*) func, func);
+                        return GSL_NAN;
+                  }
         }
 
         PUSHMARK(SP);
@@ -1535,7 +1544,7 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
                 croak("Expected to call subroutine in scalar context!");
 
         PUTBACK;                                /* make local stack pointer global */
-         
+
         y = POPn;
         return y;
     }

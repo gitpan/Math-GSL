@@ -256,6 +256,8 @@ package Math::GSL::Roots;
 
 *GSL_MAJOR_VERSION = *Math::GSL::Rootsc::GSL_MAJOR_VERSION;
 *GSL_MINOR_VERSION = *Math::GSL::Rootsc::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::Rootsc::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::Rootsc::GSL_NEGZERO;
 
 my %__gsl_root_fsolver_bisection_hash;
 tie %__gsl_root_fsolver_bisection_hash,"Math::GSL::Roots::gsl_root_fsolver_type", $Math::GSL::Rootsc::gsl_root_fsolver_bisection;

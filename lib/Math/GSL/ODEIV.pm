@@ -356,6 +356,8 @@ package Math::GSL::ODEIV;
 
 *GSL_MAJOR_VERSION = *Math::GSL::ODEIVc::GSL_MAJOR_VERSION;
 *GSL_MINOR_VERSION = *Math::GSL::ODEIVc::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::ODEIVc::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::ODEIVc::GSL_NEGZERO;
 
 my %__gsl_odeiv_step_rk2_hash;
 tie %__gsl_odeiv_step_rk2_hash,"Math::GSL::ODEIV::gsl_odeiv_step_type", $Math::GSL::ODEIVc::gsl_odeiv_step_rk2;

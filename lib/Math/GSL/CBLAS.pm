@@ -198,6 +198,8 @@ package Math::GSL::CBLAS;
 
 *GSL_MAJOR_VERSION = *Math::GSL::CBLASc::GSL_MAJOR_VERSION;
 *GSL_MINOR_VERSION = *Math::GSL::CBLASc::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::CBLASc::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::CBLASc::GSL_NEGZERO;
 *CblasRowMajor = *Math::GSL::CBLASc::CblasRowMajor;
 *CblasColMajor = *Math::GSL::CBLASc::CblasColMajor;
 *CblasNoTrans = *Math::GSL::CBLASc::CblasNoTrans;

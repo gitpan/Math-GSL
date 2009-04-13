@@ -109,6 +109,10 @@ package Math::GSL::Machine;
 *GSL_ROOT5_MACH_EPS = *Math::GSL::Machinec::GSL_ROOT5_MACH_EPS;
 *GSL_ROOT6_MACH_EPS = *Math::GSL::Machinec::GSL_ROOT6_MACH_EPS;
 *GSL_LOG_MACH_EPS = *Math::GSL::Machinec::GSL_LOG_MACH_EPS;
+*GSL_MAJOR_VERSION = *Math::GSL::Machinec::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::Machinec::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::Machinec::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::Machinec::GSL_NEGZERO;
 
 @EXPORT_OK = qw/
                $GSL_DBL_EPSILON 

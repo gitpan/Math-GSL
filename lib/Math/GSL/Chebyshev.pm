@@ -244,6 +244,8 @@ package Math::GSL::Chebyshev;
 
 *GSL_MAJOR_VERSION = *Math::GSL::Chebyshevc::GSL_MAJOR_VERSION;
 *GSL_MINOR_VERSION = *Math::GSL::Chebyshevc::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::Chebyshevc::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::Chebyshevc::GSL_NEGZERO;
 *M_E = *Math::GSL::Chebyshevc::M_E;
 *M_LOG2E = *Math::GSL::Chebyshevc::M_LOG2E;
 *M_LOG10E = *Math::GSL::Chebyshevc::M_LOG10E;

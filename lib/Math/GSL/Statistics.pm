@@ -160,6 +160,8 @@ package Math::GSL::Statistics;
 
 *GSL_MAJOR_VERSION = *Math::GSL::Statisticsc::GSL_MAJOR_VERSION;
 *GSL_MINOR_VERSION = *Math::GSL::Statisticsc::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::Statisticsc::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::Statisticsc::GSL_NEGZERO;
 
 @EXPORT_OK = qw/
                gsl_stats_mean 

@@ -531,6 +531,8 @@ package Math::GSL::MatrixComplex;
 
 *GSL_MAJOR_VERSION = *Math::GSL::MatrixComplexc::GSL_MAJOR_VERSION;
 *GSL_MINOR_VERSION = *Math::GSL::MatrixComplexc::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::MatrixComplexc::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::MatrixComplexc::GSL_NEGZERO;
 
 
 use strict;

@@ -119,6 +119,8 @@ package Math::GSL::BSpline;
 
 *GSL_MAJOR_VERSION = *Math::GSL::BSplinec::GSL_MAJOR_VERSION;
 *GSL_MINOR_VERSION = *Math::GSL::BSplinec::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::BSplinec::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::BSplinec::GSL_NEGZERO;
 
 @EXPORT_OK = qw/
                gsl_bspline_alloc 

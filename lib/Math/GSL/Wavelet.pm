@@ -196,6 +196,8 @@ package Math::GSL::Wavelet;
 
 *GSL_MAJOR_VERSION = *Math::GSL::Waveletc::GSL_MAJOR_VERSION;
 *GSL_MINOR_VERSION = *Math::GSL::Waveletc::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::Waveletc::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::Waveletc::GSL_NEGZERO;
 *forward = *Math::GSL::Waveletc::forward;
 *backward = *Math::GSL::Waveletc::backward;
 *gsl_wavelet_forward = *Math::GSL::Waveletc::gsl_wavelet_forward;

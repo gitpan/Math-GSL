@@ -171,6 +171,8 @@ package Math::GSL::Sum;
 
 *GSL_MAJOR_VERSION = *Math::GSL::Sumc::GSL_MAJOR_VERSION;
 *GSL_MINOR_VERSION = *Math::GSL::Sumc::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::Sumc::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::Sumc::GSL_NEGZERO;
 
 @EXPORT_OK = qw/
                gsl_sum_levin_u_alloc 

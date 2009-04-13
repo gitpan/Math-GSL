@@ -181,6 +181,8 @@ package Math::GSL::Histogram;
 
 *GSL_MAJOR_VERSION = *Math::GSL::Histogramc::GSL_MAJOR_VERSION;
 *GSL_MINOR_VERSION = *Math::GSL::Histogramc::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::Histogramc::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::Histogramc::GSL_NEGZERO;
 
 @EXPORT_OK = qw/
                gsl_histogram_alloc 

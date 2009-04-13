@@ -156,6 +156,8 @@ package Math::GSL::QRNG;
 
 *GSL_MAJOR_VERSION = *Math::GSL::QRNGc::GSL_MAJOR_VERSION;
 *GSL_MINOR_VERSION = *Math::GSL::QRNGc::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::QRNGc::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::QRNGc::GSL_NEGZERO;
 
 my %__gsl_qrng_niederreiter_2_hash;
 tie %__gsl_qrng_niederreiter_2_hash,"Math::GSL::QRNG::gsl_qrng_type", $Math::GSL::QRNGc::gsl_qrng_niederreiter_2;

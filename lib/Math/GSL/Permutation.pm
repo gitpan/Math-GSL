@@ -128,6 +128,8 @@ package Math::GSL::Permutation;
 
 *GSL_MAJOR_VERSION = *Math::GSL::Permutationc::GSL_MAJOR_VERSION;
 *GSL_MINOR_VERSION = *Math::GSL::Permutationc::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::Permutationc::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::Permutationc::GSL_NEGZERO;
 
 @EXPORT_OK = qw/
                 gsl_permutation_alloc

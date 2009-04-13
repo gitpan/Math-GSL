@@ -64,6 +64,8 @@ package Math::GSL::PowInt;
 
 *GSL_MAJOR_VERSION = *Math::GSL::PowIntc::GSL_MAJOR_VERSION;
 *GSL_MINOR_VERSION = *Math::GSL::PowIntc::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::PowIntc::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::PowIntc::GSL_NEGZERO;
 
 
 our @EXPORT_OK = qw/gsl_pow_2 gsl_pow_2 gsl_pow_3 
