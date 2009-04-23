@@ -48,8 +48,6 @@ sub this {
 
 package Math::GSL::VectorComplex;
 
-*fopen = *Math::GSL::VectorComplexc::fopen;
-*fclose = *Math::GSL::VectorComplexc::fclose;
 *gsl_vector_alloc = *Math::GSL::VectorComplexc::gsl_vector_alloc;
 *gsl_vector_calloc = *Math::GSL::VectorComplexc::gsl_vector_calloc;
 *gsl_vector_alloc_from_block = *Math::GSL::VectorComplexc::gsl_vector_alloc_from_block;
@@ -521,7 +519,7 @@ use overload
     fallback => 1,
 ;
 
-@EXPORT_all  = qw/fopen fclose
+@EXPORT_all  = qw/
                  gsl_vector_complex_alloc gsl_vector_complex_calloc gsl_vector_complex_alloc_from_block gsl_vector_complex_alloc_from_vector
                  gsl_vector_complex_free gsl_vector_complex_view_array gsl_vector_complex_view_array_with_stride gsl_vector_complex_const_view_array
                  gsl_vector_complex_const_view_array_with_stride gsl_vector_complex_subvector gsl_vector_complex_subvector_with_stride
@@ -532,9 +530,8 @@ use overload
                  gsl_vector_complex_fprintf gsl_vector_complex_memcpy gsl_vector_complex_reverse gsl_vector_complex_swap
                  gsl_vector_complex_swap_elements gsl_vector_complex_isnull gsl_vector_complex_ispos gsl_vector_complex_isneg
 /;
-@EXPORT_file =qw/ fopen fclose/;
-@EXPORT_OK = (@EXPORT_all, @EXPORT_file);
-%EXPORT_TAGS = ( file => \@EXPORT_file, all => \@EXPORT_all );
+@EXPORT_OK = (@EXPORT_all);
+%EXPORT_TAGS = ( all => \@EXPORT_all );
 
 =head1 NAME
 

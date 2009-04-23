@@ -1500,49 +1500,94 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
 
 
     #include "gsl/gsl_nan.h"
+    #include "gsl/gsl_math.h"
+    #include "gsl/gsl_monte.h"
 
 
-    static HV * Callbacks = (HV*)NULL;  // Hash of callbacks, stored by memory address
-    SV * Last_Call        = (SV*)NULL;  // last used callback, used as fudge for systems with MULTIPLICITY
 
-    /* this function returns the value of evaluating the function pointer stored in func with argument x */
+    struct gsl_function_perl {
+        gsl_function C_gsl_function;
+        SV * function;
+        SV * params;
+    };
+    struct gsl_monte_function_perl {
+        gsl_monte_function C_gsl_monte_function;
+        SV * f;
+        SV * dim;
+        SV * params;
+    };
 
-    double callthis(double x , int func, void *params){
-        SV ** sv;
+
+    /* this function returns the value 
+        of evaluating the function pointer
+        stored in func with argument x
+    */
+    double call_gsl_function(double x , void *params){
+        struct gsl_function_perl *F=(struct gsl_function_perl*)params;
         unsigned int count;
         double y;
         dSP;
 
         //fprintf(stderr, "LOOKUP CALLBACK\n");
-        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
-        if (sv == (SV**)NULL) {
-                  fprintf(stderr, 'not found in Callbacks');
-                  if (Last_Call != (SV*)NULL) {
-                        fprintf(stderr, 'retrieving last_call');
-                        SvSetSV((SV*) sv, (SV*)Last_Call ); // Ya don't have to go home, but ya can't stay here
-                  } else {
-                        fprintf(stderr, "Math::GSL(callthis): %s (%d) not in Callbacks!\n", (char*) func, func);
-                        return GSL_NAN;
-                  }
-        }
+        ENTER;
+        SAVETMPS;
 
         PUSHMARK(SP);
         XPUSHs(sv_2mortal(newSVnv((double)x)));
+        XPUSHs(F->params);
         PUTBACK;                                /* make local stack pointer global */
 
-        count = call_sv(*sv, G_SCALAR);
+        count = call_sv(F->function, G_SCALAR);
         SPAGAIN;
 
         if (count != 1)
                 croak("Expected to call subroutine in scalar context!");
 
-        PUTBACK;                                /* make local stack pointer global */
-
         y = POPn;
+
+        PUTBACK;                                /* make local stack pointer global */
+        FREETMPS;
+        LEAVE;
+         
         return y;
     }
-    double callmonte(double x[], size_t dim, void *params ){
-        fprintf(stderr, "callmonte!!!");
+    double call_gsl_monte_function(double *x_array , size_t dim, void *params){
+        struct gsl_monte_function_perl *F=(struct gsl_monte_function_perl*)params;
+        unsigned int count;
+        unsigned int i;
+        AV* perl_array;
+        double y;
+        dSP;
+
+        //fprintf(stderr, "LOOKUP CALLBACK\n");
+        ENTER;
+        SAVETMPS;
+
+        PUSHMARK(SP);
+        perl_array=newAV();
+        sv_2mortal((SV*)perl_array);
+        XPUSHs(sv_2mortal(newRV((SV *)perl_array)));
+        for(i=0; i<dim; i++) {
+                /* no mortal : it is referenced by the array */
+                av_push(perl_array, newSVnv(x_array[i]));
+        }
+        XPUSHs(sv_2mortal(newSViv(dim)));
+        XPUSHs(F->params);
+        PUTBACK;                                /* make local stack pointer global */
+
+        count = call_sv(F->f, G_SCALAR);
+        SPAGAIN;
+
+        if (count != 1)
+                croak("Expected to call subroutine in scalar context!");
+
+        y = POPn;
+
+        PUTBACK;                                /* make local stack pointer global */
+        FREETMPS;
+        LEAVE;
+         
+        return y;
     }
 
 
@@ -3972,6 +4017,7 @@ XS(_wrap_gsl_integration_qk15) {
     double *arg5 = (double *) 0 ;
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
+    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -3993,28 +4039,45 @@ XS(_wrap_gsl_integration_qk15) {
       SWIG_croak("Usage: gsl_integration_qk15(f,a,b,resabs,resasc);");
     }
     {
-      gsl_function F;
-      int count;
-      double x;
+      SV * function = 0;
+      SV * params = 0;
       
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_function = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>1) {
+          croak("Math::GSL : $f is an array with more than 2 elements!");
+        }
+        p_function = av_fetch(array, 0, 0);
+        function = *p_function;
+        if (av_len(array)>0) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        function = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(0));
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)) , 0 );
-      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!function || !(SvPOK(function) || (SvROK(function) && (SvTYPE(SvRV(function)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      SvSetSV( (SV*) Last_Call, newSVsv(ST(0)) ); // Store the last used callback, in case we cannot find it by address
-      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(0));
+      function = newSVsv(function);
       
-      F.params   = &ST(0);
-      F.function = &callthis;
-      arg1         = &F;
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_function1.params = params;
+      w_gsl_function1.function = function;
+      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
+      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
+      arg1         = &w_gsl_function1.C_gsl_function;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -4050,7 +4113,11 @@ XS(_wrap_gsl_integration_qk15) {
       int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -4059,7 +4126,11 @@ XS(_wrap_gsl_integration_qk15) {
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -4080,6 +4151,7 @@ XS(_wrap_gsl_integration_qk21) {
     double *arg5 = (double *) 0 ;
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
+    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -4101,28 +4173,45 @@ XS(_wrap_gsl_integration_qk21) {
       SWIG_croak("Usage: gsl_integration_qk21(f,a,b,resabs,resasc);");
     }
     {
-      gsl_function F;
-      int count;
-      double x;
+      SV * function = 0;
+      SV * params = 0;
       
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_function = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>1) {
+          croak("Math::GSL : $f is an array with more than 2 elements!");
+        }
+        p_function = av_fetch(array, 0, 0);
+        function = *p_function;
+        if (av_len(array)>0) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        function = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(0));
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)) , 0 );
-      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!function || !(SvPOK(function) || (SvROK(function) && (SvTYPE(SvRV(function)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      SvSetSV( (SV*) Last_Call, newSVsv(ST(0)) ); // Store the last used callback, in case we cannot find it by address
-      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(0));
+      function = newSVsv(function);
       
-      F.params   = &ST(0);
-      F.function = &callthis;
-      arg1         = &F;
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_function1.params = params;
+      w_gsl_function1.function = function;
+      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
+      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
+      arg1         = &w_gsl_function1.C_gsl_function;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -4158,7 +4247,11 @@ XS(_wrap_gsl_integration_qk21) {
       int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -4167,7 +4260,11 @@ XS(_wrap_gsl_integration_qk21) {
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -4188,6 +4285,7 @@ XS(_wrap_gsl_integration_qk31) {
     double *arg5 = (double *) 0 ;
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
+    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -4209,28 +4307,45 @@ XS(_wrap_gsl_integration_qk31) {
       SWIG_croak("Usage: gsl_integration_qk31(f,a,b,resabs,resasc);");
     }
     {
-      gsl_function F;
-      int count;
-      double x;
+      SV * function = 0;
+      SV * params = 0;
       
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_function = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>1) {
+          croak("Math::GSL : $f is an array with more than 2 elements!");
+        }
+        p_function = av_fetch(array, 0, 0);
+        function = *p_function;
+        if (av_len(array)>0) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        function = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(0));
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)) , 0 );
-      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!function || !(SvPOK(function) || (SvROK(function) && (SvTYPE(SvRV(function)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      SvSetSV( (SV*) Last_Call, newSVsv(ST(0)) ); // Store the last used callback, in case we cannot find it by address
-      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(0));
+      function = newSVsv(function);
       
-      F.params   = &ST(0);
-      F.function = &callthis;
-      arg1         = &F;
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_function1.params = params;
+      w_gsl_function1.function = function;
+      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
+      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
+      arg1         = &w_gsl_function1.C_gsl_function;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -4266,7 +4381,11 @@ XS(_wrap_gsl_integration_qk31) {
       int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -4275,7 +4394,11 @@ XS(_wrap_gsl_integration_qk31) {
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -4296,6 +4419,7 @@ XS(_wrap_gsl_integration_qk41) {
     double *arg5 = (double *) 0 ;
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
+    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -4317,28 +4441,45 @@ XS(_wrap_gsl_integration_qk41) {
       SWIG_croak("Usage: gsl_integration_qk41(f,a,b,resabs,resasc);");
     }
     {
-      gsl_function F;
-      int count;
-      double x;
+      SV * function = 0;
+      SV * params = 0;
       
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_function = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>1) {
+          croak("Math::GSL : $f is an array with more than 2 elements!");
+        }
+        p_function = av_fetch(array, 0, 0);
+        function = *p_function;
+        if (av_len(array)>0) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        function = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(0));
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)) , 0 );
-      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!function || !(SvPOK(function) || (SvROK(function) && (SvTYPE(SvRV(function)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      SvSetSV( (SV*) Last_Call, newSVsv(ST(0)) ); // Store the last used callback, in case we cannot find it by address
-      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(0));
+      function = newSVsv(function);
       
-      F.params   = &ST(0);
-      F.function = &callthis;
-      arg1         = &F;
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_function1.params = params;
+      w_gsl_function1.function = function;
+      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
+      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
+      arg1         = &w_gsl_function1.C_gsl_function;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -4374,7 +4515,11 @@ XS(_wrap_gsl_integration_qk41) {
       int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -4383,7 +4528,11 @@ XS(_wrap_gsl_integration_qk41) {
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -4404,6 +4553,7 @@ XS(_wrap_gsl_integration_qk51) {
     double *arg5 = (double *) 0 ;
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
+    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -4425,28 +4575,45 @@ XS(_wrap_gsl_integration_qk51) {
       SWIG_croak("Usage: gsl_integration_qk51(f,a,b,resabs,resasc);");
     }
     {
-      gsl_function F;
-      int count;
-      double x;
+      SV * function = 0;
+      SV * params = 0;
       
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_function = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>1) {
+          croak("Math::GSL : $f is an array with more than 2 elements!");
+        }
+        p_function = av_fetch(array, 0, 0);
+        function = *p_function;
+        if (av_len(array)>0) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        function = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(0));
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)) , 0 );
-      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!function || !(SvPOK(function) || (SvROK(function) && (SvTYPE(SvRV(function)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      SvSetSV( (SV*) Last_Call, newSVsv(ST(0)) ); // Store the last used callback, in case we cannot find it by address
-      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(0));
+      function = newSVsv(function);
       
-      F.params   = &ST(0);
-      F.function = &callthis;
-      arg1         = &F;
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_function1.params = params;
+      w_gsl_function1.function = function;
+      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
+      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
+      arg1         = &w_gsl_function1.C_gsl_function;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -4482,7 +4649,11 @@ XS(_wrap_gsl_integration_qk51) {
       int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -4491,7 +4662,11 @@ XS(_wrap_gsl_integration_qk51) {
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -4512,6 +4687,7 @@ XS(_wrap_gsl_integration_qk61) {
     double *arg5 = (double *) 0 ;
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
+    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -4533,28 +4709,45 @@ XS(_wrap_gsl_integration_qk61) {
       SWIG_croak("Usage: gsl_integration_qk61(f,a,b,resabs,resasc);");
     }
     {
-      gsl_function F;
-      int count;
-      double x;
+      SV * function = 0;
+      SV * params = 0;
       
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_function = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>1) {
+          croak("Math::GSL : $f is an array with more than 2 elements!");
+        }
+        p_function = av_fetch(array, 0, 0);
+        function = *p_function;
+        if (av_len(array)>0) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        function = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(0));
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)) , 0 );
-      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!function || !(SvPOK(function) || (SvROK(function) && (SvTYPE(SvRV(function)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      SvSetSV( (SV*) Last_Call, newSVsv(ST(0)) ); // Store the last used callback, in case we cannot find it by address
-      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(0));
+      function = newSVsv(function);
       
-      F.params   = &ST(0);
-      F.function = &callthis;
-      arg1         = &F;
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_function1.params = params;
+      w_gsl_function1.function = function;
+      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
+      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
+      arg1         = &w_gsl_function1.C_gsl_function;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -4590,7 +4783,11 @@ XS(_wrap_gsl_integration_qk61) {
       int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -4599,7 +4796,11 @@ XS(_wrap_gsl_integration_qk61) {
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -4618,6 +4819,7 @@ XS(_wrap_gsl_integration_qcheb) {
     double arg3 ;
     double *arg4 = (double *) 0 ;
     double *arg5 = (double *) 0 ;
+    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -4633,28 +4835,45 @@ XS(_wrap_gsl_integration_qcheb) {
       SWIG_croak("Usage: gsl_integration_qcheb(f,a,b,cheb12,cheb24);");
     }
     {
-      gsl_function F;
-      int count;
-      double x;
+      SV * function = 0;
+      SV * params = 0;
       
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_function = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>1) {
+          croak("Math::GSL : $f is an array with more than 2 elements!");
+        }
+        p_function = av_fetch(array, 0, 0);
+        function = *p_function;
+        if (av_len(array)>0) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        function = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(0));
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)) , 0 );
-      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!function || !(SvPOK(function) || (SvROK(function) && (SvTYPE(SvRV(function)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      SvSetSV( (SV*) Last_Call, newSVsv(ST(0)) ); // Store the last used callback, in case we cannot find it by address
-      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(0));
+      function = newSVsv(function);
       
-      F.params   = &ST(0);
-      F.function = &callthis;
-      arg1         = &F;
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_function1.params = params;
+      w_gsl_function1.function = function;
+      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
+      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
+      arg1         = &w_gsl_function1.C_gsl_function;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -4678,14 +4897,22 @@ XS(_wrap_gsl_integration_qcheb) {
     arg5 = (double *)(argp5);
     gsl_integration_qcheb(arg1,arg2,arg3,arg4,arg5);
     
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -4716,6 +4943,7 @@ XS(_wrap_gsl_integration_qk) {
     int res5 = 0 ;
     void *argp6 = 0 ;
     int res6 = 0 ;
+    struct gsl_function_perl w_gsl_function7 ;
     double val8 ;
     int ecode8 = 0 ;
     double val9 ;
@@ -4806,28 +5034,45 @@ XS(_wrap_gsl_integration_qk) {
     } 
     arg6 = (double *)(argp6);
     {
-      gsl_function F;
-      int count;
-      double x;
+      SV * function = 0;
+      SV * params = 0;
       
-      if (!SvROK(ST(6))) {
-        croak("Math::GSL : $f is not a reference value!");
+      if (SvROK(ST(6)) && (SvTYPE(SvRV(ST(6))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(6));
+        SV ** p_function = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>1) {
+          croak("Math::GSL : $f is an array with more than 2 elements!");
+        }
+        p_function = av_fetch(array, 0, 0);
+        function = *p_function;
+        if (av_len(array)>0) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        function = ST(6);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(6));
-      hv_store( Callbacks, (char*)&ST(6), sizeof(ST(6)), newSVsv(ST(6)) , 0 );
-      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(6));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(6)));
+      if (!function || !(SvPOK(function) || (SvROK(function) && (SvTYPE(SvRV(function)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      SvSetSV( (SV*) Last_Call, newSVsv(ST(6)) ); // Store the last used callback, in case we cannot find it by address
-      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(6));
+      function = newSVsv(function);
       
-      F.params   = &ST(6);
-      F.function = &callthis;
-      arg7         = &F;
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_function7.params = params;
+      w_gsl_function7.function = function;
+      w_gsl_function7.C_gsl_function.params   = &w_gsl_function7;
+      w_gsl_function7.C_gsl_function.function = &call_gsl_function;
+      arg7         = &w_gsl_function7.C_gsl_function;
     }
     ecode8 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(7), &val8);
     if (!SWIG_IsOK(ecode8)) {
@@ -4869,7 +5114,11 @@ XS(_wrap_gsl_integration_qk) {
     
     
     
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg7->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -4884,7 +5133,11 @@ XS(_wrap_gsl_integration_qk) {
     
     
     
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg7->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -4906,6 +5159,7 @@ XS(_wrap_gsl_integration_qng) {
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
     size_t *arg8 = (size_t *) 0 ;
+    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -4931,28 +5185,45 @@ XS(_wrap_gsl_integration_qng) {
       SWIG_croak("Usage: gsl_integration_qng(f,a,b,epsabs,epsrel);");
     }
     {
-      gsl_function F;
-      int count;
-      double x;
+      SV * function = 0;
+      SV * params = 0;
       
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_function = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>1) {
+          croak("Math::GSL : $f is an array with more than 2 elements!");
+        }
+        p_function = av_fetch(array, 0, 0);
+        function = *p_function;
+        if (av_len(array)>0) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        function = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(0));
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)) , 0 );
-      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!function || !(SvPOK(function) || (SvROK(function) && (SvTYPE(SvRV(function)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      SvSetSV( (SV*) Last_Call, newSVsv(ST(0)) ); // Store the last used callback, in case we cannot find it by address
-      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(0));
+      function = newSVsv(function);
       
-      F.params   = &ST(0);
-      F.function = &callthis;
-      arg1         = &F;
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_function1.params = params;
+      w_gsl_function1.function = function;
+      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
+      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
+      arg1         = &w_gsl_function1.C_gsl_function;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -4994,7 +5265,11 @@ XS(_wrap_gsl_integration_qng) {
       int new_flags = SWIG_IsNewObj(res8) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg8), SWIGTYPE_p_int, new_flags); argvi++  ;
     }
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -5004,7 +5279,11 @@ XS(_wrap_gsl_integration_qng) {
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -5029,6 +5308,7 @@ XS(_wrap_gsl_integration_qag) {
     gsl_integration_workspace *arg8 = (gsl_integration_workspace *) 0 ;
     double *arg9 = (double *) 0 ;
     double *arg10 = (double *) 0 ;
+    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -5057,28 +5337,45 @@ XS(_wrap_gsl_integration_qag) {
       SWIG_croak("Usage: gsl_integration_qag(f,a,b,epsabs,epsrel,limit,key,workspace);");
     }
     {
-      gsl_function F;
-      int count;
-      double x;
+      SV * function = 0;
+      SV * params = 0;
       
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_function = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>1) {
+          croak("Math::GSL : $f is an array with more than 2 elements!");
+        }
+        p_function = av_fetch(array, 0, 0);
+        function = *p_function;
+        if (av_len(array)>0) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        function = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(0));
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)) , 0 );
-      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!function || !(SvPOK(function) || (SvROK(function) && (SvTYPE(SvRV(function)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      SvSetSV( (SV*) Last_Call, newSVsv(ST(0)) ); // Store the last used callback, in case we cannot find it by address
-      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(0));
+      function = newSVsv(function);
       
-      F.params   = &ST(0);
-      F.function = &callthis;
-      arg1         = &F;
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_function1.params = params;
+      w_gsl_function1.function = function;
+      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
+      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
+      arg1         = &w_gsl_function1.C_gsl_function;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -5129,7 +5426,11 @@ XS(_wrap_gsl_integration_qag) {
       int new_flags = SWIG_IsNewObj(res10) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg10), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -5141,7 +5442,11 @@ XS(_wrap_gsl_integration_qag) {
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -5165,6 +5470,7 @@ XS(_wrap_gsl_integration_qagi) {
     gsl_integration_workspace *arg5 = (gsl_integration_workspace *) 0 ;
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
+    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -5187,28 +5493,45 @@ XS(_wrap_gsl_integration_qagi) {
       SWIG_croak("Usage: gsl_integration_qagi(f,epsabs,epsrel,limit,workspace);");
     }
     {
-      gsl_function F;
-      int count;
-      double x;
+      SV * function = 0;
+      SV * params = 0;
       
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_function = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>1) {
+          croak("Math::GSL : $f is an array with more than 2 elements!");
+        }
+        p_function = av_fetch(array, 0, 0);
+        function = *p_function;
+        if (av_len(array)>0) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        function = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(0));
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)) , 0 );
-      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!function || !(SvPOK(function) || (SvROK(function) && (SvTYPE(SvRV(function)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      SvSetSV( (SV*) Last_Call, newSVsv(ST(0)) ); // Store the last used callback, in case we cannot find it by address
-      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(0));
+      function = newSVsv(function);
       
-      F.params   = &ST(0);
-      F.function = &callthis;
-      arg1         = &F;
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_function1.params = params;
+      w_gsl_function1.function = function;
+      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
+      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
+      arg1         = &w_gsl_function1.C_gsl_function;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -5244,7 +5567,11 @@ XS(_wrap_gsl_integration_qagi) {
       int new_flags = SWIG_IsNewObj(res7) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg7), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -5253,7 +5580,11 @@ XS(_wrap_gsl_integration_qagi) {
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -5275,6 +5606,7 @@ XS(_wrap_gsl_integration_qagiu) {
     gsl_integration_workspace *arg6 = (gsl_integration_workspace *) 0 ;
     double *arg7 = (double *) 0 ;
     double *arg8 = (double *) 0 ;
+    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -5299,28 +5631,45 @@ XS(_wrap_gsl_integration_qagiu) {
       SWIG_croak("Usage: gsl_integration_qagiu(f,a,epsabs,epsrel,limit,workspace);");
     }
     {
-      gsl_function F;
-      int count;
-      double x;
+      SV * function = 0;
+      SV * params = 0;
       
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_function = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>1) {
+          croak("Math::GSL : $f is an array with more than 2 elements!");
+        }
+        p_function = av_fetch(array, 0, 0);
+        function = *p_function;
+        if (av_len(array)>0) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        function = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(0));
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)) , 0 );
-      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!function || !(SvPOK(function) || (SvROK(function) && (SvTYPE(SvRV(function)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      SvSetSV( (SV*) Last_Call, newSVsv(ST(0)) ); // Store the last used callback, in case we cannot find it by address
-      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(0));
+      function = newSVsv(function);
       
-      F.params   = &ST(0);
-      F.function = &callthis;
-      arg1         = &F;
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_function1.params = params;
+      w_gsl_function1.function = function;
+      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
+      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
+      arg1         = &w_gsl_function1.C_gsl_function;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -5361,7 +5710,11 @@ XS(_wrap_gsl_integration_qagiu) {
       int new_flags = SWIG_IsNewObj(res8) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg8), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -5371,7 +5724,11 @@ XS(_wrap_gsl_integration_qagiu) {
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -5394,6 +5751,7 @@ XS(_wrap_gsl_integration_qagil) {
     gsl_integration_workspace *arg6 = (gsl_integration_workspace *) 0 ;
     double *arg7 = (double *) 0 ;
     double *arg8 = (double *) 0 ;
+    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -5418,28 +5776,45 @@ XS(_wrap_gsl_integration_qagil) {
       SWIG_croak("Usage: gsl_integration_qagil(f,b,epsabs,epsrel,limit,workspace);");
     }
     {
-      gsl_function F;
-      int count;
-      double x;
+      SV * function = 0;
+      SV * params = 0;
       
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_function = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>1) {
+          croak("Math::GSL : $f is an array with more than 2 elements!");
+        }
+        p_function = av_fetch(array, 0, 0);
+        function = *p_function;
+        if (av_len(array)>0) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        function = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(0));
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)) , 0 );
-      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!function || !(SvPOK(function) || (SvROK(function) && (SvTYPE(SvRV(function)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      SvSetSV( (SV*) Last_Call, newSVsv(ST(0)) ); // Store the last used callback, in case we cannot find it by address
-      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(0));
+      function = newSVsv(function);
       
-      F.params   = &ST(0);
-      F.function = &callthis;
-      arg1         = &F;
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_function1.params = params;
+      w_gsl_function1.function = function;
+      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
+      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
+      arg1         = &w_gsl_function1.C_gsl_function;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -5480,7 +5855,11 @@ XS(_wrap_gsl_integration_qagil) {
       int new_flags = SWIG_IsNewObj(res8) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg8), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -5490,7 +5869,11 @@ XS(_wrap_gsl_integration_qagil) {
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -5514,6 +5897,7 @@ XS(_wrap_gsl_integration_qags) {
     gsl_integration_workspace *arg7 = (gsl_integration_workspace *) 0 ;
     double *arg8 = (double *) 0 ;
     double *arg9 = (double *) 0 ;
+    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -5540,28 +5924,45 @@ XS(_wrap_gsl_integration_qags) {
       SWIG_croak("Usage: gsl_integration_qags(f,a,b,epsabs,epsrel,limit,workspace);");
     }
     {
-      gsl_function F;
-      int count;
-      double x;
+      SV * function = 0;
+      SV * params = 0;
       
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_function = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>1) {
+          croak("Math::GSL : $f is an array with more than 2 elements!");
+        }
+        p_function = av_fetch(array, 0, 0);
+        function = *p_function;
+        if (av_len(array)>0) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        function = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(0));
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)) , 0 );
-      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!function || !(SvPOK(function) || (SvROK(function) && (SvTYPE(SvRV(function)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      SvSetSV( (SV*) Last_Call, newSVsv(ST(0)) ); // Store the last used callback, in case we cannot find it by address
-      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(0));
+      function = newSVsv(function);
       
-      F.params   = &ST(0);
-      F.function = &callthis;
-      arg1         = &F;
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_function1.params = params;
+      w_gsl_function1.function = function;
+      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
+      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
+      arg1         = &w_gsl_function1.C_gsl_function;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -5607,7 +6008,11 @@ XS(_wrap_gsl_integration_qags) {
       int new_flags = SWIG_IsNewObj(res9) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg9), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -5618,7 +6023,11 @@ XS(_wrap_gsl_integration_qags) {
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -5643,6 +6052,7 @@ XS(_wrap_gsl_integration_qagp) {
     gsl_integration_workspace *arg7 = (gsl_integration_workspace *) 0 ;
     double *arg8 = (double *) 0 ;
     double *arg9 = (double *) 0 ;
+    struct gsl_function_perl w_gsl_function1 ;
     void *argp2 = 0 ;
     int res2 = 0 ;
     size_t val3 ;
@@ -5669,28 +6079,45 @@ XS(_wrap_gsl_integration_qagp) {
       SWIG_croak("Usage: gsl_integration_qagp(f,pts,npts,epsabs,epsrel,limit,workspace);");
     }
     {
-      gsl_function F;
-      int count;
-      double x;
+      SV * function = 0;
+      SV * params = 0;
       
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_function = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>1) {
+          croak("Math::GSL : $f is an array with more than 2 elements!");
+        }
+        p_function = av_fetch(array, 0, 0);
+        function = *p_function;
+        if (av_len(array)>0) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        function = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(0));
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)) , 0 );
-      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!function || !(SvPOK(function) || (SvROK(function) && (SvTYPE(SvRV(function)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      SvSetSV( (SV*) Last_Call, newSVsv(ST(0)) ); // Store the last used callback, in case we cannot find it by address
-      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(0));
+      function = newSVsv(function);
       
-      F.params   = &ST(0);
-      F.function = &callthis;
-      arg1         = &F;
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_function1.params = params;
+      w_gsl_function1.function = function;
+      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
+      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
+      arg1         = &w_gsl_function1.C_gsl_function;
     }
     res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res2)) {
@@ -5736,7 +6163,11 @@ XS(_wrap_gsl_integration_qagp) {
       int new_flags = SWIG_IsNewObj(res9) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg9), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -5747,7 +6178,11 @@ XS(_wrap_gsl_integration_qagp) {
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -5773,6 +6208,7 @@ XS(_wrap_gsl_integration_qawc) {
     gsl_integration_workspace *arg8 = (gsl_integration_workspace *) 0 ;
     double *arg9 = (double *) 0 ;
     double *arg10 = (double *) 0 ;
+    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -5801,28 +6237,45 @@ XS(_wrap_gsl_integration_qawc) {
       SWIG_croak("Usage: gsl_integration_qawc(f,a,b,c,epsabs,epsrel,limit,workspace);");
     }
     {
-      gsl_function F;
-      int count;
-      double x;
+      SV * function = 0;
+      SV * params = 0;
       
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_function = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>1) {
+          croak("Math::GSL : $f is an array with more than 2 elements!");
+        }
+        p_function = av_fetch(array, 0, 0);
+        function = *p_function;
+        if (av_len(array)>0) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        function = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(0));
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)) , 0 );
-      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!function || !(SvPOK(function) || (SvROK(function) && (SvTYPE(SvRV(function)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      SvSetSV( (SV*) Last_Call, newSVsv(ST(0)) ); // Store the last used callback, in case we cannot find it by address
-      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(0));
+      function = newSVsv(function);
       
-      F.params   = &ST(0);
-      F.function = &callthis;
-      arg1         = &F;
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_function1.params = params;
+      w_gsl_function1.function = function;
+      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
+      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
+      arg1         = &w_gsl_function1.C_gsl_function;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -5873,7 +6326,11 @@ XS(_wrap_gsl_integration_qawc) {
       int new_flags = SWIG_IsNewObj(res10) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg10), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -5885,7 +6342,11 @@ XS(_wrap_gsl_integration_qawc) {
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -5912,6 +6373,7 @@ XS(_wrap_gsl_integration_qaws) {
     gsl_integration_workspace *arg8 = (gsl_integration_workspace *) 0 ;
     double *arg9 = (double *) 0 ;
     double *arg10 = (double *) 0 ;
+    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -5940,28 +6402,45 @@ XS(_wrap_gsl_integration_qaws) {
       SWIG_croak("Usage: gsl_integration_qaws(f,a,b,t,epsabs,epsrel,limit,workspace);");
     }
     {
-      gsl_function F;
-      int count;
-      double x;
+      SV * function = 0;
+      SV * params = 0;
       
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_function = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>1) {
+          croak("Math::GSL : $f is an array with more than 2 elements!");
+        }
+        p_function = av_fetch(array, 0, 0);
+        function = *p_function;
+        if (av_len(array)>0) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        function = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(0));
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)) , 0 );
-      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!function || !(SvPOK(function) || (SvROK(function) && (SvTYPE(SvRV(function)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      SvSetSV( (SV*) Last_Call, newSVsv(ST(0)) ); // Store the last used callback, in case we cannot find it by address
-      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(0));
+      function = newSVsv(function);
       
-      F.params   = &ST(0);
-      F.function = &callthis;
-      arg1         = &F;
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_function1.params = params;
+      w_gsl_function1.function = function;
+      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
+      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
+      arg1         = &w_gsl_function1.C_gsl_function;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -6012,7 +6491,11 @@ XS(_wrap_gsl_integration_qaws) {
       int new_flags = SWIG_IsNewObj(res10) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg10), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -6024,7 +6507,11 @@ XS(_wrap_gsl_integration_qaws) {
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -6050,6 +6537,7 @@ XS(_wrap_gsl_integration_qawo) {
     gsl_integration_qawo_table *arg7 = (gsl_integration_qawo_table *) 0 ;
     double *arg8 = (double *) 0 ;
     double *arg9 = (double *) 0 ;
+    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -6076,28 +6564,45 @@ XS(_wrap_gsl_integration_qawo) {
       SWIG_croak("Usage: gsl_integration_qawo(f,a,epsabs,epsrel,limit,workspace,wf);");
     }
     {
-      gsl_function F;
-      int count;
-      double x;
+      SV * function = 0;
+      SV * params = 0;
       
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_function = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>1) {
+          croak("Math::GSL : $f is an array with more than 2 elements!");
+        }
+        p_function = av_fetch(array, 0, 0);
+        function = *p_function;
+        if (av_len(array)>0) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        function = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(0));
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)) , 0 );
-      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!function || !(SvPOK(function) || (SvROK(function) && (SvTYPE(SvRV(function)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      SvSetSV( (SV*) Last_Call, newSVsv(ST(0)) ); // Store the last used callback, in case we cannot find it by address
-      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(0));
+      function = newSVsv(function);
       
-      F.params   = &ST(0);
-      F.function = &callthis;
-      arg1         = &F;
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_function1.params = params;
+      w_gsl_function1.function = function;
+      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
+      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
+      arg1         = &w_gsl_function1.C_gsl_function;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -6143,7 +6648,11 @@ XS(_wrap_gsl_integration_qawo) {
       int new_flags = SWIG_IsNewObj(res9) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg9), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -6154,7 +6663,11 @@ XS(_wrap_gsl_integration_qawo) {
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -6179,6 +6692,7 @@ XS(_wrap_gsl_integration_qawf) {
     gsl_integration_qawo_table *arg7 = (gsl_integration_qawo_table *) 0 ;
     double *arg8 = (double *) 0 ;
     double *arg9 = (double *) 0 ;
+    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -6205,28 +6719,45 @@ XS(_wrap_gsl_integration_qawf) {
       SWIG_croak("Usage: gsl_integration_qawf(f,a,epsabs,limit,workspace,cycle_workspace,wf);");
     }
     {
-      gsl_function F;
-      int count;
-      double x;
+      SV * function = 0;
+      SV * params = 0;
       
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_function = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>1) {
+          croak("Math::GSL : $f is an array with more than 2 elements!");
+        }
+        p_function = av_fetch(array, 0, 0);
+        function = *p_function;
+        if (av_len(array)>0) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        function = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(0));
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)) , 0 );
-      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!function || !(SvPOK(function) || (SvROK(function) && (SvTYPE(SvRV(function)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      SvSetSV( (SV*) Last_Call, newSVsv(ST(0)) ); // Store the last used callback, in case we cannot find it by address
-      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(0));
+      function = newSVsv(function);
       
-      F.params   = &ST(0);
-      F.function = &callthis;
-      arg1         = &F;
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_function1.params = params;
+      w_gsl_function1.function = function;
+      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
+      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
+      arg1         = &w_gsl_function1.C_gsl_function;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -6272,7 +6803,11 @@ XS(_wrap_gsl_integration_qawf) {
       int new_flags = SWIG_IsNewObj(res9) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg9), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -6283,7 +6818,11 @@ XS(_wrap_gsl_integration_qawf) {
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     

@@ -1496,49 +1496,94 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
 
 
     #include "gsl/gsl_nan.h"
+    #include "gsl/gsl_math.h"
+    #include "gsl/gsl_monte.h"
 
 
-    static HV * Callbacks = (HV*)NULL;  // Hash of callbacks, stored by memory address
-    SV * Last_Call        = (SV*)NULL;  // last used callback, used as fudge for systems with MULTIPLICITY
 
-    /* this function returns the value of evaluating the function pointer stored in func with argument x */
+    struct gsl_function_perl {
+        gsl_function C_gsl_function;
+        SV * function;
+        SV * params;
+    };
+    struct gsl_monte_function_perl {
+        gsl_monte_function C_gsl_monte_function;
+        SV * f;
+        SV * dim;
+        SV * params;
+    };
 
-    double callthis(double x , int func, void *params){
-        SV ** sv;
+
+    /* this function returns the value 
+        of evaluating the function pointer
+        stored in func with argument x
+    */
+    double call_gsl_function(double x , void *params){
+        struct gsl_function_perl *F=(struct gsl_function_perl*)params;
         unsigned int count;
         double y;
         dSP;
 
         //fprintf(stderr, "LOOKUP CALLBACK\n");
-        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
-        if (sv == (SV**)NULL) {
-                  fprintf(stderr, 'not found in Callbacks');
-                  if (Last_Call != (SV*)NULL) {
-                        fprintf(stderr, 'retrieving last_call');
-                        SvSetSV((SV*) sv, (SV*)Last_Call ); // Ya don't have to go home, but ya can't stay here
-                  } else {
-                        fprintf(stderr, "Math::GSL(callthis): %s (%d) not in Callbacks!\n", (char*) func, func);
-                        return GSL_NAN;
-                  }
-        }
+        ENTER;
+        SAVETMPS;
 
         PUSHMARK(SP);
         XPUSHs(sv_2mortal(newSVnv((double)x)));
+        XPUSHs(F->params);
         PUTBACK;                                /* make local stack pointer global */
 
-        count = call_sv(*sv, G_SCALAR);
+        count = call_sv(F->function, G_SCALAR);
         SPAGAIN;
 
         if (count != 1)
                 croak("Expected to call subroutine in scalar context!");
 
-        PUTBACK;                                /* make local stack pointer global */
-
         y = POPn;
+
+        PUTBACK;                                /* make local stack pointer global */
+        FREETMPS;
+        LEAVE;
+         
         return y;
     }
-    double callmonte(double x[], size_t dim, void *params ){
-        fprintf(stderr, "callmonte!!!");
+    double call_gsl_monte_function(double *x_array , size_t dim, void *params){
+        struct gsl_monte_function_perl *F=(struct gsl_monte_function_perl*)params;
+        unsigned int count;
+        unsigned int i;
+        AV* perl_array;
+        double y;
+        dSP;
+
+        //fprintf(stderr, "LOOKUP CALLBACK\n");
+        ENTER;
+        SAVETMPS;
+
+        PUSHMARK(SP);
+        perl_array=newAV();
+        sv_2mortal((SV*)perl_array);
+        XPUSHs(sv_2mortal(newRV((SV *)perl_array)));
+        for(i=0; i<dim; i++) {
+                /* no mortal : it is referenced by the array */
+                av_push(perl_array, newSVnv(x_array[i]));
+        }
+        XPUSHs(sv_2mortal(newSViv(dim)));
+        XPUSHs(F->params);
+        PUTBACK;                                /* make local stack pointer global */
+
+        count = call_sv(F->f, G_SCALAR);
+        SPAGAIN;
+
+        if (count != 1)
+                croak("Expected to call subroutine in scalar context!");
+
+        y = POPn;
+
+        PUTBACK;                                /* make local stack pointer global */
+        FREETMPS;
+        LEAVE;
+         
+        return y;
     }
 
 
@@ -1758,6 +1803,7 @@ XS(_wrap_gsl_function_struct_params_set) {
     void *arg2 = (void *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
+    int res2 ;
     int argvi = 0;
     dXSARGS;
     
@@ -1769,8 +1815,9 @@ XS(_wrap_gsl_function_struct_params_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_function_struct_params_set" "', argument " "1"" of type '" "struct gsl_function_struct *""'"); 
     }
     arg1 = (struct gsl_function_struct *)(argp1);
-    {
-      arg2 = (double *) ST(1);
+    res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2), 0, SWIG_POINTER_DISOWN);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_function_struct_params_set" "', argument " "2"" of type '" "void *""'"); 
     }
     if (arg1) (arg1)->params = arg2;
     
@@ -2056,6 +2103,7 @@ XS(_wrap_gsl_function_fdf_struct_params_set) {
     void *arg2 = (void *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
+    int res2 ;
     int argvi = 0;
     dXSARGS;
     
@@ -2067,8 +2115,9 @@ XS(_wrap_gsl_function_fdf_struct_params_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_function_fdf_struct_params_set" "', argument " "1"" of type '" "struct gsl_function_fdf_struct *""'"); 
     }
     arg1 = (struct gsl_function_fdf_struct *)(argp1);
-    {
-      arg2 = (double *) ST(1);
+    res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2), 0, SWIG_POINTER_DISOWN);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_function_fdf_struct_params_set" "', argument " "2"" of type '" "void *""'"); 
     }
     if (arg1) (arg1)->params = arg2;
     
@@ -2226,6 +2275,7 @@ XS(_wrap_gsl_function_vec_struct_params_set) {
     void *arg2 = (void *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
+    int res2 ;
     int argvi = 0;
     dXSARGS;
     
@@ -2237,8 +2287,9 @@ XS(_wrap_gsl_function_vec_struct_params_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_function_vec_struct_params_set" "', argument " "1"" of type '" "struct gsl_function_vec_struct *""'"); 
     }
     arg1 = (struct gsl_function_vec_struct *)(argp1);
-    {
-      arg2 = (double *) ST(1);
+    res2 = SWIG_ConvertPtr(ST(1),SWIG_as_voidptrptr(&arg2), 0, SWIG_POINTER_DISOWN);
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_function_vec_struct_params_set" "', argument " "2"" of type '" "void *""'"); 
     }
     if (arg1) (arg1)->params = arg2;
     
@@ -2333,6 +2384,7 @@ XS(_wrap_gsl_deriv_central) {
     double arg3 ;
     double *arg4 = (double *) 0 ;
     double *arg5 = (double *) 0 ;
+    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -2342,7 +2394,6 @@ XS(_wrap_gsl_deriv_central) {
     double temp5 ;
     int res5 = SWIG_TMPOBJ ;
     int argvi = 0;
-    SV * _saved[1] ;
     int result;
     dXSARGS;
     
@@ -2352,28 +2403,45 @@ XS(_wrap_gsl_deriv_central) {
       SWIG_croak("Usage: gsl_deriv_central(f,x,h);");
     }
     {
-      gsl_function F;
-      int count;
-      double x;
+      SV * function = 0;
+      SV * params = 0;
       
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_function = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>1) {
+          croak("Math::GSL : $f is an array with more than 2 elements!");
+        }
+        p_function = av_fetch(array, 0, 0);
+        function = *p_function;
+        if (av_len(array)>0) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        function = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(0));
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)) , 0 );
-      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!function || !(SvPOK(function) || (SvROK(function) && (SvTYPE(SvRV(function)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      SvSetSV( (SV*) Last_Call, newSVsv(ST(0)) ); // Store the last used callback, in case we cannot find it by address
-      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(0));
+      function = newSVsv(function);
       
-      F.params   = &ST(0);
-      F.function = &callthis;
-      arg1         = &F;
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_function1.params = params;
+      w_gsl_function1.function = function;
+      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
+      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
+      arg1         = &w_gsl_function1.C_gsl_function;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -2385,45 +2453,36 @@ XS(_wrap_gsl_deriv_central) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_deriv_central" "', argument " "3"" of type '" "double""'");
     } 
     arg3 = (double)(val3);
-    _saved[0] = ST(0);
     result = (int)gsl_deriv_central((struct gsl_function_struct const *)arg1,arg2,arg3,arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    {
-      SV ** sv;
-      
-      sv = hv_fetch(Callbacks, (char*)&_saved[0], sizeof(_saved[0]), FALSE );
-      if (sv == (SV**)NULL)
-      croak("Math::GSL(argout) : Missing callback!\n");
-      dSP;
-      
-      PUSHMARK(SP);
-      // these are the arguments passed to the callback
-      XPUSHs(sv_2mortal(newSViv((int)arg2)));
-      // shouldnt we be doing something with arg3 ?
-      PUTBACK;
-      
-      /* This actually calls the perl subroutine, in scalar context */
-      call_sv(*sv, G_SCALAR);    
-      
-      ST(argvi) = sv_newmortal();
-      sv_setnv(ST(argvi), (double) *arg4);
-      argvi++;
-      sv_setnv(ST(argvi), (double) *arg5);
-      argvi++;
-      
-      if (argvi >= items) {
-        EXTEND(SP,1);              
-      }
-      
+    if (SWIG_IsTmpObj(res4)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    if (SWIG_IsTmpObj(res5)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg5)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -2440,6 +2499,7 @@ XS(_wrap_gsl_deriv_backward) {
     double arg3 ;
     double *arg4 = (double *) 0 ;
     double *arg5 = (double *) 0 ;
+    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -2449,7 +2509,6 @@ XS(_wrap_gsl_deriv_backward) {
     double temp5 ;
     int res5 = SWIG_TMPOBJ ;
     int argvi = 0;
-    SV * _saved[1] ;
     int result;
     dXSARGS;
     
@@ -2459,28 +2518,45 @@ XS(_wrap_gsl_deriv_backward) {
       SWIG_croak("Usage: gsl_deriv_backward(f,x,h);");
     }
     {
-      gsl_function F;
-      int count;
-      double x;
+      SV * function = 0;
+      SV * params = 0;
       
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_function = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>1) {
+          croak("Math::GSL : $f is an array with more than 2 elements!");
+        }
+        p_function = av_fetch(array, 0, 0);
+        function = *p_function;
+        if (av_len(array)>0) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        function = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(0));
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)) , 0 );
-      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!function || !(SvPOK(function) || (SvROK(function) && (SvTYPE(SvRV(function)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      SvSetSV( (SV*) Last_Call, newSVsv(ST(0)) ); // Store the last used callback, in case we cannot find it by address
-      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(0));
+      function = newSVsv(function);
       
-      F.params   = &ST(0);
-      F.function = &callthis;
-      arg1         = &F;
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_function1.params = params;
+      w_gsl_function1.function = function;
+      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
+      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
+      arg1         = &w_gsl_function1.C_gsl_function;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -2492,45 +2568,36 @@ XS(_wrap_gsl_deriv_backward) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_deriv_backward" "', argument " "3"" of type '" "double""'");
     } 
     arg3 = (double)(val3);
-    _saved[0] = ST(0);
     result = (int)gsl_deriv_backward((struct gsl_function_struct const *)arg1,arg2,arg3,arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    {
-      SV ** sv;
-      
-      sv = hv_fetch(Callbacks, (char*)&_saved[0], sizeof(_saved[0]), FALSE );
-      if (sv == (SV**)NULL)
-      croak("Math::GSL(argout) : Missing callback!\n");
-      dSP;
-      
-      PUSHMARK(SP);
-      // these are the arguments passed to the callback
-      XPUSHs(sv_2mortal(newSViv((int)arg2)));
-      // shouldnt we be doing something with arg3 ?
-      PUTBACK;
-      
-      /* This actually calls the perl subroutine, in scalar context */
-      call_sv(*sv, G_SCALAR);    
-      
-      ST(argvi) = sv_newmortal();
-      sv_setnv(ST(argvi), (double) *arg4);
-      argvi++;
-      sv_setnv(ST(argvi), (double) *arg5);
-      argvi++;
-      
-      if (argvi >= items) {
-        EXTEND(SP,1);              
-      }
-      
+    if (SWIG_IsTmpObj(res4)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    if (SWIG_IsTmpObj(res5)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg5)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -2547,6 +2614,7 @@ XS(_wrap_gsl_deriv_forward) {
     double arg3 ;
     double *arg4 = (double *) 0 ;
     double *arg5 = (double *) 0 ;
+    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -2556,7 +2624,6 @@ XS(_wrap_gsl_deriv_forward) {
     double temp5 ;
     int res5 = SWIG_TMPOBJ ;
     int argvi = 0;
-    SV * _saved[1] ;
     int result;
     dXSARGS;
     
@@ -2566,28 +2633,45 @@ XS(_wrap_gsl_deriv_forward) {
       SWIG_croak("Usage: gsl_deriv_forward(f,x,h);");
     }
     {
-      gsl_function F;
-      int count;
-      double x;
+      SV * function = 0;
+      SV * params = 0;
       
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_function = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>1) {
+          croak("Math::GSL : $f is an array with more than 2 elements!");
+        }
+        p_function = av_fetch(array, 0, 0);
+        function = *p_function;
+        if (av_len(array)>0) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        function = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      //fprintf(stderr,"STORE CALLBACK hv: %d\n", (int)ST(0));
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)) , 0 );
-      //fprintf(stderr,"STORE CALLBACK sv: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!function || !(SvPOK(function) || (SvROK(function) && (SvTYPE(SvRV(function)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      SvSetSV( (SV*) Last_Call, newSVsv(ST(0)) ); // Store the last used callback, in case we cannot find it by address
-      //fprintf(stderr,"STORE CALLBACK post-sv: %d\n", (int)ST(0));
+      function = newSVsv(function);
       
-      F.params   = &ST(0);
-      F.function = &callthis;
-      arg1         = &F;
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_function1.params = params;
+      w_gsl_function1.function = function;
+      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
+      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
+      arg1         = &w_gsl_function1.C_gsl_function;
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -2599,45 +2683,36 @@ XS(_wrap_gsl_deriv_forward) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_deriv_forward" "', argument " "3"" of type '" "double""'");
     } 
     arg3 = (double)(val3);
-    _saved[0] = ST(0);
     result = (int)gsl_deriv_forward((struct gsl_function_struct const *)arg1,arg2,arg3,arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    {
-      SV ** sv;
-      
-      sv = hv_fetch(Callbacks, (char*)&_saved[0], sizeof(_saved[0]), FALSE );
-      if (sv == (SV**)NULL)
-      croak("Math::GSL(argout) : Missing callback!\n");
-      dSP;
-      
-      PUSHMARK(SP);
-      // these are the arguments passed to the callback
-      XPUSHs(sv_2mortal(newSViv((int)arg2)));
-      // shouldnt we be doing something with arg3 ?
-      PUTBACK;
-      
-      /* This actually calls the perl subroutine, in scalar context */
-      call_sv(*sv, G_SCALAR);    
-      
-      ST(argvi) = sv_newmortal();
-      sv_setnv(ST(argvi), (double) *arg4);
-      argvi++;
-      sv_setnv(ST(argvi), (double) *arg5);
-      argvi++;
-      
-      if (argvi >= items) {
-        EXTEND(SP,1);              
-      }
-      
+    if (SWIG_IsTmpObj(res4)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    if (SWIG_IsTmpObj(res5)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg5)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
     
     
     

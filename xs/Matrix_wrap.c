@@ -1523,49 +1523,94 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
 
 
     #include "gsl/gsl_nan.h"
+    #include "gsl/gsl_math.h"
+    #include "gsl/gsl_monte.h"
 
 
-    static HV * Callbacks = (HV*)NULL;  // Hash of callbacks, stored by memory address
-    SV * Last_Call        = (SV*)NULL;  // last used callback, used as fudge for systems with MULTIPLICITY
 
-    /* this function returns the value of evaluating the function pointer stored in func with argument x */
+    struct gsl_function_perl {
+        gsl_function C_gsl_function;
+        SV * function;
+        SV * params;
+    };
+    struct gsl_monte_function_perl {
+        gsl_monte_function C_gsl_monte_function;
+        SV * f;
+        SV * dim;
+        SV * params;
+    };
 
-    double callthis(double x , int func, void *params){
-        SV ** sv;
+
+    /* this function returns the value 
+        of evaluating the function pointer
+        stored in func with argument x
+    */
+    double call_gsl_function(double x , void *params){
+        struct gsl_function_perl *F=(struct gsl_function_perl*)params;
         unsigned int count;
         double y;
         dSP;
 
         //fprintf(stderr, "LOOKUP CALLBACK\n");
-        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
-        if (sv == (SV**)NULL) {
-                  fprintf(stderr, 'not found in Callbacks');
-                  if (Last_Call != (SV*)NULL) {
-                        fprintf(stderr, 'retrieving last_call');
-                        SvSetSV((SV*) sv, (SV*)Last_Call ); // Ya don't have to go home, but ya can't stay here
-                  } else {
-                        fprintf(stderr, "Math::GSL(callthis): %s (%d) not in Callbacks!\n", (char*) func, func);
-                        return GSL_NAN;
-                  }
-        }
+        ENTER;
+        SAVETMPS;
 
         PUSHMARK(SP);
         XPUSHs(sv_2mortal(newSVnv((double)x)));
+        XPUSHs(F->params);
         PUTBACK;                                /* make local stack pointer global */
 
-        count = call_sv(*sv, G_SCALAR);
+        count = call_sv(F->function, G_SCALAR);
         SPAGAIN;
 
         if (count != 1)
                 croak("Expected to call subroutine in scalar context!");
 
-        PUTBACK;                                /* make local stack pointer global */
-
         y = POPn;
+
+        PUTBACK;                                /* make local stack pointer global */
+        FREETMPS;
+        LEAVE;
+         
         return y;
     }
-    double callmonte(double x[], size_t dim, void *params ){
-        fprintf(stderr, "callmonte!!!");
+    double call_gsl_monte_function(double *x_array , size_t dim, void *params){
+        struct gsl_monte_function_perl *F=(struct gsl_monte_function_perl*)params;
+        unsigned int count;
+        unsigned int i;
+        AV* perl_array;
+        double y;
+        dSP;
+
+        //fprintf(stderr, "LOOKUP CALLBACK\n");
+        ENTER;
+        SAVETMPS;
+
+        PUSHMARK(SP);
+        perl_array=newAV();
+        sv_2mortal((SV*)perl_array);
+        XPUSHs(sv_2mortal(newRV((SV *)perl_array)));
+        for(i=0; i<dim; i++) {
+                /* no mortal : it is referenced by the array */
+                av_push(perl_array, newSVnv(x_array[i]));
+        }
+        XPUSHs(sv_2mortal(newSViv(dim)));
+        XPUSHs(F->params);
+        PUTBACK;                                /* make local stack pointer global */
+
+        count = call_sv(F->f, G_SCALAR);
+        SPAGAIN;
+
+        if (count != 1)
+                croak("Expected to call subroutine in scalar context!");
+
+        y = POPn;
+
+        PUTBACK;                                /* make local stack pointer global */
+        FREETMPS;
+        LEAVE;
+         
+        return y;
     }
 
 

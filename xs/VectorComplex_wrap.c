@@ -1503,101 +1503,95 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
 
 
     #include "gsl/gsl_nan.h"
+    #include "gsl/gsl_math.h"
+    #include "gsl/gsl_monte.h"
 
 
-    static HV * Callbacks = (HV*)NULL;  // Hash of callbacks, stored by memory address
-    SV * Last_Call        = (SV*)NULL;  // last used callback, used as fudge for systems with MULTIPLICITY
 
-    /* this function returns the value of evaluating the function pointer stored in func with argument x */
+    struct gsl_function_perl {
+        gsl_function C_gsl_function;
+        SV * function;
+        SV * params;
+    };
+    struct gsl_monte_function_perl {
+        gsl_monte_function C_gsl_monte_function;
+        SV * f;
+        SV * dim;
+        SV * params;
+    };
 
-    double callthis(double x , int func, void *params){
-        SV ** sv;
+
+    /* this function returns the value 
+        of evaluating the function pointer
+        stored in func with argument x
+    */
+    double call_gsl_function(double x , void *params){
+        struct gsl_function_perl *F=(struct gsl_function_perl*)params;
         unsigned int count;
         double y;
         dSP;
 
         //fprintf(stderr, "LOOKUP CALLBACK\n");
-        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
-        if (sv == (SV**)NULL) {
-                  fprintf(stderr, 'not found in Callbacks');
-                  if (Last_Call != (SV*)NULL) {
-                        fprintf(stderr, 'retrieving last_call');
-                        SvSetSV((SV*) sv, (SV*)Last_Call ); // Ya don't have to go home, but ya can't stay here
-                  } else {
-                        fprintf(stderr, "Math::GSL(callthis): %s (%d) not in Callbacks!\n", (char*) func, func);
-                        return GSL_NAN;
-                  }
-        }
+        ENTER;
+        SAVETMPS;
 
         PUSHMARK(SP);
         XPUSHs(sv_2mortal(newSVnv((double)x)));
+        XPUSHs(F->params);
         PUTBACK;                                /* make local stack pointer global */
 
-        count = call_sv(*sv, G_SCALAR);
+        count = call_sv(F->function, G_SCALAR);
         SPAGAIN;
 
         if (count != 1)
                 croak("Expected to call subroutine in scalar context!");
 
-        PUTBACK;                                /* make local stack pointer global */
-
         y = POPn;
+
+        PUTBACK;                                /* make local stack pointer global */
+        FREETMPS;
+        LEAVE;
+         
         return y;
     }
-    double callmonte(double x[], size_t dim, void *params ){
-        fprintf(stderr, "callmonte!!!");
+    double call_gsl_monte_function(double *x_array , size_t dim, void *params){
+        struct gsl_monte_function_perl *F=(struct gsl_monte_function_perl*)params;
+        unsigned int count;
+        unsigned int i;
+        AV* perl_array;
+        double y;
+        dSP;
+
+        //fprintf(stderr, "LOOKUP CALLBACK\n");
+        ENTER;
+        SAVETMPS;
+
+        PUSHMARK(SP);
+        perl_array=newAV();
+        sv_2mortal((SV*)perl_array);
+        XPUSHs(sv_2mortal(newRV((SV *)perl_array)));
+        for(i=0; i<dim; i++) {
+                /* no mortal : it is referenced by the array */
+                av_push(perl_array, newSVnv(x_array[i]));
+        }
+        XPUSHs(sv_2mortal(newSViv(dim)));
+        XPUSHs(F->params);
+        PUTBACK;                                /* make local stack pointer global */
+
+        count = call_sv(F->f, G_SCALAR);
+        SPAGAIN;
+
+        if (count != 1)
+                croak("Expected to call subroutine in scalar context!");
+
+        y = POPn;
+
+        PUTBACK;                                /* make local stack pointer global */
+        FREETMPS;
+        LEAVE;
+         
+        return y;
     }
-
-
-SWIGINTERN swig_type_info*
-SWIG_pchar_descriptor(void)
-{
-  static int init = 0;
-  static swig_type_info* info = 0;
-  if (!init) {
-    info = SWIG_TypeQuery("_p_char");
-    init = 1;
-  }
-  return info;
-}
-
-
-SWIGINTERN int
-SWIG_AsCharPtrAndSize(SV *obj, char** cptr, size_t* psize, int *alloc)
-{
-  if (SvPOK(obj)) {
-    STRLEN len = 0;
-    char *cstr = SvPV(obj, len); 
-    size_t size = len + 1;
-    if (cptr)  {
-      if (alloc) {
-	if (*alloc == SWIG_NEWOBJ) {
-	  *cptr = (char *)memcpy((char *)malloc((size)*sizeof(char)), cstr, sizeof(char)*(size));
-	} else {
-	  *cptr = cstr;
-	  *alloc = SWIG_OLDOBJ;
-	}
-      }
-    }
-    if (psize) *psize = size;
-    return SWIG_OK;
-  } else {
-    swig_type_info* pchar_descriptor = SWIG_pchar_descriptor();
-    if (pchar_descriptor) {
-      char* vptr = 0; 
-      if (SWIG_ConvertPtr(obj, (void**)&vptr, pchar_descriptor, 0) == SWIG_OK) {
-	if (cptr) *cptr = vptr;
-	if (psize) *psize = vptr ? (strlen(vptr) + 1) : 0;
-	if (alloc) *alloc = SWIG_OLDOBJ;
-	return SWIG_OK;
-      }
-    }
-  }
-  return SWIG_TypeError;
-}
-
-
-
 
 
     #include "gsl/gsl_nan.h"
@@ -1815,6 +1809,57 @@ SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
   return obj;
 }
 
+
+SWIGINTERN swig_type_info*
+SWIG_pchar_descriptor(void)
+{
+  static int init = 0;
+  static swig_type_info* info = 0;
+  if (!init) {
+    info = SWIG_TypeQuery("_p_char");
+    init = 1;
+  }
+  return info;
+}
+
+
+SWIGINTERN int
+SWIG_AsCharPtrAndSize(SV *obj, char** cptr, size_t* psize, int *alloc)
+{
+  if (SvPOK(obj)) {
+    STRLEN len = 0;
+    char *cstr = SvPV(obj, len); 
+    size_t size = len + 1;
+    if (cptr)  {
+      if (alloc) {
+	if (*alloc == SWIG_NEWOBJ) {
+	  *cptr = (char *)memcpy((char *)malloc((size)*sizeof(char)), cstr, sizeof(char)*(size));
+	} else {
+	  *cptr = cstr;
+	  *alloc = SWIG_OLDOBJ;
+	}
+      }
+    }
+    if (psize) *psize = size;
+    return SWIG_OK;
+  } else {
+    swig_type_info* pchar_descriptor = SWIG_pchar_descriptor();
+    if (pchar_descriptor) {
+      char* vptr = 0; 
+      if (SWIG_ConvertPtr(obj, (void**)&vptr, pchar_descriptor, 0) == SWIG_OK) {
+	if (cptr) *cptr = vptr;
+	if (psize) *psize = vptr ? (strlen(vptr) + 1) : 0;
+	if (alloc) *alloc = SWIG_OLDOBJ;
+	return SWIG_OK;
+      }
+    }
+  }
+  return SWIG_TypeError;
+}
+
+
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -1844,74 +1889,6 @@ SWIGCLASS_STATIC int swig_magic_readonly(pTHX_ SV *SWIGUNUSEDPARM(sv), MAGIC *SW
 #ifdef __cplusplus
 extern "C" {
 #endif
-XS(_wrap_fopen) {
-  {
-    char *arg1 = (char *) 0 ;
-    char *arg2 = (char *) 0 ;
-    int res1 ;
-    char *buf1 = 0 ;
-    int alloc1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    FILE *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: fopen(char *,char *);");
-    }
-    res1 = SWIG_AsCharPtrAndSize(ST(0), &buf1, NULL, &alloc1);
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "fopen" "', argument " "1"" of type '" "char *""'");
-    }
-    arg1 = (char *)(buf1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "fopen" "', argument " "2"" of type '" "char *""'");
-    }
-    arg2 = (char *)(buf2);
-    result = (FILE *)fopen(arg1,arg2);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_FILE, 0 | 0); argvi++ ;
-    if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_fclose) {
-  {
-    FILE *arg1 = (FILE *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: fclose(FILE *);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_FILE, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "fclose" "', argument " "1"" of type '" "FILE *""'"); 
-    }
-    arg1 = (FILE *)(argp1);
-    result = (int)fclose(arg1);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_gsl_complex_long_double_dat_set) {
   {
     gsl_complex_long_double *arg1 = (gsl_complex_long_double *) 0 ;
@@ -6725,8 +6702,6 @@ static swig_variable_info swig_variables[] = {
 {0,0,0,0}
 };
 static swig_command_info swig_commands[] = {
-{"Math::GSL::VectorComplexc::fopen", _wrap_fopen},
-{"Math::GSL::VectorComplexc::fclose", _wrap_fclose},
 {"Math::GSL::VectorComplexc::gsl_complex_long_double_dat_set", _wrap_gsl_complex_long_double_dat_set},
 {"Math::GSL::VectorComplexc::gsl_complex_long_double_dat_get", _wrap_gsl_complex_long_double_dat_get},
 {"Math::GSL::VectorComplexc::new_gsl_complex_long_double", _wrap_new_gsl_complex_long_double},

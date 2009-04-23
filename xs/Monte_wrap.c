@@ -1499,49 +1499,94 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
 
 
     #include "gsl/gsl_nan.h"
+    #include "gsl/gsl_math.h"
+    #include "gsl/gsl_monte.h"
 
 
-    static HV * Callbacks = (HV*)NULL;  // Hash of callbacks, stored by memory address
-    SV * Last_Call        = (SV*)NULL;  // last used callback, used as fudge for systems with MULTIPLICITY
 
-    /* this function returns the value of evaluating the function pointer stored in func with argument x */
+    struct gsl_function_perl {
+        gsl_function C_gsl_function;
+        SV * function;
+        SV * params;
+    };
+    struct gsl_monte_function_perl {
+        gsl_monte_function C_gsl_monte_function;
+        SV * f;
+        SV * dim;
+        SV * params;
+    };
 
-    double callthis(double x , int func, void *params){
-        SV ** sv;
+
+    /* this function returns the value 
+        of evaluating the function pointer
+        stored in func with argument x
+    */
+    double call_gsl_function(double x , void *params){
+        struct gsl_function_perl *F=(struct gsl_function_perl*)params;
         unsigned int count;
         double y;
         dSP;
 
         //fprintf(stderr, "LOOKUP CALLBACK\n");
-        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
-        if (sv == (SV**)NULL) {
-                  fprintf(stderr, 'not found in Callbacks');
-                  if (Last_Call != (SV*)NULL) {
-                        fprintf(stderr, 'retrieving last_call');
-                        SvSetSV((SV*) sv, (SV*)Last_Call ); // Ya don't have to go home, but ya can't stay here
-                  } else {
-                        fprintf(stderr, "Math::GSL(callthis): %s (%d) not in Callbacks!\n", (char*) func, func);
-                        return GSL_NAN;
-                  }
-        }
+        ENTER;
+        SAVETMPS;
 
         PUSHMARK(SP);
         XPUSHs(sv_2mortal(newSVnv((double)x)));
+        XPUSHs(F->params);
         PUTBACK;                                /* make local stack pointer global */
 
-        count = call_sv(*sv, G_SCALAR);
+        count = call_sv(F->function, G_SCALAR);
         SPAGAIN;
 
         if (count != 1)
                 croak("Expected to call subroutine in scalar context!");
 
-        PUTBACK;                                /* make local stack pointer global */
-
         y = POPn;
+
+        PUTBACK;                                /* make local stack pointer global */
+        FREETMPS;
+        LEAVE;
+         
         return y;
     }
-    double callmonte(double x[], size_t dim, void *params ){
-        fprintf(stderr, "callmonte!!!");
+    double call_gsl_monte_function(double *x_array , size_t dim, void *params){
+        struct gsl_monte_function_perl *F=(struct gsl_monte_function_perl*)params;
+        unsigned int count;
+        unsigned int i;
+        AV* perl_array;
+        double y;
+        dSP;
+
+        //fprintf(stderr, "LOOKUP CALLBACK\n");
+        ENTER;
+        SAVETMPS;
+
+        PUSHMARK(SP);
+        perl_array=newAV();
+        sv_2mortal((SV*)perl_array);
+        XPUSHs(sv_2mortal(newRV((SV *)perl_array)));
+        for(i=0; i<dim; i++) {
+                /* no mortal : it is referenced by the array */
+                av_push(perl_array, newSVnv(x_array[i]));
+        }
+        XPUSHs(sv_2mortal(newSViv(dim)));
+        XPUSHs(F->params);
+        PUTBACK;                                /* make local stack pointer global */
+
+        count = call_sv(F->f, G_SCALAR);
+        SPAGAIN;
+
+        if (count != 1)
+                croak("Expected to call subroutine in scalar context!");
+
+        y = POPn;
+
+        PUTBACK;                                /* make local stack pointer global */
+        FREETMPS;
+        LEAVE;
+         
+        return y;
     }
 
 
@@ -3671,6 +3716,7 @@ XS(_wrap_gsl_monte_miser_integrate) {
     gsl_monte_miser_state *arg7 = (gsl_monte_miser_state *) 0 ;
     double *arg8 = (double *) 0 ;
     double *arg9 = (double *) 0 ;
+    struct gsl_monte_function_perl w_gsl_monte_function1 ;
     size_t val4 ;
     int ecode4 = 0 ;
     size_t val5 ;
@@ -3693,26 +3739,65 @@ XS(_wrap_gsl_monte_miser_integrate) {
       SWIG_croak("Usage: gsl_monte_miser_integrate(f,xl,xh,dim,calls,r,state);");
     }
     {
-      gsl_monte_function MF;
-      int count;
-      double x;
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      SV * f = 0;
+      SV * dim = 0;
+      SV * params = 0;
+      size_t C_dim;
+      
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_f = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>2) {
+          croak("Math::GSL : $f is an array with more than 3 elements!");
+        }
+        p_f = av_fetch(array, 0, 0);
+        f = *p_f;
+        if (av_len(array)>0) {
+          SV ** p_dim = 0;
+          p_dim = av_fetch(array, 1, 0);
+          dim = *p_dim;
+        }
+        if (av_len(array)>1) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        f = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      fprintf(stderr,"STORE $f gsl_monte_function CALLBACK: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!f || !(SvPOK(f) || (SvROK(f) && (SvTYPE(SvRV(f)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
-      SvSetSV( (SV*) Last_Call,  newSVsv(ST(0)) );
+      f = newSVsv(f);
       
-      MF.params  = &ST(0);
-      MF.dim     = 1; // XXX
-      MF.f       = &callmonte;
-      arg1         = &MF;
+      if (! dim) {
+        dim=&PL_sv_undef;
+        C_dim=0;
+      } else {
+        if (!SvIOK(dim)) {
+          croak("Math::GSL : $f is not an integer for dim!");
+        }
+        C_dim=SvIV(dim);
+      }
+      dim = newSVsv(dim);
+      
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_monte_function1.f = f;
+      w_gsl_monte_function1.dim = dim;
+      w_gsl_monte_function1.params = params;
+      w_gsl_monte_function1.C_gsl_monte_function.f = &call_gsl_monte_function;
+      w_gsl_monte_function1.C_gsl_monte_function.dim = C_dim;
+      w_gsl_monte_function1.C_gsl_monte_function.params   = &w_gsl_monte_function1;
+      arg1         = &w_gsl_monte_function1.C_gsl_monte_function;
     }
     {
       AV *tempav;
@@ -3784,7 +3869,12 @@ XS(_wrap_gsl_monte_miser_integrate) {
       int new_flags = SWIG_IsNewObj(res9) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg9), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    {
+      struct gsl_monte_function_perl *p=(struct gsl_monte_function_perl *) arg1->params;
+      SvREFCNT_dec(p->f);
+      SvREFCNT_dec(p->dim);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -3795,7 +3885,12 @@ XS(_wrap_gsl_monte_miser_integrate) {
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_monte_function_perl *p=(struct gsl_monte_function_perl *) arg1->params;
+      SvREFCNT_dec(p->f);
+      SvREFCNT_dec(p->dim);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -4078,6 +4173,7 @@ XS(_wrap_gsl_monte_plain_integrate) {
     gsl_monte_plain_state *arg7 = (gsl_monte_plain_state *) 0 ;
     double *arg8 = (double *) 0 ;
     double *arg9 = (double *) 0 ;
+    struct gsl_monte_function_perl w_gsl_monte_function1 ;
     size_t val4 ;
     int ecode4 = 0 ;
     size_t val5 ;
@@ -4100,26 +4196,65 @@ XS(_wrap_gsl_monte_plain_integrate) {
       SWIG_croak("Usage: gsl_monte_plain_integrate(f,xl,xu,dim,calls,r,state);");
     }
     {
-      gsl_monte_function MF;
-      int count;
-      double x;
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      SV * f = 0;
+      SV * dim = 0;
+      SV * params = 0;
+      size_t C_dim;
+      
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_f = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>2) {
+          croak("Math::GSL : $f is an array with more than 3 elements!");
+        }
+        p_f = av_fetch(array, 0, 0);
+        f = *p_f;
+        if (av_len(array)>0) {
+          SV ** p_dim = 0;
+          p_dim = av_fetch(array, 1, 0);
+          dim = *p_dim;
+        }
+        if (av_len(array)>1) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        f = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      fprintf(stderr,"STORE $f gsl_monte_function CALLBACK: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!f || !(SvPOK(f) || (SvROK(f) && (SvTYPE(SvRV(f)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
-      SvSetSV( (SV*) Last_Call,  newSVsv(ST(0)) );
+      f = newSVsv(f);
       
-      MF.params  = &ST(0);
-      MF.dim     = 1; // XXX
-      MF.f       = &callmonte;
-      arg1         = &MF;
+      if (! dim) {
+        dim=&PL_sv_undef;
+        C_dim=0;
+      } else {
+        if (!SvIOK(dim)) {
+          croak("Math::GSL : $f is not an integer for dim!");
+        }
+        C_dim=SvIV(dim);
+      }
+      dim = newSVsv(dim);
+      
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_monte_function1.f = f;
+      w_gsl_monte_function1.dim = dim;
+      w_gsl_monte_function1.params = params;
+      w_gsl_monte_function1.C_gsl_monte_function.f = &call_gsl_monte_function;
+      w_gsl_monte_function1.C_gsl_monte_function.dim = C_dim;
+      w_gsl_monte_function1.C_gsl_monte_function.params   = &w_gsl_monte_function1;
+      arg1         = &w_gsl_monte_function1.C_gsl_monte_function;
     }
     {
       AV *tempav;
@@ -4191,7 +4326,12 @@ XS(_wrap_gsl_monte_plain_integrate) {
       int new_flags = SWIG_IsNewObj(res9) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg9), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    {
+      struct gsl_monte_function_perl *p=(struct gsl_monte_function_perl *) arg1->params;
+      SvREFCNT_dec(p->f);
+      SvREFCNT_dec(p->dim);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -4202,7 +4342,12 @@ XS(_wrap_gsl_monte_plain_integrate) {
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_monte_function_perl *p=(struct gsl_monte_function_perl *) arg1->params;
+      SvREFCNT_dec(p->f);
+      SvREFCNT_dec(p->dim);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -6305,6 +6450,7 @@ XS(_wrap_gsl_monte_vegas_integrate) {
     gsl_monte_vegas_state *arg7 = (gsl_monte_vegas_state *) 0 ;
     double *arg8 = (double *) 0 ;
     double *arg9 = (double *) 0 ;
+    struct gsl_monte_function_perl w_gsl_monte_function1 ;
     void *argp2 = 0 ;
     int res2 = 0 ;
     void *argp3 = 0 ;
@@ -6331,26 +6477,65 @@ XS(_wrap_gsl_monte_vegas_integrate) {
       SWIG_croak("Usage: gsl_monte_vegas_integrate(f,xl,xu,dim,calls,r,state);");
     }
     {
-      gsl_monte_function MF;
-      int count;
-      double x;
-      if (!SvROK(ST(0))) {
-        croak("Math::GSL : $f is not a reference value!");
+      SV * f = 0;
+      SV * dim = 0;
+      SV * params = 0;
+      size_t C_dim;
+      
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_f = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>2) {
+          croak("Math::GSL : $f is an array with more than 3 elements!");
+        }
+        p_f = av_fetch(array, 0, 0);
+        f = *p_f;
+        if (av_len(array)>0) {
+          SV ** p_dim = 0;
+          p_dim = av_fetch(array, 1, 0);
+          dim = *p_dim;
+        }
+        if (av_len(array)>1) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        f = ST(0);
       }
-      if (Callbacks == (HV*)NULL)
-      Callbacks = newHV();
-      fprintf(stderr,"STORE $f gsl_monte_function CALLBACK: %d\n", (int)ST(0));
       
-      if (Last_Call == (SV*)NULL) // initialize Last_Call the first time it is called
-      Last_Call = newSV(sizeof(ST(0)));
+      if (!f || !(SvPOK(f) || (SvROK(f) && (SvTYPE(SvRV(f)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
       
-      hv_store( Callbacks, (char*)&ST(0), sizeof(ST(0)), newSVsv(ST(0)), 0 );
-      SvSetSV( (SV*) Last_Call,  newSVsv(ST(0)) );
+      f = newSVsv(f);
       
-      MF.params  = &ST(0);
-      MF.dim     = 1; // XXX
-      MF.f       = &callmonte;
-      arg1         = &MF;
+      if (! dim) {
+        dim=&PL_sv_undef;
+        C_dim=0;
+      } else {
+        if (!SvIOK(dim)) {
+          croak("Math::GSL : $f is not an integer for dim!");
+        }
+        C_dim=SvIV(dim);
+      }
+      dim = newSVsv(dim);
+      
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_monte_function1.f = f;
+      w_gsl_monte_function1.dim = dim;
+      w_gsl_monte_function1.params = params;
+      w_gsl_monte_function1.C_gsl_monte_function.f = &call_gsl_monte_function;
+      w_gsl_monte_function1.C_gsl_monte_function.dim = C_dim;
+      w_gsl_monte_function1.C_gsl_monte_function.params   = &w_gsl_monte_function1;
+      arg1         = &w_gsl_monte_function1.C_gsl_monte_function;
     }
     res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res2)) {
@@ -6396,7 +6581,12 @@ XS(_wrap_gsl_monte_vegas_integrate) {
       int new_flags = SWIG_IsNewObj(res9) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg9), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    {
+      struct gsl_monte_function_perl *p=(struct gsl_monte_function_perl *) arg1->params;
+      SvREFCNT_dec(p->f);
+      SvREFCNT_dec(p->dim);
+      SvREFCNT_dec(p->params);
+    }
     
     
     
@@ -6407,7 +6597,12 @@ XS(_wrap_gsl_monte_vegas_integrate) {
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      struct gsl_monte_function_perl *p=(struct gsl_monte_function_perl *) arg1->params;
+      SvREFCNT_dec(p->f);
+      SvREFCNT_dec(p->dim);
+      SvREFCNT_dec(p->params);
+    }
     
     
     

@@ -1490,49 +1490,94 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
 
 
     #include "gsl/gsl_nan.h"
+    #include "gsl/gsl_math.h"
+    #include "gsl/gsl_monte.h"
 
 
-    static HV * Callbacks = (HV*)NULL;  // Hash of callbacks, stored by memory address
-    SV * Last_Call        = (SV*)NULL;  // last used callback, used as fudge for systems with MULTIPLICITY
 
-    /* this function returns the value of evaluating the function pointer stored in func with argument x */
+    struct gsl_function_perl {
+        gsl_function C_gsl_function;
+        SV * function;
+        SV * params;
+    };
+    struct gsl_monte_function_perl {
+        gsl_monte_function C_gsl_monte_function;
+        SV * f;
+        SV * dim;
+        SV * params;
+    };
 
-    double callthis(double x , int func, void *params){
-        SV ** sv;
+
+    /* this function returns the value 
+        of evaluating the function pointer
+        stored in func with argument x
+    */
+    double call_gsl_function(double x , void *params){
+        struct gsl_function_perl *F=(struct gsl_function_perl*)params;
         unsigned int count;
         double y;
         dSP;
 
         //fprintf(stderr, "LOOKUP CALLBACK\n");
-        sv = hv_fetch(Callbacks, (char*)func, sizeof(func), FALSE );
-        if (sv == (SV**)NULL) {
-                  fprintf(stderr, 'not found in Callbacks');
-                  if (Last_Call != (SV*)NULL) {
-                        fprintf(stderr, 'retrieving last_call');
-                        SvSetSV((SV*) sv, (SV*)Last_Call ); // Ya don't have to go home, but ya can't stay here
-                  } else {
-                        fprintf(stderr, "Math::GSL(callthis): %s (%d) not in Callbacks!\n", (char*) func, func);
-                        return GSL_NAN;
-                  }
-        }
+        ENTER;
+        SAVETMPS;
 
         PUSHMARK(SP);
         XPUSHs(sv_2mortal(newSVnv((double)x)));
+        XPUSHs(F->params);
         PUTBACK;                                /* make local stack pointer global */
 
-        count = call_sv(*sv, G_SCALAR);
+        count = call_sv(F->function, G_SCALAR);
         SPAGAIN;
 
         if (count != 1)
                 croak("Expected to call subroutine in scalar context!");
 
-        PUTBACK;                                /* make local stack pointer global */
-
         y = POPn;
+
+        PUTBACK;                                /* make local stack pointer global */
+        FREETMPS;
+        LEAVE;
+         
         return y;
     }
-    double callmonte(double x[], size_t dim, void *params ){
-        fprintf(stderr, "callmonte!!!");
+    double call_gsl_monte_function(double *x_array , size_t dim, void *params){
+        struct gsl_monte_function_perl *F=(struct gsl_monte_function_perl*)params;
+        unsigned int count;
+        unsigned int i;
+        AV* perl_array;
+        double y;
+        dSP;
+
+        //fprintf(stderr, "LOOKUP CALLBACK\n");
+        ENTER;
+        SAVETMPS;
+
+        PUSHMARK(SP);
+        perl_array=newAV();
+        sv_2mortal((SV*)perl_array);
+        XPUSHs(sv_2mortal(newRV((SV *)perl_array)));
+        for(i=0; i<dim; i++) {
+                /* no mortal : it is referenced by the array */
+                av_push(perl_array, newSVnv(x_array[i]));
+        }
+        XPUSHs(sv_2mortal(newSViv(dim)));
+        XPUSHs(F->params);
+        PUTBACK;                                /* make local stack pointer global */
+
+        count = call_sv(F->f, G_SCALAR);
+        SPAGAIN;
+
+        if (count != 1)
+                croak("Expected to call subroutine in scalar context!");
+
+        y = POPn;
+
+        PUTBACK;                                /* make local stack pointer global */
+        FREETMPS;
+        LEAVE;
+         
+        return y;
     }
 
 
@@ -4795,10 +4840,10 @@ XS(_wrap_cblas_sgemv) {
       
       tempav = (AV*)SvRV(ST(5));
       len = av_len(tempav);
-      arg6 = (double *) malloc((len+1)*sizeof(double));
+      arg6 = (float *) malloc((len+1)*sizeof(float));
       for (i = 0; i <= len; i++) {
         tv = av_fetch(tempav, i, 0);
-        arg6[i] = (double) SvNV(*tv);
+        arg6[i] = (float)(double) SvNV(*tv);
       }
     }
     ecode7 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(6), &val7);
@@ -4843,7 +4888,9 @@ XS(_wrap_cblas_sgemv) {
     
     
     
-    
+    {
+      if (arg6) free(arg6);
+    }
     
     if (SWIG_IsNewObj(res8)) free((char*)arg8);
     
@@ -4857,7 +4904,9 @@ XS(_wrap_cblas_sgemv) {
     
     
     
-    
+    {
+      if (arg6) free(arg6);
+    }
     
     if (SWIG_IsNewObj(res8)) free((char*)arg8);
     
@@ -4964,10 +5013,10 @@ XS(_wrap_cblas_sgbmv) {
       
       tempav = (AV*)SvRV(ST(7));
       len = av_len(tempav);
-      arg8 = (double *) malloc((len+1)*sizeof(double));
+      arg8 = (float *) malloc((len+1)*sizeof(float));
       for (i = 0; i <= len; i++) {
         tv = av_fetch(tempav, i, 0);
-        arg8[i] = (double) SvNV(*tv);
+        arg8[i] = (float)(double) SvNV(*tv);
       }
     }
     ecode9 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(8), &val9);
@@ -5014,7 +5063,9 @@ XS(_wrap_cblas_sgbmv) {
     
     
     
-    
+    {
+      if (arg8) free(arg8);
+    }
     
     if (SWIG_IsNewObj(res10)) free((char*)arg10);
     
@@ -5030,7 +5081,9 @@ XS(_wrap_cblas_sgbmv) {
     
     
     
-    
+    {
+      if (arg8) free(arg8);
+    }
     
     if (SWIG_IsNewObj(res10)) free((char*)arg10);
     
@@ -5112,10 +5165,10 @@ XS(_wrap_cblas_strmv) {
       
       tempav = (AV*)SvRV(ST(5));
       len = av_len(tempav);
-      arg6 = (double *) malloc((len+1)*sizeof(double));
+      arg6 = (float *) malloc((len+1)*sizeof(float));
       for (i = 0; i <= len; i++) {
         tv = av_fetch(tempav, i, 0);
-        arg6[i] = (double) SvNV(*tv);
+        arg6[i] = (float)(double) SvNV(*tv);
       }
     }
     ecode7 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(6), &val7);
@@ -5140,7 +5193,9 @@ XS(_wrap_cblas_strmv) {
     
     
     
-    
+    {
+      if (arg6) free(arg6);
+    }
     
     
     
@@ -5151,7 +5206,9 @@ XS(_wrap_cblas_strmv) {
     
     
     
-    
+    {
+      if (arg6) free(arg6);
+    }
     
     
     
@@ -5238,10 +5295,10 @@ XS(_wrap_cblas_stbmv) {
       
       tempav = (AV*)SvRV(ST(6));
       len = av_len(tempav);
-      arg7 = (double *) malloc((len+1)*sizeof(double));
+      arg7 = (float *) malloc((len+1)*sizeof(float));
       for (i = 0; i <= len; i++) {
         tv = av_fetch(tempav, i, 0);
-        arg7[i] = (double) SvNV(*tv);
+        arg7[i] = (float)(double) SvNV(*tv);
       }
     }
     ecode8 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(7), &val8);
@@ -5267,7 +5324,9 @@ XS(_wrap_cblas_stbmv) {
     
     
     
-    
+    {
+      if (arg7) free(arg7);
+    }
     
     
     
@@ -5279,7 +5338,9 @@ XS(_wrap_cblas_stbmv) {
     
     
     
-    
+    {
+      if (arg7) free(arg7);
+    }
     
     
     
@@ -5455,10 +5516,10 @@ XS(_wrap_cblas_strsv) {
       
       tempav = (AV*)SvRV(ST(5));
       len = av_len(tempav);
-      arg6 = (double *) malloc((len+1)*sizeof(double));
+      arg6 = (float *) malloc((len+1)*sizeof(float));
       for (i = 0; i <= len; i++) {
         tv = av_fetch(tempav, i, 0);
-        arg6[i] = (double) SvNV(*tv);
+        arg6[i] = (float)(double) SvNV(*tv);
       }
     }
     ecode7 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(6), &val7);
@@ -5483,7 +5544,9 @@ XS(_wrap_cblas_strsv) {
     
     
     
-    
+    {
+      if (arg6) free(arg6);
+    }
     
     
     
@@ -5494,7 +5557,9 @@ XS(_wrap_cblas_strsv) {
     
     
     
-    
+    {
+      if (arg6) free(arg6);
+    }
     
     
     
@@ -5581,10 +5646,10 @@ XS(_wrap_cblas_stbsv) {
       
       tempav = (AV*)SvRV(ST(6));
       len = av_len(tempav);
-      arg7 = (double *) malloc((len+1)*sizeof(double));
+      arg7 = (float *) malloc((len+1)*sizeof(float));
       for (i = 0; i <= len; i++) {
         tv = av_fetch(tempav, i, 0);
-        arg7[i] = (double) SvNV(*tv);
+        arg7[i] = (float)(double) SvNV(*tv);
       }
     }
     ecode8 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(7), &val8);
@@ -5610,7 +5675,9 @@ XS(_wrap_cblas_stbsv) {
     
     
     
-    
+    {
+      if (arg7) free(arg7);
+    }
     
     
     
@@ -5622,7 +5689,9 @@ XS(_wrap_cblas_stbsv) {
     
     
     
-    
+    {
+      if (arg7) free(arg7);
+    }
     
     
     
@@ -8529,10 +8598,10 @@ XS(_wrap_cblas_ssymv) {
       
       tempav = (AV*)SvRV(ST(4));
       len = av_len(tempav);
-      arg5 = (double *) malloc((len+1)*sizeof(double));
+      arg5 = (float *) malloc((len+1)*sizeof(float));
       for (i = 0; i <= len; i++) {
         tv = av_fetch(tempav, i, 0);
-        arg5[i] = (double) SvNV(*tv);
+        arg5[i] = (float)(double) SvNV(*tv);
       }
     }
     ecode6 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(5), &val6);
@@ -8576,7 +8645,9 @@ XS(_wrap_cblas_ssymv) {
     
     
     
-    
+    {
+      if (arg5) free(arg5);
+    }
     
     if (SWIG_IsNewObj(res7)) free((char*)arg7);
     
@@ -8589,7 +8660,9 @@ XS(_wrap_cblas_ssymv) {
     
     
     
-    
+    {
+      if (arg5) free(arg5);
+    }
     
     if (SWIG_IsNewObj(res7)) free((char*)arg7);
     
@@ -8680,10 +8753,10 @@ XS(_wrap_cblas_ssbmv) {
       
       tempav = (AV*)SvRV(ST(5));
       len = av_len(tempav);
-      arg6 = (double *) malloc((len+1)*sizeof(double));
+      arg6 = (float *) malloc((len+1)*sizeof(float));
       for (i = 0; i <= len; i++) {
         tv = av_fetch(tempav, i, 0);
-        arg6[i] = (double) SvNV(*tv);
+        arg6[i] = (float)(double) SvNV(*tv);
       }
     }
     ecode7 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(6), &val7);
@@ -8728,7 +8801,9 @@ XS(_wrap_cblas_ssbmv) {
     
     
     
-    
+    {
+      if (arg6) free(arg6);
+    }
     
     if (SWIG_IsNewObj(res8)) free((char*)arg8);
     
@@ -8742,7 +8817,9 @@ XS(_wrap_cblas_ssbmv) {
     
     
     
-    
+    {
+      if (arg6) free(arg6);
+    }
     
     if (SWIG_IsNewObj(res8)) free((char*)arg8);
     
@@ -12372,10 +12449,10 @@ XS(_wrap_cblas_sgemm) {
       
       tempav = (AV*)SvRV(ST(7));
       len = av_len(tempav);
-      arg8 = (double *) malloc((len+1)*sizeof(double));
+      arg8 = (float *) malloc((len+1)*sizeof(float));
       for (i = 0; i <= len; i++) {
         tv = av_fetch(tempav, i, 0);
-        arg8[i] = (double) SvNV(*tv);
+        arg8[i] = (float)(double) SvNV(*tv);
       }
     }
     ecode9 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(8), &val9);
@@ -12395,10 +12472,10 @@ XS(_wrap_cblas_sgemm) {
       
       tempav = (AV*)SvRV(ST(9));
       len = av_len(tempav);
-      arg10 = (double *) malloc((len+1)*sizeof(double));
+      arg10 = (float *) malloc((len+1)*sizeof(float));
       for (i = 0; i <= len; i++) {
         tv = av_fetch(tempav, i, 0);
-        arg10[i] = (double) SvNV(*tv);
+        arg10[i] = (float)(double) SvNV(*tv);
       }
     }
     ecode11 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(10), &val11);
@@ -12431,12 +12508,18 @@ XS(_wrap_cblas_sgemm) {
     
     
     
+    {
+      if (arg8) free(arg8);
+    }
+    
+    {
+      if (arg10) free(arg10);
+    }
     
     
-    
-    
-    
-    
+    {
+      if (arg13) free(arg13);
+    }
     
     XSRETURN(argvi);
   fail:
@@ -12447,12 +12530,18 @@ XS(_wrap_cblas_sgemm) {
     
     
     
+    {
+      if (arg8) free(arg8);
+    }
+    
+    {
+      if (arg10) free(arg10);
+    }
     
     
-    
-    
-    
-    
+    {
+      if (arg13) free(arg13);
+    }
     
     SWIG_croak_null();
   }
@@ -12545,10 +12634,10 @@ XS(_wrap_cblas_ssymm) {
       
       tempav = (AV*)SvRV(ST(6));
       len = av_len(tempav);
-      arg7 = (double *) malloc((len+1)*sizeof(double));
+      arg7 = (float *) malloc((len+1)*sizeof(float));
       for (i = 0; i <= len; i++) {
         tv = av_fetch(tempav, i, 0);
-        arg7[i] = (double) SvNV(*tv);
+        arg7[i] = (float)(double) SvNV(*tv);
       }
     }
     ecode8 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(7), &val8);
@@ -12568,10 +12657,10 @@ XS(_wrap_cblas_ssymm) {
       
       tempav = (AV*)SvRV(ST(8));
       len = av_len(tempav);
-      arg9 = (double *) malloc((len+1)*sizeof(double));
+      arg9 = (float *) malloc((len+1)*sizeof(float));
       for (i = 0; i <= len; i++) {
         tv = av_fetch(tempav, i, 0);
-        arg9[i] = (double) SvNV(*tv);
+        arg9[i] = (float)(double) SvNV(*tv);
       }
     }
     ecode10 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(9), &val10);
@@ -12603,12 +12692,18 @@ XS(_wrap_cblas_ssymm) {
     
     
     
+    {
+      if (arg7) free(arg7);
+    }
+    
+    {
+      if (arg9) free(arg9);
+    }
     
     
-    
-    
-    
-    
+    {
+      if (arg12) free(arg12);
+    }
     
     XSRETURN(argvi);
   fail:
@@ -12618,12 +12713,18 @@ XS(_wrap_cblas_ssymm) {
     
     
     
+    {
+      if (arg7) free(arg7);
+    }
+    
+    {
+      if (arg9) free(arg9);
+    }
     
     
-    
-    
-    
-    
+    {
+      if (arg12) free(arg12);
+    }
     
     SWIG_croak_null();
   }
@@ -12712,10 +12813,10 @@ XS(_wrap_cblas_ssyrk) {
       
       tempav = (AV*)SvRV(ST(6));
       len = av_len(tempav);
-      arg7 = (double *) malloc((len+1)*sizeof(double));
+      arg7 = (float *) malloc((len+1)*sizeof(float));
       for (i = 0; i <= len; i++) {
         tv = av_fetch(tempav, i, 0);
-        arg7[i] = (double) SvNV(*tv);
+        arg7[i] = (float)(double) SvNV(*tv);
       }
     }
     ecode8 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(7), &val8);
@@ -12747,10 +12848,14 @@ XS(_wrap_cblas_ssyrk) {
     
     
     
+    {
+      if (arg7) free(arg7);
+    }
     
     
-    
-    
+    {
+      if (arg10) free(arg10);
+    }
     
     XSRETURN(argvi);
   fail:
@@ -12760,10 +12865,14 @@ XS(_wrap_cblas_ssyrk) {
     
     
     
+    {
+      if (arg7) free(arg7);
+    }
     
     
-    
-    
+    {
+      if (arg10) free(arg10);
+    }
     
     SWIG_croak_null();
   }
@@ -12856,10 +12965,10 @@ XS(_wrap_cblas_ssyr2k) {
       
       tempav = (AV*)SvRV(ST(6));
       len = av_len(tempav);
-      arg7 = (double *) malloc((len+1)*sizeof(double));
+      arg7 = (float *) malloc((len+1)*sizeof(float));
       for (i = 0; i <= len; i++) {
         tv = av_fetch(tempav, i, 0);
-        arg7[i] = (double) SvNV(*tv);
+        arg7[i] = (float)(double) SvNV(*tv);
       }
     }
     ecode8 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(7), &val8);
@@ -12879,10 +12988,10 @@ XS(_wrap_cblas_ssyr2k) {
       
       tempav = (AV*)SvRV(ST(8));
       len = av_len(tempav);
-      arg9 = (double *) malloc((len+1)*sizeof(double));
+      arg9 = (float *) malloc((len+1)*sizeof(float));
       for (i = 0; i <= len; i++) {
         tv = av_fetch(tempav, i, 0);
-        arg9[i] = (double) SvNV(*tv);
+        arg9[i] = (float)(double) SvNV(*tv);
       }
     }
     ecode10 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(9), &val10);
@@ -12914,12 +13023,18 @@ XS(_wrap_cblas_ssyr2k) {
     
     
     
+    {
+      if (arg7) free(arg7);
+    }
+    
+    {
+      if (arg9) free(arg9);
+    }
     
     
-    
-    
-    
-    
+    {
+      if (arg12) free(arg12);
+    }
     
     XSRETURN(argvi);
   fail:
@@ -12929,12 +13044,18 @@ XS(_wrap_cblas_ssyr2k) {
     
     
     
+    {
+      if (arg7) free(arg7);
+    }
+    
+    {
+      if (arg9) free(arg9);
+    }
     
     
-    
-    
-    
-    
+    {
+      if (arg12) free(arg12);
+    }
     
     SWIG_croak_null();
   }
@@ -13035,10 +13156,10 @@ XS(_wrap_cblas_strmm) {
       
       tempav = (AV*)SvRV(ST(8));
       len = av_len(tempav);
-      arg9 = (double *) malloc((len+1)*sizeof(double));
+      arg9 = (float *) malloc((len+1)*sizeof(float));
       for (i = 0; i <= len; i++) {
         tv = av_fetch(tempav, i, 0);
-        arg9[i] = (double) SvNV(*tv);
+        arg9[i] = (float)(double) SvNV(*tv);
       }
     }
     ecode10 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(9), &val10);
@@ -13066,7 +13187,9 @@ XS(_wrap_cblas_strmm) {
     
     
     
-    
+    {
+      if (arg9) free(arg9);
+    }
     
     
     
@@ -13080,7 +13203,9 @@ XS(_wrap_cblas_strmm) {
     
     
     
-    
+    {
+      if (arg9) free(arg9);
+    }
     
     
     
@@ -13183,10 +13308,10 @@ XS(_wrap_cblas_strsm) {
       
       tempav = (AV*)SvRV(ST(8));
       len = av_len(tempav);
-      arg9 = (double *) malloc((len+1)*sizeof(double));
+      arg9 = (float *) malloc((len+1)*sizeof(float));
       for (i = 0; i <= len; i++) {
         tv = av_fetch(tempav, i, 0);
-        arg9[i] = (double) SvNV(*tv);
+        arg9[i] = (float)(double) SvNV(*tv);
       }
     }
     ecode10 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(9), &val10);
@@ -13214,7 +13339,9 @@ XS(_wrap_cblas_strsm) {
     
     
     
-    
+    {
+      if (arg9) free(arg9);
+    }
     
     
     
@@ -13228,7 +13355,9 @@ XS(_wrap_cblas_strsm) {
     
     
     
-    
+    {
+      if (arg9) free(arg9);
+    }
     
     
     
