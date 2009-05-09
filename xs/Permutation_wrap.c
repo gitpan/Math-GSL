@@ -1876,7 +1876,9 @@ XS(_wrap_gsl_permute) {
     {
       if (arg1) free(arg1);
     }
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     
     XSRETURN(argvi);
@@ -1884,7 +1886,9 @@ XS(_wrap_gsl_permute) {
     {
       if (arg1) free(arg1);
     }
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     
     SWIG_croak_null();
@@ -1960,7 +1964,9 @@ XS(_wrap_gsl_permute_inverse) {
     {
       if (arg1) free(arg1);
     }
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     
     XSRETURN(argvi);
@@ -1968,7 +1974,9 @@ XS(_wrap_gsl_permute_inverse) {
     {
       if (arg1) free(arg1);
     }
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     
     SWIG_croak_null();

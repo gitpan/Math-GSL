@@ -2509,14 +2509,18 @@ XS(_wrap_gsl_sum_levin_u_accel) {
       int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -2608,7 +2612,9 @@ XS(_wrap_gsl_sum_levin_u_minmax) {
       int new_flags = SWIG_IsNewObj(res7) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg7), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -2617,7 +2623,9 @@ XS(_wrap_gsl_sum_levin_u_minmax) {
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -3320,14 +3328,18 @@ XS(_wrap_gsl_sum_levin_utrunc_accel) {
       int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -3419,7 +3431,9 @@ XS(_wrap_gsl_sum_levin_utrunc_minmax) {
       int new_flags = SWIG_IsNewObj(res7) ? (SWIG_POINTER_OWN | 0) : 0;
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg7), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -3428,7 +3442,9 @@ XS(_wrap_gsl_sum_levin_utrunc_minmax) {
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     

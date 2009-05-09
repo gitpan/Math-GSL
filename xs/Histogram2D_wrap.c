@@ -3476,16 +3476,24 @@ XS(_wrap_gsl_histogram2d_set_ranges) {
     result = (int)gsl_histogram2d_set_ranges(arg1,(double const (*))arg2,arg3,(double const (*))arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
+    {
+      if (arg2) free(arg2);
+    }
     
-    
-    
+    {
+      if (arg4) free(arg4);
+    }
     
     XSRETURN(argvi);
   fail:
     
+    {
+      if (arg2) free(arg2);
+    }
     
-    
-    
+    {
+      if (arg4) free(arg4);
+    }
     
     SWIG_croak_null();
   }

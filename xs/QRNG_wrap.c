@@ -2904,11 +2904,15 @@ XS(_wrap_gsl_qrng_get) {
       argvi++;
     }
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     XSRETURN(argvi);
   fail:
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     SWIG_croak_null();
   }
 }

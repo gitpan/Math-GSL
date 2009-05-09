@@ -1877,12 +1877,16 @@ XS(_wrap_gsl_poly_eval) {
     arg3 = (double)(val3);
     result = (double)gsl_poly_eval((double const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -1963,11 +1967,15 @@ XS(_wrap_gsl_poly_complex_eval) {
           argvi++;
           */
     }
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     SWIG_croak_null();
   }
@@ -2150,14 +2158,22 @@ XS(_wrap_gsl_poly_dd_init) {
     result = (int)gsl_poly_dd_init(arg1,(double const (*))arg2,(double const (*))arg3,arg4);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     XSRETURN(argvi);
   fail:
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     SWIG_croak_null();
   }
@@ -2229,14 +2245,22 @@ XS(_wrap_gsl_poly_dd_eval) {
     arg4 = (double)(val4);
     result = (double)gsl_poly_dd_eval((double const (*))arg1,(double const (*))arg2,arg3,arg4);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
-    
+    {
+      if (arg1) free(arg1);
+    }
+    {
+      if (arg2) free(arg2);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
-    
+    {
+      if (arg1) free(arg1);
+    }
+    {
+      if (arg2) free(arg2);
+    }
     
     
     SWIG_croak_null();
@@ -2327,16 +2351,24 @@ XS(_wrap_gsl_poly_dd_taylor) {
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
+    {
+      if (arg4) free(arg4);
+    }
     
     
     XSRETURN(argvi);
   fail:
     
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
+    {
+      if (arg4) free(arg4);
+    }
     
     
     SWIG_croak_null();

@@ -1821,7 +1821,9 @@ XS(_wrap_gsl_wavelet2d_transform) {
     result = (int)gsl_wavelet2d_transform((gsl_wavelet const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     
     
@@ -1829,7 +1831,9 @@ XS(_wrap_gsl_wavelet2d_transform) {
     XSRETURN(argvi);
   fail:
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     
     
@@ -1910,7 +1914,9 @@ XS(_wrap_gsl_wavelet2d_transform_forward) {
     result = (int)gsl_wavelet2d_transform_forward((gsl_wavelet const *)arg1,arg2,arg3,arg4,arg5,arg6);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     
     
@@ -1918,7 +1924,9 @@ XS(_wrap_gsl_wavelet2d_transform_forward) {
     XSRETURN(argvi);
   fail:
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     
     
@@ -1999,7 +2007,9 @@ XS(_wrap_gsl_wavelet2d_transform_inverse) {
     result = (int)gsl_wavelet2d_transform_inverse((gsl_wavelet const *)arg1,arg2,arg3,arg4,arg5,arg6);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     
     
@@ -2007,7 +2017,9 @@ XS(_wrap_gsl_wavelet2d_transform_inverse) {
     XSRETURN(argvi);
   fail:
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     
     
@@ -2102,7 +2114,9 @@ XS(_wrap_gsl_wavelet2d_nstransform) {
     result = (int)gsl_wavelet2d_nstransform((gsl_wavelet const *)arg1,arg2,arg3,arg4,arg5,arg6,arg7);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     
     
@@ -2110,7 +2124,9 @@ XS(_wrap_gsl_wavelet2d_nstransform) {
     XSRETURN(argvi);
   fail:
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     
     
@@ -2191,7 +2207,9 @@ XS(_wrap_gsl_wavelet2d_nstransform_forward) {
     result = (int)gsl_wavelet2d_nstransform_forward((gsl_wavelet const *)arg1,arg2,arg3,arg4,arg5,arg6);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     
     
@@ -2199,7 +2217,9 @@ XS(_wrap_gsl_wavelet2d_nstransform_forward) {
     XSRETURN(argvi);
   fail:
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     
     
@@ -2280,7 +2300,9 @@ XS(_wrap_gsl_wavelet2d_nstransform_inverse) {
     result = (int)gsl_wavelet2d_nstransform_inverse((gsl_wavelet const *)arg1,arg2,arg3,arg4,arg5,arg6);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     
     
@@ -2288,7 +2310,9 @@ XS(_wrap_gsl_wavelet2d_nstransform_inverse) {
     XSRETURN(argvi);
   fail:
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     
     

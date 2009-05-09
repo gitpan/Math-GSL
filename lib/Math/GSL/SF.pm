@@ -614,6 +614,10 @@ sub ACQUIRE {
 
 package Math::GSL::SF;
 
+*GSL_MAJOR_VERSION = *Math::GSL::SFc::GSL_MAJOR_VERSION;
+*GSL_MINOR_VERSION = *Math::GSL::SFc::GSL_MINOR_VERSION;
+*GSL_POSZERO = *Math::GSL::SFc::GSL_POSZERO;
+*GSL_NEGZERO = *Math::GSL::SFc::GSL_NEGZERO;
 *GSL_VERSION = *Math::GSL::SFc::GSL_VERSION;
 *gsl_version = *Math::GSL::SFc::gsl_version;
 *GSL_PREC_DOUBLE = *Math::GSL::SFc::GSL_PREC_DOUBLE;
@@ -1183,7 +1187,7 @@ push @EXPORT_misc, qw/
                @EXPORT_coulumb, @EXPORT_coupling, @EXPORT_dawson, @EXPORT_debye,
                @EXPORT_dilog, @EXPORT_misc, @EXPORT_elliptic, @EXPORT_error, @EXPORT_legendre,
                @EXPORT_gamma, @EXPORT_transport, @EXPORT_trig, @EXPORT_zeta, @EXPORT_eta,
-               @EXPORT_vars
+               @EXPORT_vars, @EXPORT_mathieu
              );
 
 %EXPORT_TAGS = ( 

@@ -1987,10 +1987,28 @@ XS(_wrap_gsl_ntuple_ntuple_data_set) {
     }
     arg1 = (gsl_ntuple *)(argp1);
     {
-      fprintf(stderr,"symname=gsl_ntuple_ntuple_data_set\n");
-      if (ST(1)) 
-      arg2 = (double *) ST(1);
-      // should have a croak in an else
+      AV *tempav;
+      I32 len;
+      int i;
+      SV  **tv;
+      
+      //fprintf(stderr,"symname=gsl_ntuple_ntuple_data_set \n");
+      
+      if (!SvROK(ST(1)))
+      croak("Math::GSL::NTuple : ntuple_data is not a reference!");
+      
+      if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
+      croak("Math::GSL::NTuple : ntuple_data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(1));
+      len = av_len(tempav);
+      if( len > 0 ){
+        arg2 = (int **) malloc((len+1)*sizeof(int *));
+        for (i = 0; i <= len; i++) {
+          tv = av_fetch(tempav, i, 0);
+          memset((int*)(arg2+i), SvIV(*tv) , sizeof(int *));
+        }
+      }
     }
     _saved[0] = ST(1);
     if (arg1) (arg1)->ntuple_data = arg2;
@@ -1999,11 +2017,15 @@ XS(_wrap_gsl_ntuple_ntuple_data_set) {
       //Perl_sv_dump(arg2);
     }
     
-    
+    {
+      //    if (arg2) free(arg2);
+    }
     XSRETURN(argvi);
   fail:
     
-    
+    {
+      //    if (arg2) free(arg2);
+    }
     SWIG_croak_null();
   }
 }
@@ -2515,10 +2537,28 @@ XS(_wrap_gsl_ntuple_open) {
     }
     arg1 = (char *)(buf1);
     {
-      fprintf(stderr,"symname=gsl_ntuple_open\n");
-      if (ST(1)) 
-      arg2 = (double *) ST(1);
-      // should have a croak in an else
+      AV *tempav;
+      I32 len;
+      int i;
+      SV  **tv;
+      
+      //fprintf(stderr,"symname=gsl_ntuple_open \n");
+      
+      if (!SvROK(ST(1)))
+      croak("Math::GSL::NTuple : ntuple_data is not a reference!");
+      
+      if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
+      croak("Math::GSL::NTuple : ntuple_data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(1));
+      len = av_len(tempav);
+      if( len > 0 ){
+        arg2 = (int **) malloc((len+1)*sizeof(int *));
+        for (i = 0; i <= len; i++) {
+          tv = av_fetch(tempav, i, 0);
+          memset((int*)(arg2+i), SvIV(*tv) , sizeof(int *));
+        }
+      }
     }
     ecode3 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
@@ -2532,12 +2572,16 @@ XS(_wrap_gsl_ntuple_open) {
       //Perl_sv_dump(arg2);
     }
     if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
-    
+    {
+      //    if (arg2) free(arg2);
+    }
     
     XSRETURN(argvi);
   fail:
     if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
-    
+    {
+      //    if (arg2) free(arg2);
+    }
     
     SWIG_croak_null();
   }
@@ -2568,10 +2612,28 @@ XS(_wrap_gsl_ntuple_create) {
     }
     arg1 = (char *)(buf1);
     {
-      fprintf(stderr,"symname=gsl_ntuple_create\n");
-      if (ST(1)) 
-      arg2 = (double *) ST(1);
-      // should have a croak in an else
+      AV *tempav;
+      I32 len;
+      int i;
+      SV  **tv;
+      
+      //fprintf(stderr,"symname=gsl_ntuple_create \n");
+      
+      if (!SvROK(ST(1)))
+      croak("Math::GSL::NTuple : ntuple_data is not a reference!");
+      
+      if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
+      croak("Math::GSL::NTuple : ntuple_data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(1));
+      len = av_len(tempav);
+      if( len > 0 ){
+        arg2 = (int **) malloc((len+1)*sizeof(int *));
+        for (i = 0; i <= len; i++) {
+          tv = av_fetch(tempav, i, 0);
+          memset((int*)(arg2+i), SvIV(*tv) , sizeof(int *));
+        }
+      }
     }
     ecode3 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
@@ -2585,12 +2647,16 @@ XS(_wrap_gsl_ntuple_create) {
       //Perl_sv_dump(arg2);
     }
     if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
-    
+    {
+      //    if (arg2) free(arg2);
+    }
     
     XSRETURN(argvi);
   fail:
     if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
-    
+    {
+      //    if (arg2) free(arg2);
+    }
     
     SWIG_croak_null();
   }
@@ -4051,12 +4117,16 @@ XS(_wrap_gsl_histogram_set_ranges) {
     result = (int)gsl_histogram_set_ranges(arg1,(double const (*))arg2,arg3);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     XSRETURN(argvi);
   fail:
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     SWIG_croak_null();
   }

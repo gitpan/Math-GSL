@@ -1,7 +1,7 @@
 %include "system.i"
 %include "gsl/gsl_nan.h"
-#ifdef GSL_MINOR_VERSION &&  GSL_MINOR_VERSION >= 12
-    %include "gsl_inline.h"
+#if defined GSL_MINOR_VERSION && (GSL_MINOR_VERSION >= 12)
+    %include "gsl/gsl_inline.h"
 #endif
 
 typedef int size_t;
@@ -30,12 +30,11 @@ typedef int size_t;
         $1[i] = (double) SvNV(*tv);
     }
 }
-/*  This caused gsl_vector_view  functions to fail, can we 
- *  turn this off for those functions?
+
 %typemap(freearg) double const [] {
         if ($1) free($1);
 }
-*/
+
 %typemap(in) float const [] {
     AV *tempav;
     I32 len;
@@ -82,7 +81,7 @@ typedef int size_t;
         if ($1) free($1);
 }
 
-%apply double const [] { 
+%apply double const [] {
     double *data, double *dest, double *f_in, double *f_out,
     double data[], const double * src, double x[], double a[], double b[],
     const double * x, const double * y, const double * w , const double x_array[],

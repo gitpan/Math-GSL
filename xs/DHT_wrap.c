@@ -2605,13 +2605,21 @@ XS(_wrap_gsl_dht_apply) {
     result = (int)gsl_dht_apply((struct gsl_dht_struct const *)arg1,arg2,arg3);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     XSRETURN(argvi);
   fail:
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     SWIG_croak_null();
   }
 }

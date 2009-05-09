@@ -3502,7 +3502,9 @@ XS(_wrap_gsl_odeiv_step_apply) {
     
     
     
-    
+    {
+      if (arg6) free(arg6);
+    }
     
     
     XSRETURN(argvi);
@@ -3512,7 +3514,9 @@ XS(_wrap_gsl_odeiv_step_apply) {
     
     
     
-    
+    {
+      if (arg6) free(arg6);
+    }
     
     
     SWIG_croak_null();
@@ -4282,17 +4286,29 @@ XS(_wrap_gsl_odeiv_control_hadjust) {
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
     
-    
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
+    {
+      if (arg4) free(arg4);
+    }
+    {
+      if (arg5) free(arg5);
+    }
     
     XSRETURN(argvi);
   fail:
     
     
-    
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
+    {
+      if (arg4) free(arg4);
+    }
+    {
+      if (arg5) free(arg5);
+    }
     
     SWIG_croak_null();
   }
@@ -4535,7 +4551,9 @@ XS(_wrap_gsl_odeiv_control_scaled_new) {
     
     
     
-    
+    {
+      if (arg5) free(arg5);
+    }
     
     XSRETURN(argvi);
   fail:
@@ -4543,7 +4561,9 @@ XS(_wrap_gsl_odeiv_control_scaled_new) {
     
     
     
-    
+    {
+      if (arg5) free(arg5);
+    }
     
     SWIG_croak_null();
   }

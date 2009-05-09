@@ -2198,14 +2198,22 @@ XS(_wrap_gsl_spline_init) {
     result = (int)gsl_spline_init(arg1,(double const (*))arg2,(double const (*))arg3,arg4);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     XSRETURN(argvi);
   fail:
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     SWIG_croak_null();
   }

@@ -3863,12 +3863,16 @@ XS(_wrap_gsl_fft_complex_radix2_forward) {
     arg3 = (size_t)(val3);
     result = (int)gsl_fft_complex_radix2_forward(arg1,arg2,arg3);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -3922,12 +3926,16 @@ XS(_wrap_gsl_fft_complex_radix2_backward) {
     arg3 = (size_t)(val3);
     result = (int)gsl_fft_complex_radix2_backward(arg1,arg2,arg3);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -3981,12 +3989,16 @@ XS(_wrap_gsl_fft_complex_radix2_inverse) {
     arg3 = (size_t)(val3);
     result = (int)gsl_fft_complex_radix2_inverse(arg1,arg2,arg3);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -4048,13 +4060,17 @@ XS(_wrap_gsl_fft_complex_radix2_transform) {
     arg4 = (gsl_fft_direction)(val4);
     result = (int)gsl_fft_complex_radix2_transform(arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -4109,12 +4125,16 @@ XS(_wrap_gsl_fft_complex_radix2_dif_forward) {
     arg3 = (size_t)(val3);
     result = (int)gsl_fft_complex_radix2_dif_forward(arg1,arg2,arg3);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -4168,12 +4188,16 @@ XS(_wrap_gsl_fft_complex_radix2_dif_backward) {
     arg3 = (size_t)(val3);
     result = (int)gsl_fft_complex_radix2_dif_backward(arg1,arg2,arg3);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -4227,12 +4251,16 @@ XS(_wrap_gsl_fft_complex_radix2_dif_inverse) {
     arg3 = (size_t)(val3);
     result = (int)gsl_fft_complex_radix2_dif_inverse(arg1,arg2,arg3);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -4294,13 +4322,17 @@ XS(_wrap_gsl_fft_complex_radix2_dif_transform) {
     arg4 = (gsl_fft_direction)(val4);
     result = (int)gsl_fft_complex_radix2_dif_transform(arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -5078,14 +5110,18 @@ XS(_wrap_gsl_fft_complex_forward) {
     arg5 = (gsl_fft_complex_workspace *)(argp5);
     result = (int)gsl_fft_complex_forward(arg1,arg2,arg3,(gsl_fft_complex_wavetable const *)arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -5157,14 +5193,18 @@ XS(_wrap_gsl_fft_complex_backward) {
     arg5 = (gsl_fft_complex_workspace *)(argp5);
     result = (int)gsl_fft_complex_backward(arg1,arg2,arg3,(gsl_fft_complex_wavetable const *)arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -5236,14 +5276,18 @@ XS(_wrap_gsl_fft_complex_inverse) {
     arg5 = (gsl_fft_complex_workspace *)(argp5);
     result = (int)gsl_fft_complex_inverse(arg1,arg2,arg3,(gsl_fft_complex_wavetable const *)arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -5323,7 +5367,9 @@ XS(_wrap_gsl_fft_complex_transform) {
     arg6 = (gsl_fft_direction)(val6);
     result = (int)gsl_fft_complex_transform(arg1,arg2,arg3,(gsl_fft_complex_wavetable const *)arg4,arg5,arg6);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -5331,7 +5377,9 @@ XS(_wrap_gsl_fft_complex_transform) {
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -5388,12 +5436,16 @@ XS(_wrap_gsl_fft_halfcomplex_radix2_backward) {
     arg3 = (size_t)(val3);
     result = (int)gsl_fft_halfcomplex_radix2_backward(arg1,arg2,arg3);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -5447,12 +5499,16 @@ XS(_wrap_gsl_fft_halfcomplex_radix2_inverse) {
     arg3 = (size_t)(val3);
     result = (int)gsl_fft_halfcomplex_radix2_inverse(arg1,arg2,arg3);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -5506,12 +5562,16 @@ XS(_wrap_gsl_fft_halfcomplex_radix2_transform) {
     arg3 = (size_t)(val3);
     result = (int)gsl_fft_halfcomplex_radix2_transform(arg1,arg2,arg3);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -6020,14 +6080,18 @@ XS(_wrap_gsl_fft_halfcomplex_backward) {
     arg5 = (gsl_fft_real_workspace *)(argp5);
     result = (int)gsl_fft_halfcomplex_backward(arg1,arg2,arg3,(gsl_fft_halfcomplex_wavetable const *)arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -6099,14 +6163,18 @@ XS(_wrap_gsl_fft_halfcomplex_inverse) {
     arg5 = (gsl_fft_real_workspace *)(argp5);
     result = (int)gsl_fft_halfcomplex_inverse(arg1,arg2,arg3,(gsl_fft_halfcomplex_wavetable const *)arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -6178,14 +6246,18 @@ XS(_wrap_gsl_fft_halfcomplex_transform) {
     arg5 = (gsl_fft_real_workspace *)(argp5);
     result = (int)gsl_fft_halfcomplex_transform(arg1,arg2,arg3,(gsl_fft_halfcomplex_wavetable const *)arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -6249,13 +6321,17 @@ XS(_wrap_gsl_fft_halfcomplex_unpack) {
     arg4 = (size_t)(val4);
     result = (int)gsl_fft_halfcomplex_unpack((double const (*))arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -6318,13 +6394,17 @@ XS(_wrap_gsl_fft_halfcomplex_radix2_unpack) {
     arg4 = (size_t)(val4);
     result = (int)gsl_fft_halfcomplex_radix2_unpack((double const (*))arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -6379,12 +6459,16 @@ XS(_wrap_gsl_fft_real_radix2_transform) {
     arg3 = (size_t)(val3);
     result = (int)gsl_fft_real_radix2_transform(arg1,arg2,arg3);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -7123,14 +7207,18 @@ XS(_wrap_gsl_fft_real_transform) {
     arg5 = (gsl_fft_real_workspace *)(argp5);
     result = (int)gsl_fft_real_transform(arg1,arg2,arg3,(gsl_fft_real_wavetable const *)arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -7194,13 +7282,17 @@ XS(_wrap_gsl_fft_real_unpack) {
     arg4 = (size_t)(val4);
     result = (int)gsl_fft_real_unpack((double const (*))arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     

@@ -1869,12 +1869,16 @@ XS(_wrap_gsl_sort) {
       //Perl_sv_dump(ST(argvi));
       argvi++;
     }
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -1962,7 +1966,9 @@ XS(_wrap_gsl_sort_index) {
     {
       if (arg1) free(arg1);
     }
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     
     XSRETURN(argvi);
@@ -1970,7 +1976,9 @@ XS(_wrap_gsl_sort_index) {
     {
       if (arg1) free(arg1);
     }
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     
     SWIG_croak_null();
@@ -2064,16 +2072,24 @@ XS(_wrap_gsl_sort_smallest) {
       ST(argvi) = sv_2mortal( newRV_noinc( (SV*) tempav) );
       argvi++;
     }
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     SWIG_croak_null();
@@ -2171,7 +2187,9 @@ XS(_wrap_gsl_sort_smallest_index) {
       if (arg1) free(arg1);
     }
     
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     XSRETURN(argvi);
@@ -2180,7 +2198,9 @@ XS(_wrap_gsl_sort_smallest_index) {
       if (arg1) free(arg1);
     }
     
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     SWIG_croak_null();
@@ -2274,16 +2294,24 @@ XS(_wrap_gsl_sort_largest) {
       ST(argvi) = sv_2mortal( newRV_noinc( (SV*) tempav) );
       argvi++;
     }
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     SWIG_croak_null();
@@ -2381,7 +2409,9 @@ XS(_wrap_gsl_sort_largest_index) {
       if (arg1) free(arg1);
     }
     
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     XSRETURN(argvi);
@@ -2390,7 +2420,9 @@ XS(_wrap_gsl_sort_largest_index) {
       if (arg1) free(arg1);
     }
     
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     SWIG_croak_null();
@@ -2944,12 +2976,16 @@ XS(_wrap_gsl_sort_vector_smallest) {
       ST(argvi) = sv_2mortal( newRV_noinc( (SV*) tempav) );
       argvi++;
     }
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -3017,12 +3053,16 @@ XS(_wrap_gsl_sort_vector_largest) {
       ST(argvi) = sv_2mortal( newRV_noinc( (SV*) tempav) );
       argvi++;
     }
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();

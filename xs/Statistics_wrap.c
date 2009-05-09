@@ -1899,12 +1899,16 @@ XS(_wrap_gsl_stats_mean) {
     arg3 = (size_t)(val3);
     result = (double)gsl_stats_mean((double const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -1958,12 +1962,16 @@ XS(_wrap_gsl_stats_variance) {
     arg3 = (size_t)(val3);
     result = (double)gsl_stats_variance((double const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -2017,12 +2025,16 @@ XS(_wrap_gsl_stats_sd) {
     arg3 = (size_t)(val3);
     result = (double)gsl_stats_sd((double const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -2084,13 +2096,17 @@ XS(_wrap_gsl_stats_variance_with_fixed_mean) {
     arg4 = (double)(val4);
     result = (double)gsl_stats_variance_with_fixed_mean((double const (*))arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -2153,13 +2169,17 @@ XS(_wrap_gsl_stats_sd_with_fixed_mean) {
     arg4 = (double)(val4);
     result = (double)gsl_stats_sd_with_fixed_mean((double const (*))arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -2214,12 +2234,16 @@ XS(_wrap_gsl_stats_tss) {
     arg3 = (size_t)(val3);
     result = (double)gsl_stats_tss((double const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -2281,13 +2305,17 @@ XS(_wrap_gsl_stats_tss_m) {
     arg4 = (double)(val4);
     result = (double)gsl_stats_tss_m((double const (*))arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -2342,12 +2370,16 @@ XS(_wrap_gsl_stats_absdev) {
     arg3 = (size_t)(val3);
     result = (double)gsl_stats_absdev((double const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -2401,12 +2433,16 @@ XS(_wrap_gsl_stats_skew) {
     arg3 = (size_t)(val3);
     result = (double)gsl_stats_skew((double const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -2460,12 +2496,16 @@ XS(_wrap_gsl_stats_kurtosis) {
     arg3 = (size_t)(val3);
     result = (double)gsl_stats_kurtosis((double const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -2519,12 +2559,16 @@ XS(_wrap_gsl_stats_lag1_autocorrelation) {
     arg3 = (size_t)(val3);
     result = (double)gsl_stats_lag1_autocorrelation((double const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -2605,16 +2649,24 @@ XS(_wrap_gsl_stats_covariance) {
     arg5 = (size_t)(val5);
     result = (double)gsl_stats_covariance((double const (*))arg1,arg2,(double const (*))arg3,arg4,arg5);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     SWIG_croak_null();
@@ -2695,16 +2747,24 @@ XS(_wrap_gsl_stats_correlation) {
     arg5 = (size_t)(val5);
     result = (double)gsl_stats_correlation((double const (*))arg1,arg2,(double const (*))arg3,arg4,arg5);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     SWIG_croak_null();
@@ -2766,13 +2826,17 @@ XS(_wrap_gsl_stats_variance_m) {
     arg4 = (double)(val4);
     result = (double)gsl_stats_variance_m((double const (*))arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -2835,13 +2899,17 @@ XS(_wrap_gsl_stats_sd_m) {
     arg4 = (double)(val4);
     result = (double)gsl_stats_sd_m((double const (*))arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -2904,13 +2972,17 @@ XS(_wrap_gsl_stats_absdev_m) {
     arg4 = (double)(val4);
     result = (double)gsl_stats_absdev_m((double const (*))arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -2981,14 +3053,18 @@ XS(_wrap_gsl_stats_skew_m_sd) {
     arg5 = (double)(val5);
     result = (double)gsl_stats_skew_m_sd((double const (*))arg1,arg2,arg3,arg4,arg5);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -3060,14 +3136,18 @@ XS(_wrap_gsl_stats_kurtosis_m_sd) {
     arg5 = (double)(val5);
     result = (double)gsl_stats_kurtosis_m_sd((double const (*))arg1,arg2,arg3,arg4,arg5);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -3131,13 +3211,17 @@ XS(_wrap_gsl_stats_lag1_autocorrelation_m) {
     arg4 = (double)(val4);
     result = (double)gsl_stats_lag1_autocorrelation_m((double const (*))arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -3235,18 +3319,26 @@ XS(_wrap_gsl_stats_covariance_m) {
     arg7 = (double)(val7);
     result = (double)gsl_stats_covariance_m((double const (*))arg1,arg2,(double const (*))arg3,arg4,arg5,arg6,arg7);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
@@ -3329,16 +3421,24 @@ XS(_wrap_gsl_stats_wmean) {
     arg5 = (size_t)(val5);
     result = (double)gsl_stats_wmean((double const (*))arg1,arg2,(double const (*))arg3,arg4,arg5);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     SWIG_croak_null();
@@ -3419,16 +3519,24 @@ XS(_wrap_gsl_stats_wvariance) {
     arg5 = (size_t)(val5);
     result = (double)gsl_stats_wvariance((double const (*))arg1,arg2,(double const (*))arg3,arg4,arg5);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     SWIG_croak_null();
@@ -3509,16 +3617,24 @@ XS(_wrap_gsl_stats_wsd) {
     arg5 = (size_t)(val5);
     result = (double)gsl_stats_wsd((double const (*))arg1,arg2,(double const (*))arg3,arg4,arg5);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     SWIG_croak_null();
@@ -3607,17 +3723,25 @@ XS(_wrap_gsl_stats_wvariance_with_fixed_mean) {
     arg6 = (double)(val6);
     result = (double)gsl_stats_wvariance_with_fixed_mean((double const (*))arg1,arg2,(double const (*))arg3,arg4,arg5,arg6);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
@@ -3707,17 +3831,25 @@ XS(_wrap_gsl_stats_wsd_with_fixed_mean) {
     arg6 = (double)(val6);
     result = (double)gsl_stats_wsd_with_fixed_mean((double const (*))arg1,arg2,(double const (*))arg3,arg4,arg5,arg6);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
@@ -3799,16 +3931,24 @@ XS(_wrap_gsl_stats_wtss) {
     arg5 = (size_t)(val5);
     result = (double)gsl_stats_wtss((double const (*))arg1,arg2,(double const (*))arg3,arg4,arg5);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     SWIG_croak_null();
@@ -3897,17 +4037,25 @@ XS(_wrap_gsl_stats_wtss_m) {
     arg6 = (double)(val6);
     result = (double)gsl_stats_wtss_m((double const (*))arg1,arg2,(double const (*))arg3,arg4,arg5,arg6);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
@@ -3989,16 +4137,24 @@ XS(_wrap_gsl_stats_wabsdev) {
     arg5 = (size_t)(val5);
     result = (double)gsl_stats_wabsdev((double const (*))arg1,arg2,(double const (*))arg3,arg4,arg5);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     SWIG_croak_null();
@@ -4079,16 +4235,24 @@ XS(_wrap_gsl_stats_wskew) {
     arg5 = (size_t)(val5);
     result = (double)gsl_stats_wskew((double const (*))arg1,arg2,(double const (*))arg3,arg4,arg5);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     SWIG_croak_null();
@@ -4169,16 +4333,24 @@ XS(_wrap_gsl_stats_wkurtosis) {
     arg5 = (size_t)(val5);
     result = (double)gsl_stats_wkurtosis((double const (*))arg1,arg2,(double const (*))arg3,arg4,arg5);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     SWIG_croak_null();
@@ -4267,17 +4439,25 @@ XS(_wrap_gsl_stats_wvariance_m) {
     arg6 = (double)(val6);
     result = (double)gsl_stats_wvariance_m((double const (*))arg1,arg2,(double const (*))arg3,arg4,arg5,arg6);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
@@ -4367,17 +4547,25 @@ XS(_wrap_gsl_stats_wsd_m) {
     arg6 = (double)(val6);
     result = (double)gsl_stats_wsd_m((double const (*))arg1,arg2,(double const (*))arg3,arg4,arg5,arg6);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
@@ -4467,17 +4655,25 @@ XS(_wrap_gsl_stats_wabsdev_m) {
     arg6 = (double)(val6);
     result = (double)gsl_stats_wabsdev_m((double const (*))arg1,arg2,(double const (*))arg3,arg4,arg5,arg6);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
@@ -4575,18 +4771,26 @@ XS(_wrap_gsl_stats_wskew_m_sd) {
     arg7 = (double)(val7);
     result = (double)gsl_stats_wskew_m_sd((double const (*))arg1,arg2,(double const (*))arg3,arg4,arg5,arg6,arg7);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
@@ -4685,18 +4889,26 @@ XS(_wrap_gsl_stats_wkurtosis_m_sd) {
     arg7 = (double)(val7);
     result = (double)gsl_stats_wkurtosis_m_sd((double const (*))arg1,arg2,(double const (*))arg3,arg4,arg5,arg6,arg7);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
@@ -4787,18 +4999,26 @@ XS(_wrap_gsl_stats_pvariance) {
     arg6 = (size_t)(val6);
     result = (double)gsl_stats_pvariance((double const (*))arg1,arg2,arg3,(double const (*))arg4,arg5,arg6);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
     
-    
-    
+    {
+      if (arg4) free(arg4);
+    }
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
     
-    
-    
+    {
+      if (arg4) free(arg4);
+    }
     
     
     SWIG_croak_null();
@@ -4887,18 +5107,26 @@ XS(_wrap_gsl_stats_ttest) {
     arg6 = (size_t)(val6);
     result = (double)gsl_stats_ttest((double const (*))arg1,arg2,arg3,(double const (*))arg4,arg5,arg6);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
     
-    
-    
+    {
+      if (arg4) free(arg4);
+    }
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
     
-    
-    
+    {
+      if (arg4) free(arg4);
+    }
     
     
     SWIG_croak_null();
@@ -4952,12 +5180,16 @@ XS(_wrap_gsl_stats_max) {
     arg3 = (size_t)(val3);
     result = (double)gsl_stats_max((double const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -5011,12 +5243,16 @@ XS(_wrap_gsl_stats_min) {
     arg3 = (size_t)(val3);
     result = (double)gsl_stats_min((double const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -5091,14 +5327,18 @@ XS(_wrap_gsl_stats_minmax) {
     }
     
     
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     XSRETURN(argvi);
   fail:
     
     
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     SWIG_croak_null();
@@ -5152,12 +5392,16 @@ XS(_wrap_gsl_stats_max_index) {
     arg3 = (size_t)(val3);
     result = (size_t)gsl_stats_max_index((double const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -5211,12 +5455,16 @@ XS(_wrap_gsl_stats_min_index) {
     arg3 = (size_t)(val3);
     result = (size_t)gsl_stats_min_index((double const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -5291,14 +5539,18 @@ XS(_wrap_gsl_stats_minmax_index) {
     }
     
     
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     XSRETURN(argvi);
   fail:
     
     
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     SWIG_croak_null();
@@ -5352,12 +5604,16 @@ XS(_wrap_gsl_stats_median_from_sorted_data) {
     arg3 = (size_t)(val3);
     result = (double)gsl_stats_median_from_sorted_data((double const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -5419,13 +5675,17 @@ XS(_wrap_gsl_stats_quantile_from_sorted_data) {
     arg4 = (double)(val4);
     result = (double)gsl_stats_quantile_from_sorted_data((double const (*))arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     

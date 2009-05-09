@@ -5109,9 +5109,15 @@ XS(_wrap_gsl_integration_qk) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg11), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
     
-    
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
+    {
+      if (arg4) free(arg4);
+    }
     
     
     {
@@ -5128,9 +5134,15 @@ XS(_wrap_gsl_integration_qk) {
     XSRETURN(argvi);
   fail:
     
-    
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
+    {
+      if (arg4) free(arg4);
+    }
     
     
     {

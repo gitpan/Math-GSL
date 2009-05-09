@@ -3312,13 +3312,17 @@ XS(_wrap_gsl_interp_accel_find) {
     result = (size_t)gsl_interp_accel_find(arg1,(double const (*))arg2,arg3,arg4);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     
     XSRETURN(argvi);
   fail:
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     
     SWIG_croak_null();
@@ -3485,14 +3489,22 @@ XS(_wrap_gsl_interp_init) {
     result = (int)gsl_interp_init(arg1,(double const (*))arg2,(double const (*))arg3,arg4);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     XSRETURN(argvi);
   fail:
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     SWIG_croak_null();
   }
@@ -3639,16 +3651,24 @@ XS(_wrap_gsl_interp_eval_e) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg6), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
@@ -3731,15 +3751,23 @@ XS(_wrap_gsl_interp_eval) {
     result = (double)gsl_interp_eval((gsl_interp const *)arg1,(double const (*))arg2,(double const (*))arg3,arg4,arg5);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     
     XSRETURN(argvi);
   fail:
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     
     SWIG_croak_null();
@@ -3831,16 +3859,24 @@ XS(_wrap_gsl_interp_eval_deriv_e) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg6), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
@@ -3923,15 +3959,23 @@ XS(_wrap_gsl_interp_eval_deriv) {
     result = (double)gsl_interp_eval_deriv((gsl_interp const *)arg1,(double const (*))arg2,(double const (*))arg3,arg4,arg5);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     
     XSRETURN(argvi);
   fail:
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     
     SWIG_croak_null();
@@ -4023,16 +4067,24 @@ XS(_wrap_gsl_interp_eval_deriv2_e) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg6), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
@@ -4115,15 +4167,23 @@ XS(_wrap_gsl_interp_eval_deriv2) {
     result = (double)gsl_interp_eval_deriv2((gsl_interp const *)arg1,(double const (*))arg2,(double const (*))arg3,arg4,arg5);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     
     XSRETURN(argvi);
   fail:
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     
     SWIG_croak_null();
@@ -4223,8 +4283,12 @@ XS(_wrap_gsl_interp_eval_integ_e) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg7), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
@@ -4232,8 +4296,12 @@ XS(_wrap_gsl_interp_eval_integ_e) {
     XSRETURN(argvi);
   fail:
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
@@ -4325,16 +4393,24 @@ XS(_wrap_gsl_interp_eval_integ) {
     result = (double)gsl_interp_eval_integ((gsl_interp const *)arg1,(double const (*))arg2,(double const (*))arg3,arg4,arg5,arg6);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
@@ -4424,13 +4500,17 @@ XS(_wrap_gsl_interp_bsearch) {
     arg4 = (size_t)(val4);
     result = (size_t)gsl_interp_bsearch((double const (*))arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     

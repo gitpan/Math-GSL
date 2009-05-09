@@ -2511,10 +2511,14 @@ XS(_wrap_gsl_ieee_printf_double) {
     }
     gsl_ieee_printf_double((double const *)arg1);
     
-    
+    {
+      if (arg1) free(arg1);
+    }
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     SWIG_croak_null();
   }
 }
@@ -2595,11 +2599,15 @@ XS(_wrap_gsl_ieee_fprintf_double) {
     gsl_ieee_fprintf_double(arg1,(double const *)arg2);
     
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     XSRETURN(argvi);
   fail:
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     SWIG_croak_null();
   }
 }
@@ -2679,11 +2687,15 @@ XS(_wrap_gsl_ieee_double_to_rep) {
     arg2 = (gsl_ieee_double_rep *)(argp2);
     gsl_ieee_double_to_rep((double const *)arg1,arg2);
     
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     SWIG_croak_null();
   }

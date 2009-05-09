@@ -2409,11 +2409,15 @@ XS(_wrap_gsl_vector_data_set) {
     if (arg1) (arg1)->data = arg2;
     
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     XSRETURN(argvi);
   fail:
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     SWIG_croak_null();
   }
 }
@@ -3079,11 +3083,15 @@ XS(_wrap_gsl_vector_view_array) {
     arg2 = (size_t)(val2);
     result = gsl_vector_view_array(arg1,arg2);
     ST(argvi) = SWIG_NewPointerObj((_gsl_vector_view *)memcpy((_gsl_vector_view *)malloc(sizeof(_gsl_vector_view)),&result,sizeof(_gsl_vector_view)), SWIGTYPE_p__gsl_vector_view, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     SWIG_croak_null();
   }
@@ -3136,12 +3144,16 @@ XS(_wrap_gsl_vector_view_array_with_stride) {
     arg3 = (size_t)(val3);
     result = gsl_vector_view_array_with_stride(arg1,arg2,arg3);
     ST(argvi) = SWIG_NewPointerObj((_gsl_vector_view *)memcpy((_gsl_vector_view *)malloc(sizeof(_gsl_vector_view)),&result,sizeof(_gsl_vector_view)), SWIGTYPE_p__gsl_vector_view, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -3187,11 +3199,15 @@ XS(_wrap_gsl_vector_const_view_array) {
     arg2 = (size_t)(val2);
     result = gsl_vector_const_view_array((double const *)arg1,arg2);
     ST(argvi) = SWIG_NewPointerObj((_gsl_vector_const_view *)memcpy((_gsl_vector_const_view *)malloc(sizeof(_gsl_vector_const_view)),&result,sizeof(_gsl_vector_const_view)), SWIGTYPE_p__gsl_vector_const_view, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     SWIG_croak_null();
   }
@@ -3244,12 +3260,16 @@ XS(_wrap_gsl_vector_const_view_array_with_stride) {
     arg3 = (size_t)(val3);
     result = gsl_vector_const_view_array_with_stride((double const *)arg1,arg2,arg3);
     ST(argvi) = SWIG_NewPointerObj((_gsl_vector_const_view *)memcpy((_gsl_vector_const_view *)malloc(sizeof(_gsl_vector_const_view)),&result,sizeof(_gsl_vector_const_view)), SWIGTYPE_p__gsl_vector_const_view, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -4834,11 +4854,15 @@ XS(_wrap_gsl_matrix_complex_data_set) {
     if (arg1) (arg1)->data = arg2;
     
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     XSRETURN(argvi);
   fail:
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     SWIG_croak_null();
   }
 }
@@ -5992,12 +6016,16 @@ XS(_wrap_gsl_matrix_complex_view_array) {
     arg3 = (size_t)(val3);
     result = gsl_matrix_complex_view_array(arg1,arg2,arg3);
     ST(argvi) = SWIG_NewPointerObj((_gsl_matrix_complex_view *)memcpy((_gsl_matrix_complex_view *)malloc(sizeof(_gsl_matrix_complex_view)),&result,sizeof(_gsl_matrix_complex_view)), SWIGTYPE_p__gsl_matrix_complex_view, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -6059,13 +6087,17 @@ XS(_wrap_gsl_matrix_complex_view_array_with_tda) {
     arg4 = (size_t)(val4);
     result = gsl_matrix_complex_view_array_with_tda(arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_NewPointerObj((_gsl_matrix_complex_view *)memcpy((_gsl_matrix_complex_view *)malloc(sizeof(_gsl_matrix_complex_view)),&result,sizeof(_gsl_matrix_complex_view)), SWIGTYPE_p__gsl_matrix_complex_view, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -6590,12 +6622,16 @@ XS(_wrap_gsl_matrix_complex_const_view_array) {
     arg3 = (size_t)(val3);
     result = gsl_matrix_complex_const_view_array((double const *)arg1,arg2,arg3);
     ST(argvi) = SWIG_NewPointerObj((_gsl_matrix_complex_const_view *)memcpy((_gsl_matrix_complex_const_view *)malloc(sizeof(_gsl_matrix_complex_const_view)),&result,sizeof(_gsl_matrix_complex_const_view)), SWIGTYPE_p__gsl_matrix_complex_const_view, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -6657,13 +6693,17 @@ XS(_wrap_gsl_matrix_complex_const_view_array_with_tda) {
     arg4 = (size_t)(val4);
     result = gsl_matrix_complex_const_view_array_with_tda((double const *)arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_NewPointerObj((_gsl_matrix_complex_const_view *)memcpy((_gsl_matrix_complex_const_view *)malloc(sizeof(_gsl_matrix_complex_const_view)),&result,sizeof(_gsl_matrix_complex_const_view)), SWIGTYPE_p__gsl_matrix_complex_const_view, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     

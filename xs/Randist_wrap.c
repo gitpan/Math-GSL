@@ -2781,13 +2781,17 @@ XS(_wrap_gsl_ran_dirichlet) {
     
     
     
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     XSRETURN(argvi);
   fail:
     
     
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     SWIG_croak_null();
   }
@@ -2852,13 +2856,21 @@ XS(_wrap_gsl_ran_dirichlet_pdf) {
     result = (double)gsl_ran_dirichlet_pdf(arg1,(double const (*))arg2,(double const (*))arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     XSRETURN(argvi);
   fail:
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     SWIG_croak_null();
   }
 }
@@ -2922,13 +2934,21 @@ XS(_wrap_gsl_ran_dirichlet_lnpdf) {
     result = (double)gsl_ran_dirichlet_lnpdf(arg1,(double const (*))arg2,(double const (*))arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     XSRETURN(argvi);
   fail:
     
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     SWIG_croak_null();
   }
 }
@@ -4680,14 +4700,18 @@ XS(_wrap_gsl_ran_multinomial) {
     
     
     
-    
+    {
+      if (arg4) free(arg4);
+    }
     
     XSRETURN(argvi);
   fail:
     
     
     
-    
+    {
+      if (arg4) free(arg4);
+    }
     
     SWIG_croak_null();
   }
@@ -4741,12 +4765,16 @@ XS(_wrap_gsl_ran_multinomial_pdf) {
     result = (double)gsl_ran_multinomial_pdf(arg1,(double const (*))arg2,(unsigned int const (*))arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     XSRETURN(argvi);
   fail:
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     SWIG_croak_null();
   }
@@ -4800,12 +4828,16 @@ XS(_wrap_gsl_ran_multinomial_lnpdf) {
     result = (double)gsl_ran_multinomial_lnpdf(arg1,(double const (*))arg2,(unsigned int const (*))arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     XSRETURN(argvi);
   fail:
     
-    
+    {
+      if (arg2) free(arg2);
+    }
     
     SWIG_croak_null();
   }

@@ -3875,8 +3875,12 @@ XS(_wrap_gsl_monte_miser_integrate) {
       SvREFCNT_dec(p->dim);
       SvREFCNT_dec(p->params);
     }
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
@@ -3891,8 +3895,12 @@ XS(_wrap_gsl_monte_miser_integrate) {
       SvREFCNT_dec(p->dim);
       SvREFCNT_dec(p->params);
     }
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
@@ -4332,8 +4340,12 @@ XS(_wrap_gsl_monte_plain_integrate) {
       SvREFCNT_dec(p->dim);
       SvREFCNT_dec(p->params);
     }
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
@@ -4348,8 +4360,12 @@ XS(_wrap_gsl_monte_plain_integrate) {
       SvREFCNT_dec(p->dim);
       SvREFCNT_dec(p->params);
     }
-    
-    
+    {
+      if (arg2) free(arg2);
+    }
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
