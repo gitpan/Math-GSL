@@ -1956,7 +1956,7 @@ XS(_wrap_gsl_sort_index) {
       int i=0;
       AV* tempav = newAV();
       while( i < arg4 ) {
-        av_push(tempav, newSVnv((size_t) arg1[i]));
+        av_push(tempav, newSVnv((double) arg1[i]));
         i++;
       }
       
@@ -2176,7 +2176,7 @@ XS(_wrap_gsl_sort_smallest_index) {
       int i=0;
       AV* tempav = newAV();
       while( i < arg2 ) {
-        av_push(tempav, newSVnv((size_t) arg1[i]));
+        av_push(tempav, newSVnv((double) arg1[i]));
         i++;
       }
       
@@ -2398,7 +2398,7 @@ XS(_wrap_gsl_sort_largest_index) {
       int i=0;
       AV* tempav = newAV();
       while( i < arg2 ) {
-        av_push(tempav, newSVnv((size_t) arg1[i]));
+        av_push(tempav, newSVnv((double) arg1[i]));
         i++;
       }
       

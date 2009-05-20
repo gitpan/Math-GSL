@@ -2888,10 +2888,6 @@ XS(_wrap_gsl_qrng_get) {
     result = (int)gsl_qrng_get((gsl_qrng const *)arg1,arg2);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     {
-      AV *tempav;
-      I32 len;
-      int i;
-      SV **tv;
       if (argvi >= items) {
         EXTEND(sp,1);              
       }
