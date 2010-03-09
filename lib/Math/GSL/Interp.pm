@@ -110,61 +110,6 @@ sub ACQUIRE {
 }
 
 
-############# Class : Math::GSL::Interp::gsl_interp_type ##############
-
-package Math::GSL::Interp::gsl_interp_type;
-use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( Math::GSL::Interp );
-%OWNER = ();
-%ITERATORS = ();
-*swig_name_get = *Math::GSL::Interpc::gsl_interp_type_name_get;
-*swig_name_set = *Math::GSL::Interpc::gsl_interp_type_name_set;
-*swig_min_size_get = *Math::GSL::Interpc::gsl_interp_type_min_size_get;
-*swig_min_size_set = *Math::GSL::Interpc::gsl_interp_type_min_size_set;
-*swig_alloc_get = *Math::GSL::Interpc::gsl_interp_type_alloc_get;
-*swig_alloc_set = *Math::GSL::Interpc::gsl_interp_type_alloc_set;
-*swig_init_get = *Math::GSL::Interpc::gsl_interp_type_init_get;
-*swig_init_set = *Math::GSL::Interpc::gsl_interp_type_init_set;
-*swig_eval_get = *Math::GSL::Interpc::gsl_interp_type_eval_get;
-*swig_eval_set = *Math::GSL::Interpc::gsl_interp_type_eval_set;
-*swig_eval_deriv_get = *Math::GSL::Interpc::gsl_interp_type_eval_deriv_get;
-*swig_eval_deriv_set = *Math::GSL::Interpc::gsl_interp_type_eval_deriv_set;
-*swig_eval_deriv2_get = *Math::GSL::Interpc::gsl_interp_type_eval_deriv2_get;
-*swig_eval_deriv2_set = *Math::GSL::Interpc::gsl_interp_type_eval_deriv2_set;
-*swig_eval_integ_get = *Math::GSL::Interpc::gsl_interp_type_eval_integ_get;
-*swig_eval_integ_set = *Math::GSL::Interpc::gsl_interp_type_eval_integ_set;
-*swig_free_get = *Math::GSL::Interpc::gsl_interp_type_free_get;
-*swig_free_set = *Math::GSL::Interpc::gsl_interp_type_free_set;
-sub new {
-    my $pkg = shift;
-    my $self = Math::GSL::Interpc::new_gsl_interp_type(@_);
-    bless $self, $pkg if defined($self);
-}
-
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        Math::GSL::Interpc::delete_gsl_interp_type($self);
-        delete $OWNER{$self};
-    }
-}
-
-sub DISOWN {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    delete $OWNER{$ptr};
-}
-
-sub ACQUIRE {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    $OWNER{$ptr} = 1;
-}
-
-
 ############# Class : Math::GSL::Interp::gsl_interp ##############
 
 package Math::GSL::Interp::gsl_interp;
@@ -220,36 +165,12 @@ package Math::GSL::Interp;
 *GSL_MINOR_VERSION = *Math::GSL::Interpc::GSL_MINOR_VERSION;
 *GSL_POSZERO = *Math::GSL::Interpc::GSL_POSZERO;
 *GSL_NEGZERO = *Math::GSL::Interpc::GSL_NEGZERO;
-
-my %__gsl_interp_linear_hash;
-tie %__gsl_interp_linear_hash,"Math::GSL::Interp::gsl_interp_type", $Math::GSL::Interpc::gsl_interp_linear;
-$gsl_interp_linear= \%__gsl_interp_linear_hash;
-bless $gsl_interp_linear, Math::GSL::Interp::gsl_interp_type;
-
-my %__gsl_interp_polynomial_hash;
-tie %__gsl_interp_polynomial_hash,"Math::GSL::Interp::gsl_interp_type", $Math::GSL::Interpc::gsl_interp_polynomial;
-$gsl_interp_polynomial= \%__gsl_interp_polynomial_hash;
-bless $gsl_interp_polynomial, Math::GSL::Interp::gsl_interp_type;
-
-my %__gsl_interp_cspline_hash;
-tie %__gsl_interp_cspline_hash,"Math::GSL::Interp::gsl_interp_type", $Math::GSL::Interpc::gsl_interp_cspline;
-$gsl_interp_cspline= \%__gsl_interp_cspline_hash;
-bless $gsl_interp_cspline, Math::GSL::Interp::gsl_interp_type;
-
-my %__gsl_interp_cspline_periodic_hash;
-tie %__gsl_interp_cspline_periodic_hash,"Math::GSL::Interp::gsl_interp_type", $Math::GSL::Interpc::gsl_interp_cspline_periodic;
-$gsl_interp_cspline_periodic= \%__gsl_interp_cspline_periodic_hash;
-bless $gsl_interp_cspline_periodic, Math::GSL::Interp::gsl_interp_type;
-
-my %__gsl_interp_akima_hash;
-tie %__gsl_interp_akima_hash,"Math::GSL::Interp::gsl_interp_type", $Math::GSL::Interpc::gsl_interp_akima;
-$gsl_interp_akima= \%__gsl_interp_akima_hash;
-bless $gsl_interp_akima, Math::GSL::Interp::gsl_interp_type;
-
-my %__gsl_interp_akima_periodic_hash;
-tie %__gsl_interp_akima_periodic_hash,"Math::GSL::Interp::gsl_interp_type", $Math::GSL::Interpc::gsl_interp_akima_periodic;
-$gsl_interp_akima_periodic= \%__gsl_interp_akima_periodic_hash;
-bless $gsl_interp_akima_periodic, Math::GSL::Interp::gsl_interp_type;
+*gsl_interp_linear = *Math::GSL::Interpc::gsl_interp_linear;
+*gsl_interp_polynomial = *Math::GSL::Interpc::gsl_interp_polynomial;
+*gsl_interp_cspline = *Math::GSL::Interpc::gsl_interp_cspline;
+*gsl_interp_cspline_periodic = *Math::GSL::Interpc::gsl_interp_cspline_periodic;
+*gsl_interp_akima = *Math::GSL::Interpc::gsl_interp_akima;
+*gsl_interp_akima_periodic = *Math::GSL::Interpc::gsl_interp_akima_periodic;
 
 @EXPORT_OK = qw/
                gsl_interp_accel_alloc 

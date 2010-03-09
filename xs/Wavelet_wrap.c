@@ -1437,14 +1437,13 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 
 #define SWIGTYPE_p_char swig_types[0]
 #define SWIGTYPE_p_double swig_types[1]
-#define SWIGTYPE_p_f_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_int_p_int_int__int swig_types[2]
+#define SWIGTYPE_p_f_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_size_t_p_size_t_size_t__int swig_types[2]
 #define SWIGTYPE_p_gsl_wavelet swig_types[3]
 #define SWIGTYPE_p_gsl_wavelet_direction swig_types[4]
 #define SWIGTYPE_p_gsl_wavelet_type swig_types[5]
 #define SWIGTYPE_p_gsl_wavelet_workspace swig_types[6]
-#define SWIGTYPE_p_int swig_types[7]
-static swig_type_info *swig_types[9];
-static swig_module_info swig_module = {swig_types, 8, 0, 0, 0, 0};
+static swig_type_info *swig_types[8];
+static swig_module_info swig_module = {swig_types, 7, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1498,7 +1497,15 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
     #include "gsl/gsl_monte.h"
 
 
+    struct perl_array {
+        I32 len;
+        AV *array;
+    };
 
+
+    /* structure to hold required information while the gsl function call
+       for each callback
+     */
     struct gsl_function_perl {
         gsl_function C_gsl_function;
         SV * function;
@@ -1512,9 +1519,8 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
     };
 
 
-    /* this function returns the value 
-        of evaluating the function pointer
-        stored in func with argument x
+    /* These functions (C callbacks) calls the perl callbacks.
+       Info for perl callback can be found using the 'void*params' parameter
     */
     double call_gsl_function(double x , void *params){
         struct gsl_function_perl *F=(struct gsl_function_perl*)params;
@@ -2108,7 +2114,7 @@ XS(_wrap_gsl_wavelet_type_init_set) {
     }
     arg1 = (gsl_wavelet_type *)(argp1);
     {
-      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_int_p_int_int__int);
+      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_size_t_p_size_t_size_t__int);
       if (!SWIG_IsOK(res)) {
         SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_wavelet_type_init_set" "', argument " "2"" of type '" "int (*)(double const **,double const **,double const **,double const **,size_t *,size_t *,size_t)""'"); 
       }
@@ -2144,7 +2150,7 @@ XS(_wrap_gsl_wavelet_type_init_get) {
     }
     arg1 = (gsl_wavelet_type *)(argp1);
     result = (int (*)(double const **,double const **,double const **,double const **,size_t *,size_t *,size_t)) ((arg1)->init);
-    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_int_p_int_int__int); argvi++ ;
+    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_size_t_p_size_t_size_t__int); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -2578,7 +2584,7 @@ XS(_wrap_gsl_wavelet_nc_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_wavelet_nc_get" "', argument " "1"" of type '" "gsl_wavelet *""'"); 
     }
     arg1 = (gsl_wavelet *)(argp1);
-    result = (size_t) ((arg1)->nc);
+    result =  ((arg1)->nc);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -2643,7 +2649,7 @@ XS(_wrap_gsl_wavelet_offset_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_wavelet_offset_get" "', argument " "1"" of type '" "gsl_wavelet *""'"); 
     }
     arg1 = (gsl_wavelet *)(argp1);
-    result = (size_t) ((arg1)->offset);
+    result =  ((arg1)->offset);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -2818,7 +2824,7 @@ XS(_wrap_gsl_wavelet_workspace_n_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_wavelet_workspace_n_get" "', argument " "1"" of type '" "gsl_wavelet_workspace *""'"); 
     }
     arg1 = (gsl_wavelet_workspace *)(argp1);
-    result = (size_t) ((arg1)->n);
+    result =  ((arg1)->n);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -3286,42 +3292,38 @@ XS(_wrap_gsl_wavelet_transform_inverse) {
 
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_f_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_int_p_int_int__int = {"_p_f_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_int_p_int_int__int", "int (*)(double const **,double const **,double const **,double const **,int *,int *,int)|int (*)(double const **,double const **,double const **,double const **,size_t *,size_t *,size_t)", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_f_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_size_t_p_size_t_size_t__int = {"_p_f_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_size_t_p_size_t_size_t__int", "int (*)(double const **,double const **,double const **,double const **,size_t *,size_t *,size_t)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_gsl_wavelet = {"_p_gsl_wavelet", "gsl_wavelet *", 0, 0, (void*)"Math::GSL::Wavelet::gsl_wavelet", 0};
 static swig_type_info _swigt__p_gsl_wavelet_direction = {"_p_gsl_wavelet_direction", "enum gsl_wavelet_direction *|gsl_wavelet_direction *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_gsl_wavelet_type = {"_p_gsl_wavelet_type", "gsl_wavelet_type *", 0, 0, (void*)"Math::GSL::Wavelet::gsl_wavelet_type", 0};
 static swig_type_info _swigt__p_gsl_wavelet_workspace = {"_p_gsl_wavelet_workspace", "gsl_wavelet_workspace *", 0, 0, (void*)"Math::GSL::Wavelet::gsl_wavelet_workspace", 0};
-static swig_type_info _swigt__p_int = {"_p_int", "int *|size_t *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_char,
   &_swigt__p_double,
-  &_swigt__p_f_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_int_p_int_int__int,
+  &_swigt__p_f_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_size_t_p_size_t_size_t__int,
   &_swigt__p_gsl_wavelet,
   &_swigt__p_gsl_wavelet_direction,
   &_swigt__p_gsl_wavelet_type,
   &_swigt__p_gsl_wavelet_workspace,
-  &_swigt__p_int,
 };
 
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_f_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_int_p_int_int__int[] = {  {&_swigt__p_f_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_int_p_int_int__int, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_f_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_size_t_p_size_t_size_t__int[] = {  {&_swigt__p_f_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_size_t_p_size_t_size_t__int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_wavelet[] = {  {&_swigt__p_gsl_wavelet, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_wavelet_direction[] = {  {&_swigt__p_gsl_wavelet_direction, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_wavelet_type[] = {  {&_swigt__p_gsl_wavelet_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_wavelet_workspace[] = {  {&_swigt__p_gsl_wavelet_workspace, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_char,
   _swigc__p_double,
-  _swigc__p_f_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_int_p_int_int__int,
+  _swigc__p_f_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_p_q_const__double_p_size_t_p_size_t_size_t__int,
   _swigc__p_gsl_wavelet,
   _swigc__p_gsl_wavelet_direction,
   _swigc__p_gsl_wavelet_type,
   _swigc__p_gsl_wavelet_workspace,
-  _swigc__p_int,
 };
 
 

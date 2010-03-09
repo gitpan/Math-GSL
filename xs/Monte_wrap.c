@@ -1438,7 +1438,7 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_FILE swig_types[0]
 #define SWIGTYPE_p_char swig_types[1]
 #define SWIGTYPE_p_double swig_types[2]
-#define SWIGTYPE_p_f_p_double_int_p_void__double swig_types[3]
+#define SWIGTYPE_p_f_p_double_size_t_p_void__double swig_types[3]
 #define SWIGTYPE_p_f_p_q_const__char_p_q_const__char_int_int__void swig_types[4]
 #define SWIGTYPE_p_f_p_q_const__char_p_q_const__char_int_p_q_const__char__void swig_types[5]
 #define SWIGTYPE_p_gsl_monte_function_struct swig_types[6]
@@ -1447,9 +1447,10 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_gsl_monte_vegas_state swig_types[9]
 #define SWIGTYPE_p_gsl_rng swig_types[10]
 #define SWIGTYPE_p_int swig_types[11]
-#define SWIGTYPE_p_void swig_types[12]
-static swig_type_info *swig_types[14];
-static swig_module_info swig_module = {swig_types, 13, 0, 0, 0, 0};
+#define SWIGTYPE_p_size_t swig_types[12]
+#define SWIGTYPE_p_void swig_types[13]
+static swig_type_info *swig_types[15];
+static swig_module_info swig_module = {swig_types, 14, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1503,7 +1504,15 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
     #include "gsl/gsl_monte.h"
 
 
+    struct perl_array {
+        I32 len;
+        AV *array;
+    };
 
+
+    /* structure to hold required information while the gsl function call
+       for each callback
+     */
     struct gsl_function_perl {
         gsl_function C_gsl_function;
         SV * function;
@@ -1517,9 +1526,8 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
     };
 
 
-    /* this function returns the value 
-        of evaluating the function pointer
-        stored in func with argument x
+    /* These functions (C callbacks) calls the perl callbacks.
+       Info for perl callback can be found using the 'void*params' parameter
     */
     double call_gsl_function(double x , void *params){
         struct gsl_function_perl *F=(struct gsl_function_perl*)params;
@@ -1946,7 +1954,7 @@ XS(_wrap_gsl_monte_function_struct_f_set) {
     }
     arg1 = (struct gsl_monte_function_struct *)(argp1);
     {
-      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_double_int_p_void__double);
+      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_double_size_t_p_void__double);
       if (!SWIG_IsOK(res)) {
         SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_monte_function_struct_f_set" "', argument " "2"" of type '" "double (*)(double *,size_t,void *)""'"); 
       }
@@ -1982,7 +1990,7 @@ XS(_wrap_gsl_monte_function_struct_f_get) {
     }
     arg1 = (struct gsl_monte_function_struct *)(argp1);
     result = (double (*)(double *,size_t,void *)) ((arg1)->f);
-    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_double_int_p_void__double); argvi++ ;
+    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_double_size_t_p_void__double); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -2046,7 +2054,7 @@ XS(_wrap_gsl_monte_function_struct_dim_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_monte_function_struct_dim_get" "', argument " "1"" of type '" "struct gsl_monte_function_struct *""'"); 
     }
     arg1 = (struct gsl_monte_function_struct *)(argp1);
-    result = (size_t) ((arg1)->dim);
+    result =  ((arg1)->dim);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -2219,7 +2227,7 @@ XS(_wrap_gsl_monte_miser_state_min_calls_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_monte_miser_state_min_calls_get" "', argument " "1"" of type '" "gsl_monte_miser_state *""'"); 
     }
     arg1 = (gsl_monte_miser_state *)(argp1);
-    result = (size_t) ((arg1)->min_calls);
+    result =  ((arg1)->min_calls);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -2284,7 +2292,7 @@ XS(_wrap_gsl_monte_miser_state_min_calls_per_bisection_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_monte_miser_state_min_calls_per_bisection_get" "', argument " "1"" of type '" "gsl_monte_miser_state *""'"); 
     }
     arg1 = (gsl_monte_miser_state *)(argp1);
-    result = (size_t) ((arg1)->min_calls_per_bisection);
+    result =  ((arg1)->min_calls_per_bisection);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -2544,7 +2552,7 @@ XS(_wrap_gsl_monte_miser_state_dim_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_monte_miser_state_dim_get" "', argument " "1"" of type '" "gsl_monte_miser_state *""'"); 
     }
     arg1 = (gsl_monte_miser_state *)(argp1);
-    result = (size_t) ((arg1)->dim);
+    result =  ((arg1)->dim);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -3549,7 +3557,7 @@ XS(_wrap_gsl_monte_miser_state_hits_l_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_monte_miser_state_hits_l_set" "', argument " "1"" of type '" "gsl_monte_miser_state *""'"); 
     }
     arg1 = (gsl_monte_miser_state *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_int, SWIG_POINTER_DISOWN |  0 );
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_size_t, SWIG_POINTER_DISOWN |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_monte_miser_state_hits_l_set" "', argument " "2"" of type '" "size_t *""'"); 
     }
@@ -3585,7 +3593,7 @@ XS(_wrap_gsl_monte_miser_state_hits_l_get) {
     }
     arg1 = (gsl_monte_miser_state *)(argp1);
     result = (size_t *) ((arg1)->hits_l);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_int, 0 | 0); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_size_t, 0 | 0); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -3614,7 +3622,7 @@ XS(_wrap_gsl_monte_miser_state_hits_r_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_monte_miser_state_hits_r_set" "', argument " "1"" of type '" "gsl_monte_miser_state *""'"); 
     }
     arg1 = (gsl_monte_miser_state *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_int, SWIG_POINTER_DISOWN |  0 );
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_size_t, SWIG_POINTER_DISOWN |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_monte_miser_state_hits_r_set" "', argument " "2"" of type '" "size_t *""'"); 
     }
@@ -3650,7 +3658,7 @@ XS(_wrap_gsl_monte_miser_state_hits_r_get) {
     }
     arg1 = (gsl_monte_miser_state *)(argp1);
     result = (size_t *) ((arg1)->hits_r);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_int, 0 | 0); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_size_t, 0 | 0); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -4049,7 +4057,7 @@ XS(_wrap_gsl_monte_plain_state_dim_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_monte_plain_state_dim_get" "', argument " "1"" of type '" "gsl_monte_plain_state *""'"); 
     }
     arg1 = (gsl_monte_plain_state *)(argp1);
-    result = (size_t) ((arg1)->dim);
+    result =  ((arg1)->dim);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -4514,7 +4522,7 @@ XS(_wrap_gsl_monte_vegas_state_dim_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_monte_vegas_state_dim_get" "', argument " "1"" of type '" "gsl_monte_vegas_state *""'"); 
     }
     arg1 = (gsl_monte_vegas_state *)(argp1);
-    result = (size_t) ((arg1)->dim);
+    result =  ((arg1)->dim);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -4579,7 +4587,7 @@ XS(_wrap_gsl_monte_vegas_state_bins_max_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_monte_vegas_state_bins_max_get" "', argument " "1"" of type '" "gsl_monte_vegas_state *""'"); 
     }
     arg1 = (gsl_monte_vegas_state *)(argp1);
-    result = (size_t) ((arg1)->bins_max);
+    result =  ((arg1)->bins_max);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -6999,7 +7007,7 @@ XS(_wrap_gsl_set_stream) {
 static swig_type_info _swigt__p_FILE = {"_p_FILE", "FILE *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_f_p_double_int_p_void__double = {"_p_f_p_double_int_p_void__double", "double (*)(double *,int,void *)|double (*)(double *,size_t,void *)", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_f_p_double_size_t_p_void__double = {"_p_f_p_double_size_t_p_void__double", "double (*)(double *,size_t,void *)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_p_q_const__char_p_q_const__char_int_int__void = {"_p_f_p_q_const__char_p_q_const__char_int_int__void", "void (*)(char const *,char const *,int,int)|gsl_error_handler_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_p_q_const__char_p_q_const__char_int_p_q_const__char__void = {"_p_f_p_q_const__char_p_q_const__char_int_p_q_const__char__void", "gsl_stream_handler_t *|void (*)(char const *,char const *,int,char const *)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_gsl_monte_function_struct = {"_p_gsl_monte_function_struct", "gsl_monte_function *|struct gsl_monte_function_struct *|gsl_monte_function_struct *", 0, 0, (void*)"Math::GSL::Monte::gsl_monte_function_struct", 0};
@@ -7007,14 +7015,15 @@ static swig_type_info _swigt__p_gsl_monte_miser_state = {"_p_gsl_monte_miser_sta
 static swig_type_info _swigt__p_gsl_monte_plain_state = {"_p_gsl_monte_plain_state", "gsl_monte_plain_state *", 0, 0, (void*)"Math::GSL::Monte::gsl_monte_plain_state", 0};
 static swig_type_info _swigt__p_gsl_monte_vegas_state = {"_p_gsl_monte_vegas_state", "gsl_monte_vegas_state *", 0, 0, (void*)"Math::GSL::Monte::gsl_monte_vegas_state", 0};
 static swig_type_info _swigt__p_gsl_rng = {"_p_gsl_rng", "gsl_rng *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_int = {"_p_int", "int *|size_t *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_int = {"_p_int", "int *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_size_t = {"_p_size_t", "size_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_void = {"_p_void", "void *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_FILE,
   &_swigt__p_char,
   &_swigt__p_double,
-  &_swigt__p_f_p_double_int_p_void__double,
+  &_swigt__p_f_p_double_size_t_p_void__double,
   &_swigt__p_f_p_q_const__char_p_q_const__char_int_int__void,
   &_swigt__p_f_p_q_const__char_p_q_const__char_int_p_q_const__char__void,
   &_swigt__p_gsl_monte_function_struct,
@@ -7023,13 +7032,14 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_gsl_monte_vegas_state,
   &_swigt__p_gsl_rng,
   &_swigt__p_int,
+  &_swigt__p_size_t,
   &_swigt__p_void,
 };
 
 static swig_cast_info _swigc__p_FILE[] = {  {&_swigt__p_FILE, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_f_p_double_int_p_void__double[] = {  {&_swigt__p_f_p_double_int_p_void__double, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_f_p_double_size_t_p_void__double[] = {  {&_swigt__p_f_p_double_size_t_p_void__double, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_p_q_const__char_p_q_const__char_int_int__void[] = {  {&_swigt__p_f_p_q_const__char_p_q_const__char_int_int__void, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_p_q_const__char_p_q_const__char_int_p_q_const__char__void[] = {  {&_swigt__p_f_p_q_const__char_p_q_const__char_int_p_q_const__char__void, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_monte_function_struct[] = {  {&_swigt__p_gsl_monte_function_struct, 0, 0, 0},{0, 0, 0, 0}};
@@ -7038,13 +7048,14 @@ static swig_cast_info _swigc__p_gsl_monte_plain_state[] = {  {&_swigt__p_gsl_mon
 static swig_cast_info _swigc__p_gsl_monte_vegas_state[] = {  {&_swigt__p_gsl_monte_vegas_state, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_rng[] = {  {&_swigt__p_gsl_rng, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_size_t[] = {  {&_swigt__p_size_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_void[] = {  {&_swigt__p_void, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_FILE,
   _swigc__p_char,
   _swigc__p_double,
-  _swigc__p_f_p_double_int_p_void__double,
+  _swigc__p_f_p_double_size_t_p_void__double,
   _swigc__p_f_p_q_const__char_p_q_const__char_int_int__void,
   _swigc__p_f_p_q_const__char_p_q_const__char_int_p_q_const__char__void,
   _swigc__p_gsl_monte_function_struct,
@@ -7053,6 +7064,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_gsl_monte_vegas_state,
   _swigc__p_gsl_rng,
   _swigc__p_int,
+  _swigc__p_size_t,
   _swigc__p_void,
 };
 

@@ -1444,11 +1444,10 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_gsl_function_fdf_struct swig_types[6]
 #define SWIGTYPE_p_gsl_function_struct swig_types[7]
 #define SWIGTYPE_p_gsl_function_vec_struct swig_types[8]
-#define SWIGTYPE_p_int swig_types[9]
-#define SWIGTYPE_p_unsigned_int swig_types[10]
-#define SWIGTYPE_p_void swig_types[11]
-static swig_type_info *swig_types[13];
-static swig_module_info swig_module = {swig_types, 12, 0, 0, 0, 0};
+#define SWIGTYPE_p_unsigned_int swig_types[9]
+#define SWIGTYPE_p_void swig_types[10]
+static swig_type_info *swig_types[12];
+static swig_module_info swig_module = {swig_types, 11, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1502,7 +1501,15 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
     #include "gsl/gsl_monte.h"
 
 
+    struct perl_array {
+        I32 len;
+        AV *array;
+    };
 
+
+    /* structure to hold required information while the gsl function call
+       for each callback
+     */
     struct gsl_function_perl {
         gsl_function C_gsl_function;
         SV * function;
@@ -1516,9 +1523,8 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
     };
 
 
-    /* this function returns the value 
-        of evaluating the function pointer
-        stored in func with argument x
+    /* These functions (C callbacks) calls the perl callbacks.
+       Info for perl callback can be found using the 'void*params' parameter
     */
     double call_gsl_function(double x , void *params){
         struct gsl_function_perl *F=(struct gsl_function_perl*)params;
@@ -1912,7 +1918,7 @@ XS(_wrap_gsl_cheb_series_struct_order_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_cheb_series_struct_order_get" "', argument " "1"" of type '" "struct gsl_cheb_series_struct *""'"); 
     }
     arg1 = (struct gsl_cheb_series_struct *)(argp1);
-    result = (size_t) ((arg1)->order);
+    result =  ((arg1)->order);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -2107,7 +2113,7 @@ XS(_wrap_gsl_cheb_series_struct_order_sp_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_cheb_series_struct_order_sp_get" "', argument " "1"" of type '" "struct gsl_cheb_series_struct *""'"); 
     }
     arg1 = (struct gsl_cheb_series_struct *)(argp1);
-    result = (size_t) ((arg1)->order_sp);
+    result =  ((arg1)->order_sp);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -3532,7 +3538,6 @@ static swig_type_info _swigt__p_gsl_cheb_series_struct = {"_p_gsl_cheb_series_st
 static swig_type_info _swigt__p_gsl_function_fdf_struct = {"_p_gsl_function_fdf_struct", "struct gsl_function_fdf_struct *|gsl_function_fdf_struct *|gsl_function_fdf *", 0, 0, (void*)"Math::GSL::Chebyshev::gsl_function_fdf_struct", 0};
 static swig_type_info _swigt__p_gsl_function_struct = {"_p_gsl_function_struct", "gsl_function *|struct gsl_function_struct *|gsl_function_struct *", 0, 0, (void*)"Math::GSL::Chebyshev::gsl_function_struct", 0};
 static swig_type_info _swigt__p_gsl_function_vec_struct = {"_p_gsl_function_vec_struct", "gsl_function_vec *|struct gsl_function_vec_struct *|gsl_function_vec_struct *", 0, 0, (void*)"Math::GSL::Chebyshev::gsl_function_vec_struct", 0};
-static swig_type_info _swigt__p_int = {"_p_int", "int *|size_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_int = {"_p_unsigned_int", "unsigned int *|gsl_mode_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_void = {"_p_void", "void *", 0, 0, (void*)0, 0};
 
@@ -3546,7 +3551,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_gsl_function_fdf_struct,
   &_swigt__p_gsl_function_struct,
   &_swigt__p_gsl_function_vec_struct,
-  &_swigt__p_int,
   &_swigt__p_unsigned_int,
   &_swigt__p_void,
 };
@@ -3560,7 +3564,6 @@ static swig_cast_info _swigc__p_gsl_cheb_series_struct[] = {  {&_swigt__p_gsl_ch
 static swig_cast_info _swigc__p_gsl_function_fdf_struct[] = {  {&_swigt__p_gsl_function_fdf_struct, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_function_struct[] = {  {&_swigt__p_gsl_function_struct, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_function_vec_struct[] = {  {&_swigt__p_gsl_function_vec_struct, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_int[] = {  {&_swigt__p_unsigned_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_void[] = {  {&_swigt__p_void, 0, 0, 0},{0, 0, 0, 0}};
 
@@ -3574,7 +3577,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_gsl_function_fdf_struct,
   _swigc__p_gsl_function_struct,
   _swigc__p_gsl_function_vec_struct,
-  _swigc__p_int,
   _swigc__p_unsigned_int,
   _swigc__p_void,
 };

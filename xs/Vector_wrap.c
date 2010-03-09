@@ -1456,8 +1456,9 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_gsl_vector_complex swig_types[18]
 #define SWIGTYPE_p_gsl_vector_int swig_types[19]
 #define SWIGTYPE_p_int swig_types[20]
-static swig_type_info *swig_types[22];
-static swig_module_info swig_module = {swig_types, 21, 0, 0, 0, 0};
+#define SWIGTYPE_p_size_t swig_types[21]
+static swig_type_info *swig_types[23];
+static swig_module_info swig_module = {swig_types, 22, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1511,7 +1512,15 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
     #include "gsl/gsl_monte.h"
 
 
+    struct perl_array {
+        I32 len;
+        AV *array;
+    };
 
+
+    /* structure to hold required information while the gsl function call
+       for each callback
+     */
     struct gsl_function_perl {
         gsl_function C_gsl_function;
         SV * function;
@@ -1525,9 +1534,8 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
     };
 
 
-    /* this function returns the value 
-        of evaluating the function pointer
-        stored in func with argument x
+    /* These functions (C callbacks) calls the perl callbacks.
+       Info for perl callback can be found using the 'void*params' parameter
     */
     double call_gsl_function(double x , void *params){
         struct gsl_function_perl *F=(struct gsl_function_perl*)params;
@@ -2087,7 +2095,7 @@ XS(_wrap_gsl_vector_char_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_vector_char_size_get" "', argument " "1"" of type '" "gsl_vector_char *""'"); 
     }
     arg1 = (gsl_vector_char *)(argp1);
-    result = (size_t) ((arg1)->size);
+    result =  ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -2152,7 +2160,7 @@ XS(_wrap_gsl_vector_char_stride_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_vector_char_stride_get" "', argument " "1"" of type '" "gsl_vector_char *""'"); 
     }
     arg1 = (gsl_vector_char *)(argp1);
-    result = (size_t) ((arg1)->stride);
+    result =  ((arg1)->stride);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -3917,7 +3925,7 @@ XS(_wrap_gsl_vector_char_max_index) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_vector_char_max_index" "', argument " "1"" of type '" "gsl_vector_char const *""'"); 
     }
     arg1 = (gsl_vector_char *)(argp1);
-    result = (size_t)gsl_vector_char_max_index((gsl_vector_char const *)arg1);
+    result = gsl_vector_char_max_index((gsl_vector_char const *)arg1);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -3945,7 +3953,7 @@ XS(_wrap_gsl_vector_char_min_index) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_vector_char_min_index" "', argument " "1"" of type '" "gsl_vector_char const *""'"); 
     }
     arg1 = (gsl_vector_char *)(argp1);
-    result = (size_t)gsl_vector_char_min_index((gsl_vector_char const *)arg1);
+    result = gsl_vector_char_min_index((gsl_vector_char const *)arg1);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -3986,13 +3994,13 @@ XS(_wrap_gsl_vector_char_minmax_index) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((*arg2)); argvi++  ;
     } else {
       int new_flags = SWIG_IsNewObj(res2) ? (SWIG_POINTER_OWN | 0) : 0;
-      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg2), SWIGTYPE_p_int, new_flags); argvi++  ;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg2), SWIGTYPE_p_size_t, new_flags); argvi++  ;
     }
     if (SWIG_IsTmpObj(res3)) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((*arg3)); argvi++  ;
     } else {
       int new_flags = SWIG_IsNewObj(res3) ? (SWIG_POINTER_OWN | 0) : 0;
-      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg3), SWIGTYPE_p_int, new_flags); argvi++  ;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg3), SWIGTYPE_p_size_t, new_flags); argvi++  ;
     }
     
     
@@ -4401,7 +4409,7 @@ XS(_wrap_gsl_vector_complex_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_vector_complex_size_get" "', argument " "1"" of type '" "gsl_vector_complex *""'"); 
     }
     arg1 = (gsl_vector_complex *)(argp1);
-    result = (size_t) ((arg1)->size);
+    result =  ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -4466,7 +4474,7 @@ XS(_wrap_gsl_vector_complex_stride_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_vector_complex_stride_get" "', argument " "1"" of type '" "gsl_vector_complex *""'"); 
     }
     arg1 = (gsl_vector_complex *)(argp1);
-    result = (size_t) ((arg1)->stride);
+    result =  ((arg1)->stride);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -6431,7 +6439,7 @@ XS(_wrap_gsl_vector_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_vector_size_get" "', argument " "1"" of type '" "gsl_vector *""'"); 
     }
     arg1 = (gsl_vector *)(argp1);
-    result = (size_t) ((arg1)->size);
+    result =  ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -6496,7 +6504,7 @@ XS(_wrap_gsl_vector_stride_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_vector_stride_get" "', argument " "1"" of type '" "gsl_vector *""'"); 
     }
     arg1 = (gsl_vector *)(argp1);
-    result = (size_t) ((arg1)->stride);
+    result =  ((arg1)->stride);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -8327,7 +8335,7 @@ XS(_wrap_gsl_vector_max_index) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_vector_max_index" "', argument " "1"" of type '" "gsl_vector const *""'"); 
     }
     arg1 = (gsl_vector *)(argp1);
-    result = (size_t)gsl_vector_max_index((gsl_vector const *)arg1);
+    result = gsl_vector_max_index((gsl_vector const *)arg1);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -8355,7 +8363,7 @@ XS(_wrap_gsl_vector_min_index) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_vector_min_index" "', argument " "1"" of type '" "gsl_vector const *""'"); 
     }
     arg1 = (gsl_vector *)(argp1);
-    result = (size_t)gsl_vector_min_index((gsl_vector const *)arg1);
+    result = gsl_vector_min_index((gsl_vector const *)arg1);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -8396,13 +8404,13 @@ XS(_wrap_gsl_vector_minmax_index) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((*arg2)); argvi++  ;
     } else {
       int new_flags = SWIG_IsNewObj(res2) ? (SWIG_POINTER_OWN | 0) : 0;
-      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg2), SWIGTYPE_p_int, new_flags); argvi++  ;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg2), SWIGTYPE_p_size_t, new_flags); argvi++  ;
     }
     if (SWIG_IsTmpObj(res3)) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((*arg3)); argvi++  ;
     } else {
       int new_flags = SWIG_IsNewObj(res3) ? (SWIG_POINTER_OWN | 0) : 0;
-      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg3), SWIGTYPE_p_int, new_flags); argvi++  ;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg3), SWIGTYPE_p_size_t, new_flags); argvi++  ;
     }
     
     
@@ -8811,7 +8819,7 @@ XS(_wrap_gsl_vector_int_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_vector_int_size_get" "', argument " "1"" of type '" "gsl_vector_int *""'"); 
     }
     arg1 = (gsl_vector_int *)(argp1);
-    result = (size_t) ((arg1)->size);
+    result =  ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -8876,7 +8884,7 @@ XS(_wrap_gsl_vector_int_stride_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_vector_int_stride_get" "', argument " "1"" of type '" "gsl_vector_int *""'"); 
     }
     arg1 = (gsl_vector_int *)(argp1);
-    result = (size_t) ((arg1)->stride);
+    result =  ((arg1)->stride);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -10628,7 +10636,7 @@ XS(_wrap_gsl_vector_int_max_index) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_vector_int_max_index" "', argument " "1"" of type '" "gsl_vector_int const *""'"); 
     }
     arg1 = (gsl_vector_int *)(argp1);
-    result = (size_t)gsl_vector_int_max_index((gsl_vector_int const *)arg1);
+    result = gsl_vector_int_max_index((gsl_vector_int const *)arg1);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -10656,7 +10664,7 @@ XS(_wrap_gsl_vector_int_min_index) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_vector_int_min_index" "', argument " "1"" of type '" "gsl_vector_int const *""'"); 
     }
     arg1 = (gsl_vector_int *)(argp1);
-    result = (size_t)gsl_vector_int_min_index((gsl_vector_int const *)arg1);
+    result = gsl_vector_int_min_index((gsl_vector_int const *)arg1);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -10697,13 +10705,13 @@ XS(_wrap_gsl_vector_int_minmax_index) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((*arg2)); argvi++  ;
     } else {
       int new_flags = SWIG_IsNewObj(res2) ? (SWIG_POINTER_OWN | 0) : 0;
-      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg2), SWIGTYPE_p_int, new_flags); argvi++  ;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg2), SWIGTYPE_p_size_t, new_flags); argvi++  ;
     }
     if (SWIG_IsTmpObj(res3)) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((*arg3)); argvi++  ;
     } else {
       int new_flags = SWIG_IsNewObj(res3) ? (SWIG_POINTER_OWN | 0) : 0;
-      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg3), SWIGTYPE_p_int, new_flags); argvi++  ;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg3), SWIGTYPE_p_size_t, new_flags); argvi++  ;
     }
     
     
@@ -11081,7 +11089,8 @@ static swig_type_info _swigt__p_gsl_vector = {"_p_gsl_vector", "gsl_vector *", 0
 static swig_type_info _swigt__p_gsl_vector_char = {"_p_gsl_vector_char", "gsl_vector_char *", 0, 0, (void*)"Math::GSL::Vector::gsl_vector_char", 0};
 static swig_type_info _swigt__p_gsl_vector_complex = {"_p_gsl_vector_complex", "gsl_vector_complex *", 0, 0, (void*)"Math::GSL::Vector::gsl_vector_complex", 0};
 static swig_type_info _swigt__p_gsl_vector_int = {"_p_gsl_vector_int", "gsl_vector_int *", 0, 0, (void*)"Math::GSL::Vector::gsl_vector_int", 0};
-static swig_type_info _swigt__p_int = {"_p_int", "int *|size_t *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_int = {"_p_int", "int *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_size_t = {"_p_size_t", "size_t *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_FILE,
@@ -11105,6 +11114,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_gsl_vector_complex,
   &_swigt__p_gsl_vector_int,
   &_swigt__p_int,
+  &_swigt__p_size_t,
 };
 
 static swig_cast_info _swigc__p_FILE[] = {  {&_swigt__p_FILE, 0, 0, 0},{0, 0, 0, 0}};
@@ -11128,6 +11138,7 @@ static swig_cast_info _swigc__p_gsl_vector_char[] = {  {&_swigt__p_gsl_vector_ch
 static swig_cast_info _swigc__p_gsl_vector_complex[] = {  {&_swigt__p_gsl_vector_complex, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_vector_int[] = {  {&_swigt__p_gsl_vector_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_size_t[] = {  {&_swigt__p_size_t, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_FILE,
@@ -11151,6 +11162,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_gsl_vector_complex,
   _swigc__p_gsl_vector_int,
   _swigc__p_int,
+  _swigc__p_size_t,
 };
 
 

@@ -1451,8 +1451,9 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_gsl_vector_complex swig_types[13]
 #define SWIGTYPE_p_int swig_types[14]
 #define SWIGTYPE_p_long_double swig_types[15]
-static swig_type_info *swig_types[17];
-static swig_module_info swig_module = {swig_types, 16, 0, 0, 0, 0};
+#define SWIGTYPE_p_size_t swig_types[16]
+static swig_type_info *swig_types[18];
+static swig_module_info swig_module = {swig_types, 17, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1506,7 +1507,15 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
     #include "gsl/gsl_monte.h"
 
 
+    struct perl_array {
+        I32 len;
+        AV *array;
+    };
 
+
+    /* structure to hold required information while the gsl function call
+       for each callback
+     */
     struct gsl_function_perl {
         gsl_function C_gsl_function;
         SV * function;
@@ -1520,9 +1529,8 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
     };
 
 
-    /* this function returns the value 
-        of evaluating the function pointer
-        stored in func with argument x
+    /* These functions (C callbacks) calls the perl callbacks.
+       Info for perl callback can be found using the 'void*params' parameter
     */
     double call_gsl_function(double x , void *params){
         struct gsl_function_perl *F=(struct gsl_function_perl*)params;
@@ -7484,7 +7492,7 @@ XS(_wrap_gsl_permutation_struct_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_permutation_struct_size_get" "', argument " "1"" of type '" "struct gsl_permutation_struct *""'"); 
     }
     arg1 = (struct gsl_permutation_struct *)(argp1);
-    result = (size_t) ((arg1)->size);
+    result =  ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -7514,7 +7522,7 @@ XS(_wrap_gsl_permutation_struct_data_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_permutation_struct_data_set" "', argument " "1"" of type '" "struct gsl_permutation_struct *""'"); 
     }
     arg1 = (struct gsl_permutation_struct *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_int, SWIG_POINTER_DISOWN |  0 );
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_size_t, SWIG_POINTER_DISOWN |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_permutation_struct_data_set" "', argument " "2"" of type '" "size_t *""'"); 
     }
@@ -7550,7 +7558,7 @@ XS(_wrap_gsl_permutation_struct_data_get) {
     }
     arg1 = (struct gsl_permutation_struct *)(argp1);
     result = (size_t *) ((arg1)->data);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_int, 0 | 0); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_size_t, 0 | 0); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -7933,7 +7941,7 @@ XS(_wrap_gsl_permutation_size) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_permutation_size" "', argument " "1"" of type '" "gsl_permutation const *""'"); 
     }
     arg1 = (gsl_permutation *)(argp1);
-    result = (size_t)gsl_permutation_size((struct gsl_permutation_struct const *)arg1);
+    result = gsl_permutation_size((struct gsl_permutation_struct const *)arg1);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -7962,7 +7970,7 @@ XS(_wrap_gsl_permutation_data) {
     }
     arg1 = (gsl_permutation *)(argp1);
     result = (size_t *)gsl_permutation_data((struct gsl_permutation_struct const *)arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_int, 0 | 0); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_size_t, 0 | 0); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -7997,7 +8005,7 @@ XS(_wrap_gsl_permutation_get) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_permutation_get" "', argument " "2"" of type '" "size_t""'");
     } 
     arg2 = (size_t)(val2);
-    result = (size_t)gsl_permutation_get((struct gsl_permutation_struct const *)arg1,arg2);
+    result = gsl_permutation_get((struct gsl_permutation_struct const *)arg1,arg2);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     
@@ -8348,7 +8356,7 @@ XS(_wrap_gsl_permutation_inversions) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_permutation_inversions" "', argument " "1"" of type '" "gsl_permutation const *""'"); 
     }
     arg1 = (gsl_permutation *)(argp1);
-    result = (size_t)gsl_permutation_inversions((struct gsl_permutation_struct const *)arg1);
+    result = gsl_permutation_inversions((struct gsl_permutation_struct const *)arg1);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -8376,7 +8384,7 @@ XS(_wrap_gsl_permutation_linear_cycles) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_permutation_linear_cycles" "', argument " "1"" of type '" "gsl_permutation const *""'"); 
     }
     arg1 = (gsl_permutation *)(argp1);
-    result = (size_t)gsl_permutation_linear_cycles((struct gsl_permutation_struct const *)arg1);
+    result = gsl_permutation_linear_cycles((struct gsl_permutation_struct const *)arg1);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -8404,7 +8412,7 @@ XS(_wrap_gsl_permutation_canonical_cycles) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_permutation_canonical_cycles" "', argument " "1"" of type '" "gsl_permutation const *""'"); 
     }
     arg1 = (gsl_permutation *)(argp1);
-    result = (size_t)gsl_permutation_canonical_cycles((struct gsl_permutation_struct const *)arg1);
+    result = gsl_permutation_canonical_cycles((struct gsl_permutation_struct const *)arg1);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -10829,8 +10837,9 @@ static swig_type_info _swigt__p_gsl_mode_t = {"_p_gsl_mode_t", "gsl_mode_t *", 0
 static swig_type_info _swigt__p_gsl_permutation_struct = {"_p_gsl_permutation_struct", "gsl_permutation *|struct gsl_permutation_struct *|gsl_permutation_struct *", 0, 0, (void*)"Math::GSL::Linalg::gsl_permutation_struct", 0};
 static swig_type_info _swigt__p_gsl_vector = {"_p_gsl_vector", "gsl_vector *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_gsl_vector_complex = {"_p_gsl_vector_complex", "gsl_vector_complex *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_int = {"_p_int", "int *|size_t *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_int = {"_p_int", "int *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_long_double = {"_p_long_double", "long double *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_size_t = {"_p_size_t", "size_t *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_FILE,
@@ -10849,6 +10858,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_gsl_vector_complex,
   &_swigt__p_int,
   &_swigt__p_long_double,
+  &_swigt__p_size_t,
 };
 
 static swig_cast_info _swigc__p_FILE[] = {  {&_swigt__p_FILE, 0, 0, 0},{0, 0, 0, 0}};
@@ -10867,6 +10877,7 @@ static swig_cast_info _swigc__p_gsl_vector[] = {  {&_swigt__p_gsl_vector, 0, 0, 
 static swig_cast_info _swigc__p_gsl_vector_complex[] = {  {&_swigt__p_gsl_vector_complex, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_long_double[] = {  {&_swigt__p_long_double, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_size_t[] = {  {&_swigt__p_size_t, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_FILE,
@@ -10885,6 +10896,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_gsl_vector_complex,
   _swigc__p_int,
   _swigc__p_long_double,
+  _swigc__p_size_t,
 };
 
 

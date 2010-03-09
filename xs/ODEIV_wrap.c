@@ -1439,13 +1439,13 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_double swig_types[1]
 #define SWIGTYPE_p_f_double_a___q_const__double_a___double_p_void__int swig_types[2]
 #define SWIGTYPE_p_f_double_a___q_const__double_p_double_a___double_p_void__int swig_types[3]
-#define SWIGTYPE_p_f_int__p_void swig_types[4]
-#define SWIGTYPE_p_f_p_void__unsigned_int swig_types[5]
-#define SWIGTYPE_p_f_p_void__void swig_types[6]
-#define SWIGTYPE_p_f_p_void_double_double_double_double__int swig_types[7]
-#define SWIGTYPE_p_f_p_void_int__int swig_types[8]
-#define SWIGTYPE_p_f_p_void_int_double_double_a___double_a___double_a___q_const__double_a___double_p_q_const__gsl_odeiv_system__int swig_types[9]
-#define SWIGTYPE_p_f_p_void_int_unsigned_int_a___q_const__double_a___q_const__double_a___q_const__double_p_double__int swig_types[10]
+#define SWIGTYPE_p_f_p_void__unsigned_int swig_types[4]
+#define SWIGTYPE_p_f_p_void__void swig_types[5]
+#define SWIGTYPE_p_f_p_void_double_double_double_double__int swig_types[6]
+#define SWIGTYPE_p_f_p_void_size_t__int swig_types[7]
+#define SWIGTYPE_p_f_p_void_size_t_double_double_a___double_a___double_a___q_const__double_a___double_p_q_const__gsl_odeiv_system__int swig_types[8]
+#define SWIGTYPE_p_f_p_void_size_t_unsigned_int_a___q_const__double_a___q_const__double_a___q_const__double_p_double__int swig_types[9]
+#define SWIGTYPE_p_f_size_t__p_void swig_types[10]
 #define SWIGTYPE_p_f_void__p_void swig_types[11]
 #define SWIGTYPE_p_gsl_odeiv_control swig_types[12]
 #define SWIGTYPE_p_gsl_odeiv_control_type swig_types[13]
@@ -1453,10 +1453,9 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_gsl_odeiv_step swig_types[15]
 #define SWIGTYPE_p_gsl_odeiv_step_type swig_types[16]
 #define SWIGTYPE_p_gsl_odeiv_system swig_types[17]
-#define SWIGTYPE_p_int swig_types[18]
-#define SWIGTYPE_p_void swig_types[19]
-static swig_type_info *swig_types[21];
-static swig_module_info swig_module = {swig_types, 20, 0, 0, 0, 0};
+#define SWIGTYPE_p_void swig_types[18]
+static swig_type_info *swig_types[20];
+static swig_module_info swig_module = {swig_types, 19, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1510,7 +1509,15 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
     #include "gsl/gsl_monte.h"
 
 
+    struct perl_array {
+        I32 len;
+        AV *array;
+    };
 
+
+    /* structure to hold required information while the gsl function call
+       for each callback
+     */
     struct gsl_function_perl {
         gsl_function C_gsl_function;
         SV * function;
@@ -1524,9 +1531,8 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
     };
 
 
-    /* this function returns the value 
-        of evaluating the function pointer
-        stored in func with argument x
+    /* These functions (C callbacks) calls the perl callbacks.
+       Info for perl callback can be found using the 'void*params' parameter
     */
     double call_gsl_function(double x , void *params){
         struct gsl_function_perl *F=(struct gsl_function_perl*)params;
@@ -2339,7 +2345,7 @@ XS(_wrap_gsl_odeiv_system_dimension_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_odeiv_system_dimension_get" "', argument " "1"" of type '" "gsl_odeiv_system *""'"); 
     }
     arg1 = (gsl_odeiv_system *)(argp1);
-    result = (size_t) ((arg1)->dimension);
+    result =  ((arg1)->dimension);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -2677,7 +2683,7 @@ XS(_wrap_gsl_odeiv_step_type_alloc_set) {
     }
     arg1 = (gsl_odeiv_step_type *)(argp1);
     {
-      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_int__p_void);
+      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_size_t__p_void);
       if (!SWIG_IsOK(res)) {
         SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_odeiv_step_type_alloc_set" "', argument " "2"" of type '" "void *(*)(size_t)""'"); 
       }
@@ -2713,7 +2719,7 @@ XS(_wrap_gsl_odeiv_step_type_alloc_get) {
     }
     arg1 = (gsl_odeiv_step_type *)(argp1);
     result = (void *(*)(size_t)) ((arg1)->alloc);
-    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_int__p_void); argvi++ ;
+    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_size_t__p_void); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -2741,7 +2747,7 @@ XS(_wrap_gsl_odeiv_step_type_apply_set) {
     }
     arg1 = (gsl_odeiv_step_type *)(argp1);
     {
-      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_void_int_double_double_a___double_a___double_a___q_const__double_a___double_p_q_const__gsl_odeiv_system__int);
+      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_void_size_t_double_double_a___double_a___double_a___q_const__double_a___double_p_q_const__gsl_odeiv_system__int);
       if (!SWIG_IsOK(res)) {
         SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_odeiv_step_type_apply_set" "', argument " "2"" of type '" "int (*)(void *,size_t,double,double,double [],double [],double const [],double [],gsl_odeiv_system const *)""'"); 
       }
@@ -2777,7 +2783,7 @@ XS(_wrap_gsl_odeiv_step_type_apply_get) {
     }
     arg1 = (gsl_odeiv_step_type *)(argp1);
     result = (int (*)(void *,size_t,double,double,double [],double [],double const [],double [],gsl_odeiv_system const *)) ((arg1)->apply);
-    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_void_int_double_double_a___double_a___double_a___q_const__double_a___double_p_q_const__gsl_odeiv_system__int); argvi++ ;
+    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_void_size_t_double_double_a___double_a___double_a___q_const__double_a___double_p_q_const__gsl_odeiv_system__int); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -2805,7 +2811,7 @@ XS(_wrap_gsl_odeiv_step_type_reset_set) {
     }
     arg1 = (gsl_odeiv_step_type *)(argp1);
     {
-      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_void_int__int);
+      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_void_size_t__int);
       if (!SWIG_IsOK(res)) {
         SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_odeiv_step_type_reset_set" "', argument " "2"" of type '" "int (*)(void *,size_t)""'"); 
       }
@@ -2841,7 +2847,7 @@ XS(_wrap_gsl_odeiv_step_type_reset_get) {
     }
     arg1 = (gsl_odeiv_step_type *)(argp1);
     result = (int (*)(void *,size_t)) ((arg1)->reset);
-    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_void_int__int); argvi++ ;
+    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_void_size_t__int); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -3143,7 +3149,7 @@ XS(_wrap_gsl_odeiv_step_dimension_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_odeiv_step_dimension_get" "', argument " "1"" of type '" "gsl_odeiv_step *""'"); 
     }
     arg1 = (gsl_odeiv_step *)(argp1);
-    result = (size_t) ((arg1)->dimension);
+    result =  ((arg1)->dimension);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -3741,7 +3747,7 @@ XS(_wrap_gsl_odeiv_control_type_hadjust_set) {
     }
     arg1 = (gsl_odeiv_control_type *)(argp1);
     {
-      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_void_int_unsigned_int_a___q_const__double_a___q_const__double_a___q_const__double_p_double__int);
+      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_void_size_t_unsigned_int_a___q_const__double_a___q_const__double_a___q_const__double_p_double__int);
       if (!SWIG_IsOK(res)) {
         SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_odeiv_control_type_hadjust_set" "', argument " "2"" of type '" "int (*)(void *,size_t,unsigned int,double const [],double const [],double const [],double *)""'"); 
       }
@@ -3777,7 +3783,7 @@ XS(_wrap_gsl_odeiv_control_type_hadjust_get) {
     }
     arg1 = (gsl_odeiv_control_type *)(argp1);
     result = (int (*)(void *,size_t,unsigned int,double const [],double const [],double const [],double *)) ((arg1)->hadjust);
-    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_void_int_unsigned_int_a___q_const__double_a___q_const__double_a___q_const__double_p_double__int); argvi++ ;
+    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_void_size_t_unsigned_int_a___q_const__double_a___q_const__double_a___q_const__double_p_double__int); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -4624,7 +4630,7 @@ XS(_wrap_gsl_odeiv_evolve_dimension_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_odeiv_evolve_dimension_get" "', argument " "1"" of type '" "gsl_odeiv_evolve *""'"); 
     }
     arg1 = (gsl_odeiv_evolve *)(argp1);
-    result = (size_t) ((arg1)->dimension);
+    result =  ((arg1)->dimension);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -5323,13 +5329,13 @@ static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_double_a___q_const__double_a___double_p_void__int = {"_p_f_double_a___q_const__double_a___double_p_void__int", "int (*)(double,double const [],double [],void *)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_double_a___q_const__double_p_double_a___double_p_void__int = {"_p_f_double_a___q_const__double_p_double_a___double_p_void__int", "int (*)(double,double const [],double *,double [],void *)", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_f_int__p_void = {"_p_f_int__p_void", "void *(*)(size_t)|void *(*)(int)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_p_void__unsigned_int = {"_p_f_p_void__unsigned_int", "unsigned int (*)(void *)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_p_void__void = {"_p_f_p_void__void", "void (*)(void *)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_p_void_double_double_double_double__int = {"_p_f_p_void_double_double_double_double__int", "int (*)(void *,double,double,double,double)", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_f_p_void_int__int = {"_p_f_p_void_int__int", "int (*)(void *,size_t)|int (*)(void *,int)", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_f_p_void_int_double_double_a___double_a___double_a___q_const__double_a___double_p_q_const__gsl_odeiv_system__int = {"_p_f_p_void_int_double_double_a___double_a___double_a___q_const__double_a___double_p_q_const__gsl_odeiv_system__int", "int (*)(void *,int,double,double,double [],double [],double const [],double [],gsl_odeiv_system const *)|int (*)(void *,size_t,double,double,double [],double [],double const [],double [],gsl_odeiv_system const *)", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_f_p_void_int_unsigned_int_a___q_const__double_a___q_const__double_a___q_const__double_p_double__int = {"_p_f_p_void_int_unsigned_int_a___q_const__double_a___q_const__double_a___q_const__double_p_double__int", "int (*)(void *,int,unsigned int,double const [],double const [],double const [],double *)|int (*)(void *,size_t,unsigned int,double const [],double const [],double const [],double *)", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_f_p_void_size_t__int = {"_p_f_p_void_size_t__int", "int (*)(void *,size_t)", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_f_p_void_size_t_double_double_a___double_a___double_a___q_const__double_a___double_p_q_const__gsl_odeiv_system__int = {"_p_f_p_void_size_t_double_double_a___double_a___double_a___q_const__double_a___double_p_q_const__gsl_odeiv_system__int", "int (*)(void *,size_t,double,double,double [],double [],double const [],double [],gsl_odeiv_system const *)", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_f_p_void_size_t_unsigned_int_a___q_const__double_a___q_const__double_a___q_const__double_p_double__int = {"_p_f_p_void_size_t_unsigned_int_a___q_const__double_a___q_const__double_a___q_const__double_p_double__int", "int (*)(void *,size_t,unsigned int,double const [],double const [],double const [],double *)", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_f_size_t__p_void = {"_p_f_size_t__p_void", "void *(*)(size_t)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_void__p_void = {"_p_f_void__p_void", "void *(*)(void)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_gsl_odeiv_control = {"_p_gsl_odeiv_control", "gsl_odeiv_control *", 0, 0, (void*)"Math::GSL::ODEIV::gsl_odeiv_control", 0};
 static swig_type_info _swigt__p_gsl_odeiv_control_type = {"_p_gsl_odeiv_control_type", "gsl_odeiv_control_type *", 0, 0, (void*)"Math::GSL::ODEIV::gsl_odeiv_control_type", 0};
@@ -5337,7 +5343,6 @@ static swig_type_info _swigt__p_gsl_odeiv_evolve = {"_p_gsl_odeiv_evolve", "gsl_
 static swig_type_info _swigt__p_gsl_odeiv_step = {"_p_gsl_odeiv_step", "gsl_odeiv_step *", 0, 0, (void*)"Math::GSL::ODEIV::gsl_odeiv_step", 0};
 static swig_type_info _swigt__p_gsl_odeiv_step_type = {"_p_gsl_odeiv_step_type", "gsl_odeiv_step_type *", 0, 0, (void*)"Math::GSL::ODEIV::gsl_odeiv_step_type", 0};
 static swig_type_info _swigt__p_gsl_odeiv_system = {"_p_gsl_odeiv_system", "gsl_odeiv_system *", 0, 0, (void*)"Math::GSL::ODEIV::gsl_odeiv_system", 0};
-static swig_type_info _swigt__p_int = {"_p_int", "int *|size_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_void = {"_p_void", "void *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
@@ -5345,13 +5350,13 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_double,
   &_swigt__p_f_double_a___q_const__double_a___double_p_void__int,
   &_swigt__p_f_double_a___q_const__double_p_double_a___double_p_void__int,
-  &_swigt__p_f_int__p_void,
   &_swigt__p_f_p_void__unsigned_int,
   &_swigt__p_f_p_void__void,
   &_swigt__p_f_p_void_double_double_double_double__int,
-  &_swigt__p_f_p_void_int__int,
-  &_swigt__p_f_p_void_int_double_double_a___double_a___double_a___q_const__double_a___double_p_q_const__gsl_odeiv_system__int,
-  &_swigt__p_f_p_void_int_unsigned_int_a___q_const__double_a___q_const__double_a___q_const__double_p_double__int,
+  &_swigt__p_f_p_void_size_t__int,
+  &_swigt__p_f_p_void_size_t_double_double_a___double_a___double_a___q_const__double_a___double_p_q_const__gsl_odeiv_system__int,
+  &_swigt__p_f_p_void_size_t_unsigned_int_a___q_const__double_a___q_const__double_a___q_const__double_p_double__int,
+  &_swigt__p_f_size_t__p_void,
   &_swigt__p_f_void__p_void,
   &_swigt__p_gsl_odeiv_control,
   &_swigt__p_gsl_odeiv_control_type,
@@ -5359,7 +5364,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_gsl_odeiv_step,
   &_swigt__p_gsl_odeiv_step_type,
   &_swigt__p_gsl_odeiv_system,
-  &_swigt__p_int,
   &_swigt__p_void,
 };
 
@@ -5367,13 +5371,13 @@ static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0,
 static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_double_a___q_const__double_a___double_p_void__int[] = {  {&_swigt__p_f_double_a___q_const__double_a___double_p_void__int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_double_a___q_const__double_p_double_a___double_p_void__int[] = {  {&_swigt__p_f_double_a___q_const__double_p_double_a___double_p_void__int, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_f_int__p_void[] = {  {&_swigt__p_f_int__p_void, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_p_void__unsigned_int[] = {  {&_swigt__p_f_p_void__unsigned_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_p_void__void[] = {  {&_swigt__p_f_p_void__void, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_p_void_double_double_double_double__int[] = {  {&_swigt__p_f_p_void_double_double_double_double__int, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_f_p_void_int__int[] = {  {&_swigt__p_f_p_void_int__int, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_f_p_void_int_double_double_a___double_a___double_a___q_const__double_a___double_p_q_const__gsl_odeiv_system__int[] = {  {&_swigt__p_f_p_void_int_double_double_a___double_a___double_a___q_const__double_a___double_p_q_const__gsl_odeiv_system__int, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_f_p_void_int_unsigned_int_a___q_const__double_a___q_const__double_a___q_const__double_p_double__int[] = {  {&_swigt__p_f_p_void_int_unsigned_int_a___q_const__double_a___q_const__double_a___q_const__double_p_double__int, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_f_p_void_size_t__int[] = {  {&_swigt__p_f_p_void_size_t__int, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_f_p_void_size_t_double_double_a___double_a___double_a___q_const__double_a___double_p_q_const__gsl_odeiv_system__int[] = {  {&_swigt__p_f_p_void_size_t_double_double_a___double_a___double_a___q_const__double_a___double_p_q_const__gsl_odeiv_system__int, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_f_p_void_size_t_unsigned_int_a___q_const__double_a___q_const__double_a___q_const__double_p_double__int[] = {  {&_swigt__p_f_p_void_size_t_unsigned_int_a___q_const__double_a___q_const__double_a___q_const__double_p_double__int, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_f_size_t__p_void[] = {  {&_swigt__p_f_size_t__p_void, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_void__p_void[] = {  {&_swigt__p_f_void__p_void, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_odeiv_control[] = {  {&_swigt__p_gsl_odeiv_control, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_odeiv_control_type[] = {  {&_swigt__p_gsl_odeiv_control_type, 0, 0, 0},{0, 0, 0, 0}};
@@ -5381,7 +5385,6 @@ static swig_cast_info _swigc__p_gsl_odeiv_evolve[] = {  {&_swigt__p_gsl_odeiv_ev
 static swig_cast_info _swigc__p_gsl_odeiv_step[] = {  {&_swigt__p_gsl_odeiv_step, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_odeiv_step_type[] = {  {&_swigt__p_gsl_odeiv_step_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_odeiv_system[] = {  {&_swigt__p_gsl_odeiv_system, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_void[] = {  {&_swigt__p_void, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
@@ -5389,13 +5392,13 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_double,
   _swigc__p_f_double_a___q_const__double_a___double_p_void__int,
   _swigc__p_f_double_a___q_const__double_p_double_a___double_p_void__int,
-  _swigc__p_f_int__p_void,
   _swigc__p_f_p_void__unsigned_int,
   _swigc__p_f_p_void__void,
   _swigc__p_f_p_void_double_double_double_double__int,
-  _swigc__p_f_p_void_int__int,
-  _swigc__p_f_p_void_int_double_double_a___double_a___double_a___q_const__double_a___double_p_q_const__gsl_odeiv_system__int,
-  _swigc__p_f_p_void_int_unsigned_int_a___q_const__double_a___q_const__double_a___q_const__double_p_double__int,
+  _swigc__p_f_p_void_size_t__int,
+  _swigc__p_f_p_void_size_t_double_double_a___double_a___double_a___q_const__double_a___double_p_q_const__gsl_odeiv_system__int,
+  _swigc__p_f_p_void_size_t_unsigned_int_a___q_const__double_a___q_const__double_a___q_const__double_p_double__int,
+  _swigc__p_f_size_t__p_void,
   _swigc__p_f_void__p_void,
   _swigc__p_gsl_odeiv_control,
   _swigc__p_gsl_odeiv_control_type,
@@ -5403,7 +5406,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_gsl_odeiv_step,
   _swigc__p_gsl_odeiv_step_type,
   _swigc__p_gsl_odeiv_system,
-  _swigc__p_int,
   _swigc__p_void,
 };
 

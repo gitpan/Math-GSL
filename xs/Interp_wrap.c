@@ -1437,18 +1437,12 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 
 #define SWIGTYPE_p_char swig_types[0]
 #define SWIGTYPE_p_double swig_types[1]
-#define SWIGTYPE_p_f_int__p_void swig_types[2]
-#define SWIGTYPE_p_f_p_q_const__void_a___q_const__double_a___q_const__double_int_double_p_gsl_interp_accel_p_double__int swig_types[3]
-#define SWIGTYPE_p_f_p_q_const__void_a___q_const__double_a___q_const__double_int_p_gsl_interp_accel_double_double_p_double__int swig_types[4]
-#define SWIGTYPE_p_f_p_void__void swig_types[5]
-#define SWIGTYPE_p_f_p_void_a___q_const__double_a___q_const__double_int__int swig_types[6]
-#define SWIGTYPE_p_gsl_interp swig_types[7]
-#define SWIGTYPE_p_gsl_interp_accel swig_types[8]
-#define SWIGTYPE_p_gsl_interp_type swig_types[9]
-#define SWIGTYPE_p_int swig_types[10]
-#define SWIGTYPE_p_void swig_types[11]
-static swig_type_info *swig_types[13];
-static swig_module_info swig_module = {swig_types, 12, 0, 0, 0, 0};
+#define SWIGTYPE_p_gsl_interp swig_types[2]
+#define SWIGTYPE_p_gsl_interp_accel swig_types[3]
+#define SWIGTYPE_p_gsl_interp_type swig_types[4]
+#define SWIGTYPE_p_void swig_types[5]
+static swig_type_info *swig_types[7];
+static swig_module_info swig_module = {swig_types, 6, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1502,7 +1496,15 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
     #include "gsl/gsl_monte.h"
 
 
+    struct perl_array {
+        I32 len;
+        AV *array;
+    };
 
+
+    /* structure to hold required information while the gsl function call
+       for each callback
+     */
     struct gsl_function_perl {
         gsl_function C_gsl_function;
         SV * function;
@@ -1516,9 +1518,8 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
     };
 
 
-    /* this function returns the value 
-        of evaluating the function pointer
-        stored in func with argument x
+    /* These functions (C callbacks) calls the perl callbacks.
+       Info for perl callback can be found using the 'void*params' parameter
     */
     double call_gsl_function(double x , void *params){
         struct gsl_function_perl *F=(struct gsl_function_perl*)params;
@@ -1729,55 +1730,13 @@ SWIG_From_size_t  SWIG_PERL_DECL_ARGS_1(size_t value)
 }
 
 
-SWIGINTERN swig_type_info*
-SWIG_pchar_descriptor(void)
-{
-  static int init = 0;
-  static swig_type_info* info = 0;
-  if (!init) {
-    info = SWIG_TypeQuery("_p_char");
-    init = 1;
-  }
-  return info;
+SWIGINTERNINLINE SV *
+SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
+{    
+  SV *obj = sv_newmortal();
+  sv_setnv(obj, value);
+  return obj;
 }
-
-
-SWIGINTERN int
-SWIG_AsCharPtrAndSize(SV *obj, char** cptr, size_t* psize, int *alloc)
-{
-  if (SvPOK(obj)) {
-    STRLEN len = 0;
-    char *cstr = SvPV(obj, len); 
-    size_t size = len + 1;
-    if (cptr)  {
-      if (alloc) {
-	if (*alloc == SWIG_NEWOBJ) {
-	  *cptr = (char *)memcpy((char *)malloc((size)*sizeof(char)), cstr, sizeof(char)*(size));
-	} else {
-	  *cptr = cstr;
-	  *alloc = SWIG_OLDOBJ;
-	}
-      }
-    }
-    if (psize) *psize = size;
-    return SWIG_OK;
-  } else {
-    swig_type_info* pchar_descriptor = SWIG_pchar_descriptor();
-    if (pchar_descriptor) {
-      char* vptr = 0; 
-      if (SWIG_ConvertPtr(obj, (void**)&vptr, pchar_descriptor, 0) == SWIG_OK) {
-	if (cptr) *cptr = vptr;
-	if (psize) *psize = vptr ? (strlen(vptr) + 1) : 0;
-	if (alloc) *alloc = SWIG_OLDOBJ;
-	return SWIG_OK;
-      }
-    }
-  }
-  return SWIG_TypeError;
-}
-
-
-
 
 
 SWIGINTERNINLINE SV *
@@ -1800,45 +1759,10 @@ SWIG_FromCharPtr(const char *cptr)
 }
 
 
-#include <limits.h>
-#if !defined(SWIG_NO_LLONG_MAX)
-# if !defined(LLONG_MAX) && defined(__GNUC__) && defined (__LONG_LONG_MAX__)
-#   define LLONG_MAX __LONG_LONG_MAX__
-#   define LLONG_MIN (-LLONG_MAX - 1LL)
-#   define ULLONG_MAX (LLONG_MAX * 2ULL + 1ULL)
-# endif
-#endif
-
-
-SWIGINTERN int
-SWIG_AsVal_unsigned_SS_int SWIG_PERL_DECL_ARGS_2(SV * obj, unsigned int *val)
-{
-  unsigned long v;
-  int res = SWIG_AsVal_unsigned_SS_long SWIG_PERL_CALL_ARGS_2(obj, &v);
-  if (SWIG_IsOK(res)) {
-    if ((v > UINT_MAX)) {
-      return SWIG_OverflowError;
-    } else {
-      if (val) *val = (unsigned int)(v);
-    }
-  }  
-  return res;
-}
-
-
 SWIGINTERNINLINE SV *
 SWIG_From_unsigned_SS_int  SWIG_PERL_DECL_ARGS_1(unsigned int value)
 {    
   return SWIG_From_unsigned_SS_long  SWIG_PERL_CALL_ARGS_1(value);
-}
-
-
-SWIGINTERNINLINE SV *
-SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
-{    
-  SV *obj = sv_newmortal();
-  sv_setnv(obj, value);
-  return obj;
 }
 
 #ifdef __cplusplus
@@ -2056,7 +1980,7 @@ XS(_wrap_gsl_interp_accel_cache_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_interp_accel_cache_get" "', argument " "1"" of type '" "gsl_interp_accel *""'"); 
     }
     arg1 = (gsl_interp_accel *)(argp1);
-    result = (size_t) ((arg1)->cache);
+    result =  ((arg1)->cache);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -2121,7 +2045,7 @@ XS(_wrap_gsl_interp_accel_miss_count_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_interp_accel_miss_count_get" "', argument " "1"" of type '" "gsl_interp_accel *""'"); 
     }
     arg1 = (gsl_interp_accel *)(argp1);
-    result = (size_t) ((arg1)->miss_count);
+    result =  ((arg1)->miss_count);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -2186,7 +2110,7 @@ XS(_wrap_gsl_interp_accel_hit_count_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_interp_accel_hit_count_get" "', argument " "1"" of type '" "gsl_interp_accel *""'"); 
     }
     arg1 = (gsl_interp_accel *)(argp1);
-    result = (size_t) ((arg1)->hit_count);
+    result =  ((arg1)->hit_count);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -2231,635 +2155,6 @@ XS(_wrap_delete_gsl_interp_accel) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_gsl_interp_accel" "', argument " "1"" of type '" "gsl_interp_accel *""'"); 
     }
     arg1 = (gsl_interp_accel *)(argp1);
-    free((char *) arg1);
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_interp_type_name_set) {
-  {
-    gsl_interp_type *arg1 = (gsl_interp_type *) 0 ;
-    char *arg2 = (char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_interp_type_name_set(self,name);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_interp_type, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_interp_type_name_set" "', argument " "1"" of type '" "gsl_interp_type *""'"); 
-    }
-    arg1 = (gsl_interp_type *)(argp1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_interp_type_name_set" "', argument " "2"" of type '" "char const *""'");
-    }
-    arg2 = (char *)(buf2);
-    if (arg2) {
-      size_t size = strlen((const char *)((const char *)(arg2))) + 1;
-      arg1->name = (char const *)(char *)memcpy((char *)malloc((size)*sizeof(char)), arg2, sizeof(char)*(size));
-    } else {
-      arg1->name = 0;
-    }
-    
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    XSRETURN(argvi);
-  fail:
-    
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_interp_type_name_get) {
-  {
-    gsl_interp_type *arg1 = (gsl_interp_type *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_interp_type_name_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_interp_type, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_interp_type_name_get" "', argument " "1"" of type '" "gsl_interp_type *""'"); 
-    }
-    arg1 = (gsl_interp_type *)(argp1);
-    result = (char *) ((arg1)->name);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_interp_type_min_size_set) {
-  {
-    gsl_interp_type *arg1 = (gsl_interp_type *) 0 ;
-    unsigned int arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    unsigned int val2 ;
-    int ecode2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_interp_type_min_size_set(self,min_size);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_interp_type, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_interp_type_min_size_set" "', argument " "1"" of type '" "gsl_interp_type *""'"); 
-    }
-    arg1 = (gsl_interp_type *)(argp1);
-    ecode2 = SWIG_AsVal_unsigned_SS_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_interp_type_min_size_set" "', argument " "2"" of type '" "unsigned int""'");
-    } 
-    arg2 = (unsigned int)(val2);
-    if (arg1) (arg1)->min_size = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_interp_type_min_size_get) {
-  {
-    gsl_interp_type *arg1 = (gsl_interp_type *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    unsigned int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_interp_type_min_size_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_interp_type, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_interp_type_min_size_get" "', argument " "1"" of type '" "gsl_interp_type *""'"); 
-    }
-    arg1 = (gsl_interp_type *)(argp1);
-    result = (unsigned int) ((arg1)->min_size);
-    ST(argvi) = SWIG_From_unsigned_SS_int  SWIG_PERL_CALL_ARGS_1((unsigned int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_interp_type_alloc_set) {
-  {
-    gsl_interp_type *arg1 = (gsl_interp_type *) 0 ;
-    void *(*arg2)(size_t) = (void *(*)(size_t)) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_interp_type_alloc_set(self,alloc);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_interp_type, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_interp_type_alloc_set" "', argument " "1"" of type '" "gsl_interp_type *""'"); 
-    }
-    arg1 = (gsl_interp_type *)(argp1);
-    {
-      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_int__p_void);
-      if (!SWIG_IsOK(res)) {
-        SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_interp_type_alloc_set" "', argument " "2"" of type '" "void *(*)(size_t)""'"); 
-      }
-    }
-    if (arg1) (arg1)->alloc = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_interp_type_alloc_get) {
-  {
-    gsl_interp_type *arg1 = (gsl_interp_type *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    void *(*result)(size_t) = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_interp_type_alloc_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_interp_type, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_interp_type_alloc_get" "', argument " "1"" of type '" "gsl_interp_type *""'"); 
-    }
-    arg1 = (gsl_interp_type *)(argp1);
-    result = (void *(*)(size_t)) ((arg1)->alloc);
-    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_int__p_void); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_interp_type_init_set) {
-  {
-    gsl_interp_type *arg1 = (gsl_interp_type *) 0 ;
-    int (*arg2)(void *,double const [],double const [],size_t) = (int (*)(void *,double const [],double const [],size_t)) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_interp_type_init_set(self,init);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_interp_type, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_interp_type_init_set" "', argument " "1"" of type '" "gsl_interp_type *""'"); 
-    }
-    arg1 = (gsl_interp_type *)(argp1);
-    {
-      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_void_a___q_const__double_a___q_const__double_int__int);
-      if (!SWIG_IsOK(res)) {
-        SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_interp_type_init_set" "', argument " "2"" of type '" "int (*)(void *,double const [],double const [],size_t)""'"); 
-      }
-    }
-    if (arg1) (arg1)->init = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_interp_type_init_get) {
-  {
-    gsl_interp_type *arg1 = (gsl_interp_type *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int (*result)(void *,double const [],double const [],size_t) = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_interp_type_init_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_interp_type, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_interp_type_init_get" "', argument " "1"" of type '" "gsl_interp_type *""'"); 
-    }
-    arg1 = (gsl_interp_type *)(argp1);
-    result = (int (*)(void *,double const [],double const [],size_t)) ((arg1)->init);
-    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_void_a___q_const__double_a___q_const__double_int__int); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_interp_type_eval_set) {
-  {
-    gsl_interp_type *arg1 = (gsl_interp_type *) 0 ;
-    int (*arg2)(void const *,double const [],double const [],size_t,double,gsl_interp_accel *,double *) = (int (*)(void const *,double const [],double const [],size_t,double,gsl_interp_accel *,double *)) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_interp_type_eval_set(self,eval);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_interp_type, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_interp_type_eval_set" "', argument " "1"" of type '" "gsl_interp_type *""'"); 
-    }
-    arg1 = (gsl_interp_type *)(argp1);
-    {
-      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_q_const__void_a___q_const__double_a___q_const__double_int_double_p_gsl_interp_accel_p_double__int);
-      if (!SWIG_IsOK(res)) {
-        SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_interp_type_eval_set" "', argument " "2"" of type '" "int (*)(void const *,double const [],double const [],size_t,double,gsl_interp_accel *,double *)""'"); 
-      }
-    }
-    if (arg1) (arg1)->eval = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_interp_type_eval_get) {
-  {
-    gsl_interp_type *arg1 = (gsl_interp_type *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int (*result)(void const *,double const [],double const [],size_t,double,gsl_interp_accel *,double *) = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_interp_type_eval_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_interp_type, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_interp_type_eval_get" "', argument " "1"" of type '" "gsl_interp_type *""'"); 
-    }
-    arg1 = (gsl_interp_type *)(argp1);
-    result = (int (*)(void const *,double const [],double const [],size_t,double,gsl_interp_accel *,double *)) ((arg1)->eval);
-    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_q_const__void_a___q_const__double_a___q_const__double_int_double_p_gsl_interp_accel_p_double__int); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_interp_type_eval_deriv_set) {
-  {
-    gsl_interp_type *arg1 = (gsl_interp_type *) 0 ;
-    int (*arg2)(void const *,double const [],double const [],size_t,double,gsl_interp_accel *,double *) = (int (*)(void const *,double const [],double const [],size_t,double,gsl_interp_accel *,double *)) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_interp_type_eval_deriv_set(self,eval_deriv);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_interp_type, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_interp_type_eval_deriv_set" "', argument " "1"" of type '" "gsl_interp_type *""'"); 
-    }
-    arg1 = (gsl_interp_type *)(argp1);
-    {
-      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_q_const__void_a___q_const__double_a___q_const__double_int_double_p_gsl_interp_accel_p_double__int);
-      if (!SWIG_IsOK(res)) {
-        SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_interp_type_eval_deriv_set" "', argument " "2"" of type '" "int (*)(void const *,double const [],double const [],size_t,double,gsl_interp_accel *,double *)""'"); 
-      }
-    }
-    if (arg1) (arg1)->eval_deriv = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_interp_type_eval_deriv_get) {
-  {
-    gsl_interp_type *arg1 = (gsl_interp_type *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int (*result)(void const *,double const [],double const [],size_t,double,gsl_interp_accel *,double *) = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_interp_type_eval_deriv_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_interp_type, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_interp_type_eval_deriv_get" "', argument " "1"" of type '" "gsl_interp_type *""'"); 
-    }
-    arg1 = (gsl_interp_type *)(argp1);
-    result = (int (*)(void const *,double const [],double const [],size_t,double,gsl_interp_accel *,double *)) ((arg1)->eval_deriv);
-    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_q_const__void_a___q_const__double_a___q_const__double_int_double_p_gsl_interp_accel_p_double__int); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_interp_type_eval_deriv2_set) {
-  {
-    gsl_interp_type *arg1 = (gsl_interp_type *) 0 ;
-    int (*arg2)(void const *,double const [],double const [],size_t,double,gsl_interp_accel *,double *) = (int (*)(void const *,double const [],double const [],size_t,double,gsl_interp_accel *,double *)) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_interp_type_eval_deriv2_set(self,eval_deriv2);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_interp_type, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_interp_type_eval_deriv2_set" "', argument " "1"" of type '" "gsl_interp_type *""'"); 
-    }
-    arg1 = (gsl_interp_type *)(argp1);
-    {
-      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_q_const__void_a___q_const__double_a___q_const__double_int_double_p_gsl_interp_accel_p_double__int);
-      if (!SWIG_IsOK(res)) {
-        SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_interp_type_eval_deriv2_set" "', argument " "2"" of type '" "int (*)(void const *,double const [],double const [],size_t,double,gsl_interp_accel *,double *)""'"); 
-      }
-    }
-    if (arg1) (arg1)->eval_deriv2 = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_interp_type_eval_deriv2_get) {
-  {
-    gsl_interp_type *arg1 = (gsl_interp_type *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int (*result)(void const *,double const [],double const [],size_t,double,gsl_interp_accel *,double *) = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_interp_type_eval_deriv2_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_interp_type, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_interp_type_eval_deriv2_get" "', argument " "1"" of type '" "gsl_interp_type *""'"); 
-    }
-    arg1 = (gsl_interp_type *)(argp1);
-    result = (int (*)(void const *,double const [],double const [],size_t,double,gsl_interp_accel *,double *)) ((arg1)->eval_deriv2);
-    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_q_const__void_a___q_const__double_a___q_const__double_int_double_p_gsl_interp_accel_p_double__int); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_interp_type_eval_integ_set) {
-  {
-    gsl_interp_type *arg1 = (gsl_interp_type *) 0 ;
-    int (*arg2)(void const *,double const [],double const [],size_t,gsl_interp_accel *,double,double,double *) = (int (*)(void const *,double const [],double const [],size_t,gsl_interp_accel *,double,double,double *)) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_interp_type_eval_integ_set(self,eval_integ);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_interp_type, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_interp_type_eval_integ_set" "', argument " "1"" of type '" "gsl_interp_type *""'"); 
-    }
-    arg1 = (gsl_interp_type *)(argp1);
-    {
-      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_q_const__void_a___q_const__double_a___q_const__double_int_p_gsl_interp_accel_double_double_p_double__int);
-      if (!SWIG_IsOK(res)) {
-        SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_interp_type_eval_integ_set" "', argument " "2"" of type '" "int (*)(void const *,double const [],double const [],size_t,gsl_interp_accel *,double,double,double *)""'"); 
-      }
-    }
-    if (arg1) (arg1)->eval_integ = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_interp_type_eval_integ_get) {
-  {
-    gsl_interp_type *arg1 = (gsl_interp_type *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int (*result)(void const *,double const [],double const [],size_t,gsl_interp_accel *,double,double,double *) = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_interp_type_eval_integ_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_interp_type, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_interp_type_eval_integ_get" "', argument " "1"" of type '" "gsl_interp_type *""'"); 
-    }
-    arg1 = (gsl_interp_type *)(argp1);
-    result = (int (*)(void const *,double const [],double const [],size_t,gsl_interp_accel *,double,double,double *)) ((arg1)->eval_integ);
-    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_q_const__void_a___q_const__double_a___q_const__double_int_p_gsl_interp_accel_double_double_p_double__int); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_interp_type_free_set) {
-  {
-    gsl_interp_type *arg1 = (gsl_interp_type *) 0 ;
-    void (*arg2)(void *) = (void (*)(void *)) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_interp_type_free_set(self,free);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_interp_type, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_interp_type_free_set" "', argument " "1"" of type '" "gsl_interp_type *""'"); 
-    }
-    arg1 = (gsl_interp_type *)(argp1);
-    {
-      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_void__void);
-      if (!SWIG_IsOK(res)) {
-        SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_interp_type_free_set" "', argument " "2"" of type '" "void (*)(void *)""'"); 
-      }
-    }
-    if (arg1) (arg1)->free = arg2;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_interp_type_free_get) {
-  {
-    gsl_interp_type *arg1 = (gsl_interp_type *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    void (*result)(void *) = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_interp_type_free_get(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_interp_type, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_interp_type_free_get" "', argument " "1"" of type '" "gsl_interp_type *""'"); 
-    }
-    arg1 = (gsl_interp_type *)(argp1);
-    result = (void (*)(void *)) ((arg1)->free);
-    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_void__void); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_new_gsl_interp_type) {
-  {
-    int argvi = 0;
-    gsl_interp_type *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 0) || (items > 0)) {
-      SWIG_croak("Usage: new_gsl_interp_type();");
-    }
-    result = (gsl_interp_type *)calloc(1, sizeof(gsl_interp_type));
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_interp_type, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
-    XSRETURN(argvi);
-  fail:
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_delete_gsl_interp_type) {
-  {
-    gsl_interp_type *arg1 = (gsl_interp_type *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: delete_gsl_interp_type(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_interp_type, SWIG_POINTER_DISOWN |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_gsl_interp_type" "', argument " "1"" of type '" "gsl_interp_type *""'"); 
-    }
-    arg1 = (gsl_interp_type *)(argp1);
     free((char *) arg1);
     
     
@@ -2926,7 +2221,7 @@ XS(_wrap_gsl_interp_type_get) {
     }
     arg1 = (gsl_interp *)(argp1);
     result = (gsl_interp_type *) ((arg1)->type);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_interp_type, 0 | SWIG_SHADOW); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_interp_type, 0 | 0); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -3120,7 +2415,7 @@ XS(_wrap_gsl_interp_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_interp_size_get" "', argument " "1"" of type '" "gsl_interp *""'"); 
     }
     arg1 = (gsl_interp *)(argp1);
-    result = (size_t) ((arg1)->size);
+    result =  ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -3309,7 +2604,7 @@ XS(_wrap_gsl_interp_accel_find) {
       SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_interp_accel_find" "', argument " "4"" of type '" "double""'");
     } 
     arg4 = (double)(val4);
-    result = (size_t)gsl_interp_accel_find(arg1,(double const (*))arg2,arg3,arg4);
+    result = gsl_interp_accel_find(arg1,(double const (*))arg2,arg3,arg4);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     {
@@ -4498,7 +3793,7 @@ XS(_wrap_gsl_interp_bsearch) {
       SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_interp_bsearch" "', argument " "4"" of type '" "size_t""'");
     } 
     arg4 = (size_t)(val4);
-    result = (size_t)gsl_interp_bsearch((double const (*))arg1,arg2,arg3,arg4);
+    result = gsl_interp_bsearch((double const (*))arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     {
       if (arg1) free(arg1);
@@ -4524,57 +3819,33 @@ XS(_wrap_gsl_interp_bsearch) {
 
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_f_int__p_void = {"_p_f_int__p_void", "void *(*)(size_t)|void *(*)(int)", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_f_p_q_const__void_a___q_const__double_a___q_const__double_int_double_p_gsl_interp_accel_p_double__int = {"_p_f_p_q_const__void_a___q_const__double_a___q_const__double_int_double_p_gsl_interp_accel_p_double__int", "int (*)(void const *,double const [],double const [],int,double,gsl_interp_accel *,double *)|int (*)(void const *,double const [],double const [],size_t,double,gsl_interp_accel *,double *)", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_f_p_q_const__void_a___q_const__double_a___q_const__double_int_p_gsl_interp_accel_double_double_p_double__int = {"_p_f_p_q_const__void_a___q_const__double_a___q_const__double_int_p_gsl_interp_accel_double_double_p_double__int", "int (*)(void const *,double const [],double const [],int,gsl_interp_accel *,double,double,double *)|int (*)(void const *,double const [],double const [],size_t,gsl_interp_accel *,double,double,double *)", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_f_p_void__void = {"_p_f_p_void__void", "void (*)(void *)", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_f_p_void_a___q_const__double_a___q_const__double_int__int = {"_p_f_p_void_a___q_const__double_a___q_const__double_int__int", "int (*)(void *,double const [],double const [],size_t)|int (*)(void *,double const [],double const [],int)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_gsl_interp = {"_p_gsl_interp", "gsl_interp *", 0, 0, (void*)"Math::GSL::Interp::gsl_interp", 0};
 static swig_type_info _swigt__p_gsl_interp_accel = {"_p_gsl_interp_accel", "gsl_interp_accel *", 0, 0, (void*)"Math::GSL::Interp::gsl_interp_accel", 0};
-static swig_type_info _swigt__p_gsl_interp_type = {"_p_gsl_interp_type", "gsl_interp_type *", 0, 0, (void*)"Math::GSL::Interp::gsl_interp_type", 0};
-static swig_type_info _swigt__p_int = {"_p_int", "int *|size_t *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_gsl_interp_type = {"_p_gsl_interp_type", "gsl_interp_type *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_void = {"_p_void", "void *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_char,
   &_swigt__p_double,
-  &_swigt__p_f_int__p_void,
-  &_swigt__p_f_p_q_const__void_a___q_const__double_a___q_const__double_int_double_p_gsl_interp_accel_p_double__int,
-  &_swigt__p_f_p_q_const__void_a___q_const__double_a___q_const__double_int_p_gsl_interp_accel_double_double_p_double__int,
-  &_swigt__p_f_p_void__void,
-  &_swigt__p_f_p_void_a___q_const__double_a___q_const__double_int__int,
   &_swigt__p_gsl_interp,
   &_swigt__p_gsl_interp_accel,
   &_swigt__p_gsl_interp_type,
-  &_swigt__p_int,
   &_swigt__p_void,
 };
 
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_f_int__p_void[] = {  {&_swigt__p_f_int__p_void, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_f_p_q_const__void_a___q_const__double_a___q_const__double_int_double_p_gsl_interp_accel_p_double__int[] = {  {&_swigt__p_f_p_q_const__void_a___q_const__double_a___q_const__double_int_double_p_gsl_interp_accel_p_double__int, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_f_p_q_const__void_a___q_const__double_a___q_const__double_int_p_gsl_interp_accel_double_double_p_double__int[] = {  {&_swigt__p_f_p_q_const__void_a___q_const__double_a___q_const__double_int_p_gsl_interp_accel_double_double_p_double__int, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_f_p_void__void[] = {  {&_swigt__p_f_p_void__void, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_f_p_void_a___q_const__double_a___q_const__double_int__int[] = {  {&_swigt__p_f_p_void_a___q_const__double_a___q_const__double_int__int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_interp[] = {  {&_swigt__p_gsl_interp, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_interp_accel[] = {  {&_swigt__p_gsl_interp_accel, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_interp_type[] = {  {&_swigt__p_gsl_interp_type, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_void[] = {  {&_swigt__p_void, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_char,
   _swigc__p_double,
-  _swigc__p_f_int__p_void,
-  _swigc__p_f_p_q_const__void_a___q_const__double_a___q_const__double_int_double_p_gsl_interp_accel_p_double__int,
-  _swigc__p_f_p_q_const__void_a___q_const__double_a___q_const__double_int_p_gsl_interp_accel_double_double_p_double__int,
-  _swigc__p_f_p_void__void,
-  _swigc__p_f_p_void_a___q_const__double_a___q_const__double_int__int,
   _swigc__p_gsl_interp,
   _swigc__p_gsl_interp_accel,
   _swigc__p_gsl_interp_type,
-  _swigc__p_int,
   _swigc__p_void,
 };
 
@@ -4605,26 +3876,6 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::Interpc::gsl_interp_accel_hit_count_get", _wrap_gsl_interp_accel_hit_count_get},
 {"Math::GSL::Interpc::new_gsl_interp_accel", _wrap_new_gsl_interp_accel},
 {"Math::GSL::Interpc::delete_gsl_interp_accel", _wrap_delete_gsl_interp_accel},
-{"Math::GSL::Interpc::gsl_interp_type_name_set", _wrap_gsl_interp_type_name_set},
-{"Math::GSL::Interpc::gsl_interp_type_name_get", _wrap_gsl_interp_type_name_get},
-{"Math::GSL::Interpc::gsl_interp_type_min_size_set", _wrap_gsl_interp_type_min_size_set},
-{"Math::GSL::Interpc::gsl_interp_type_min_size_get", _wrap_gsl_interp_type_min_size_get},
-{"Math::GSL::Interpc::gsl_interp_type_alloc_set", _wrap_gsl_interp_type_alloc_set},
-{"Math::GSL::Interpc::gsl_interp_type_alloc_get", _wrap_gsl_interp_type_alloc_get},
-{"Math::GSL::Interpc::gsl_interp_type_init_set", _wrap_gsl_interp_type_init_set},
-{"Math::GSL::Interpc::gsl_interp_type_init_get", _wrap_gsl_interp_type_init_get},
-{"Math::GSL::Interpc::gsl_interp_type_eval_set", _wrap_gsl_interp_type_eval_set},
-{"Math::GSL::Interpc::gsl_interp_type_eval_get", _wrap_gsl_interp_type_eval_get},
-{"Math::GSL::Interpc::gsl_interp_type_eval_deriv_set", _wrap_gsl_interp_type_eval_deriv_set},
-{"Math::GSL::Interpc::gsl_interp_type_eval_deriv_get", _wrap_gsl_interp_type_eval_deriv_get},
-{"Math::GSL::Interpc::gsl_interp_type_eval_deriv2_set", _wrap_gsl_interp_type_eval_deriv2_set},
-{"Math::GSL::Interpc::gsl_interp_type_eval_deriv2_get", _wrap_gsl_interp_type_eval_deriv2_get},
-{"Math::GSL::Interpc::gsl_interp_type_eval_integ_set", _wrap_gsl_interp_type_eval_integ_set},
-{"Math::GSL::Interpc::gsl_interp_type_eval_integ_get", _wrap_gsl_interp_type_eval_integ_get},
-{"Math::GSL::Interpc::gsl_interp_type_free_set", _wrap_gsl_interp_type_free_set},
-{"Math::GSL::Interpc::gsl_interp_type_free_get", _wrap_gsl_interp_type_free_get},
-{"Math::GSL::Interpc::new_gsl_interp_type", _wrap_new_gsl_interp_type},
-{"Math::GSL::Interpc::delete_gsl_interp_type", _wrap_delete_gsl_interp_type},
 {"Math::GSL::Interpc::gsl_interp_type_set", _wrap_gsl_interp_type_set},
 {"Math::GSL::Interpc::gsl_interp_type_get", _wrap_gsl_interp_type_get},
 {"Math::GSL::Interpc::gsl_interp_xmin_set", _wrap_gsl_interp_xmin_set},
@@ -4970,7 +4221,6 @@ XS(SWIG_init) {
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   SWIG_TypeClientData(SWIGTYPE_p_gsl_interp_accel, (void*) "Math::GSL::Interp::gsl_interp_accel");
-  SWIG_TypeClientData(SWIGTYPE_p_gsl_interp_type, (void*) "Math::GSL::Interp::gsl_interp_type");
   SWIG_TypeClientData(SWIGTYPE_p_gsl_interp, (void*) "Math::GSL::Interp::gsl_interp");
   ST(0) = &PL_sv_yes;
   XSRETURN(1);

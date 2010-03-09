@@ -1441,11 +1441,11 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_f_p_q_const__gsl_vector_p_void_p_gsl_vector__void swig_types[3]
 #define SWIGTYPE_p_f_p_void__int swig_types[4]
 #define SWIGTYPE_p_f_p_void__void swig_types[5]
-#define SWIGTYPE_p_f_p_void_int__int swig_types[6]
-#define SWIGTYPE_p_f_p_void_p_struct_gsl_multimin_function_fdf_struct_p_gsl_vector_p_double_p_gsl_vector_p_gsl_vector__int swig_types[7]
-#define SWIGTYPE_p_f_p_void_p_struct_gsl_multimin_function_fdf_struct_p_q_const__gsl_vector_p_double_p_gsl_vector_double_double__int swig_types[8]
-#define SWIGTYPE_p_f_p_void_p_struct_gsl_multimin_function_struct_p_gsl_vector_p_double_p_double__int swig_types[9]
-#define SWIGTYPE_p_f_p_void_p_struct_gsl_multimin_function_struct_p_q_const__gsl_vector_p_double_p_q_const__gsl_vector__int swig_types[10]
+#define SWIGTYPE_p_f_p_void_p_struct_gsl_multimin_function_fdf_struct_p_gsl_vector_p_double_p_gsl_vector_p_gsl_vector__int swig_types[6]
+#define SWIGTYPE_p_f_p_void_p_struct_gsl_multimin_function_fdf_struct_p_q_const__gsl_vector_p_double_p_gsl_vector_double_double__int swig_types[7]
+#define SWIGTYPE_p_f_p_void_p_struct_gsl_multimin_function_struct_p_gsl_vector_p_double_p_double__int swig_types[8]
+#define SWIGTYPE_p_f_p_void_p_struct_gsl_multimin_function_struct_p_q_const__gsl_vector_p_double_p_q_const__gsl_vector__int swig_types[9]
+#define SWIGTYPE_p_f_p_void_size_t__int swig_types[10]
 #define SWIGTYPE_p_gsl_multimin_fdfminimizer swig_types[11]
 #define SWIGTYPE_p_gsl_multimin_fdfminimizer_type swig_types[12]
 #define SWIGTYPE_p_gsl_multimin_fminimizer swig_types[13]
@@ -1453,10 +1453,9 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_gsl_multimin_function_fdf_struct swig_types[15]
 #define SWIGTYPE_p_gsl_multimin_function_struct swig_types[16]
 #define SWIGTYPE_p_gsl_vector swig_types[17]
-#define SWIGTYPE_p_int swig_types[18]
-#define SWIGTYPE_p_void swig_types[19]
-static swig_type_info *swig_types[21];
-static swig_module_info swig_module = {swig_types, 20, 0, 0, 0, 0};
+#define SWIGTYPE_p_void swig_types[18]
+static swig_type_info *swig_types[20];
+static swig_module_info swig_module = {swig_types, 19, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1510,7 +1509,15 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
     #include "gsl/gsl_monte.h"
 
 
+    struct perl_array {
+        I32 len;
+        AV *array;
+    };
 
+
+    /* structure to hold required information while the gsl function call
+       for each callback
+     */
     struct gsl_function_perl {
         gsl_function C_gsl_function;
         SV * function;
@@ -1524,9 +1531,8 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
     };
 
 
-    /* this function returns the value 
-        of evaluating the function pointer
-        stored in func with argument x
+    /* These functions (C callbacks) calls the perl callbacks.
+       Info for perl callback can be found using the 'void*params' parameter
     */
     double call_gsl_function(double x , void *params){
         struct gsl_function_perl *F=(struct gsl_function_perl*)params;
@@ -2095,7 +2101,7 @@ XS(_wrap_gsl_multimin_function_struct_n_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_multimin_function_struct_n_get" "', argument " "1"" of type '" "struct gsl_multimin_function_struct *""'"); 
     }
     arg1 = (struct gsl_multimin_function_struct *)(argp1);
-    result = (size_t) ((arg1)->n);
+    result =  ((arg1)->n);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -2460,7 +2466,7 @@ XS(_wrap_gsl_multimin_function_fdf_struct_n_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_multimin_function_fdf_struct_n_get" "', argument " "1"" of type '" "struct gsl_multimin_function_fdf_struct *""'"); 
     }
     arg1 = (struct gsl_multimin_function_fdf_struct *)(argp1);
-    result = (size_t) ((arg1)->n);
+    result =  ((arg1)->n);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -2752,7 +2758,7 @@ XS(_wrap_gsl_multimin_fminimizer_type_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_multimin_fminimizer_type_size_get" "', argument " "1"" of type '" "gsl_multimin_fminimizer_type *""'"); 
     }
     arg1 = (gsl_multimin_fminimizer_type *)(argp1);
-    result = (size_t) ((arg1)->size);
+    result =  ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -2781,7 +2787,7 @@ XS(_wrap_gsl_multimin_fminimizer_type_alloc_set) {
     }
     arg1 = (gsl_multimin_fminimizer_type *)(argp1);
     {
-      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_void_int__int);
+      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_void_size_t__int);
       if (!SWIG_IsOK(res)) {
         SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_multimin_fminimizer_type_alloc_set" "', argument " "2"" of type '" "int (*)(void *,size_t)""'"); 
       }
@@ -2817,7 +2823,7 @@ XS(_wrap_gsl_multimin_fminimizer_type_alloc_get) {
     }
     arg1 = (gsl_multimin_fminimizer_type *)(argp1);
     result = (int (*)(void *,size_t)) ((arg1)->alloc);
-    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_void_int__int); argvi++ ;
+    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_void_size_t__int); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -3961,7 +3967,7 @@ XS(_wrap_gsl_multimin_fdfminimizer_type_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_multimin_fdfminimizer_type_size_get" "', argument " "1"" of type '" "gsl_multimin_fdfminimizer_type *""'"); 
     }
     arg1 = (gsl_multimin_fdfminimizer_type *)(argp1);
-    result = (size_t) ((arg1)->size);
+    result =  ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -3990,7 +3996,7 @@ XS(_wrap_gsl_multimin_fdfminimizer_type_alloc_set) {
     }
     arg1 = (gsl_multimin_fdfminimizer_type *)(argp1);
     {
-      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_void_int__int);
+      int res = SWIG_ConvertFunctionPtr(ST(1), (void**)(&arg2), SWIGTYPE_p_f_p_void_size_t__int);
       if (!SWIG_IsOK(res)) {
         SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_multimin_fdfminimizer_type_alloc_set" "', argument " "2"" of type '" "int (*)(void *,size_t)""'"); 
       }
@@ -4026,7 +4032,7 @@ XS(_wrap_gsl_multimin_fdfminimizer_type_alloc_get) {
     }
     arg1 = (gsl_multimin_fdfminimizer_type *)(argp1);
     result = (int (*)(void *,size_t)) ((arg1)->alloc);
-    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_void_int__int); argvi++ ;
+    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_void_size_t__int); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -5173,11 +5179,11 @@ static swig_type_info _swigt__p_f_p_q_const__gsl_vector_p_void_p_double_p_gsl_ve
 static swig_type_info _swigt__p_f_p_q_const__gsl_vector_p_void_p_gsl_vector__void = {"_p_f_p_q_const__gsl_vector_p_void_p_gsl_vector__void", "void (*)(gsl_vector const *,void *,gsl_vector *)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_p_void__int = {"_p_f_p_void__int", "int (*)(void *)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_p_void__void = {"_p_f_p_void__void", "void (*)(void *)", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_f_p_void_int__int = {"_p_f_p_void_int__int", "int (*)(void *,size_t)|int (*)(void *,int)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_p_void_p_struct_gsl_multimin_function_fdf_struct_p_gsl_vector_p_double_p_gsl_vector_p_gsl_vector__int = {"_p_f_p_void_p_struct_gsl_multimin_function_fdf_struct_p_gsl_vector_p_double_p_gsl_vector_p_gsl_vector__int", "int (*)(void *,gsl_multimin_function_fdf *,gsl_vector *,double *,gsl_vector *,gsl_vector *)|int (*)(void *,struct gsl_multimin_function_fdf_struct *,gsl_vector *,double *,gsl_vector *,gsl_vector *)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_p_void_p_struct_gsl_multimin_function_fdf_struct_p_q_const__gsl_vector_p_double_p_gsl_vector_double_double__int = {"_p_f_p_void_p_struct_gsl_multimin_function_fdf_struct_p_q_const__gsl_vector_p_double_p_gsl_vector_double_double__int", "int (*)(void *,gsl_multimin_function_fdf *,gsl_vector const *,double *,gsl_vector *,double,double)|int (*)(void *,struct gsl_multimin_function_fdf_struct *,gsl_vector const *,double *,gsl_vector *,double,double)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_p_void_p_struct_gsl_multimin_function_struct_p_gsl_vector_p_double_p_double__int = {"_p_f_p_void_p_struct_gsl_multimin_function_struct_p_gsl_vector_p_double_p_double__int", "int (*)(void *,gsl_multimin_function *,gsl_vector *,double *,double *)|int (*)(void *,struct gsl_multimin_function_struct *,gsl_vector *,double *,double *)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_p_void_p_struct_gsl_multimin_function_struct_p_q_const__gsl_vector_p_double_p_q_const__gsl_vector__int = {"_p_f_p_void_p_struct_gsl_multimin_function_struct_p_q_const__gsl_vector_p_double_p_q_const__gsl_vector__int", "int (*)(void *,gsl_multimin_function *,gsl_vector const *,double *,gsl_vector const *)|int (*)(void *,struct gsl_multimin_function_struct *,gsl_vector const *,double *,gsl_vector const *)", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_f_p_void_size_t__int = {"_p_f_p_void_size_t__int", "int (*)(void *,size_t)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_gsl_multimin_fdfminimizer = {"_p_gsl_multimin_fdfminimizer", "gsl_multimin_fdfminimizer *", 0, 0, (void*)"Math::GSL::Multimin::gsl_multimin_fdfminimizer", 0};
 static swig_type_info _swigt__p_gsl_multimin_fdfminimizer_type = {"_p_gsl_multimin_fdfminimizer_type", "gsl_multimin_fdfminimizer_type *", 0, 0, (void*)"Math::GSL::Multimin::gsl_multimin_fdfminimizer_type", 0};
 static swig_type_info _swigt__p_gsl_multimin_fminimizer = {"_p_gsl_multimin_fminimizer", "gsl_multimin_fminimizer *", 0, 0, (void*)"Math::GSL::Multimin::gsl_multimin_fminimizer", 0};
@@ -5185,7 +5191,6 @@ static swig_type_info _swigt__p_gsl_multimin_fminimizer_type = {"_p_gsl_multimin
 static swig_type_info _swigt__p_gsl_multimin_function_fdf_struct = {"_p_gsl_multimin_function_fdf_struct", "struct gsl_multimin_function_fdf_struct *|gsl_multimin_function_fdf_struct *|gsl_multimin_function_fdf *", 0, 0, (void*)"Math::GSL::Multimin::gsl_multimin_function_fdf_struct", 0};
 static swig_type_info _swigt__p_gsl_multimin_function_struct = {"_p_gsl_multimin_function_struct", "gsl_multimin_function *|struct gsl_multimin_function_struct *|gsl_multimin_function_struct *", 0, 0, (void*)"Math::GSL::Multimin::gsl_multimin_function_struct", 0};
 static swig_type_info _swigt__p_gsl_vector = {"_p_gsl_vector", "gsl_vector *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_int = {"_p_int", "int *|size_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_void = {"_p_void", "void *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
@@ -5195,11 +5200,11 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_f_p_q_const__gsl_vector_p_void_p_gsl_vector__void,
   &_swigt__p_f_p_void__int,
   &_swigt__p_f_p_void__void,
-  &_swigt__p_f_p_void_int__int,
   &_swigt__p_f_p_void_p_struct_gsl_multimin_function_fdf_struct_p_gsl_vector_p_double_p_gsl_vector_p_gsl_vector__int,
   &_swigt__p_f_p_void_p_struct_gsl_multimin_function_fdf_struct_p_q_const__gsl_vector_p_double_p_gsl_vector_double_double__int,
   &_swigt__p_f_p_void_p_struct_gsl_multimin_function_struct_p_gsl_vector_p_double_p_double__int,
   &_swigt__p_f_p_void_p_struct_gsl_multimin_function_struct_p_q_const__gsl_vector_p_double_p_q_const__gsl_vector__int,
+  &_swigt__p_f_p_void_size_t__int,
   &_swigt__p_gsl_multimin_fdfminimizer,
   &_swigt__p_gsl_multimin_fdfminimizer_type,
   &_swigt__p_gsl_multimin_fminimizer,
@@ -5207,7 +5212,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_gsl_multimin_function_fdf_struct,
   &_swigt__p_gsl_multimin_function_struct,
   &_swigt__p_gsl_vector,
-  &_swigt__p_int,
   &_swigt__p_void,
 };
 
@@ -5217,11 +5221,11 @@ static swig_cast_info _swigc__p_f_p_q_const__gsl_vector_p_void_p_double_p_gsl_ve
 static swig_cast_info _swigc__p_f_p_q_const__gsl_vector_p_void_p_gsl_vector__void[] = {  {&_swigt__p_f_p_q_const__gsl_vector_p_void_p_gsl_vector__void, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_p_void__int[] = {  {&_swigt__p_f_p_void__int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_p_void__void[] = {  {&_swigt__p_f_p_void__void, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_f_p_void_int__int[] = {  {&_swigt__p_f_p_void_int__int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_p_void_p_struct_gsl_multimin_function_fdf_struct_p_gsl_vector_p_double_p_gsl_vector_p_gsl_vector__int[] = {  {&_swigt__p_f_p_void_p_struct_gsl_multimin_function_fdf_struct_p_gsl_vector_p_double_p_gsl_vector_p_gsl_vector__int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_p_void_p_struct_gsl_multimin_function_fdf_struct_p_q_const__gsl_vector_p_double_p_gsl_vector_double_double__int[] = {  {&_swigt__p_f_p_void_p_struct_gsl_multimin_function_fdf_struct_p_q_const__gsl_vector_p_double_p_gsl_vector_double_double__int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_p_void_p_struct_gsl_multimin_function_struct_p_gsl_vector_p_double_p_double__int[] = {  {&_swigt__p_f_p_void_p_struct_gsl_multimin_function_struct_p_gsl_vector_p_double_p_double__int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_p_void_p_struct_gsl_multimin_function_struct_p_q_const__gsl_vector_p_double_p_q_const__gsl_vector__int[] = {  {&_swigt__p_f_p_void_p_struct_gsl_multimin_function_struct_p_q_const__gsl_vector_p_double_p_q_const__gsl_vector__int, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_f_p_void_size_t__int[] = {  {&_swigt__p_f_p_void_size_t__int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_multimin_fdfminimizer[] = {  {&_swigt__p_gsl_multimin_fdfminimizer, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_multimin_fdfminimizer_type[] = {  {&_swigt__p_gsl_multimin_fdfminimizer_type, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_multimin_fminimizer[] = {  {&_swigt__p_gsl_multimin_fminimizer, 0, 0, 0},{0, 0, 0, 0}};
@@ -5229,7 +5233,6 @@ static swig_cast_info _swigc__p_gsl_multimin_fminimizer_type[] = {  {&_swigt__p_
 static swig_cast_info _swigc__p_gsl_multimin_function_fdf_struct[] = {  {&_swigt__p_gsl_multimin_function_fdf_struct, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_multimin_function_struct[] = {  {&_swigt__p_gsl_multimin_function_struct, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_vector[] = {  {&_swigt__p_gsl_vector, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_void[] = {  {&_swigt__p_void, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
@@ -5239,11 +5242,11 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_f_p_q_const__gsl_vector_p_void_p_gsl_vector__void,
   _swigc__p_f_p_void__int,
   _swigc__p_f_p_void__void,
-  _swigc__p_f_p_void_int__int,
   _swigc__p_f_p_void_p_struct_gsl_multimin_function_fdf_struct_p_gsl_vector_p_double_p_gsl_vector_p_gsl_vector__int,
   _swigc__p_f_p_void_p_struct_gsl_multimin_function_fdf_struct_p_q_const__gsl_vector_p_double_p_gsl_vector_double_double__int,
   _swigc__p_f_p_void_p_struct_gsl_multimin_function_struct_p_gsl_vector_p_double_p_double__int,
   _swigc__p_f_p_void_p_struct_gsl_multimin_function_struct_p_q_const__gsl_vector_p_double_p_q_const__gsl_vector__int,
+  _swigc__p_f_p_void_size_t__int,
   _swigc__p_gsl_multimin_fdfminimizer,
   _swigc__p_gsl_multimin_fdfminimizer_type,
   _swigc__p_gsl_multimin_fminimizer,
@@ -5251,7 +5254,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_gsl_multimin_function_fdf_struct,
   _swigc__p_gsl_multimin_function_struct,
   _swigc__p_gsl_vector,
-  _swigc__p_int,
   _swigc__p_void,
 };
 

@@ -1459,11 +1459,10 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_gsl_matrix_complex swig_types[21]
 #define SWIGTYPE_p_gsl_vector swig_types[22]
 #define SWIGTYPE_p_gsl_vector_complex swig_types[23]
-#define SWIGTYPE_p_int swig_types[24]
-#define SWIGTYPE_p_long_double swig_types[25]
-#define SWIGTYPE_p_unsigned_int swig_types[26]
-static swig_type_info *swig_types[28];
-static swig_module_info swig_module = {swig_types, 27, 0, 0, 0, 0};
+#define SWIGTYPE_p_long_double swig_types[24]
+#define SWIGTYPE_p_unsigned_int swig_types[25]
+static swig_type_info *swig_types[27];
+static swig_module_info swig_module = {swig_types, 26, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1517,7 +1516,15 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
     #include "gsl/gsl_monte.h"
 
 
+    struct perl_array {
+        I32 len;
+        AV *array;
+    };
 
+
+    /* structure to hold required information while the gsl function call
+       for each callback
+     */
     struct gsl_function_perl {
         gsl_function C_gsl_function;
         SV * function;
@@ -1531,9 +1538,8 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
     };
 
 
-    /* this function returns the value 
-        of evaluating the function pointer
-        stored in func with argument x
+    /* These functions (C callbacks) calls the perl callbacks.
+       Info for perl callback can be found using the 'void*params' parameter
     */
     double call_gsl_function(double x , void *params){
         struct gsl_function_perl *F=(struct gsl_function_perl*)params;
@@ -1915,7 +1921,7 @@ XS(_wrap_gsl_eigen_symm_workspace_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_eigen_symm_workspace_size_get" "', argument " "1"" of type '" "gsl_eigen_symm_workspace *""'"); 
     }
     arg1 = (gsl_eigen_symm_workspace *)(argp1);
-    result = (size_t) ((arg1)->size);
+    result =  ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -2258,7 +2264,7 @@ XS(_wrap_gsl_eigen_symmv_workspace_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_eigen_symmv_workspace_size_get" "', argument " "1"" of type '" "gsl_eigen_symmv_workspace *""'"); 
     }
     arg1 = (gsl_eigen_symmv_workspace *)(argp1);
-    result = (size_t) ((arg1)->size);
+    result =  ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -2741,7 +2747,7 @@ XS(_wrap_gsl_eigen_herm_workspace_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_eigen_herm_workspace_size_get" "', argument " "1"" of type '" "gsl_eigen_herm_workspace *""'"); 
     }
     arg1 = (gsl_eigen_herm_workspace *)(argp1);
-    result = (size_t) ((arg1)->size);
+    result =  ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -3149,7 +3155,7 @@ XS(_wrap_gsl_eigen_hermv_workspace_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_eigen_hermv_workspace_size_get" "', argument " "1"" of type '" "gsl_eigen_hermv_workspace *""'"); 
     }
     arg1 = (gsl_eigen_hermv_workspace *)(argp1);
-    result = (size_t) ((arg1)->size);
+    result =  ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -3697,7 +3703,7 @@ XS(_wrap_gsl_eigen_francis_workspace_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_eigen_francis_workspace_size_get" "', argument " "1"" of type '" "gsl_eigen_francis_workspace *""'"); 
     }
     arg1 = (gsl_eigen_francis_workspace *)(argp1);
-    result = (size_t) ((arg1)->size);
+    result =  ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -3762,7 +3768,7 @@ XS(_wrap_gsl_eigen_francis_workspace_max_iterations_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_eigen_francis_workspace_max_iterations_get" "', argument " "1"" of type '" "gsl_eigen_francis_workspace *""'"); 
     }
     arg1 = (gsl_eigen_francis_workspace *)(argp1);
-    result = (size_t) ((arg1)->max_iterations);
+    result =  ((arg1)->max_iterations);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -3827,7 +3833,7 @@ XS(_wrap_gsl_eigen_francis_workspace_n_iter_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_eigen_francis_workspace_n_iter_get" "', argument " "1"" of type '" "gsl_eigen_francis_workspace *""'"); 
     }
     arg1 = (gsl_eigen_francis_workspace *)(argp1);
-    result = (size_t) ((arg1)->n_iter);
+    result =  ((arg1)->n_iter);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -3892,7 +3898,7 @@ XS(_wrap_gsl_eigen_francis_workspace_n_evals_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_eigen_francis_workspace_n_evals_get" "', argument " "1"" of type '" "gsl_eigen_francis_workspace *""'"); 
     }
     arg1 = (gsl_eigen_francis_workspace *)(argp1);
-    result = (size_t) ((arg1)->n_evals);
+    result =  ((arg1)->n_evals);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -4385,7 +4391,7 @@ XS(_wrap_gsl_eigen_nonsymm_workspace_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_eigen_nonsymm_workspace_size_get" "', argument " "1"" of type '" "gsl_eigen_nonsymm_workspace *""'"); 
     }
     arg1 = (gsl_eigen_nonsymm_workspace *)(argp1);
-    result = (size_t) ((arg1)->size);
+    result =  ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -4710,7 +4716,7 @@ XS(_wrap_gsl_eigen_nonsymm_workspace_n_evals_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_eigen_nonsymm_workspace_n_evals_get" "', argument " "1"" of type '" "gsl_eigen_nonsymm_workspace *""'"); 
     }
     arg1 = (gsl_eigen_nonsymm_workspace *)(argp1);
-    result = (size_t) ((arg1)->n_evals);
+    result =  ((arg1)->n_evals);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -5093,7 +5099,7 @@ XS(_wrap_gsl_eigen_nonsymmv_workspace_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_eigen_nonsymmv_workspace_size_get" "', argument " "1"" of type '" "gsl_eigen_nonsymmv_workspace *""'"); 
     }
     arg1 = (gsl_eigen_nonsymmv_workspace *)(argp1);
-    result = (size_t) ((arg1)->size);
+    result =  ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -5709,7 +5715,7 @@ XS(_wrap_gsl_eigen_gensymm_workspace_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_eigen_gensymm_workspace_size_get" "', argument " "1"" of type '" "gsl_eigen_gensymm_workspace *""'"); 
     }
     arg1 = (gsl_eigen_gensymm_workspace *)(argp1);
-    result = (size_t) ((arg1)->size);
+    result =  ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -6035,7 +6041,7 @@ XS(_wrap_gsl_eigen_gensymmv_workspace_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_eigen_gensymmv_workspace_size_get" "', argument " "1"" of type '" "gsl_eigen_gensymmv_workspace *""'"); 
     }
     arg1 = (gsl_eigen_gensymmv_workspace *)(argp1);
-    result = (size_t) ((arg1)->size);
+    result =  ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -6333,7 +6339,7 @@ XS(_wrap_gsl_eigen_genherm_workspace_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_eigen_genherm_workspace_size_get" "', argument " "1"" of type '" "gsl_eigen_genherm_workspace *""'"); 
     }
     arg1 = (gsl_eigen_genherm_workspace *)(argp1);
-    result = (size_t) ((arg1)->size);
+    result =  ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -6659,7 +6665,7 @@ XS(_wrap_gsl_eigen_genhermv_workspace_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_eigen_genhermv_workspace_size_get" "', argument " "1"" of type '" "gsl_eigen_genhermv_workspace *""'"); 
     }
     arg1 = (gsl_eigen_genhermv_workspace *)(argp1);
-    result = (size_t) ((arg1)->size);
+    result =  ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -6957,7 +6963,7 @@ XS(_wrap_gsl_eigen_gen_workspace_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_eigen_gen_workspace_size_get" "', argument " "1"" of type '" "gsl_eigen_gen_workspace *""'"); 
     }
     arg1 = (gsl_eigen_gen_workspace *)(argp1);
-    result = (size_t) ((arg1)->size);
+    result =  ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -7087,7 +7093,7 @@ XS(_wrap_gsl_eigen_gen_workspace_n_evals_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_eigen_gen_workspace_n_evals_get" "', argument " "1"" of type '" "gsl_eigen_gen_workspace *""'"); 
     }
     arg1 = (gsl_eigen_gen_workspace *)(argp1);
-    result = (size_t) ((arg1)->n_evals);
+    result =  ((arg1)->n_evals);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -7152,7 +7158,7 @@ XS(_wrap_gsl_eigen_gen_workspace_max_iterations_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_eigen_gen_workspace_max_iterations_get" "', argument " "1"" of type '" "gsl_eigen_gen_workspace *""'"); 
     }
     arg1 = (gsl_eigen_gen_workspace *)(argp1);
-    result = (size_t) ((arg1)->max_iterations);
+    result =  ((arg1)->max_iterations);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -7217,7 +7223,7 @@ XS(_wrap_gsl_eigen_gen_workspace_n_iter_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_eigen_gen_workspace_n_iter_get" "', argument " "1"" of type '" "gsl_eigen_gen_workspace *""'"); 
     }
     arg1 = (gsl_eigen_gen_workspace *)(argp1);
-    result = (size_t) ((arg1)->n_iter);
+    result =  ((arg1)->n_iter);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -8375,7 +8381,7 @@ XS(_wrap_gsl_eigen_genv_workspace_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_eigen_genv_workspace_size_get" "', argument " "1"" of type '" "gsl_eigen_genv_workspace *""'"); 
     }
     arg1 = (gsl_eigen_genv_workspace *)(argp1);
-    result = (size_t) ((arg1)->size);
+    result =  ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -10363,7 +10369,6 @@ static swig_type_info _swigt__p_gsl_matrix = {"_p_gsl_matrix", "gsl_matrix *", 0
 static swig_type_info _swigt__p_gsl_matrix_complex = {"_p_gsl_matrix_complex", "gsl_matrix_complex *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_gsl_vector = {"_p_gsl_vector", "gsl_vector *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_gsl_vector_complex = {"_p_gsl_vector_complex", "gsl_vector_complex *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_int = {"_p_int", "int *|size_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_long_double = {"_p_long_double", "long double *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_int = {"_p_unsigned_int", "unsigned int *", 0, 0, (void*)0, 0};
 
@@ -10392,7 +10397,6 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_gsl_matrix_complex,
   &_swigt__p_gsl_vector,
   &_swigt__p_gsl_vector_complex,
-  &_swigt__p_int,
   &_swigt__p_long_double,
   &_swigt__p_unsigned_int,
 };
@@ -10421,7 +10425,6 @@ static swig_cast_info _swigc__p_gsl_matrix[] = {  {&_swigt__p_gsl_matrix, 0, 0, 
 static swig_cast_info _swigc__p_gsl_matrix_complex[] = {  {&_swigt__p_gsl_matrix_complex, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_vector[] = {  {&_swigt__p_gsl_vector, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_vector_complex[] = {  {&_swigt__p_gsl_vector_complex, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_long_double[] = {  {&_swigt__p_long_double, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_int[] = {  {&_swigt__p_unsigned_int, 0, 0, 0},{0, 0, 0, 0}};
 
@@ -10450,7 +10453,6 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_gsl_matrix_complex,
   _swigc__p_gsl_vector,
   _swigc__p_gsl_vector_complex,
-  _swigc__p_int,
   _swigc__p_long_double,
   _swigc__p_unsigned_int,
 };

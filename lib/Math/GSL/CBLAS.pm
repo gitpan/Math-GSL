@@ -190,7 +190,6 @@ package Math::GSL::CBLAS;
 *cblas_zhemm = *Math::GSL::CBLASc::cblas_zhemm;
 *cblas_zherk = *Math::GSL::CBLASc::cblas_zherk;
 *cblas_zher2k = *Math::GSL::CBLASc::cblas_zher2k;
-*cblas_xerbla = *Math::GSL::CBLASc::cblas_xerbla;
 
 # ------- VARIABLE STUBS --------
 

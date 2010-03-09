@@ -1447,7 +1447,7 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_gsl_integration_qawo_table swig_types[9]
 #define SWIGTYPE_p_gsl_integration_qaws_table swig_types[10]
 #define SWIGTYPE_p_gsl_integration_workspace swig_types[11]
-#define SWIGTYPE_p_int swig_types[12]
+#define SWIGTYPE_p_size_t swig_types[12]
 #define SWIGTYPE_p_void swig_types[13]
 static swig_type_info *swig_types[15];
 static swig_module_info swig_module = {swig_types, 14, 0, 0, 0, 0};
@@ -1504,7 +1504,15 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
     #include "gsl/gsl_monte.h"
 
 
+    struct perl_array {
+        I32 len;
+        AV *array;
+    };
 
+
+    /* structure to hold required information while the gsl function call
+       for each callback
+     */
     struct gsl_function_perl {
         gsl_function C_gsl_function;
         SV * function;
@@ -1518,9 +1526,8 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
     };
 
 
-    /* this function returns the value 
-        of evaluating the function pointer
-        stored in func with argument x
+    /* These functions (C callbacks) calls the perl callbacks.
+       Info for perl callback can be found using the 'void*params' parameter
     */
     double call_gsl_function(double x , void *params){
         struct gsl_function_perl *F=(struct gsl_function_perl*)params;
@@ -1885,7 +1892,7 @@ XS(_wrap_gsl_integration_workspace_limit_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_workspace_limit_get" "', argument " "1"" of type '" "gsl_integration_workspace *""'"); 
     }
     arg1 = (gsl_integration_workspace *)(argp1);
-    result = (size_t) ((arg1)->limit);
+    result =  ((arg1)->limit);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -1950,7 +1957,7 @@ XS(_wrap_gsl_integration_workspace_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_workspace_size_get" "', argument " "1"" of type '" "gsl_integration_workspace *""'"); 
     }
     arg1 = (gsl_integration_workspace *)(argp1);
-    result = (size_t) ((arg1)->size);
+    result =  ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -2015,7 +2022,7 @@ XS(_wrap_gsl_integration_workspace_nrmax_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_workspace_nrmax_get" "', argument " "1"" of type '" "gsl_integration_workspace *""'"); 
     }
     arg1 = (gsl_integration_workspace *)(argp1);
-    result = (size_t) ((arg1)->nrmax);
+    result =  ((arg1)->nrmax);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -2080,7 +2087,7 @@ XS(_wrap_gsl_integration_workspace_i_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_workspace_i_get" "', argument " "1"" of type '" "gsl_integration_workspace *""'"); 
     }
     arg1 = (gsl_integration_workspace *)(argp1);
-    result = (size_t) ((arg1)->i);
+    result =  ((arg1)->i);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -2145,7 +2152,7 @@ XS(_wrap_gsl_integration_workspace_maximum_level_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_workspace_maximum_level_get" "', argument " "1"" of type '" "gsl_integration_workspace *""'"); 
     }
     arg1 = (gsl_integration_workspace *)(argp1);
-    result = (size_t) ((arg1)->maximum_level);
+    result =  ((arg1)->maximum_level);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -2435,7 +2442,7 @@ XS(_wrap_gsl_integration_workspace_order_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_workspace_order_set" "', argument " "1"" of type '" "gsl_integration_workspace *""'"); 
     }
     arg1 = (gsl_integration_workspace *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_int, SWIG_POINTER_DISOWN |  0 );
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_size_t, SWIG_POINTER_DISOWN |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_integration_workspace_order_set" "', argument " "2"" of type '" "size_t *""'"); 
     }
@@ -2471,7 +2478,7 @@ XS(_wrap_gsl_integration_workspace_order_get) {
     }
     arg1 = (gsl_integration_workspace *)(argp1);
     result = (size_t *) ((arg1)->order);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_int, 0 | 0); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_size_t, 0 | 0); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -2500,7 +2507,7 @@ XS(_wrap_gsl_integration_workspace_level_set) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_workspace_level_set" "', argument " "1"" of type '" "gsl_integration_workspace *""'"); 
     }
     arg1 = (gsl_integration_workspace *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_int, SWIG_POINTER_DISOWN |  0 );
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_size_t, SWIG_POINTER_DISOWN |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_integration_workspace_level_set" "', argument " "2"" of type '" "size_t *""'"); 
     }
@@ -2536,7 +2543,7 @@ XS(_wrap_gsl_integration_workspace_level_get) {
     }
     arg1 = (gsl_integration_workspace *)(argp1);
     result = (size_t *) ((arg1)->level);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_int, 0 | 0); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_size_t, 0 | 0); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -3446,7 +3453,7 @@ XS(_wrap_gsl_integration_qawo_table_n_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_qawo_table_n_get" "', argument " "1"" of type '" "gsl_integration_qawo_table *""'"); 
     }
     arg1 = (gsl_integration_qawo_table *)(argp1);
-    result = (size_t) ((arg1)->n);
+    result =  ((arg1)->n);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -5275,7 +5282,7 @@ XS(_wrap_gsl_integration_qng) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((*arg8)); argvi++  ;
     } else {
       int new_flags = SWIG_IsNewObj(res8) ? (SWIG_POINTER_OWN | 0) : 0;
-      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg8), SWIGTYPE_p_int, new_flags); argvi++  ;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg8), SWIGTYPE_p_size_t, new_flags); argvi++  ;
     }
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
@@ -7583,7 +7590,7 @@ static swig_type_info _swigt__p_gsl_function_vec_struct = {"_p_gsl_function_vec_
 static swig_type_info _swigt__p_gsl_integration_qawo_table = {"_p_gsl_integration_qawo_table", "gsl_integration_qawo_table *", 0, 0, (void*)"Math::GSL::Integration::gsl_integration_qawo_table", 0};
 static swig_type_info _swigt__p_gsl_integration_qaws_table = {"_p_gsl_integration_qaws_table", "gsl_integration_qaws_table *", 0, 0, (void*)"Math::GSL::Integration::gsl_integration_qaws_table", 0};
 static swig_type_info _swigt__p_gsl_integration_workspace = {"_p_gsl_integration_workspace", "gsl_integration_workspace *", 0, 0, (void*)"Math::GSL::Integration::gsl_integration_workspace", 0};
-static swig_type_info _swigt__p_int = {"_p_int", "int *|size_t *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_size_t = {"_p_size_t", "size_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_void = {"_p_void", "void *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
@@ -7599,7 +7606,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_gsl_integration_qawo_table,
   &_swigt__p_gsl_integration_qaws_table,
   &_swigt__p_gsl_integration_workspace,
-  &_swigt__p_int,
+  &_swigt__p_size_t,
   &_swigt__p_void,
 };
 
@@ -7615,7 +7622,7 @@ static swig_cast_info _swigc__p_gsl_function_vec_struct[] = {  {&_swigt__p_gsl_f
 static swig_cast_info _swigc__p_gsl_integration_qawo_table[] = {  {&_swigt__p_gsl_integration_qawo_table, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_integration_qaws_table[] = {  {&_swigt__p_gsl_integration_qaws_table, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_integration_workspace[] = {  {&_swigt__p_gsl_integration_workspace, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_size_t[] = {  {&_swigt__p_size_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_void[] = {  {&_swigt__p_void, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
@@ -7631,7 +7638,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_gsl_integration_qawo_table,
   _swigc__p_gsl_integration_qaws_table,
   _swigc__p_gsl_integration_workspace,
-  _swigc__p_int,
+  _swigc__p_size_t,
   _swigc__p_void,
 };
 

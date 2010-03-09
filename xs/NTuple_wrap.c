@@ -1438,19 +1438,17 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_FILE swig_types[0]
 #define SWIGTYPE_p_char swig_types[1]
 #define SWIGTYPE_p_double swig_types[2]
-#define SWIGTYPE_p_f_p_q_const__char_p_q_const__char_int_int__void swig_types[3]
-#define SWIGTYPE_p_f_p_q_const__char_p_q_const__char_int_p_q_const__char__void swig_types[4]
-#define SWIGTYPE_p_f_p_void_p_void__double swig_types[5]
-#define SWIGTYPE_p_f_p_void_p_void__int swig_types[6]
-#define SWIGTYPE_p_gsl_histogram swig_types[7]
-#define SWIGTYPE_p_gsl_histogram_pdf swig_types[8]
-#define SWIGTYPE_p_gsl_ntuple swig_types[9]
-#define SWIGTYPE_p_gsl_ntuple_select_fn swig_types[10]
-#define SWIGTYPE_p_gsl_ntuple_value_fn swig_types[11]
-#define SWIGTYPE_p_int swig_types[12]
-#define SWIGTYPE_p_void swig_types[13]
-static swig_type_info *swig_types[15];
-static swig_module_info swig_module = {swig_types, 14, 0, 0, 0, 0};
+#define SWIGTYPE_p_f_p_void_p_void__double swig_types[3]
+#define SWIGTYPE_p_f_p_void_p_void__int swig_types[4]
+#define SWIGTYPE_p_gsl_histogram swig_types[5]
+#define SWIGTYPE_p_gsl_histogram_pdf swig_types[6]
+#define SWIGTYPE_p_gsl_ntuple swig_types[7]
+#define SWIGTYPE_p_gsl_ntuple_select_fn swig_types[8]
+#define SWIGTYPE_p_gsl_ntuple_value_fn swig_types[9]
+#define SWIGTYPE_p_size_t swig_types[10]
+#define SWIGTYPE_p_void swig_types[11]
+static swig_type_info *swig_types[13];
+static swig_module_info swig_module = {swig_types, 12, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1504,7 +1502,15 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
     #include "gsl/gsl_monte.h"
 
 
+    struct perl_array {
+        I32 len;
+        AV *array;
+    };
 
+
+    /* structure to hold required information while the gsl function call
+       for each callback
+     */
     struct gsl_function_perl {
         gsl_function C_gsl_function;
         SV * function;
@@ -1518,9 +1524,8 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
     };
 
 
-    /* this function returns the value 
-        of evaluating the function pointer
-        stored in func with argument x
+    /* These functions (C callbacks) calls the perl callbacks.
+       Info for perl callback can be found using the 'void*params' parameter
     */
     double call_gsl_function(double x , void *params){
         struct gsl_function_perl *F=(struct gsl_function_perl*)params;
@@ -1783,89 +1788,6 @@ SWIG_AsCharPtrAndSize(SV *obj, char** cptr, size_t* psize, int *alloc)
 
 
 
-#include <limits.h>
-#if !defined(SWIG_NO_LLONG_MAX)
-# if !defined(LLONG_MAX) && defined(__GNUC__) && defined (__LONG_LONG_MAX__)
-#   define LLONG_MAX __LONG_LONG_MAX__
-#   define LLONG_MIN (-LLONG_MAX - 1LL)
-#   define ULLONG_MAX (LLONG_MAX * 2ULL + 1ULL)
-# endif
-#endif
-
-
-SWIGINTERN int
-SWIG_AsVal_long SWIG_PERL_DECL_ARGS_2(SV *obj, long* val)
-{
-  if (SvIOK(obj)) {
-    if (val) *val = SvIV(obj);
-    return SWIG_OK;
-  } else {
-    int dispatch = 0;
-    const char *nptr = SvPV_nolen(obj);
-    if (nptr) {
-      char *endptr;
-      long v;
-      errno = 0;
-      v = strtol(nptr, &endptr,0);
-      if (errno == ERANGE) {
-	errno = 0;
-	return SWIG_OverflowError;
-      } else {
-	if (*endptr == '\0') {
-	  if (val) *val = v;
-	  return SWIG_Str2NumCast(SWIG_OK);
-	}
-      }
-    }
-    if (!dispatch) {
-      double d;
-      int res = SWIG_AddCast(SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(obj,&d));
-      if (SWIG_IsOK(res) && SWIG_CanCastAsInteger(&d, LONG_MIN, LONG_MAX)) {
-	if (val) *val = (long)(d);
-	return res;
-      }
-    }
-  }
-  return SWIG_TypeError;
-}
-
-
-SWIGINTERN int
-SWIG_AsVal_int SWIG_PERL_DECL_ARGS_2(SV * obj, int *val)
-{
-  long v;
-  int res = SWIG_AsVal_long SWIG_PERL_CALL_ARGS_2(obj, &v);
-  if (SWIG_IsOK(res)) {
-    if ((v < INT_MIN || v > INT_MAX)) {
-      return SWIG_OverflowError;
-    } else {
-      if (val) *val = (int)(v);
-    }
-  }  
-  return res;
-}
-
-
-SWIGINTERNINLINE SV *
-SWIG_FromCharPtrAndSize(const char* carray, size_t size)
-{
-  SV *obj = sv_newmortal();
-  if (carray) {
-    sv_setpvn(obj, carray, size);
-  } else {
-    sv_setsv(obj, &PL_sv_undef);
-  }
-  return obj;
-}
-
-
-SWIGINTERNINLINE SV * 
-SWIG_FromCharPtr(const char *cptr)
-{ 
-  return SWIG_FromCharPtrAndSize(cptr, (cptr ? strlen(cptr) : 0));
-}
-
-
 SWIGINTERNINLINE SV *
 SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
 {    
@@ -2113,7 +2035,7 @@ XS(_wrap_gsl_ntuple_size_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_ntuple_size_get" "', argument " "1"" of type '" "gsl_ntuple *""'"); 
     }
     arg1 = (gsl_ntuple *)(argp1);
-    result = (size_t) ((arg1)->size);
+    result =  ((arg1)->size);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -2833,253 +2755,6 @@ XS(_wrap_gsl_ntuple_close) {
 }
 
 
-XS(_wrap_gsl_error) {
-  {
-    char *arg1 = (char *) 0 ;
-    char *arg2 = (char *) 0 ;
-    int arg3 ;
-    int arg4 ;
-    int res1 ;
-    char *buf1 = 0 ;
-    int alloc1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int val3 ;
-    int ecode3 = 0 ;
-    int val4 ;
-    int ecode4 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 4) || (items > 4)) {
-      SWIG_croak("Usage: gsl_error(reason,file,line,gsl_errno);");
-    }
-    res1 = SWIG_AsCharPtrAndSize(ST(0), &buf1, NULL, &alloc1);
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_error" "', argument " "1"" of type '" "char const *""'");
-    }
-    arg1 = (char *)(buf1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_error" "', argument " "2"" of type '" "char const *""'");
-    }
-    arg2 = (char *)(buf2);
-    ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-    if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_error" "', argument " "3"" of type '" "int""'");
-    } 
-    arg3 = (int)(val3);
-    ecode4 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
-    if (!SWIG_IsOK(ecode4)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_error" "', argument " "4"" of type '" "int""'");
-    } 
-    arg4 = (int)(val4);
-    gsl_error((char const *)arg1,(char const *)arg2,arg3,arg4);
-    
-    if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    
-    
-    XSRETURN(argvi);
-  fail:
-    if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_stream_printf) {
-  {
-    char *arg1 = (char *) 0 ;
-    char *arg2 = (char *) 0 ;
-    int arg3 ;
-    char *arg4 = (char *) 0 ;
-    int res1 ;
-    char *buf1 = 0 ;
-    int alloc1 = 0 ;
-    int res2 ;
-    char *buf2 = 0 ;
-    int alloc2 = 0 ;
-    int val3 ;
-    int ecode3 = 0 ;
-    int res4 ;
-    char *buf4 = 0 ;
-    int alloc4 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 4) || (items > 4)) {
-      SWIG_croak("Usage: gsl_stream_printf(label,file,line,reason);");
-    }
-    res1 = SWIG_AsCharPtrAndSize(ST(0), &buf1, NULL, &alloc1);
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stream_printf" "', argument " "1"" of type '" "char const *""'");
-    }
-    arg1 = (char *)(buf1);
-    res2 = SWIG_AsCharPtrAndSize(ST(1), &buf2, NULL, &alloc2);
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_stream_printf" "', argument " "2"" of type '" "char const *""'");
-    }
-    arg2 = (char *)(buf2);
-    ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-    if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_stream_printf" "', argument " "3"" of type '" "int""'");
-    } 
-    arg3 = (int)(val3);
-    res4 = SWIG_AsCharPtrAndSize(ST(3), &buf4, NULL, &alloc4);
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_stream_printf" "', argument " "4"" of type '" "char const *""'");
-    }
-    arg4 = (char *)(buf4);
-    gsl_stream_printf((char const *)arg1,(char const *)arg2,arg3,(char const *)arg4);
-    
-    if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    
-    if (alloc4 == SWIG_NEWOBJ) free((char*)buf4);
-    XSRETURN(argvi);
-  fail:
-    if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
-    if (alloc2 == SWIG_NEWOBJ) free((char*)buf2);
-    
-    if (alloc4 == SWIG_NEWOBJ) free((char*)buf4);
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_strerror) {
-  {
-    int arg1 ;
-    int val1 ;
-    int ecode1 = 0 ;
-    int argvi = 0;
-    char *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_strerror(gsl_errno);");
-    }
-    ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_strerror" "', argument " "1"" of type '" "int""'");
-    } 
-    arg1 = (int)(val1);
-    result = (char *)gsl_strerror(arg1);
-    ST(argvi) = SWIG_FromCharPtr((const char *)result); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_set_error_handler) {
-  {
-    gsl_error_handler_t *arg1 = (gsl_error_handler_t *) 0 ;
-    int argvi = 0;
-    gsl_error_handler_t *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_set_error_handler(new_handler);");
-    }
-    {
-      int res = SWIG_ConvertFunctionPtr(ST(0), (void**)(&arg1), SWIGTYPE_p_f_p_q_const__char_p_q_const__char_int_int__void);
-      if (!SWIG_IsOK(res)) {
-        SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_set_error_handler" "', argument " "1"" of type '" "gsl_error_handler_t *""'"); 
-      }
-    }
-    result = (gsl_error_handler_t *)gsl_set_error_handler(arg1);
-    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_q_const__char_p_q_const__char_int_int__void); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_set_error_handler_off) {
-  {
-    int argvi = 0;
-    gsl_error_handler_t *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 0) || (items > 0)) {
-      SWIG_croak("Usage: gsl_set_error_handler_off();");
-    }
-    result = (gsl_error_handler_t *)gsl_set_error_handler_off();
-    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_q_const__char_p_q_const__char_int_int__void); argvi++ ;
-    XSRETURN(argvi);
-  fail:
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_set_stream_handler) {
-  {
-    gsl_stream_handler_t *arg1 = (gsl_stream_handler_t *) 0 ;
-    int argvi = 0;
-    gsl_stream_handler_t *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_set_stream_handler(new_handler);");
-    }
-    {
-      int res = SWIG_ConvertFunctionPtr(ST(0), (void**)(&arg1), SWIGTYPE_p_f_p_q_const__char_p_q_const__char_int_p_q_const__char__void);
-      if (!SWIG_IsOK(res)) {
-        SWIG_exception_fail(SWIG_ArgError(res), "in method '" "gsl_set_stream_handler" "', argument " "1"" of type '" "gsl_stream_handler_t *""'"); 
-      }
-    }
-    result = (gsl_stream_handler_t *)gsl_set_stream_handler(arg1);
-    ST(argvi) = SWIG_NewFunctionPtrObj((void *)(result), SWIGTYPE_p_f_p_q_const__char_p_q_const__char_int_p_q_const__char__void); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_set_stream) {
-  {
-    FILE *arg1 = (FILE *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    FILE *result = 0 ;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_set_stream(new_stream);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_FILE, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_set_stream" "', argument " "1"" of type '" "FILE *""'"); 
-    }
-    arg1 = (FILE *)(argp1);
-    result = (FILE *)gsl_set_stream(arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_FILE, 0 | 0); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_gsl_histogram_n_set) {
   {
     gsl_histogram *arg1 = (gsl_histogram *) 0 ;
@@ -3134,7 +2809,7 @@ XS(_wrap_gsl_histogram_n_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_histogram_n_get" "', argument " "1"" of type '" "gsl_histogram *""'"); 
     }
     arg1 = (gsl_histogram *)(argp1);
-    result = (size_t) ((arg1)->n);
+    result =  ((arg1)->n);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -3374,7 +3049,7 @@ XS(_wrap_gsl_histogram_pdf_n_get) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_histogram_pdf_n_get" "', argument " "1"" of type '" "gsl_histogram_pdf *""'"); 
     }
     arg1 = (gsl_histogram_pdf *)(argp1);
-    result = (size_t) ((arg1)->n);
+    result =  ((arg1)->n);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -3805,7 +3480,7 @@ XS(_wrap_gsl_histogram_find) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_histogram_find" "', argument " "2"" of type '" "double""'");
     } 
     arg2 = (double)(val2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_int, 0 |  0 );
+    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_size_t, 0 |  0 );
     if (!SWIG_IsOK(res3)) {
       SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_histogram_find" "', argument " "3"" of type '" "size_t *""'"); 
     }
@@ -3994,7 +3669,7 @@ XS(_wrap_gsl_histogram_bins) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_histogram_bins" "', argument " "1"" of type '" "gsl_histogram const *""'"); 
     }
     arg1 = (gsl_histogram *)(argp1);
-    result = (size_t)gsl_histogram_bins((gsl_histogram const *)arg1);
+    result = gsl_histogram_bins((gsl_histogram const *)arg1);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -4292,7 +3967,7 @@ XS(_wrap_gsl_histogram_max_bin) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_histogram_max_bin" "', argument " "1"" of type '" "gsl_histogram const *""'"); 
     }
     arg1 = (gsl_histogram *)(argp1);
-    result = (size_t)gsl_histogram_max_bin((gsl_histogram const *)arg1);
+    result = gsl_histogram_max_bin((gsl_histogram const *)arg1);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -4348,7 +4023,7 @@ XS(_wrap_gsl_histogram_min_bin) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_histogram_min_bin" "', argument " "1"" of type '" "gsl_histogram const *""'"); 
     }
     arg1 = (gsl_histogram *)(argp1);
-    result = (size_t)gsl_histogram_min_bin((gsl_histogram const *)arg1);
+    result = gsl_histogram_min_bin((gsl_histogram const *)arg1);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -5020,8 +4695,6 @@ XS(_wrap_gsl_histogram_pdf_sample) {
 static swig_type_info _swigt__p_FILE = {"_p_FILE", "FILE *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_f_p_q_const__char_p_q_const__char_int_int__void = {"_p_f_p_q_const__char_p_q_const__char_int_int__void", "void (*)(char const *,char const *,int,int)|gsl_error_handler_t *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_f_p_q_const__char_p_q_const__char_int_p_q_const__char__void = {"_p_f_p_q_const__char_p_q_const__char_int_p_q_const__char__void", "gsl_stream_handler_t *|void (*)(char const *,char const *,int,char const *)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_p_void_p_void__double = {"_p_f_p_void_p_void__double", "double (*)(void *,void *)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_f_p_void_p_void__int = {"_p_f_p_void_p_void__int", "int (*)(void *,void *)", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_gsl_histogram = {"_p_gsl_histogram", "gsl_histogram *", 0, 0, (void*)"Math::GSL::NTuple::gsl_histogram", 0};
@@ -5029,15 +4702,13 @@ static swig_type_info _swigt__p_gsl_histogram_pdf = {"_p_gsl_histogram_pdf", "gs
 static swig_type_info _swigt__p_gsl_ntuple = {"_p_gsl_ntuple", "gsl_ntuple *", 0, 0, (void*)"Math::GSL::NTuple::gsl_ntuple", 0};
 static swig_type_info _swigt__p_gsl_ntuple_select_fn = {"_p_gsl_ntuple_select_fn", "gsl_ntuple_select_fn *", 0, 0, (void*)"Math::GSL::NTuple::gsl_ntuple_select_fn", 0};
 static swig_type_info _swigt__p_gsl_ntuple_value_fn = {"_p_gsl_ntuple_value_fn", "gsl_ntuple_value_fn *", 0, 0, (void*)"Math::GSL::NTuple::gsl_ntuple_value_fn", 0};
-static swig_type_info _swigt__p_int = {"_p_int", "int *|size_t *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_size_t = {"_p_size_t", "size_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_void = {"_p_void", "void *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_FILE,
   &_swigt__p_char,
   &_swigt__p_double,
-  &_swigt__p_f_p_q_const__char_p_q_const__char_int_int__void,
-  &_swigt__p_f_p_q_const__char_p_q_const__char_int_p_q_const__char__void,
   &_swigt__p_f_p_void_p_void__double,
   &_swigt__p_f_p_void_p_void__int,
   &_swigt__p_gsl_histogram,
@@ -5045,15 +4716,13 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_gsl_ntuple,
   &_swigt__p_gsl_ntuple_select_fn,
   &_swigt__p_gsl_ntuple_value_fn,
-  &_swigt__p_int,
+  &_swigt__p_size_t,
   &_swigt__p_void,
 };
 
 static swig_cast_info _swigc__p_FILE[] = {  {&_swigt__p_FILE, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_f_p_q_const__char_p_q_const__char_int_int__void[] = {  {&_swigt__p_f_p_q_const__char_p_q_const__char_int_int__void, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_f_p_q_const__char_p_q_const__char_int_p_q_const__char__void[] = {  {&_swigt__p_f_p_q_const__char_p_q_const__char_int_p_q_const__char__void, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_p_void_p_void__double[] = {  {&_swigt__p_f_p_void_p_void__double, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_f_p_void_p_void__int[] = {  {&_swigt__p_f_p_void_p_void__int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_histogram[] = {  {&_swigt__p_gsl_histogram, 0, 0, 0},{0, 0, 0, 0}};
@@ -5061,15 +4730,13 @@ static swig_cast_info _swigc__p_gsl_histogram_pdf[] = {  {&_swigt__p_gsl_histogr
 static swig_cast_info _swigc__p_gsl_ntuple[] = {  {&_swigt__p_gsl_ntuple, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_ntuple_select_fn[] = {  {&_swigt__p_gsl_ntuple_select_fn, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_ntuple_value_fn[] = {  {&_swigt__p_gsl_ntuple_value_fn, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_size_t[] = {  {&_swigt__p_size_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_void[] = {  {&_swigt__p_void, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_FILE,
   _swigc__p_char,
   _swigc__p_double,
-  _swigc__p_f_p_q_const__char_p_q_const__char_int_int__void,
-  _swigc__p_f_p_q_const__char_p_q_const__char_int_p_q_const__char__void,
   _swigc__p_f_p_void_p_void__double,
   _swigc__p_f_p_void_p_void__int,
   _swigc__p_gsl_histogram,
@@ -5077,7 +4744,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_gsl_ntuple,
   _swigc__p_gsl_ntuple_select_fn,
   _swigc__p_gsl_ntuple_value_fn,
-  _swigc__p_int,
+  _swigc__p_size_t,
   _swigc__p_void,
 };
 
@@ -5121,13 +4788,6 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::NTuplec::gsl_ntuple_bookdata", _wrap_gsl_ntuple_bookdata},
 {"Math::GSL::NTuplec::gsl_ntuple_project", _wrap_gsl_ntuple_project},
 {"Math::GSL::NTuplec::gsl_ntuple_close", _wrap_gsl_ntuple_close},
-{"Math::GSL::NTuplec::gsl_error", _wrap_gsl_error},
-{"Math::GSL::NTuplec::gsl_stream_printf", _wrap_gsl_stream_printf},
-{"Math::GSL::NTuplec::gsl_strerror", _wrap_gsl_strerror},
-{"Math::GSL::NTuplec::gsl_set_error_handler", _wrap_gsl_set_error_handler},
-{"Math::GSL::NTuplec::gsl_set_error_handler_off", _wrap_gsl_set_error_handler_off},
-{"Math::GSL::NTuplec::gsl_set_stream_handler", _wrap_gsl_set_stream_handler},
-{"Math::GSL::NTuplec::gsl_set_stream", _wrap_gsl_set_stream},
 {"Math::GSL::NTuplec::gsl_histogram_n_set", _wrap_gsl_histogram_n_set},
 {"Math::GSL::NTuplec::gsl_histogram_n_get", _wrap_gsl_histogram_n_get},
 {"Math::GSL::NTuplec::gsl_histogram_range_set", _wrap_gsl_histogram_range_set},
@@ -5501,181 +5161,6 @@ XS(SWIG_init) {
   SWIG_TypeClientData(SWIGTYPE_p_gsl_ntuple, (void*) "Math::GSL::NTuple::gsl_ntuple");
   SWIG_TypeClientData(SWIGTYPE_p_gsl_ntuple_select_fn, (void*) "Math::GSL::NTuple::gsl_ntuple_select_fn");
   SWIG_TypeClientData(SWIGTYPE_p_gsl_ntuple_value_fn, (void*) "Math::GSL::NTuple::gsl_ntuple_value_fn");
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_SUCCESS", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_SUCCESS)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_FAILURE", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_FAILURE)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_CONTINUE", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_CONTINUE)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_EDOM", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_EDOM)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_ERANGE", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_ERANGE)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_EFAULT", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_EFAULT)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_EINVAL", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_EINVAL)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_EFAILED", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_EFAILED)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_EFACTOR", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_EFACTOR)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_ESANITY", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_ESANITY)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_ENOMEM", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_ENOMEM)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_EBADFUNC", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_EBADFUNC)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_ERUNAWAY", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_ERUNAWAY)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_EMAXITER", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_EMAXITER)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_EZERODIV", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_EZERODIV)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_EBADTOL", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_EBADTOL)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_ETOL", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_ETOL)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_EUNDRFLW", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_EUNDRFLW)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_EOVRFLW", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_EOVRFLW)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_ELOSS", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_ELOSS)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_EROUND", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_EROUND)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_EBADLEN", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_EBADLEN)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_ENOTSQR", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_ENOTSQR)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_ESING", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_ESING)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_EDIVERGE", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_EDIVERGE)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_EUNSUP", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_EUNSUP)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_EUNIMPL", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_EUNIMPL)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_ECACHE", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_ECACHE)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_ETABLE", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_ETABLE)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_ENOPROG", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_ENOPROG)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_ENOPROGJ", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_ENOPROGJ)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_ETOLF", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_ETOLF)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_ETOLX", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_ETOLX)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_ETOLG", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_ETOLG)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
-  /*@SWIG:/usr/local/share/swig/1.3.37/perl5/perltypemaps.swg,64,%set_constant@*/ do {
-    SV *sv = get_sv((char*) SWIG_prefix "GSL_EOF", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_EOF)));
-    SvREADONLY_on(sv);
-  } while(0) /*@SWIG@*/;
   SWIG_TypeClientData(SWIGTYPE_p_gsl_histogram, (void*) "Math::GSL::NTuple::gsl_histogram");
   SWIG_TypeClientData(SWIGTYPE_p_gsl_histogram_pdf, (void*) "Math::GSL::NTuple::gsl_histogram_pdf");
   ST(0) = &PL_sv_yes;
