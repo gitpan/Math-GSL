@@ -26,7 +26,7 @@
 
     tempav = (AV*)SvRV($input);
     len = av_len(tempav);
-    $1 = (double *) malloc((len+1)*sizeof(double));
+    $1 = (double *) malloc((len+2)*sizeof(double));
     for (i = 0; i <= len; i++) {
         tv = av_fetch(tempav, i, 0);
         $1[i] = (double) SvNV(*tv);
@@ -34,7 +34,7 @@
 }
 
 %typemap(freearg) double const [] {
-        if ($1) free($1);
+       // if ($1) free($1);
 }
 
 %apply double const [] { 
@@ -64,7 +64,7 @@
 
     tempav = (AV*)SvRV($input);
     len = av_len(tempav);
-    $1 = (float *) malloc((len+1)*sizeof(float));
+    $1 = (float *) malloc((len+2)*sizeof(float));
     for (i = 0; i <= len; i++) {
         tv = av_fetch(tempav, i, 0);
         $1[i] = (float)(double) SvNV(*tv);
@@ -72,7 +72,7 @@
 }
 
 %typemap(freearg) float const [] {
-        if ($1) free($1);
+        //if ($1) free($1);
 }
 
 %apply float const [] { 
@@ -96,7 +96,7 @@
 %}
 
 %typemap(in) float [] {
-    struct perl_array * p_array = 0;   
+    struct perl_array * p_array = 0;
     I32 len;
     AV *array;
     int i;
@@ -137,10 +137,10 @@
 }
 
 %typemap(freearg) float [] {
-    if ($1) free(((char*)$1)-sizeof(struct perl_array));
+    // if ($1) free(((char*)$1)-sizeof(struct perl_array));
 }
 
-%apply float const [] { 
+%apply float const [] {
     float *C
 };
 
@@ -160,15 +160,16 @@
 
     tempav = (AV*)SvRV($input);
     len = av_len(tempav);
-    $1 = (size_t *) malloc((len+1)*sizeof(size_t));
+    /* Why does this need to be len+2 ? */
+    $1 = (size_t *) malloc((len+2)*sizeof(size_t));
     for (i = 0; i <= len; i++) {
         tv = av_fetch(tempav, i, 0);
-        $1[i] = SvIV(*tv);
+        $1[i] = (size_t) SvIV(*tv);
     }
 }
 
 %typemap(freearg) size_t const [] {
-        if ($1) free($1);
+      //  if ($1) free($1);
 }
 
 %apply double const [] {
