@@ -4069,52 +4069,201 @@ XS(_wrap_cblas_srotg) {
     float *arg2 = (float *) 0 ;
     float *arg3 = (float *) 0 ;
     float *arg4 = (float *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
     int argvi = 0;
+    SV * _saved[4] ;
     dXSARGS;
     
     if ((items < 4) || (items > 4)) {
       SWIG_croak("Usage: cblas_srotg(a,b,c,s);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "cblas_srotg" "', argument " "1"" of type '" "float *""'"); 
+    {
+      struct perl_array * p_array = 0;
+      I32 len;
+      AV *array;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $a is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $a is not an array ref!");
+      
+      array = (AV*)SvRV(ST(0));
+      len = av_len(array);
+      p_array = (struct perl_array *) malloc((len+1)*sizeof(float)+sizeof(struct perl_array));
+      p_array->len=len;
+      p_array->array=array;
+      arg1 = (float *)&p_array[1];
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(array, i, 0);
+        arg1[i] = (float)(double) SvNV(*tv);
+      }
     }
-    arg1 = (float *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "cblas_srotg" "', argument " "2"" of type '" "float *""'"); 
+    {
+      struct perl_array * p_array = 0;
+      I32 len;
+      AV *array;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(1)))
+      croak("Math::GSL : $b is not a reference!");
+      if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
+      croak("Math::GSL : $b is not an array ref!");
+      
+      array = (AV*)SvRV(ST(1));
+      len = av_len(array);
+      p_array = (struct perl_array *) malloc((len+1)*sizeof(float)+sizeof(struct perl_array));
+      p_array->len=len;
+      p_array->array=array;
+      arg2 = (float *)&p_array[1];
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(array, i, 0);
+        arg2[i] = (float)(double) SvNV(*tv);
+      }
     }
-    arg2 = (float *)(argp2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "cblas_srotg" "', argument " "3"" of type '" "float *""'"); 
+    {
+      struct perl_array * p_array = 0;
+      I32 len;
+      AV *array;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(2)))
+      croak("Math::GSL : $c is not a reference!");
+      if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
+      croak("Math::GSL : $c is not an array ref!");
+      
+      array = (AV*)SvRV(ST(2));
+      len = av_len(array);
+      p_array = (struct perl_array *) malloc((len+1)*sizeof(float)+sizeof(struct perl_array));
+      p_array->len=len;
+      p_array->array=array;
+      arg3 = (float *)&p_array[1];
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(array, i, 0);
+        arg3[i] = (float)(double) SvNV(*tv);
+      }
     }
-    arg3 = (float *)(argp3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "cblas_srotg" "', argument " "4"" of type '" "float *""'"); 
+    {
+      struct perl_array * p_array = 0;
+      I32 len;
+      AV *array;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(3)))
+      croak("Math::GSL : $s is not a reference!");
+      if (SvTYPE(SvRV(ST(3))) != SVt_PVAV)
+      croak("Math::GSL : $s is not an array ref!");
+      
+      array = (AV*)SvRV(ST(3));
+      len = av_len(array);
+      p_array = (struct perl_array *) malloc((len+1)*sizeof(float)+sizeof(struct perl_array));
+      p_array->len=len;
+      p_array->array=array;
+      arg4 = (float *)&p_array[1];
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(array, i, 0);
+        arg4[i] = (float)(double) SvNV(*tv);
+      }
     }
-    arg4 = (float *)(argp4);
+    _saved[0] = ST(0);
+    _saved[1] = ST(1);
+    _saved[2] = ST(2);
+    _saved[3] = ST(3);
     cblas_srotg(arg1,arg2,arg3,arg4);
     ST(argvi) = sv_newmortal();
-    
-    
-    
-    
+    {
+      struct perl_array * p_array = 0;
+      int i;
+      SV **tv;
+      p_array=(struct perl_array *)(((char*)arg1)-sizeof(struct perl_array));
+      for (i = 0; i <= p_array->len; i++) {
+        double val=(double)(float)(arg1[i]);
+        tv = av_fetch(p_array->array, i, 0);
+        sv_setnv(*tv, val);
+        if (argvi >= items) {
+          EXTEND(sp,1);              /* Extend the stack by 1 object */
+        }
+        ST(argvi) = sv_newmortal();
+        sv_setnv(ST(argvi), val);
+        argvi++;
+      }
+    }
+    {
+      struct perl_array * p_array = 0;
+      int i;
+      SV **tv;
+      p_array=(struct perl_array *)(((char*)arg2)-sizeof(struct perl_array));
+      for (i = 0; i <= p_array->len; i++) {
+        double val=(double)(float)(arg2[i]);
+        tv = av_fetch(p_array->array, i, 0);
+        sv_setnv(*tv, val);
+        if (argvi >= items) {
+          EXTEND(sp,1);              /* Extend the stack by 1 object */
+        }
+        ST(argvi) = sv_newmortal();
+        sv_setnv(ST(argvi), val);
+        argvi++;
+      }
+    }
+    {
+      struct perl_array * p_array = 0;
+      int i;
+      SV **tv;
+      p_array=(struct perl_array *)(((char*)arg3)-sizeof(struct perl_array));
+      for (i = 0; i <= p_array->len; i++) {
+        double val=(double)(float)(arg3[i]);
+        tv = av_fetch(p_array->array, i, 0);
+        sv_setnv(*tv, val);
+        if (argvi >= items) {
+          EXTEND(sp,1);              /* Extend the stack by 1 object */
+        }
+        ST(argvi) = sv_newmortal();
+        sv_setnv(ST(argvi), val);
+        argvi++;
+      }
+    }
+    {
+      struct perl_array * p_array = 0;
+      int i;
+      SV **tv;
+      p_array=(struct perl_array *)(((char*)arg4)-sizeof(struct perl_array));
+      for (i = 0; i <= p_array->len; i++) {
+        double val=(double)(float)(arg4[i]);
+        tv = av_fetch(p_array->array, i, 0);
+        sv_setnv(*tv, val);
+        if (argvi >= items) {
+          EXTEND(sp,1);              /* Extend the stack by 1 object */
+        }
+        ST(argvi) = sv_newmortal();
+        sv_setnv(ST(argvi), val);
+        argvi++;
+      }
+    }
+    {
+      // if (arg1) free(((char*)arg1)-sizeof(struct perl_array));
+    }
+    {
+      // if (arg2) free(((char*)arg2)-sizeof(struct perl_array));
+    }
+    {
+      // if (arg3) free(((char*)arg3)-sizeof(struct perl_array));
+    }
+    {
+      // if (arg4) free(((char*)arg4)-sizeof(struct perl_array));
+    }
     XSRETURN(argvi);
   fail:
-    
-    
-    
-    
+    {
+      // if (arg1) free(((char*)arg1)-sizeof(struct perl_array));
+    }
+    {
+      // if (arg2) free(((char*)arg2)-sizeof(struct perl_array));
+    }
+    {
+      // if (arg3) free(((char*)arg3)-sizeof(struct perl_array));
+    }
+    {
+      // if (arg4) free(((char*)arg4)-sizeof(struct perl_array));
+    }
     SWIG_croak_null();
   }
 }
@@ -4127,37 +4276,83 @@ XS(_wrap_cblas_srotmg) {
     float *arg3 = (float *) 0 ;
     float arg4 ;
     float *arg5 = (float *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
     float val4 ;
     int ecode4 = 0 ;
     void *argp5 = 0 ;
     int res5 = 0 ;
     int argvi = 0;
+    SV * _saved[3] ;
     dXSARGS;
     
     if ((items < 5) || (items > 5)) {
       SWIG_croak("Usage: cblas_srotmg(d1,d2,b1,b2,P);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "cblas_srotmg" "', argument " "1"" of type '" "float *""'"); 
+    {
+      struct perl_array * p_array = 0;
+      I32 len;
+      AV *array;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $d1 is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $d1 is not an array ref!");
+      
+      array = (AV*)SvRV(ST(0));
+      len = av_len(array);
+      p_array = (struct perl_array *) malloc((len+1)*sizeof(float)+sizeof(struct perl_array));
+      p_array->len=len;
+      p_array->array=array;
+      arg1 = (float *)&p_array[1];
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(array, i, 0);
+        arg1[i] = (float)(double) SvNV(*tv);
+      }
     }
-    arg1 = (float *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "cblas_srotmg" "', argument " "2"" of type '" "float *""'"); 
+    {
+      struct perl_array * p_array = 0;
+      I32 len;
+      AV *array;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(1)))
+      croak("Math::GSL : $d2 is not a reference!");
+      if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
+      croak("Math::GSL : $d2 is not an array ref!");
+      
+      array = (AV*)SvRV(ST(1));
+      len = av_len(array);
+      p_array = (struct perl_array *) malloc((len+1)*sizeof(float)+sizeof(struct perl_array));
+      p_array->len=len;
+      p_array->array=array;
+      arg2 = (float *)&p_array[1];
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(array, i, 0);
+        arg2[i] = (float)(double) SvNV(*tv);
+      }
     }
-    arg2 = (float *)(argp2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "cblas_srotmg" "', argument " "3"" of type '" "float *""'"); 
+    {
+      struct perl_array * p_array = 0;
+      I32 len;
+      AV *array;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(2)))
+      croak("Math::GSL : $b1 is not a reference!");
+      if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
+      croak("Math::GSL : $b1 is not an array ref!");
+      
+      array = (AV*)SvRV(ST(2));
+      len = av_len(array);
+      p_array = (struct perl_array *) malloc((len+1)*sizeof(float)+sizeof(struct perl_array));
+      p_array->len=len;
+      p_array->array=array;
+      arg3 = (float *)&p_array[1];
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(array, i, 0);
+        arg3[i] = (float)(double) SvNV(*tv);
+      }
     }
-    arg3 = (float *)(argp3);
     ecode4 = SWIG_AsVal_float SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
     if (!SWIG_IsOK(ecode4)) {
       SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "cblas_srotmg" "', argument " "4"" of type '" "float""'");
@@ -4168,18 +4363,84 @@ XS(_wrap_cblas_srotmg) {
       SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "cblas_srotmg" "', argument " "5"" of type '" "float *""'"); 
     }
     arg5 = (float *)(argp5);
+    _saved[0] = ST(0);
+    _saved[1] = ST(1);
+    _saved[2] = ST(2);
     cblas_srotmg(arg1,arg2,arg3,arg4,arg5);
     ST(argvi) = sv_newmortal();
-    
-    
-    
+    {
+      struct perl_array * p_array = 0;
+      int i;
+      SV **tv;
+      p_array=(struct perl_array *)(((char*)arg1)-sizeof(struct perl_array));
+      for (i = 0; i <= p_array->len; i++) {
+        double val=(double)(float)(arg1[i]);
+        tv = av_fetch(p_array->array, i, 0);
+        sv_setnv(*tv, val);
+        if (argvi >= items) {
+          EXTEND(sp,1);              /* Extend the stack by 1 object */
+        }
+        ST(argvi) = sv_newmortal();
+        sv_setnv(ST(argvi), val);
+        argvi++;
+      }
+    }
+    {
+      struct perl_array * p_array = 0;
+      int i;
+      SV **tv;
+      p_array=(struct perl_array *)(((char*)arg2)-sizeof(struct perl_array));
+      for (i = 0; i <= p_array->len; i++) {
+        double val=(double)(float)(arg2[i]);
+        tv = av_fetch(p_array->array, i, 0);
+        sv_setnv(*tv, val);
+        if (argvi >= items) {
+          EXTEND(sp,1);              /* Extend the stack by 1 object */
+        }
+        ST(argvi) = sv_newmortal();
+        sv_setnv(ST(argvi), val);
+        argvi++;
+      }
+    }
+    {
+      struct perl_array * p_array = 0;
+      int i;
+      SV **tv;
+      p_array=(struct perl_array *)(((char*)arg3)-sizeof(struct perl_array));
+      for (i = 0; i <= p_array->len; i++) {
+        double val=(double)(float)(arg3[i]);
+        tv = av_fetch(p_array->array, i, 0);
+        sv_setnv(*tv, val);
+        if (argvi >= items) {
+          EXTEND(sp,1);              /* Extend the stack by 1 object */
+        }
+        ST(argvi) = sv_newmortal();
+        sv_setnv(ST(argvi), val);
+        argvi++;
+      }
+    }
+    {
+      // if (arg1) free(((char*)arg1)-sizeof(struct perl_array));
+    }
+    {
+      // if (arg2) free(((char*)arg2)-sizeof(struct perl_array));
+    }
+    {
+      // if (arg3) free(((char*)arg3)-sizeof(struct perl_array));
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
-    
-    
+    {
+      // if (arg1) free(((char*)arg1)-sizeof(struct perl_array));
+    }
+    {
+      // if (arg2) free(((char*)arg2)-sizeof(struct perl_array));
+    }
+    {
+      // if (arg3) free(((char*)arg3)-sizeof(struct perl_array));
+    }
     
     
     SWIG_croak_null();
@@ -13225,9 +13486,8 @@ XS(_wrap_cblas_sgemm) {
     } 
     arg12 = (float)(val12);
     {
-      struct perl_array * p_array = 0;
+      AV *tempav;
       I32 len;
-      AV *array;
       int i;
       SV **tv;
       if (!SvROK(ST(12)))
@@ -13235,14 +13495,11 @@ XS(_wrap_cblas_sgemm) {
       if (SvTYPE(SvRV(ST(12))) != SVt_PVAV)
       croak("Math::GSL : $C is not an array ref!");
       
-      array = (AV*)SvRV(ST(12));
-      len = av_len(array);
-      p_array = (struct perl_array *) malloc((len+1)*sizeof(float)+sizeof(struct perl_array));
-      p_array->len=len;
-      p_array->array=array;
-      arg13 = (float *)&p_array[1];
+      tempav = (AV*)SvRV(ST(12));
+      len = av_len(tempav);
+      arg13 = (float *) malloc((len+2)*sizeof(float));
       for (i = 0; i <= len; i++) {
-        tv = av_fetch(array, i, 0);
+        tv = av_fetch(tempav, i, 0);
         arg13[i] = (float)(double) SvNV(*tv);
       }
     }
@@ -13288,7 +13545,7 @@ XS(_wrap_cblas_sgemm) {
     
     
     {
-      // if (arg13) free(((char*)arg13)-sizeof(struct perl_array));
+      //if (arg13) free(arg13);
     }
     
     XSRETURN(argvi);
@@ -13310,7 +13567,7 @@ XS(_wrap_cblas_sgemm) {
     
     
     {
-      // if (arg13) free(((char*)arg13)-sizeof(struct perl_array));
+      //if (arg13) free(arg13);
     }
     
     SWIG_croak_null();
@@ -13442,9 +13699,8 @@ XS(_wrap_cblas_ssymm) {
     } 
     arg11 = (float)(val11);
     {
-      struct perl_array * p_array = 0;
+      AV *tempav;
       I32 len;
-      AV *array;
       int i;
       SV **tv;
       if (!SvROK(ST(11)))
@@ -13452,14 +13708,11 @@ XS(_wrap_cblas_ssymm) {
       if (SvTYPE(SvRV(ST(11))) != SVt_PVAV)
       croak("Math::GSL : $C is not an array ref!");
       
-      array = (AV*)SvRV(ST(11));
-      len = av_len(array);
-      p_array = (struct perl_array *) malloc((len+1)*sizeof(float)+sizeof(struct perl_array));
-      p_array->len=len;
-      p_array->array=array;
-      arg12 = (float *)&p_array[1];
+      tempav = (AV*)SvRV(ST(11));
+      len = av_len(tempav);
+      arg12 = (float *) malloc((len+2)*sizeof(float));
       for (i = 0; i <= len; i++) {
-        tv = av_fetch(array, i, 0);
+        tv = av_fetch(tempav, i, 0);
         arg12[i] = (float)(double) SvNV(*tv);
       }
     }
@@ -13504,7 +13757,7 @@ XS(_wrap_cblas_ssymm) {
     
     
     {
-      // if (arg12) free(((char*)arg12)-sizeof(struct perl_array));
+      //if (arg12) free(arg12);
     }
     
     XSRETURN(argvi);
@@ -13525,7 +13778,7 @@ XS(_wrap_cblas_ssymm) {
     
     
     {
-      // if (arg12) free(((char*)arg12)-sizeof(struct perl_array));
+      //if (arg12) free(arg12);
     }
     
     SWIG_croak_null();
@@ -13630,9 +13883,8 @@ XS(_wrap_cblas_ssyrk) {
     } 
     arg9 = (float)(val9);
     {
-      struct perl_array * p_array = 0;
+      AV *tempav;
       I32 len;
-      AV *array;
       int i;
       SV **tv;
       if (!SvROK(ST(9)))
@@ -13640,14 +13892,11 @@ XS(_wrap_cblas_ssyrk) {
       if (SvTYPE(SvRV(ST(9))) != SVt_PVAV)
       croak("Math::GSL : $C is not an array ref!");
       
-      array = (AV*)SvRV(ST(9));
-      len = av_len(array);
-      p_array = (struct perl_array *) malloc((len+1)*sizeof(float)+sizeof(struct perl_array));
-      p_array->len=len;
-      p_array->array=array;
-      arg10 = (float *)&p_array[1];
+      tempav = (AV*)SvRV(ST(9));
+      len = av_len(tempav);
+      arg10 = (float *) malloc((len+2)*sizeof(float));
       for (i = 0; i <= len; i++) {
-        tv = av_fetch(array, i, 0);
+        tv = av_fetch(tempav, i, 0);
         arg10[i] = (float)(double) SvNV(*tv);
       }
     }
@@ -13688,7 +13937,7 @@ XS(_wrap_cblas_ssyrk) {
     
     
     {
-      // if (arg10) free(((char*)arg10)-sizeof(struct perl_array));
+      //if (arg10) free(arg10);
     }
     
     XSRETURN(argvi);
@@ -13705,7 +13954,7 @@ XS(_wrap_cblas_ssyrk) {
     
     
     {
-      // if (arg10) free(((char*)arg10)-sizeof(struct perl_array));
+      //if (arg10) free(arg10);
     }
     
     SWIG_croak_null();
@@ -13837,9 +14086,8 @@ XS(_wrap_cblas_ssyr2k) {
     } 
     arg11 = (float)(val11);
     {
-      struct perl_array * p_array = 0;
+      AV *tempav;
       I32 len;
-      AV *array;
       int i;
       SV **tv;
       if (!SvROK(ST(11)))
@@ -13847,14 +14095,11 @@ XS(_wrap_cblas_ssyr2k) {
       if (SvTYPE(SvRV(ST(11))) != SVt_PVAV)
       croak("Math::GSL : $C is not an array ref!");
       
-      array = (AV*)SvRV(ST(11));
-      len = av_len(array);
-      p_array = (struct perl_array *) malloc((len+1)*sizeof(float)+sizeof(struct perl_array));
-      p_array->len=len;
-      p_array->array=array;
-      arg12 = (float *)&p_array[1];
+      tempav = (AV*)SvRV(ST(11));
+      len = av_len(tempav);
+      arg12 = (float *) malloc((len+2)*sizeof(float));
       for (i = 0; i <= len; i++) {
-        tv = av_fetch(array, i, 0);
+        tv = av_fetch(tempav, i, 0);
         arg12[i] = (float)(double) SvNV(*tv);
       }
     }
@@ -13899,7 +14144,7 @@ XS(_wrap_cblas_ssyr2k) {
     
     
     {
-      // if (arg12) free(((char*)arg12)-sizeof(struct perl_array));
+      //if (arg12) free(arg12);
     }
     
     XSRETURN(argvi);
@@ -13920,7 +14165,7 @@ XS(_wrap_cblas_ssyr2k) {
     
     
     {
-      // if (arg12) free(((char*)arg12)-sizeof(struct perl_array));
+      //if (arg12) free(arg12);
     }
     
     SWIG_croak_null();

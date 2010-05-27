@@ -2523,25 +2523,63 @@ XS(_wrap_delete_gsl_ieee_double_rep) {
 XS(_wrap_gsl_ieee_printf_float) {
   {
     float *arg1 = (float *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 1) || (items > 1)) {
       SWIG_croak("Usage: gsl_ieee_printf_float(x);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_ieee_printf_float" "', argument " "1"" of type '" "float const *""'"); 
+    {
+      struct perl_array * p_array = 0;
+      I32 len;
+      AV *array;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $x is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $x is not an array ref!");
+      
+      array = (AV*)SvRV(ST(0));
+      len = av_len(array);
+      p_array = (struct perl_array *) malloc((len+1)*sizeof(float)+sizeof(struct perl_array));
+      p_array->len=len;
+      p_array->array=array;
+      arg1 = (float *)&p_array[1];
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(array, i, 0);
+        arg1[i] = (float)(double) SvNV(*tv);
+      }
     }
-    arg1 = (float *)(argp1);
+    _saved[0] = ST(0);
     gsl_ieee_printf_float((float const *)arg1);
     ST(argvi) = sv_newmortal();
-    
+    {
+      struct perl_array * p_array = 0;
+      int i;
+      SV **tv;
+      p_array=(struct perl_array *)(((char*)arg1)-sizeof(struct perl_array));
+      for (i = 0; i <= p_array->len; i++) {
+        double val=(double)(float)(arg1[i]);
+        tv = av_fetch(p_array->array, i, 0);
+        sv_setnv(*tv, val);
+        if (argvi >= items) {
+          EXTEND(sp,1);              /* Extend the stack by 1 object */
+        }
+        ST(argvi) = sv_newmortal();
+        sv_setnv(ST(argvi), val);
+        argvi++;
+      }
+    }
+    {
+      // if (arg1) free(((char*)arg1)-sizeof(struct perl_array));
+    }
     XSRETURN(argvi);
   fail:
-    
+    {
+      // if (arg1) free(((char*)arg1)-sizeof(struct perl_array));
+    }
     SWIG_croak_null();
   }
 }
@@ -2595,9 +2633,8 @@ XS(_wrap_gsl_ieee_fprintf_float) {
     float *arg2 = (float *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
@@ -2608,19 +2645,58 @@ XS(_wrap_gsl_ieee_fprintf_float) {
       SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_ieee_fprintf_float" "', argument " "1"" of type '" "FILE *""'"); 
     }
     arg1 = (FILE *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_ieee_fprintf_float" "', argument " "2"" of type '" "float const *""'"); 
+    {
+      struct perl_array * p_array = 0;
+      I32 len;
+      AV *array;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(1)))
+      croak("Math::GSL : $x is not a reference!");
+      if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
+      croak("Math::GSL : $x is not an array ref!");
+      
+      array = (AV*)SvRV(ST(1));
+      len = av_len(array);
+      p_array = (struct perl_array *) malloc((len+1)*sizeof(float)+sizeof(struct perl_array));
+      p_array->len=len;
+      p_array->array=array;
+      arg2 = (float *)&p_array[1];
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(array, i, 0);
+        arg2[i] = (float)(double) SvNV(*tv);
+      }
     }
-    arg2 = (float *)(argp2);
+    _saved[0] = ST(1);
     gsl_ieee_fprintf_float(arg1,(float const *)arg2);
     ST(argvi) = sv_newmortal();
+    {
+      struct perl_array * p_array = 0;
+      int i;
+      SV **tv;
+      p_array=(struct perl_array *)(((char*)arg2)-sizeof(struct perl_array));
+      for (i = 0; i <= p_array->len; i++) {
+        double val=(double)(float)(arg2[i]);
+        tv = av_fetch(p_array->array, i, 0);
+        sv_setnv(*tv, val);
+        if (argvi >= items) {
+          EXTEND(sp,1);              /* Extend the stack by 1 object */
+        }
+        ST(argvi) = sv_newmortal();
+        sv_setnv(ST(argvi), val);
+        argvi++;
+      }
+    }
     
-    
+    {
+      // if (arg2) free(((char*)arg2)-sizeof(struct perl_array));
+    }
     XSRETURN(argvi);
   fail:
     
-    
+    {
+      // if (arg2) free(((char*)arg2)-sizeof(struct perl_array));
+    }
     SWIG_croak_null();
   }
 }
@@ -2682,33 +2758,71 @@ XS(_wrap_gsl_ieee_float_to_rep) {
   {
     float *arg1 = (float *) 0 ;
     gsl_ieee_float_rep *arg2 = (gsl_ieee_float_rep *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     void *argp2 = 0 ;
     int res2 = 0 ;
     int argvi = 0;
+    SV * _saved[1] ;
     dXSARGS;
     
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: gsl_ieee_float_to_rep(x,r);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_float, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_ieee_float_to_rep" "', argument " "1"" of type '" "float const *""'"); 
+    {
+      struct perl_array * p_array = 0;
+      I32 len;
+      AV *array;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $x is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $x is not an array ref!");
+      
+      array = (AV*)SvRV(ST(0));
+      len = av_len(array);
+      p_array = (struct perl_array *) malloc((len+1)*sizeof(float)+sizeof(struct perl_array));
+      p_array->len=len;
+      p_array->array=array;
+      arg1 = (float *)&p_array[1];
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(array, i, 0);
+        arg1[i] = (float)(double) SvNV(*tv);
+      }
     }
-    arg1 = (float *)(argp1);
     res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_gsl_ieee_float_rep, 0 |  0 );
     if (!SWIG_IsOK(res2)) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_ieee_float_to_rep" "', argument " "2"" of type '" "gsl_ieee_float_rep *""'"); 
     }
     arg2 = (gsl_ieee_float_rep *)(argp2);
+    _saved[0] = ST(0);
     gsl_ieee_float_to_rep((float const *)arg1,arg2);
     ST(argvi) = sv_newmortal();
-    
+    {
+      struct perl_array * p_array = 0;
+      int i;
+      SV **tv;
+      p_array=(struct perl_array *)(((char*)arg1)-sizeof(struct perl_array));
+      for (i = 0; i <= p_array->len; i++) {
+        double val=(double)(float)(arg1[i]);
+        tv = av_fetch(p_array->array, i, 0);
+        sv_setnv(*tv, val);
+        if (argvi >= items) {
+          EXTEND(sp,1);              /* Extend the stack by 1 object */
+        }
+        ST(argvi) = sv_newmortal();
+        sv_setnv(ST(argvi), val);
+        argvi++;
+      }
+    }
+    {
+      // if (arg1) free(((char*)arg1)-sizeof(struct perl_array));
+    }
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      // if (arg1) free(((char*)arg1)-sizeof(struct perl_array));
+    }
     
     SWIG_croak_null();
   }
