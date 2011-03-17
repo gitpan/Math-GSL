@@ -288,3 +288,4 @@ xs/VectorComplex_wrap.c
 xs/Wavelet2D_wrap.c
 xs/Wavelet_wrap.c
 xt/01-portability-files.t
+META.json

@@ -22,7 +22,7 @@ our %EXPORT_TAGS = ( all => \@EXPORT_OK, );
 
 our ($GSL_PREC_DOUBLE, $GSL_PREC_SINGLE, $GSL_PREC_APPROX ) = 0 .. 2;
 our $GSL_MODE_DEFAULT = $GSL_PREC_DOUBLE;
-our $VERSION = '0.22';
+our $VERSION = '0.23';
 
 =head1 NAME
 
@@ -30,7 +30,7 @@ Math::GSL - Perl interface to the GNU Scientific Library (GSL)
 
 =head1 VERSION
 
-Version 0.22
+Version 0.23
 
 =head1 SYNOPSIS
 
@@ -68,7 +68,7 @@ intuitive (but slightly slower) object-oriented interface.
     Math::GSL::Combination      - Combinatoric Functions
     Math::GSL::Complex          - Complex Numbers
     Math::GSL::Const            - Various Constants
-    Math::GSL::DHT              - Discrete Hilbert Transform
+    Math::GSL::DHT              - Discrete Hankel Transforms
     Math::GSL::Deriv            - Numerical Derivative
     Math::GSL::Eigen            - Eigenvalues and Eigenvectors
     Math::GSL::Errno            - Error Handling
@@ -194,13 +194,6 @@ under the same terms as Perl itself.
 
 =cut
 
-sub new 
-{
-    my ($self,$args) = @_;
-    my $class = ref $self || $self || 'Math::GSL';
-    my $this = { };
-    bless $this, $class;
-}
 sub gsl_fopen
 {
     my ($file, $mode) = @_;
