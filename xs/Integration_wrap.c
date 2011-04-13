@@ -1497,13 +1497,14 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_gsl_function_fdf_struct swig_types[6]
 #define SWIGTYPE_p_gsl_function_struct swig_types[7]
 #define SWIGTYPE_p_gsl_function_vec_struct swig_types[8]
-#define SWIGTYPE_p_gsl_integration_qawo_table swig_types[9]
-#define SWIGTYPE_p_gsl_integration_qaws_table swig_types[10]
-#define SWIGTYPE_p_gsl_integration_workspace swig_types[11]
-#define SWIGTYPE_p_size_t swig_types[12]
-#define SWIGTYPE_p_void swig_types[13]
-static swig_type_info *swig_types[15];
-static swig_module_info swig_module = {swig_types, 14, 0, 0, 0, 0};
+#define SWIGTYPE_p_gsl_integration_glfixed_table swig_types[9]
+#define SWIGTYPE_p_gsl_integration_qawo_table swig_types[10]
+#define SWIGTYPE_p_gsl_integration_qaws_table swig_types[11]
+#define SWIGTYPE_p_gsl_integration_workspace swig_types[12]
+#define SWIGTYPE_p_size_t swig_types[13]
+#define SWIGTYPE_p_void swig_types[14]
+static swig_type_info *swig_types[16];
+static swig_module_info swig_module = {swig_types, 15, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -6908,6 +6909,467 @@ XS(_wrap_gsl_integration_qawf) {
 }
 
 
+XS(_wrap_gsl_integration_glfixed_table_n_set) {
+  {
+    gsl_integration_glfixed_table *arg1 = (gsl_integration_glfixed_table *) 0 ;
+    size_t arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    size_t val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_integration_glfixed_table_n_set(self,n);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_integration_glfixed_table, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_glfixed_table_n_set" "', argument " "1"" of type '" "gsl_integration_glfixed_table *""'"); 
+    }
+    arg1 = (gsl_integration_glfixed_table *)(argp1);
+    ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_integration_glfixed_table_n_set" "', argument " "2"" of type '" "size_t""'");
+    } 
+    arg2 = (size_t)(val2);
+    if (arg1) (arg1)->n = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_integration_glfixed_table_n_get) {
+  {
+    gsl_integration_glfixed_table *arg1 = (gsl_integration_glfixed_table *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    size_t result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_integration_glfixed_table_n_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_integration_glfixed_table, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_glfixed_table_n_get" "', argument " "1"" of type '" "gsl_integration_glfixed_table *""'"); 
+    }
+    arg1 = (gsl_integration_glfixed_table *)(argp1);
+    result =  ((arg1)->n);
+    ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_integration_glfixed_table_x_set) {
+  {
+    gsl_integration_glfixed_table *arg1 = (gsl_integration_glfixed_table *) 0 ;
+    double *arg2 = (double *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_integration_glfixed_table_x_set(self,x);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_integration_glfixed_table, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_glfixed_table_x_set" "', argument " "1"" of type '" "gsl_integration_glfixed_table *""'"); 
+    }
+    arg1 = (gsl_integration_glfixed_table *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_integration_glfixed_table_x_set" "', argument " "2"" of type '" "double *""'"); 
+    }
+    arg2 = (double *)(argp2);
+    if (arg1) (arg1)->x = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_integration_glfixed_table_x_get) {
+  {
+    gsl_integration_glfixed_table *arg1 = (gsl_integration_glfixed_table *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_integration_glfixed_table_x_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_integration_glfixed_table, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_glfixed_table_x_get" "', argument " "1"" of type '" "gsl_integration_glfixed_table *""'"); 
+    }
+    arg1 = (gsl_integration_glfixed_table *)(argp1);
+    result = (double *) ((arg1)->x);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_double, 0 | 0); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_integration_glfixed_table_w_set) {
+  {
+    gsl_integration_glfixed_table *arg1 = (gsl_integration_glfixed_table *) 0 ;
+    double *arg2 = (double *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_integration_glfixed_table_w_set(self,w);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_integration_glfixed_table, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_glfixed_table_w_set" "', argument " "1"" of type '" "gsl_integration_glfixed_table *""'"); 
+    }
+    arg1 = (gsl_integration_glfixed_table *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_integration_glfixed_table_w_set" "', argument " "2"" of type '" "double *""'"); 
+    }
+    arg2 = (double *)(argp2);
+    if (arg1) (arg1)->w = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_integration_glfixed_table_w_get) {
+  {
+    gsl_integration_glfixed_table *arg1 = (gsl_integration_glfixed_table *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_integration_glfixed_table_w_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_integration_glfixed_table, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_glfixed_table_w_get" "', argument " "1"" of type '" "gsl_integration_glfixed_table *""'"); 
+    }
+    arg1 = (gsl_integration_glfixed_table *)(argp1);
+    result = (double *) ((arg1)->w);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_double, 0 | 0); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_integration_glfixed_table_precomputed_set) {
+  {
+    gsl_integration_glfixed_table *arg1 = (gsl_integration_glfixed_table *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_integration_glfixed_table_precomputed_set(self,precomputed);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_integration_glfixed_table, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_glfixed_table_precomputed_set" "', argument " "1"" of type '" "gsl_integration_glfixed_table *""'"); 
+    }
+    arg1 = (gsl_integration_glfixed_table *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_integration_glfixed_table_precomputed_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->precomputed = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_integration_glfixed_table_precomputed_get) {
+  {
+    gsl_integration_glfixed_table *arg1 = (gsl_integration_glfixed_table *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_integration_glfixed_table_precomputed_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_integration_glfixed_table, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_glfixed_table_precomputed_get" "', argument " "1"" of type '" "gsl_integration_glfixed_table *""'"); 
+    }
+    arg1 = (gsl_integration_glfixed_table *)(argp1);
+    result = (int) ((arg1)->precomputed);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_gsl_integration_glfixed_table) {
+  {
+    int argvi = 0;
+    gsl_integration_glfixed_table *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 0) || (items > 0)) {
+      SWIG_croak("Usage: new_gsl_integration_glfixed_table();");
+    }
+    result = (gsl_integration_glfixed_table *)calloc(1, sizeof(gsl_integration_glfixed_table));
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_integration_glfixed_table, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_delete_gsl_integration_glfixed_table) {
+  {
+    gsl_integration_glfixed_table *arg1 = (gsl_integration_glfixed_table *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: delete_gsl_integration_glfixed_table(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_integration_glfixed_table, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_gsl_integration_glfixed_table" "', argument " "1"" of type '" "gsl_integration_glfixed_table *""'"); 
+    }
+    arg1 = (gsl_integration_glfixed_table *)(argp1);
+    free((char *) arg1);
+    ST(argvi) = sv_newmortal();
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_integration_glfixed_table_alloc) {
+  {
+    size_t arg1 ;
+    size_t val1 ;
+    int ecode1 = 0 ;
+    int argvi = 0;
+    gsl_integration_glfixed_table *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_integration_glfixed_table_alloc(n);");
+    }
+    ecode1 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_integration_glfixed_table_alloc" "', argument " "1"" of type '" "size_t""'");
+    } 
+    arg1 = (size_t)(val1);
+    result = (gsl_integration_glfixed_table *)gsl_integration_glfixed_table_alloc(arg1);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_integration_glfixed_table, 0 | SWIG_SHADOW); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_integration_glfixed_table_free) {
+  {
+    gsl_integration_glfixed_table *arg1 = (gsl_integration_glfixed_table *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_integration_glfixed_table_free(t);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_integration_glfixed_table, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_integration_glfixed_table_free" "', argument " "1"" of type '" "gsl_integration_glfixed_table *""'"); 
+    }
+    arg1 = (gsl_integration_glfixed_table *)(argp1);
+    gsl_integration_glfixed_table_free(arg1);
+    ST(argvi) = sv_newmortal();
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_integration_glfixed) {
+  {
+    gsl_function *arg1 = (gsl_function *) 0 ;
+    double arg2 ;
+    double arg3 ;
+    gsl_integration_glfixed_table *arg4 = (gsl_integration_glfixed_table *) 0 ;
+    struct gsl_function_perl w_gsl_function1 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    double val3 ;
+    int ecode3 = 0 ;
+    void *argp4 = 0 ;
+    int res4 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 4) || (items > 4)) {
+      SWIG_croak("Usage: gsl_integration_glfixed(f,a,b,t);");
+    }
+    {
+      SV * function = 0;
+      SV * params = 0;
+      
+      if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
+        AV* array=(AV*)SvRV(ST(0));
+        SV ** p_function = 0;
+        if (av_len(array)<0) {
+          croak("Math::GSL : $f is an empty array!");
+        }
+        if (av_len(array)>1) {
+          croak("Math::GSL : $f is an array with more than 2 elements!");
+        }
+        p_function = av_fetch(array, 0, 0);
+        function = *p_function;
+        if (av_len(array)>0) {
+          SV ** p_params = 0;
+          p_params = av_fetch(array, 1, 0);
+          params = *p_params;
+        }
+      } else {
+        function = ST(0);
+      }
+      
+      if (!function || !(SvPOK(function) || (SvROK(function) && (SvTYPE(SvRV(function)) == SVt_PVCV)))) {
+        croak("Math::GSL : $f is not a reference to code!");
+      }
+      
+      function = newSVsv(function);
+      
+      if (! params) {
+        params=&PL_sv_undef;
+      }
+      params = newSVsv(params);
+      
+      w_gsl_function1.params = params;
+      w_gsl_function1.function = function;
+      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
+      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
+      arg1         = &w_gsl_function1.C_gsl_function;
+    }
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_integration_glfixed" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_integration_glfixed" "', argument " "3"" of type '" "double""'");
+    } 
+    arg3 = (double)(val3);
+    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_gsl_integration_glfixed_table, 0 |  0 );
+    if (!SWIG_IsOK(res4)) {
+      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_integration_glfixed" "', argument " "4"" of type '" "gsl_integration_glfixed_table const *""'"); 
+    }
+    arg4 = (gsl_integration_glfixed_table *)(argp4);
+    result = (double)gsl_integration_glfixed((struct gsl_function_struct const *)arg1,arg2,arg3,(gsl_integration_glfixed_table const *)arg4);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    {
+      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
+      SvREFCNT_dec(p->function);
+      SvREFCNT_dec(p->params);
+    }
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_gsl_function_struct_function_set) {
   {
     struct gsl_function_struct *arg1 = (struct gsl_function_struct *) 0 ;
@@ -7564,6 +8026,7 @@ static swig_type_info _swigt__p_f_p_q_const__struct_gsl_function_struct_double_d
 static swig_type_info _swigt__p_gsl_function_fdf_struct = {"_p_gsl_function_fdf_struct", "struct gsl_function_fdf_struct *|gsl_function_fdf_struct *|gsl_function_fdf *", 0, 0, (void*)"Math::GSL::Integration::gsl_function_fdf_struct", 0};
 static swig_type_info _swigt__p_gsl_function_struct = {"_p_gsl_function_struct", "gsl_function *|struct gsl_function_struct *|gsl_function_struct *", 0, 0, (void*)"Math::GSL::Integration::gsl_function_struct", 0};
 static swig_type_info _swigt__p_gsl_function_vec_struct = {"_p_gsl_function_vec_struct", "gsl_function_vec *|struct gsl_function_vec_struct *|gsl_function_vec_struct *", 0, 0, (void*)"Math::GSL::Integration::gsl_function_vec_struct", 0};
+static swig_type_info _swigt__p_gsl_integration_glfixed_table = {"_p_gsl_integration_glfixed_table", "gsl_integration_glfixed_table *", 0, 0, (void*)"Math::GSL::Integration::gsl_integration_glfixed_table", 0};
 static swig_type_info _swigt__p_gsl_integration_qawo_table = {"_p_gsl_integration_qawo_table", "gsl_integration_qawo_table *", 0, 0, (void*)"Math::GSL::Integration::gsl_integration_qawo_table", 0};
 static swig_type_info _swigt__p_gsl_integration_qaws_table = {"_p_gsl_integration_qaws_table", "gsl_integration_qaws_table *", 0, 0, (void*)"Math::GSL::Integration::gsl_integration_qaws_table", 0};
 static swig_type_info _swigt__p_gsl_integration_workspace = {"_p_gsl_integration_workspace", "gsl_integration_workspace *", 0, 0, (void*)"Math::GSL::Integration::gsl_integration_workspace", 0};
@@ -7580,6 +8043,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_gsl_function_fdf_struct,
   &_swigt__p_gsl_function_struct,
   &_swigt__p_gsl_function_vec_struct,
+  &_swigt__p_gsl_integration_glfixed_table,
   &_swigt__p_gsl_integration_qawo_table,
   &_swigt__p_gsl_integration_qaws_table,
   &_swigt__p_gsl_integration_workspace,
@@ -7596,6 +8060,7 @@ static swig_cast_info _swigc__p_f_p_q_const__struct_gsl_function_struct_double_d
 static swig_cast_info _swigc__p_gsl_function_fdf_struct[] = {  {&_swigt__p_gsl_function_fdf_struct, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_function_struct[] = {  {&_swigt__p_gsl_function_struct, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_function_vec_struct[] = {  {&_swigt__p_gsl_function_vec_struct, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_gsl_integration_glfixed_table[] = {  {&_swigt__p_gsl_integration_glfixed_table, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_integration_qawo_table[] = {  {&_swigt__p_gsl_integration_qawo_table, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_integration_qaws_table[] = {  {&_swigt__p_gsl_integration_qaws_table, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_integration_workspace[] = {  {&_swigt__p_gsl_integration_workspace, 0, 0, 0},{0, 0, 0, 0}};
@@ -7612,6 +8077,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_gsl_function_fdf_struct,
   _swigc__p_gsl_function_struct,
   _swigc__p_gsl_function_vec_struct,
+  _swigc__p_gsl_integration_glfixed_table,
   _swigc__p_gsl_integration_qawo_table,
   _swigc__p_gsl_integration_qaws_table,
   _swigc__p_gsl_integration_workspace,
@@ -7716,6 +8182,19 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::Integrationc::gsl_integration_qaws", _wrap_gsl_integration_qaws},
 {"Math::GSL::Integrationc::gsl_integration_qawo", _wrap_gsl_integration_qawo},
 {"Math::GSL::Integrationc::gsl_integration_qawf", _wrap_gsl_integration_qawf},
+{"Math::GSL::Integrationc::gsl_integration_glfixed_table_n_set", _wrap_gsl_integration_glfixed_table_n_set},
+{"Math::GSL::Integrationc::gsl_integration_glfixed_table_n_get", _wrap_gsl_integration_glfixed_table_n_get},
+{"Math::GSL::Integrationc::gsl_integration_glfixed_table_x_set", _wrap_gsl_integration_glfixed_table_x_set},
+{"Math::GSL::Integrationc::gsl_integration_glfixed_table_x_get", _wrap_gsl_integration_glfixed_table_x_get},
+{"Math::GSL::Integrationc::gsl_integration_glfixed_table_w_set", _wrap_gsl_integration_glfixed_table_w_set},
+{"Math::GSL::Integrationc::gsl_integration_glfixed_table_w_get", _wrap_gsl_integration_glfixed_table_w_get},
+{"Math::GSL::Integrationc::gsl_integration_glfixed_table_precomputed_set", _wrap_gsl_integration_glfixed_table_precomputed_set},
+{"Math::GSL::Integrationc::gsl_integration_glfixed_table_precomputed_get", _wrap_gsl_integration_glfixed_table_precomputed_get},
+{"Math::GSL::Integrationc::new_gsl_integration_glfixed_table", _wrap_new_gsl_integration_glfixed_table},
+{"Math::GSL::Integrationc::delete_gsl_integration_glfixed_table", _wrap_delete_gsl_integration_glfixed_table},
+{"Math::GSL::Integrationc::gsl_integration_glfixed_table_alloc", _wrap_gsl_integration_glfixed_table_alloc},
+{"Math::GSL::Integrationc::gsl_integration_glfixed_table_free", _wrap_gsl_integration_glfixed_table_free},
+{"Math::GSL::Integrationc::gsl_integration_glfixed", _wrap_gsl_integration_glfixed},
 {"Math::GSL::Integrationc::gsl_function_struct_function_set", _wrap_gsl_function_struct_function_set},
 {"Math::GSL::Integrationc::gsl_function_struct_function_get", _wrap_gsl_function_struct_function_get},
 {"Math::GSL::Integrationc::gsl_function_struct_params_set", _wrap_gsl_function_struct_params_set},
@@ -8039,7 +8518,7 @@ XS(SWIG_init) {
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "GSL_MINOR_VERSION", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(13)));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(14)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
@@ -8095,6 +8574,7 @@ XS(SWIG_init) {
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(GSL_INTEG_GAUSS61)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
+  SWIG_TypeClientData(SWIGTYPE_p_gsl_integration_glfixed_table, (void*) "Math::GSL::Integration::gsl_integration_glfixed_table");
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "M_E", TRUE | 0x2 | GV_ADDMULTI);
     sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(2.71828182845904523536028747135)));

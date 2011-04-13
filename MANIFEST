@@ -80,7 +80,7 @@ lib/Math/GSL/VectorComplex.pm
 lib/Math/GSL/Wavelet.pm
 lib/Math/GSL/Wavelet2D.pm
 Makefile.PL
-MANIFEST
+MANIFEST			This list of files
 MANIFEST.SKIP
 META.yml
 pod/BLAS.pod

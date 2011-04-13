@@ -2832,6 +2832,108 @@ XS(_wrap_gsl_multifit_linear_svd) {
 }
 
 
+XS(_wrap_gsl_multifit_linear_usvd) {
+  {
+    gsl_matrix *arg1 = (gsl_matrix *) 0 ;
+    gsl_vector *arg2 = (gsl_vector *) 0 ;
+    double arg3 ;
+    size_t *arg4 = (size_t *) 0 ;
+    gsl_vector *arg5 = (gsl_vector *) 0 ;
+    gsl_matrix *arg6 = (gsl_matrix *) 0 ;
+    double *arg7 = (double *) 0 ;
+    gsl_multifit_linear_workspace *arg8 = (gsl_multifit_linear_workspace *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    double val3 ;
+    int ecode3 = 0 ;
+    size_t temp4 ;
+    int res4 = SWIG_TMPOBJ ;
+    void *argp5 = 0 ;
+    int res5 = 0 ;
+    void *argp6 = 0 ;
+    int res6 = 0 ;
+    double temp7 ;
+    int res7 = SWIG_TMPOBJ ;
+    void *argp8 = 0 ;
+    int res8 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    arg4 = &temp4;
+    arg7 = &temp7;
+    if ((items < 6) || (items > 6)) {
+      SWIG_croak("Usage: gsl_multifit_linear_usvd(X,y,tol,c,cov,work);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_matrix, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_multifit_linear_usvd" "', argument " "1"" of type '" "gsl_matrix const *""'"); 
+    }
+    arg1 = (gsl_matrix *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_gsl_vector, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_multifit_linear_usvd" "', argument " "2"" of type '" "gsl_vector const *""'"); 
+    }
+    arg2 = (gsl_vector *)(argp2);
+    ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_multifit_linear_usvd" "', argument " "3"" of type '" "double""'");
+    } 
+    arg3 = (double)(val3);
+    res5 = SWIG_ConvertPtr(ST(3), &argp5,SWIGTYPE_p_gsl_vector, 0 |  0 );
+    if (!SWIG_IsOK(res5)) {
+      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_multifit_linear_usvd" "', argument " "5"" of type '" "gsl_vector *""'"); 
+    }
+    arg5 = (gsl_vector *)(argp5);
+    res6 = SWIG_ConvertPtr(ST(4), &argp6,SWIGTYPE_p_gsl_matrix, 0 |  0 );
+    if (!SWIG_IsOK(res6)) {
+      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_multifit_linear_usvd" "', argument " "6"" of type '" "gsl_matrix *""'"); 
+    }
+    arg6 = (gsl_matrix *)(argp6);
+    res8 = SWIG_ConvertPtr(ST(5), &argp8,SWIGTYPE_p_gsl_multifit_linear_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res8)) {
+      SWIG_exception_fail(SWIG_ArgError(res8), "in method '" "gsl_multifit_linear_usvd" "', argument " "8"" of type '" "gsl_multifit_linear_workspace *""'"); 
+    }
+    arg8 = (gsl_multifit_linear_workspace *)(argp8);
+    result = (int)gsl_multifit_linear_usvd((gsl_matrix const *)arg1,(gsl_vector const *)arg2,arg3,arg4,arg5,arg6,arg7,arg8);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res4)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg4)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res4) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_size_t, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res7)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg7)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res7) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg7), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_gsl_multifit_wlinear) {
   {
     gsl_matrix *arg1 = (gsl_matrix *) 0 ;
@@ -2996,6 +3098,118 @@ XS(_wrap_gsl_multifit_wlinear_svd) {
     }
     arg9 = (gsl_multifit_linear_workspace *)(argp9);
     result = (int)gsl_multifit_wlinear_svd((gsl_matrix const *)arg1,(gsl_vector const *)arg2,(gsl_vector const *)arg3,arg4,arg5,arg6,arg7,arg8,arg9);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    if (SWIG_IsTmpObj(res5)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg5)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res5) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_size_t, new_flags); argvi++  ;
+    }
+    if (SWIG_IsTmpObj(res8)) {
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg8)); argvi++  ;
+    } else {
+      int new_flags = SWIG_IsNewObj(res8) ? (SWIG_POINTER_OWN | 0) : 0;
+      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg8), SWIGTYPE_p_double, new_flags); argvi++  ;
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_multifit_wlinear_usvd) {
+  {
+    gsl_matrix *arg1 = (gsl_matrix *) 0 ;
+    gsl_vector *arg2 = (gsl_vector *) 0 ;
+    gsl_vector *arg3 = (gsl_vector *) 0 ;
+    double arg4 ;
+    size_t *arg5 = (size_t *) 0 ;
+    gsl_vector *arg6 = (gsl_vector *) 0 ;
+    gsl_matrix *arg7 = (gsl_matrix *) 0 ;
+    double *arg8 = (double *) 0 ;
+    gsl_multifit_linear_workspace *arg9 = (gsl_multifit_linear_workspace *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    void *argp3 = 0 ;
+    int res3 = 0 ;
+    double val4 ;
+    int ecode4 = 0 ;
+    size_t temp5 ;
+    int res5 = SWIG_TMPOBJ ;
+    void *argp6 = 0 ;
+    int res6 = 0 ;
+    void *argp7 = 0 ;
+    int res7 = 0 ;
+    double temp8 ;
+    int res8 = SWIG_TMPOBJ ;
+    void *argp9 = 0 ;
+    int res9 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    arg5 = &temp5;
+    arg8 = &temp8;
+    if ((items < 7) || (items > 7)) {
+      SWIG_croak("Usage: gsl_multifit_wlinear_usvd(X,w,y,tol,c,cov,work);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_matrix, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_multifit_wlinear_usvd" "', argument " "1"" of type '" "gsl_matrix const *""'"); 
+    }
+    arg1 = (gsl_matrix *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_gsl_vector, 0 |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_multifit_wlinear_usvd" "', argument " "2"" of type '" "gsl_vector const *""'"); 
+    }
+    arg2 = (gsl_vector *)(argp2);
+    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_gsl_vector, 0 |  0 );
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_multifit_wlinear_usvd" "', argument " "3"" of type '" "gsl_vector const *""'"); 
+    }
+    arg3 = (gsl_vector *)(argp3);
+    ecode4 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    if (!SWIG_IsOK(ecode4)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_multifit_wlinear_usvd" "', argument " "4"" of type '" "double""'");
+    } 
+    arg4 = (double)(val4);
+    res6 = SWIG_ConvertPtr(ST(4), &argp6,SWIGTYPE_p_gsl_vector, 0 |  0 );
+    if (!SWIG_IsOK(res6)) {
+      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_multifit_wlinear_usvd" "', argument " "6"" of type '" "gsl_vector *""'"); 
+    }
+    arg6 = (gsl_vector *)(argp6);
+    res7 = SWIG_ConvertPtr(ST(5), &argp7,SWIGTYPE_p_gsl_matrix, 0 |  0 );
+    if (!SWIG_IsOK(res7)) {
+      SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_multifit_wlinear_usvd" "', argument " "7"" of type '" "gsl_matrix *""'"); 
+    }
+    arg7 = (gsl_matrix *)(argp7);
+    res9 = SWIG_ConvertPtr(ST(6), &argp9,SWIGTYPE_p_gsl_multifit_linear_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res9)) {
+      SWIG_exception_fail(SWIG_ArgError(res9), "in method '" "gsl_multifit_wlinear_usvd" "', argument " "9"" of type '" "gsl_multifit_linear_workspace *""'"); 
+    }
+    arg9 = (gsl_multifit_linear_workspace *)(argp9);
+    result = (int)gsl_multifit_wlinear_usvd((gsl_matrix const *)arg1,(gsl_vector const *)arg2,(gsl_vector const *)arg3,arg4,arg5,arg6,arg7,arg8,arg9);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     if (SWIG_IsTmpObj(res5)) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg5)); argvi++  ;
@@ -6437,8 +6651,10 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::Multifitc::gsl_multifit_linear_free", _wrap_gsl_multifit_linear_free},
 {"Math::GSL::Multifitc::gsl_multifit_linear", _wrap_gsl_multifit_linear},
 {"Math::GSL::Multifitc::gsl_multifit_linear_svd", _wrap_gsl_multifit_linear_svd},
+{"Math::GSL::Multifitc::gsl_multifit_linear_usvd", _wrap_gsl_multifit_linear_usvd},
 {"Math::GSL::Multifitc::gsl_multifit_wlinear", _wrap_gsl_multifit_wlinear},
 {"Math::GSL::Multifitc::gsl_multifit_wlinear_svd", _wrap_gsl_multifit_wlinear_svd},
+{"Math::GSL::Multifitc::gsl_multifit_wlinear_usvd", _wrap_gsl_multifit_wlinear_usvd},
 {"Math::GSL::Multifitc::gsl_multifit_linear_est", _wrap_gsl_multifit_linear_est},
 {"Math::GSL::Multifitc::gsl_multifit_linear_residuals", _wrap_gsl_multifit_linear_residuals},
 {"Math::GSL::Multifitc::gsl_multifit_gradient", _wrap_gsl_multifit_gradient},
@@ -6840,7 +7056,7 @@ XS(SWIG_init) {
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "GSL_MINOR_VERSION", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(13)));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(14)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/share/swig1.3/perl5/perltypemaps.swg,65,%set_constant@*/ do {

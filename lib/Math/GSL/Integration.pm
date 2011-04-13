@@ -77,6 +77,9 @@ package Math::GSL::Integration;
 *gsl_integration_qaws = *Math::GSL::Integrationc::gsl_integration_qaws;
 *gsl_integration_qawo = *Math::GSL::Integrationc::gsl_integration_qawo;
 *gsl_integration_qawf = *Math::GSL::Integrationc::gsl_integration_qawf;
+*gsl_integration_glfixed_table_alloc = *Math::GSL::Integrationc::gsl_integration_glfixed_table_alloc;
+*gsl_integration_glfixed_table_free = *Math::GSL::Integrationc::gsl_integration_glfixed_table_free;
+*gsl_integration_glfixed = *Math::GSL::Integrationc::gsl_integration_glfixed;
 
 ############# Class : Math::GSL::Integration::gsl_integration_workspace ##############
 
@@ -222,6 +225,51 @@ sub DESTROY {
     delete $ITERATORS{$self};
     if (exists $OWNER{$self}) {
         Math::GSL::Integrationc::delete_gsl_integration_qawo_table($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
+
+############# Class : Math::GSL::Integration::gsl_integration_glfixed_table ##############
+
+package Math::GSL::Integration::gsl_integration_glfixed_table;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( Math::GSL::Integration );
+%OWNER = ();
+%ITERATORS = ();
+*swig_n_get = *Math::GSL::Integrationc::gsl_integration_glfixed_table_n_get;
+*swig_n_set = *Math::GSL::Integrationc::gsl_integration_glfixed_table_n_set;
+*swig_x_get = *Math::GSL::Integrationc::gsl_integration_glfixed_table_x_get;
+*swig_x_set = *Math::GSL::Integrationc::gsl_integration_glfixed_table_x_set;
+*swig_w_get = *Math::GSL::Integrationc::gsl_integration_glfixed_table_w_get;
+*swig_w_set = *Math::GSL::Integrationc::gsl_integration_glfixed_table_w_set;
+*swig_precomputed_get = *Math::GSL::Integrationc::gsl_integration_glfixed_table_precomputed_get;
+*swig_precomputed_set = *Math::GSL::Integrationc::gsl_integration_glfixed_table_precomputed_set;
+sub new {
+    my $pkg = shift;
+    my $self = Math::GSL::Integrationc::new_gsl_integration_glfixed_table(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        Math::GSL::Integrationc::delete_gsl_integration_glfixed_table($self);
         delete $OWNER{$self};
     }
 }
