@@ -19,7 +19,7 @@ name: Math-GSL
 provides:
   Math::GSL:
     file: lib/Math/GSL.pm
-    version: 0.25_01
+    version: 0.25_02
   Math::GSL::BLAS:
     file: lib/Math/GSL/BLAS.pm
     version: 0
@@ -783,4 +783,4 @@ requires:
   version: 0
 resources:
   license: http://www.gnu.org/licenses/old-licenses/gpl-1.0.txt
-version: 0.25_01
+version: 0.25_02
