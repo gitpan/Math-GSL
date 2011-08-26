@@ -10,9 +10,11 @@ use Math::GSL::Const   qw/:all/;
 use Math::GSL::Errno   qw/:all/;
 use Math::GSL::Vector  qw/:file/;
 use Math::GSL::Machine qw/:all/;
+use Math::GSL::Version;
+use version;
 our @EXPORT = qw();
 our @EXPORT_OK = qw(
-                     gsl_fopen gsl_fclose
+                     gsl_fopen gsl_fclose gsl_version
                      $GSL_MODE_DEFAULT $GSL_PREC_DOUBLE
                      $GSL_PREC_SINGLE $GSL_PREC_APPROX
                    );
@@ -22,7 +24,7 @@ our %EXPORT_TAGS = ( all => \@EXPORT_OK, );
 
 our ($GSL_PREC_DOUBLE, $GSL_PREC_SINGLE, $GSL_PREC_APPROX ) = 0 .. 2;
 our $GSL_MODE_DEFAULT = $GSL_PREC_DOUBLE;
-our $VERSION = '0.25_02';
+our $VERSION = '0.25_03';
 
 =head1 NAME
 
@@ -30,7 +32,7 @@ Math::GSL - Perl interface to the GNU Scientific Library (GSL)
 
 =head1 VERSION
 
-Version 0.25_02
+Version 0.25_03
 
 =head1 SYNOPSIS
 
@@ -49,6 +51,11 @@ Version 0.25_02
     use Math::GSL::Deriv qw/:all/;
     my $function = sub { my $x=shift; sin($x**2) };
     my ($status,$val,$err) = gsl_deriv_central($function, 5, 0.01 );
+
+    use Math::GSL qw/gsl_version/;
+    # get a version object for the version of the underlying GSL library,
+    # which will stringify to a version number
+    my $gsl_version = gsl_version();
 
 Each GSL subsystem has it's own module. For example, the random number generator
 subsystem is Math::GSL::RNG. Many subsystems have a more Perlish and
@@ -152,6 +159,24 @@ L<Math::GSL::Wavelet>         - Basic Wavelets
 
 L<Math::GSL::Wavelet2D>        - 2D Wavelets
 
+=cut
+
+sub gsl_fopen
+{
+    my ($file, $mode) = @_;
+    $mode .= '+b' if (is_windows() and $mode !~ /\+b/);
+    return Math::GSL::Vector::fopen($file, $mode);
+}
+
+sub gsl_fclose
+{
+    my $file = shift;
+    return Math::GSL::Vector::fclose($file);
+}
+
+sub gsl_version{
+    return version->parse($Math::GSL::Version::GSL_VERSION);
+}
 
 =head1 AUTHORS
 
@@ -238,18 +263,5 @@ This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
 
 =cut
-
-sub gsl_fopen
-{
-    my ($file, $mode) = @_;
-    $mode .= '+b' if (is_windows() and $mode !~ /\+b/);
-    return Math::GSL::Vector::fopen($file, $mode);
-}
-
-sub gsl_fclose
-{
-    my $file = shift;
-    return Math::GSL::Vector::fclose($file);
-}
 
 42;

@@ -19,7 +19,7 @@ name: Math-GSL
 provides:
   Math::GSL:
     file: lib/Math/GSL.pm
-    version: 0.25_02
+    version: 0.25_03
   Math::GSL::BLAS:
     file: lib/Math/GSL/BLAS.pm
     version: 0
@@ -27,9 +27,6 @@ provides:
     file: lib/Math/GSL/BLAS.pm
     version: 0
   Math::GSL::BSpline:
-    file: lib/Math/GSL/BSpline.pm
-    version: 0
-  Math::GSL::BSpline::gsl_bspline_deriv_workspace:
     file: lib/Math/GSL/BSpline.pm
     version: 0
   Math::GSL::BSpline::gsl_bspline_workspace:
@@ -755,6 +752,12 @@ provides:
   Math::GSL::Vectorc:
     file: lib/Math/GSL/Vector.pm
     version: 0
+  Math::GSL::Version:
+    file: lib/Math/GSL/Version.pm
+    version: 0
+  Math::GSL::Versionc:
+    file: lib/Math/GSL/Version.pm
+    version: 0
   Math::GSL::Wavelet:
     file: lib/Math/GSL/Wavelet.pm
     version: 0
@@ -780,7 +783,7 @@ requires:
   ExtUtils::PkgConfig: 1.03
   Scalar::Util: 0
   perl: v5.8.0
-  version: 0
+  version: 0.77
 resources:
   license: http://www.gnu.org/licenses/old-licenses/gpl-1.0.txt
-version: 0.25_02
+version: 0.25_03
