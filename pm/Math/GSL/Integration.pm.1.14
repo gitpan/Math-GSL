@@ -80,6 +80,7 @@ package Math::GSL::Integration;
 *gsl_integration_glfixed_table_alloc = *Math::GSL::Integrationc::gsl_integration_glfixed_table_alloc;
 *gsl_integration_glfixed_table_free = *Math::GSL::Integrationc::gsl_integration_glfixed_table_free;
 *gsl_integration_glfixed = *Math::GSL::Integrationc::gsl_integration_glfixed;
+*gsl_integration_glfixed_point = *Math::GSL::Integrationc::gsl_integration_glfixed_point;
 
 ############# Class : Math::GSL::Integration::gsl_integration_workspace ##############
 
