@@ -1642,6 +1642,13 @@ void array_wrapper_free(array_wrapper * daw){
         SV * params;
     };
 
+    void gsl_function_perl_free(struct gsl_function_perl * perl_f){
+        if (perl_f != NULL) {
+            SvREFCNT_dec(perl_f->function);
+            SvREFCNT_dec(perl_f->params);
+            Safefree(perl_f);
+        }
+    }
 
     /* These functions (C callbacks) calls the perl callbacks.
        Info for perl callback can be found using the 'void*params' parameter
@@ -2410,7 +2417,6 @@ XS(_wrap_gsl_cheb_init) {
     double arg4 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    struct gsl_function_perl w_gsl_function2 ;
     double val3 ;
     int ecode3 = 0 ;
     double val4 ;
@@ -2430,6 +2436,8 @@ XS(_wrap_gsl_cheb_init) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(1)) && (SvTYPE(SvRV(ST(1))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(1));
@@ -2462,11 +2470,12 @@ XS(_wrap_gsl_cheb_init) {
       }
       params = newSVsv(params);
       
-      w_gsl_function2.params = params;
-      w_gsl_function2.function = function;
-      w_gsl_function2.C_gsl_function.params   = &w_gsl_function2;
-      w_gsl_function2.C_gsl_function.function = &call_gsl_function;
-      arg2         = &w_gsl_function2.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg2 = &(w_gsl_function->C_gsl_function);
     }
     ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
@@ -2483,8 +2492,7 @@ XS(_wrap_gsl_cheb_init) {
     
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg2->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -2493,8 +2501,7 @@ XS(_wrap_gsl_cheb_init) {
     
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg2->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     

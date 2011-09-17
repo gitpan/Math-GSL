@@ -1639,6 +1639,13 @@ void array_wrapper_free(array_wrapper * daw){
         SV * params;
     };
 
+    void gsl_function_perl_free(struct gsl_function_perl * perl_f){
+        if (perl_f != NULL) {
+            SvREFCNT_dec(perl_f->function);
+            SvREFCNT_dec(perl_f->params);
+            Safefree(perl_f);
+        }
+    }
 
     /* These functions (C callbacks) calls the perl callbacks.
        Info for perl callback can be found using the 'void*params' parameter
@@ -1997,14 +2004,14 @@ XS(_wrap_gsl_poly_eval) {
     result = (double)gsl_poly_eval((double const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     
     XSRETURN(argvi);
   fail:
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     
@@ -2087,13 +2094,13 @@ XS(_wrap_gsl_poly_complex_eval) {
           */
     }
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     XSRETURN(argvi);
   fail:
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     SWIG_croak_null();
@@ -2274,7 +2281,7 @@ XS(_wrap_gsl_poly_eval_derivs) {
     result = (int)gsl_poly_eval_derivs((double const (*))arg1,arg2,arg3,arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     
@@ -2283,7 +2290,7 @@ XS(_wrap_gsl_poly_eval_derivs) {
     XSRETURN(argvi);
   fail:
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     
@@ -2361,20 +2368,20 @@ XS(_wrap_gsl_poly_dd_init) {
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     
     XSRETURN(argvi);
   fail:
     
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     
     SWIG_croak_null();
@@ -2448,20 +2455,20 @@ XS(_wrap_gsl_poly_dd_eval) {
     result = (double)gsl_poly_dd_eval((double const (*))arg1,(double const (*))arg2,arg3,arg4);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     
     
     XSRETURN(argvi);
   fail:
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     
     
@@ -2554,10 +2561,10 @@ XS(_wrap_gsl_poly_dd_taylor) {
     
     
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     {
-      // if (arg4) free(arg4);
+      if (arg4) free(arg4);
     }
     
     
@@ -2566,10 +2573,10 @@ XS(_wrap_gsl_poly_dd_taylor) {
     
     
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     {
-      // if (arg4) free(arg4);
+      if (arg4) free(arg4);
     }
     
     

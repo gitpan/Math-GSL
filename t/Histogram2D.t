@@ -1,6 +1,6 @@
 package Math::GSL::Histogram2D::Test;
 use base q{Test::Class};
-use Test::More tests => 88;
+use Test::More tests => 89;
 use Math::GSL              qw/:all/;
 use Math::GSL::Test        qw/:all/;
 use Math::GSL::Errno       qw/:all/;
@@ -13,6 +13,7 @@ BEGIN{ gsl_set_error_handler_off(); }
 sub make_fixture : Test(setup) {
     my $self = shift;
     $self->{H} = gsl_histogram2d_alloc( 100, 100 );
+    gsl_histogram2d_set_ranges_uniform($self->{H}, 1, 100, 1, 100);
 }
 
 sub teardown : Test(teardown) {
@@ -47,11 +48,10 @@ sub MEMCPY : Tests {
     ok_status(gsl_histogram2d_memcpy($bob, $self->{H}), $GSL_EINVAL);
 }
 
-sub CLONE : Tests { 
+sub CLONE : Tests {
     my $self = shift;
-    local $TODO = "gsl_histogram2d_clone does not return a gsl_histogram_t";
     my $copy = gsl_histogram2d_clone($self->{H});
-    isa_ok( $copy, 'Math::GSL::Histogram');
+    isa_ok( $copy, 'Math::GSL::Histogram2D::gsl_histogram2d');
 }
 
 sub INCREMENT : Tests { 
@@ -195,8 +195,17 @@ sub MIN_BIN_MAX_BIN : Tests {
     cmp_ok(gsl_histogram2d_max_bin($self->{H}), '==', 50);
 }
 
-sub GSL_HISTOGRAM2D_XSIGMA_YSIGMA : Tests {
- local $TODO = "Don't know how to test this function";
+sub GSL_HISTOGRAM2D_XSIGMA : Tests(1) {
+    my $self = shift;
+
+    local $TODO = "gsl_histogram2d_xsigma";
+
+    gsl_histogram2d_increment($self->{H}, 0, 42);
+    gsl_histogram2d_increment($self->{H}, 42, 1);
+
+    my $xsigma = gsl_histogram2d_xsigma($self->{H});
+    # what is the correct answer?
+    is_similar(42, $xsigma, 1e-8, 'gsl_histogram2d_xsigma');
 }
 
 sub EQUAL_BINS_P : Tests { 

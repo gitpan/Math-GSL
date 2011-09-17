@@ -1634,6 +1634,13 @@ void array_wrapper_free(array_wrapper * daw){
         SV * params;
     };
 
+    void gsl_function_perl_free(struct gsl_function_perl * perl_f){
+        if (perl_f != NULL) {
+            SvREFCNT_dec(perl_f->function);
+            SvREFCNT_dec(perl_f->params);
+            Safefree(perl_f);
+        }
+    }
 
     /* These functions (C callbacks) calls the perl callbacks.
        Info for perl callback can be found using the 'void*params' parameter
@@ -2286,22 +2293,22 @@ XS(_wrap_cblas_ddot) {
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
     
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     
     {
-      // if (arg4) free(arg4);
+      if (arg4) free(arg4);
     }
     
     XSRETURN(argvi);
   fail:
     
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     
     {
-      // if (arg4) free(arg4);
+      if (arg4) free(arg4);
     }
     
     SWIG_croak_null();
@@ -2767,14 +2774,14 @@ XS(_wrap_cblas_dnrm2) {
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
     
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     
     XSRETURN(argvi);
   fail:
     
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     
     SWIG_croak_null();
@@ -2830,14 +2837,14 @@ XS(_wrap_cblas_dasum) {
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
     
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     
     XSRETURN(argvi);
   fail:
     
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     
     SWIG_croak_null();
@@ -3140,14 +3147,14 @@ XS(_wrap_cblas_idamax) {
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
     
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     
     XSRETURN(argvi);
   fail:
     
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     
     SWIG_croak_null();
@@ -3618,7 +3625,7 @@ XS(_wrap_cblas_dcopy) {
     ST(argvi) = sv_newmortal();
     
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     
     
@@ -3627,7 +3634,7 @@ XS(_wrap_cblas_dcopy) {
   fail:
     
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     
     
@@ -3709,7 +3716,7 @@ XS(_wrap_cblas_daxpy) {
     
     
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     
     
@@ -3719,7 +3726,7 @@ XS(_wrap_cblas_daxpy) {
     
     
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     
     
@@ -4973,7 +4980,7 @@ XS(_wrap_cblas_drotm) {
     
     
     {
-      // if (arg6) free(arg6);
+      if (arg6) free(arg6);
     }
     XSRETURN(argvi);
   fail:
@@ -4983,7 +4990,7 @@ XS(_wrap_cblas_drotm) {
     
     
     {
-      // if (arg6) free(arg6);
+      if (arg6) free(arg6);
     }
     SWIG_croak_null();
   }
@@ -6540,11 +6547,11 @@ XS(_wrap_cblas_dgemv) {
     
     
     {
-      // if (arg6) free(arg6);
+      if (arg6) free(arg6);
     }
     
     {
-      // if (arg8) free(arg8);
+      if (arg8) free(arg8);
     }
     
     
@@ -6558,11 +6565,11 @@ XS(_wrap_cblas_dgemv) {
     
     
     {
-      // if (arg6) free(arg6);
+      if (arg6) free(arg6);
     }
     
     {
-      // if (arg8) free(arg8);
+      if (arg8) free(arg8);
     }
     
     
@@ -6725,11 +6732,11 @@ XS(_wrap_cblas_dgbmv) {
     
     
     {
-      // if (arg8) free(arg8);
+      if (arg8) free(arg8);
     }
     
     {
-      // if (arg10) free(arg10);
+      if (arg10) free(arg10);
     }
     
     
@@ -6745,11 +6752,11 @@ XS(_wrap_cblas_dgbmv) {
     
     
     {
-      // if (arg8) free(arg8);
+      if (arg8) free(arg8);
     }
     
     {
-      // if (arg10) free(arg10);
+      if (arg10) free(arg10);
     }
     
     
@@ -6859,7 +6866,7 @@ XS(_wrap_cblas_dtrmv) {
     
     
     {
-      // if (arg6) free(arg6);
+      if (arg6) free(arg6);
     }
     
     
@@ -6872,7 +6879,7 @@ XS(_wrap_cblas_dtrmv) {
     
     
     {
-      // if (arg6) free(arg6);
+      if (arg6) free(arg6);
     }
     
     
@@ -6990,7 +6997,7 @@ XS(_wrap_cblas_dtbmv) {
     
     
     {
-      // if (arg7) free(arg7);
+      if (arg7) free(arg7);
     }
     
     
@@ -7004,7 +7011,7 @@ XS(_wrap_cblas_dtbmv) {
     
     
     {
-      // if (arg7) free(arg7);
+      if (arg7) free(arg7);
     }
     
     
@@ -7105,7 +7112,7 @@ XS(_wrap_cblas_dtpmv) {
     
     
     {
-      // if (arg6) free(arg6);
+      if (arg6) free(arg6);
     }
     
     
@@ -7117,7 +7124,7 @@ XS(_wrap_cblas_dtpmv) {
     
     
     {
-      // if (arg6) free(arg6);
+      if (arg6) free(arg6);
     }
     
     
@@ -7225,7 +7232,7 @@ XS(_wrap_cblas_dtrsv) {
     
     
     {
-      // if (arg6) free(arg6);
+      if (arg6) free(arg6);
     }
     
     
@@ -7238,7 +7245,7 @@ XS(_wrap_cblas_dtrsv) {
     
     
     {
-      // if (arg6) free(arg6);
+      if (arg6) free(arg6);
     }
     
     
@@ -7356,7 +7363,7 @@ XS(_wrap_cblas_dtbsv) {
     
     
     {
-      // if (arg7) free(arg7);
+      if (arg7) free(arg7);
     }
     
     
@@ -7370,7 +7377,7 @@ XS(_wrap_cblas_dtbsv) {
     
     
     {
-      // if (arg7) free(arg7);
+      if (arg7) free(arg7);
     }
     
     
@@ -7471,7 +7478,7 @@ XS(_wrap_cblas_dtpsv) {
     
     
     {
-      // if (arg6) free(arg6);
+      if (arg6) free(arg6);
     }
     
     
@@ -7483,7 +7490,7 @@ XS(_wrap_cblas_dtpsv) {
     
     
     {
-      // if (arg6) free(arg6);
+      if (arg6) free(arg6);
     }
     
     
@@ -10517,11 +10524,11 @@ XS(_wrap_cblas_dsymv) {
     
     
     {
-      // if (arg5) free(arg5);
+      if (arg5) free(arg5);
     }
     
     {
-      // if (arg7) free(arg7);
+      if (arg7) free(arg7);
     }
     
     
@@ -10534,11 +10541,11 @@ XS(_wrap_cblas_dsymv) {
     
     
     {
-      // if (arg5) free(arg5);
+      if (arg5) free(arg5);
     }
     
     {
-      // if (arg7) free(arg7);
+      if (arg7) free(arg7);
     }
     
     
@@ -10683,11 +10690,11 @@ XS(_wrap_cblas_dsbmv) {
     
     
     {
-      // if (arg6) free(arg6);
+      if (arg6) free(arg6);
     }
     
     {
-      // if (arg8) free(arg8);
+      if (arg8) free(arg8);
     }
     
     
@@ -10701,11 +10708,11 @@ XS(_wrap_cblas_dsbmv) {
     
     
     {
-      // if (arg6) free(arg6);
+      if (arg6) free(arg6);
     }
     
     {
-      // if (arg8) free(arg8);
+      if (arg8) free(arg8);
     }
     
     
@@ -10833,10 +10840,10 @@ XS(_wrap_cblas_dspmv) {
     
     
     {
-      // if (arg5) free(arg5);
+      if (arg5) free(arg5);
     }
     {
-      // if (arg6) free(arg6);
+      if (arg6) free(arg6);
     }
     
     
@@ -10849,10 +10856,10 @@ XS(_wrap_cblas_dspmv) {
     
     
     {
-      // if (arg5) free(arg5);
+      if (arg5) free(arg5);
     }
     {
-      // if (arg6) free(arg6);
+      if (arg6) free(arg6);
     }
     
     
@@ -10980,11 +10987,11 @@ XS(_wrap_cblas_dger) {
     
     
     {
-      // if (arg5) free(arg5);
+      if (arg5) free(arg5);
     }
     
     {
-      // if (arg7) free(arg7);
+      if (arg7) free(arg7);
     }
     
     
@@ -10996,11 +11003,11 @@ XS(_wrap_cblas_dger) {
     
     
     {
-      // if (arg5) free(arg5);
+      if (arg5) free(arg5);
     }
     
     {
-      // if (arg7) free(arg7);
+      if (arg7) free(arg7);
     }
     
     
@@ -11100,7 +11107,7 @@ XS(_wrap_cblas_dsyr) {
     
     
     {
-      // if (arg5) free(arg5);
+      if (arg5) free(arg5);
     }
     
     
@@ -11112,7 +11119,7 @@ XS(_wrap_cblas_dsyr) {
     
     
     {
-      // if (arg5) free(arg5);
+      if (arg5) free(arg5);
     }
     
     
@@ -11204,7 +11211,7 @@ XS(_wrap_cblas_dspr) {
     
     
     {
-      // if (arg5) free(arg5);
+      if (arg5) free(arg5);
     }
     
     
@@ -11215,7 +11222,7 @@ XS(_wrap_cblas_dspr) {
     
     
     {
-      // if (arg5) free(arg5);
+      if (arg5) free(arg5);
     }
     
     
@@ -11341,11 +11348,11 @@ XS(_wrap_cblas_dsyr2) {
     
     
     {
-      // if (arg5) free(arg5);
+      if (arg5) free(arg5);
     }
     
     {
-      // if (arg7) free(arg7);
+      if (arg7) free(arg7);
     }
     
     
@@ -11357,11 +11364,11 @@ XS(_wrap_cblas_dsyr2) {
     
     
     {
-      // if (arg5) free(arg5);
+      if (arg5) free(arg5);
     }
     
     {
-      // if (arg7) free(arg7);
+      if (arg7) free(arg7);
     }
     
     
@@ -11480,11 +11487,11 @@ XS(_wrap_cblas_dspr2) {
     
     
     {
-      // if (arg5) free(arg5);
+      if (arg5) free(arg5);
     }
     
     {
-      // if (arg7) free(arg7);
+      if (arg7) free(arg7);
     }
     
     
@@ -11495,11 +11502,11 @@ XS(_wrap_cblas_dspr2) {
     
     
     {
-      // if (arg5) free(arg5);
+      if (arg5) free(arg5);
     }
     
     {
-      // if (arg7) free(arg7);
+      if (arg7) free(arg7);
     }
     
     
@@ -14689,11 +14696,11 @@ XS(_wrap_cblas_dgemm) {
     
     
     {
-      // if (arg8) free(arg8);
+      if (arg8) free(arg8);
     }
     
     {
-      // if (arg10) free(arg10);
+      if (arg10) free(arg10);
     }
     
     
@@ -14709,11 +14716,11 @@ XS(_wrap_cblas_dgemm) {
     
     
     {
-      // if (arg8) free(arg8);
+      if (arg8) free(arg8);
     }
     
     {
-      // if (arg10) free(arg10);
+      if (arg10) free(arg10);
     }
     
     
@@ -14867,11 +14874,11 @@ XS(_wrap_cblas_dsymm) {
     
     
     {
-      // if (arg7) free(arg7);
+      if (arg7) free(arg7);
     }
     
     {
-      // if (arg9) free(arg9);
+      if (arg9) free(arg9);
     }
     
     
@@ -14886,11 +14893,11 @@ XS(_wrap_cblas_dsymm) {
     
     
     {
-      // if (arg7) free(arg7);
+      if (arg7) free(arg7);
     }
     
     {
-      // if (arg9) free(arg9);
+      if (arg9) free(arg9);
     }
     
     
@@ -15017,7 +15024,7 @@ XS(_wrap_cblas_dsyrk) {
     
     
     {
-      // if (arg7) free(arg7);
+      if (arg7) free(arg7);
     }
     
     
@@ -15032,7 +15039,7 @@ XS(_wrap_cblas_dsyrk) {
     
     
     {
-      // if (arg7) free(arg7);
+      if (arg7) free(arg7);
     }
     
     
@@ -15186,11 +15193,11 @@ XS(_wrap_cblas_dsyr2k) {
     
     
     {
-      // if (arg7) free(arg7);
+      if (arg7) free(arg7);
     }
     
     {
-      // if (arg9) free(arg9);
+      if (arg9) free(arg9);
     }
     
     
@@ -15205,11 +15212,11 @@ XS(_wrap_cblas_dsyr2k) {
     
     
     {
-      // if (arg7) free(arg7);
+      if (arg7) free(arg7);
     }
     
     {
-      // if (arg9) free(arg9);
+      if (arg9) free(arg9);
     }
     
     
@@ -15346,7 +15353,7 @@ XS(_wrap_cblas_dtrmm) {
     
     
     {
-      // if (arg9) free(arg9);
+      if (arg9) free(arg9);
     }
     
     
@@ -15362,7 +15369,7 @@ XS(_wrap_cblas_dtrmm) {
     
     
     {
-      // if (arg9) free(arg9);
+      if (arg9) free(arg9);
     }
     
     
@@ -15498,7 +15505,7 @@ XS(_wrap_cblas_dtrsm) {
     
     
     {
-      // if (arg9) free(arg9);
+      if (arg9) free(arg9);
     }
     
     
@@ -15514,7 +15521,7 @@ XS(_wrap_cblas_dtrsm) {
     
     
     {
-      // if (arg9) free(arg9);
+      if (arg9) free(arg9);
     }
     
     

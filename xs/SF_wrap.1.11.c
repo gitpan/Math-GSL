@@ -1636,6 +1636,13 @@ void array_wrapper_free(array_wrapper * daw){
         SV * params;
     };
 
+    void gsl_function_perl_free(struct gsl_function_perl * perl_f){
+        if (perl_f != NULL) {
+            SvREFCNT_dec(perl_f->function);
+            SvREFCNT_dec(perl_f->params);
+            Safefree(perl_f);
+        }
+    }
 
     /* These functions (C callbacks) calls the perl callbacks.
        Info for perl callback can be found using the 'void*params' parameter
@@ -6289,7 +6296,7 @@ XS(_wrap_gsl_sf_bessel_sequence_Jnu_e) {
     
     
     {
-      // if (arg4) free(arg4);
+      if (arg4) free(arg4);
     }
     XSRETURN(argvi);
   fail:
@@ -6297,7 +6304,7 @@ XS(_wrap_gsl_sf_bessel_sequence_Jnu_e) {
     
     
     {
-      // if (arg4) free(arg4);
+      if (arg4) free(arg4);
     }
     SWIG_croak_null();
   }

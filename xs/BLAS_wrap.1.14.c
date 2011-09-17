@@ -1650,6 +1650,13 @@ void array_wrapper_free(array_wrapper * daw){
         SV * params;
     };
 
+    void gsl_function_perl_free(struct gsl_function_perl * perl_f){
+        if (perl_f != NULL) {
+            SvREFCNT_dec(perl_f->function);
+            SvREFCNT_dec(perl_f->params);
+            Safefree(perl_f);
+        }
+    }
 
     /* These functions (C callbacks) calls the perl callbacks.
        Info for perl callback can be found using the 'void*params' parameter
@@ -3784,20 +3791,20 @@ XS(_wrap_gsl_blas_drotg) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg4), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     
     
     XSRETURN(argvi);
   fail:
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     
     
@@ -3981,14 +3988,14 @@ XS(_wrap_gsl_blas_drotm) {
     
     
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     XSRETURN(argvi);
   fail:
     
     
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     SWIG_croak_null();
   }

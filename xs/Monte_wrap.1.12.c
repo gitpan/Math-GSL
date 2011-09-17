@@ -1645,6 +1645,13 @@ void array_wrapper_free(array_wrapper * daw){
         SV * params;
     };
 
+    void gsl_function_perl_free(struct gsl_function_perl * perl_f){
+        if (perl_f != NULL) {
+            SvREFCNT_dec(perl_f->function);
+            SvREFCNT_dec(perl_f->params);
+            Safefree(perl_f);
+        }
+    }
 
     /* These functions (C callbacks) calls the perl callbacks.
        Info for perl callback can be found using the 'void*params' parameter
@@ -4002,10 +4009,10 @@ XS(_wrap_gsl_monte_miser_integrate) {
       SvREFCNT_dec(p->params);
     }
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     
     
@@ -4022,10 +4029,10 @@ XS(_wrap_gsl_monte_miser_integrate) {
       SvREFCNT_dec(p->params);
     }
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     
     
@@ -4467,10 +4474,10 @@ XS(_wrap_gsl_monte_plain_integrate) {
       SvREFCNT_dec(p->params);
     }
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     
     
@@ -4487,10 +4494,10 @@ XS(_wrap_gsl_monte_plain_integrate) {
       SvREFCNT_dec(p->params);
     }
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     
     
@@ -6753,10 +6760,10 @@ XS(_wrap_gsl_monte_vegas_integrate) {
       SvREFCNT_dec(p->params);
     }
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     
     
@@ -6773,10 +6780,10 @@ XS(_wrap_gsl_monte_vegas_integrate) {
       SvREFCNT_dec(p->params);
     }
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     
     

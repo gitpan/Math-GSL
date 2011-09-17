@@ -1650,6 +1650,13 @@ void array_wrapper_free(array_wrapper * daw){
         SV * params;
     };
 
+    void gsl_function_perl_free(struct gsl_function_perl * perl_f){
+        if (perl_f != NULL) {
+            SvREFCNT_dec(perl_f->function);
+            SvREFCNT_dec(perl_f->params);
+            Safefree(perl_f);
+        }
+    }
 
     /* These functions (C callbacks) calls the perl callbacks.
        Info for perl callback can be found using the 'void*params' parameter
@@ -1723,8 +1730,8 @@ void array_wrapper_free(array_wrapper * daw){
     }
 
 
-    #include "gsl/gsl_odeiv.h"
     #include "gsl/gsl_types.h"
+    #include "gsl/gsl_odeiv.h"
 
 
 SWIGINTERN int
@@ -3412,7 +3419,7 @@ XS(_wrap_gsl_odeiv_step_alloc) {
     } 
     arg2 = (size_t)(val2);
     result = (gsl_odeiv_step *)gsl_odeiv_step_alloc((gsl_odeiv_step_type const *)arg1,arg2);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_odeiv_step, 0 | SWIG_SHADOW); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_odeiv_step, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
     
     
     XSRETURN(argvi);
@@ -3627,7 +3634,7 @@ XS(_wrap_gsl_odeiv_step_apply) {
     
     
     {
-      // if (arg6) free(arg6);
+      if (arg6) free(arg6);
     }
     
     
@@ -3639,7 +3646,7 @@ XS(_wrap_gsl_odeiv_step_apply) {
     
     
     {
-      // if (arg6) free(arg6);
+      if (arg6) free(arg6);
     }
     
     
@@ -4411,13 +4418,13 @@ XS(_wrap_gsl_odeiv_control_hadjust) {
     
     
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     {
-      // if (arg4) free(arg4);
+      if (arg4) free(arg4);
     }
     {
-      // if (arg5) free(arg5);
+      if (arg5) free(arg5);
     }
     
     XSRETURN(argvi);
@@ -4425,13 +4432,13 @@ XS(_wrap_gsl_odeiv_control_hadjust) {
     
     
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     {
-      // if (arg4) free(arg4);
+      if (arg4) free(arg4);
     }
     {
-      // if (arg5) free(arg5);
+      if (arg5) free(arg5);
     }
     
     SWIG_croak_null();
@@ -4676,7 +4683,7 @@ XS(_wrap_gsl_odeiv_control_scaled_new) {
     
     
     {
-      // if (arg5) free(arg5);
+      if (arg5) free(arg5);
     }
     
     XSRETURN(argvi);
@@ -4686,7 +4693,7 @@ XS(_wrap_gsl_odeiv_control_scaled_new) {
     
     
     {
-      // if (arg5) free(arg5);
+      if (arg5) free(arg5);
     }
     
     SWIG_croak_null();
@@ -5277,7 +5284,7 @@ XS(_wrap_gsl_odeiv_evolve_alloc) {
     } 
     arg1 = (size_t)(val1);
     result = (gsl_odeiv_evolve *)gsl_odeiv_evolve_alloc(arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_odeiv_evolve, 0 | SWIG_SHADOW); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_odeiv_evolve, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
     
     XSRETURN(argvi);
   fail:

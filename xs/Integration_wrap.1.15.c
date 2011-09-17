@@ -1648,6 +1648,13 @@ void array_wrapper_free(array_wrapper * daw){
         SV * params;
     };
 
+    void gsl_function_perl_free(struct gsl_function_perl * perl_f){
+        if (perl_f != NULL) {
+            SvREFCNT_dec(perl_f->function);
+            SvREFCNT_dec(perl_f->params);
+            Safefree(perl_f);
+        }
+    }
 
     /* These functions (C callbacks) calls the perl callbacks.
        Info for perl callback can be found using the 'void*params' parameter
@@ -4140,7 +4147,6 @@ XS(_wrap_gsl_integration_qk15) {
     double *arg5 = (double *) 0 ;
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
-    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -4164,6 +4170,8 @@ XS(_wrap_gsl_integration_qk15) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(0));
@@ -4196,11 +4204,12 @@ XS(_wrap_gsl_integration_qk15) {
       }
       params = newSVsv(params);
       
-      w_gsl_function1.params = params;
-      w_gsl_function1.function = function;
-      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
-      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
-      arg1         = &w_gsl_function1.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg1 = &(w_gsl_function->C_gsl_function);
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -4238,8 +4247,7 @@ XS(_wrap_gsl_integration_qk15) {
     }
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -4251,8 +4259,7 @@ XS(_wrap_gsl_integration_qk15) {
   fail:
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -4274,7 +4281,6 @@ XS(_wrap_gsl_integration_qk21) {
     double *arg5 = (double *) 0 ;
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
-    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -4298,6 +4304,8 @@ XS(_wrap_gsl_integration_qk21) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(0));
@@ -4330,11 +4338,12 @@ XS(_wrap_gsl_integration_qk21) {
       }
       params = newSVsv(params);
       
-      w_gsl_function1.params = params;
-      w_gsl_function1.function = function;
-      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
-      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
-      arg1         = &w_gsl_function1.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg1 = &(w_gsl_function->C_gsl_function);
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -4372,8 +4381,7 @@ XS(_wrap_gsl_integration_qk21) {
     }
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -4385,8 +4393,7 @@ XS(_wrap_gsl_integration_qk21) {
   fail:
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -4408,7 +4415,6 @@ XS(_wrap_gsl_integration_qk31) {
     double *arg5 = (double *) 0 ;
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
-    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -4432,6 +4438,8 @@ XS(_wrap_gsl_integration_qk31) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(0));
@@ -4464,11 +4472,12 @@ XS(_wrap_gsl_integration_qk31) {
       }
       params = newSVsv(params);
       
-      w_gsl_function1.params = params;
-      w_gsl_function1.function = function;
-      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
-      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
-      arg1         = &w_gsl_function1.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg1 = &(w_gsl_function->C_gsl_function);
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -4506,8 +4515,7 @@ XS(_wrap_gsl_integration_qk31) {
     }
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -4519,8 +4527,7 @@ XS(_wrap_gsl_integration_qk31) {
   fail:
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -4542,7 +4549,6 @@ XS(_wrap_gsl_integration_qk41) {
     double *arg5 = (double *) 0 ;
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
-    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -4566,6 +4572,8 @@ XS(_wrap_gsl_integration_qk41) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(0));
@@ -4598,11 +4606,12 @@ XS(_wrap_gsl_integration_qk41) {
       }
       params = newSVsv(params);
       
-      w_gsl_function1.params = params;
-      w_gsl_function1.function = function;
-      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
-      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
-      arg1         = &w_gsl_function1.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg1 = &(w_gsl_function->C_gsl_function);
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -4640,8 +4649,7 @@ XS(_wrap_gsl_integration_qk41) {
     }
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -4653,8 +4661,7 @@ XS(_wrap_gsl_integration_qk41) {
   fail:
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -4676,7 +4683,6 @@ XS(_wrap_gsl_integration_qk51) {
     double *arg5 = (double *) 0 ;
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
-    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -4700,6 +4706,8 @@ XS(_wrap_gsl_integration_qk51) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(0));
@@ -4732,11 +4740,12 @@ XS(_wrap_gsl_integration_qk51) {
       }
       params = newSVsv(params);
       
-      w_gsl_function1.params = params;
-      w_gsl_function1.function = function;
-      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
-      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
-      arg1         = &w_gsl_function1.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg1 = &(w_gsl_function->C_gsl_function);
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -4774,8 +4783,7 @@ XS(_wrap_gsl_integration_qk51) {
     }
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -4787,8 +4795,7 @@ XS(_wrap_gsl_integration_qk51) {
   fail:
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -4810,7 +4817,6 @@ XS(_wrap_gsl_integration_qk61) {
     double *arg5 = (double *) 0 ;
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
-    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -4834,6 +4840,8 @@ XS(_wrap_gsl_integration_qk61) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(0));
@@ -4866,11 +4874,12 @@ XS(_wrap_gsl_integration_qk61) {
       }
       params = newSVsv(params);
       
-      w_gsl_function1.params = params;
-      w_gsl_function1.function = function;
-      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
-      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
-      arg1         = &w_gsl_function1.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg1 = &(w_gsl_function->C_gsl_function);
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -4908,8 +4917,7 @@ XS(_wrap_gsl_integration_qk61) {
     }
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -4921,8 +4929,7 @@ XS(_wrap_gsl_integration_qk61) {
   fail:
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -4942,7 +4949,6 @@ XS(_wrap_gsl_integration_qcheb) {
     double arg3 ;
     double *arg4 = (double *) 0 ;
     double *arg5 = (double *) 0 ;
-    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -4960,6 +4966,8 @@ XS(_wrap_gsl_integration_qcheb) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(0));
@@ -4992,11 +5000,12 @@ XS(_wrap_gsl_integration_qcheb) {
       }
       params = newSVsv(params);
       
-      w_gsl_function1.params = params;
-      w_gsl_function1.function = function;
-      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
-      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
-      arg1         = &w_gsl_function1.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg1 = &(w_gsl_function->C_gsl_function);
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -5022,8 +5031,7 @@ XS(_wrap_gsl_integration_qcheb) {
     ST(argvi) = sv_newmortal();
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -5033,8 +5041,7 @@ XS(_wrap_gsl_integration_qcheb) {
   fail:
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -5066,7 +5073,6 @@ XS(_wrap_gsl_integration_qk) {
     int res5 = 0 ;
     void *argp6 = 0 ;
     int res6 = 0 ;
-    struct gsl_function_perl w_gsl_function7 ;
     double val8 ;
     int ecode8 = 0 ;
     double val9 ;
@@ -5159,6 +5165,8 @@ XS(_wrap_gsl_integration_qk) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(6)) && (SvTYPE(SvRV(ST(6))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(6));
@@ -5191,11 +5199,12 @@ XS(_wrap_gsl_integration_qk) {
       }
       params = newSVsv(params);
       
-      w_gsl_function7.params = params;
-      w_gsl_function7.function = function;
-      w_gsl_function7.C_gsl_function.params   = &w_gsl_function7;
-      w_gsl_function7.C_gsl_function.function = &call_gsl_function;
-      arg7         = &w_gsl_function7.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg7 = &(w_gsl_function->C_gsl_function);
     }
     ecode8 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(7), &val8);
     if (!SWIG_IsOK(ecode8)) {
@@ -5233,20 +5242,19 @@ XS(_wrap_gsl_integration_qk) {
     }
     
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     {
-      // if (arg4) free(arg4);
+      if (arg4) free(arg4);
     }
     
     
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg7->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -5258,20 +5266,19 @@ XS(_wrap_gsl_integration_qk) {
   fail:
     
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     {
-      // if (arg4) free(arg4);
+      if (arg4) free(arg4);
     }
     
     
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg7->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -5294,7 +5301,6 @@ XS(_wrap_gsl_integration_qng) {
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
     size_t *arg8 = (size_t *) 0 ;
-    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -5322,6 +5328,8 @@ XS(_wrap_gsl_integration_qng) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(0));
@@ -5354,11 +5362,12 @@ XS(_wrap_gsl_integration_qng) {
       }
       params = newSVsv(params);
       
-      w_gsl_function1.params = params;
-      w_gsl_function1.function = function;
-      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
-      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
-      arg1         = &w_gsl_function1.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg1 = &(w_gsl_function->C_gsl_function);
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -5402,8 +5411,7 @@ XS(_wrap_gsl_integration_qng) {
     }
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -5416,8 +5424,7 @@ XS(_wrap_gsl_integration_qng) {
   fail:
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -5443,7 +5450,6 @@ XS(_wrap_gsl_integration_qag) {
     gsl_integration_workspace *arg8 = (gsl_integration_workspace *) 0 ;
     double *arg9 = (double *) 0 ;
     double *arg10 = (double *) 0 ;
-    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -5474,6 +5480,8 @@ XS(_wrap_gsl_integration_qag) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(0));
@@ -5506,11 +5514,12 @@ XS(_wrap_gsl_integration_qag) {
       }
       params = newSVsv(params);
       
-      w_gsl_function1.params = params;
-      w_gsl_function1.function = function;
-      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
-      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
-      arg1         = &w_gsl_function1.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg1 = &(w_gsl_function->C_gsl_function);
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -5563,8 +5572,7 @@ XS(_wrap_gsl_integration_qag) {
     }
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -5579,8 +5587,7 @@ XS(_wrap_gsl_integration_qag) {
   fail:
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -5605,7 +5612,6 @@ XS(_wrap_gsl_integration_qagi) {
     gsl_integration_workspace *arg5 = (gsl_integration_workspace *) 0 ;
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
-    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -5630,6 +5636,8 @@ XS(_wrap_gsl_integration_qagi) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(0));
@@ -5662,11 +5670,12 @@ XS(_wrap_gsl_integration_qagi) {
       }
       params = newSVsv(params);
       
-      w_gsl_function1.params = params;
-      w_gsl_function1.function = function;
-      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
-      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
-      arg1         = &w_gsl_function1.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg1 = &(w_gsl_function->C_gsl_function);
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -5704,8 +5713,7 @@ XS(_wrap_gsl_integration_qagi) {
     }
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -5717,8 +5725,7 @@ XS(_wrap_gsl_integration_qagi) {
   fail:
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -5741,7 +5748,6 @@ XS(_wrap_gsl_integration_qagiu) {
     gsl_integration_workspace *arg6 = (gsl_integration_workspace *) 0 ;
     double *arg7 = (double *) 0 ;
     double *arg8 = (double *) 0 ;
-    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -5768,6 +5774,8 @@ XS(_wrap_gsl_integration_qagiu) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(0));
@@ -5800,11 +5808,12 @@ XS(_wrap_gsl_integration_qagiu) {
       }
       params = newSVsv(params);
       
-      w_gsl_function1.params = params;
-      w_gsl_function1.function = function;
-      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
-      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
-      arg1         = &w_gsl_function1.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg1 = &(w_gsl_function->C_gsl_function);
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -5847,8 +5856,7 @@ XS(_wrap_gsl_integration_qagiu) {
     }
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -5861,8 +5869,7 @@ XS(_wrap_gsl_integration_qagiu) {
   fail:
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -5886,7 +5893,6 @@ XS(_wrap_gsl_integration_qagil) {
     gsl_integration_workspace *arg6 = (gsl_integration_workspace *) 0 ;
     double *arg7 = (double *) 0 ;
     double *arg8 = (double *) 0 ;
-    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -5913,6 +5919,8 @@ XS(_wrap_gsl_integration_qagil) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(0));
@@ -5945,11 +5953,12 @@ XS(_wrap_gsl_integration_qagil) {
       }
       params = newSVsv(params);
       
-      w_gsl_function1.params = params;
-      w_gsl_function1.function = function;
-      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
-      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
-      arg1         = &w_gsl_function1.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg1 = &(w_gsl_function->C_gsl_function);
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -5992,8 +6001,7 @@ XS(_wrap_gsl_integration_qagil) {
     }
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -6006,8 +6014,7 @@ XS(_wrap_gsl_integration_qagil) {
   fail:
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -6032,7 +6039,6 @@ XS(_wrap_gsl_integration_qags) {
     gsl_integration_workspace *arg7 = (gsl_integration_workspace *) 0 ;
     double *arg8 = (double *) 0 ;
     double *arg9 = (double *) 0 ;
-    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -6061,6 +6067,8 @@ XS(_wrap_gsl_integration_qags) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(0));
@@ -6093,11 +6101,12 @@ XS(_wrap_gsl_integration_qags) {
       }
       params = newSVsv(params);
       
-      w_gsl_function1.params = params;
-      w_gsl_function1.function = function;
-      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
-      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
-      arg1         = &w_gsl_function1.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg1 = &(w_gsl_function->C_gsl_function);
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -6145,8 +6154,7 @@ XS(_wrap_gsl_integration_qags) {
     }
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -6160,8 +6168,7 @@ XS(_wrap_gsl_integration_qags) {
   fail:
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -6187,7 +6194,6 @@ XS(_wrap_gsl_integration_qagp) {
     gsl_integration_workspace *arg7 = (gsl_integration_workspace *) 0 ;
     double *arg8 = (double *) 0 ;
     double *arg9 = (double *) 0 ;
-    struct gsl_function_perl w_gsl_function1 ;
     void *argp2 = 0 ;
     int res2 = 0 ;
     size_t val3 ;
@@ -6216,6 +6222,8 @@ XS(_wrap_gsl_integration_qagp) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(0));
@@ -6248,11 +6256,12 @@ XS(_wrap_gsl_integration_qagp) {
       }
       params = newSVsv(params);
       
-      w_gsl_function1.params = params;
-      w_gsl_function1.function = function;
-      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
-      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
-      arg1         = &w_gsl_function1.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg1 = &(w_gsl_function->C_gsl_function);
     }
     res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res2)) {
@@ -6300,8 +6309,7 @@ XS(_wrap_gsl_integration_qagp) {
     }
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -6315,8 +6323,7 @@ XS(_wrap_gsl_integration_qagp) {
   fail:
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -6343,7 +6350,6 @@ XS(_wrap_gsl_integration_qawc) {
     gsl_integration_workspace *arg8 = (gsl_integration_workspace *) 0 ;
     double *arg9 = (double *) 0 ;
     double *arg10 = (double *) 0 ;
-    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -6374,6 +6380,8 @@ XS(_wrap_gsl_integration_qawc) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(0));
@@ -6406,11 +6414,12 @@ XS(_wrap_gsl_integration_qawc) {
       }
       params = newSVsv(params);
       
-      w_gsl_function1.params = params;
-      w_gsl_function1.function = function;
-      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
-      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
-      arg1         = &w_gsl_function1.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg1 = &(w_gsl_function->C_gsl_function);
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -6463,8 +6472,7 @@ XS(_wrap_gsl_integration_qawc) {
     }
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -6479,8 +6487,7 @@ XS(_wrap_gsl_integration_qawc) {
   fail:
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -6508,7 +6515,6 @@ XS(_wrap_gsl_integration_qaws) {
     gsl_integration_workspace *arg8 = (gsl_integration_workspace *) 0 ;
     double *arg9 = (double *) 0 ;
     double *arg10 = (double *) 0 ;
-    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -6539,6 +6545,8 @@ XS(_wrap_gsl_integration_qaws) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(0));
@@ -6571,11 +6579,12 @@ XS(_wrap_gsl_integration_qaws) {
       }
       params = newSVsv(params);
       
-      w_gsl_function1.params = params;
-      w_gsl_function1.function = function;
-      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
-      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
-      arg1         = &w_gsl_function1.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg1 = &(w_gsl_function->C_gsl_function);
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -6628,8 +6637,7 @@ XS(_wrap_gsl_integration_qaws) {
     }
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -6644,8 +6652,7 @@ XS(_wrap_gsl_integration_qaws) {
   fail:
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -6672,7 +6679,6 @@ XS(_wrap_gsl_integration_qawo) {
     gsl_integration_qawo_table *arg7 = (gsl_integration_qawo_table *) 0 ;
     double *arg8 = (double *) 0 ;
     double *arg9 = (double *) 0 ;
-    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -6701,6 +6707,8 @@ XS(_wrap_gsl_integration_qawo) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(0));
@@ -6733,11 +6741,12 @@ XS(_wrap_gsl_integration_qawo) {
       }
       params = newSVsv(params);
       
-      w_gsl_function1.params = params;
-      w_gsl_function1.function = function;
-      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
-      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
-      arg1         = &w_gsl_function1.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg1 = &(w_gsl_function->C_gsl_function);
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -6785,8 +6794,7 @@ XS(_wrap_gsl_integration_qawo) {
     }
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -6800,8 +6808,7 @@ XS(_wrap_gsl_integration_qawo) {
   fail:
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -6827,7 +6834,6 @@ XS(_wrap_gsl_integration_qawf) {
     gsl_integration_qawo_table *arg7 = (gsl_integration_qawo_table *) 0 ;
     double *arg8 = (double *) 0 ;
     double *arg9 = (double *) 0 ;
-    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -6856,6 +6862,8 @@ XS(_wrap_gsl_integration_qawf) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(0));
@@ -6888,11 +6896,12 @@ XS(_wrap_gsl_integration_qawf) {
       }
       params = newSVsv(params);
       
-      w_gsl_function1.params = params;
-      w_gsl_function1.function = function;
-      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
-      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
-      arg1         = &w_gsl_function1.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg1 = &(w_gsl_function->C_gsl_function);
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -6940,8 +6949,7 @@ XS(_wrap_gsl_integration_qawf) {
     }
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -6955,8 +6963,7 @@ XS(_wrap_gsl_integration_qawf) {
   fail:
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -7337,7 +7344,6 @@ XS(_wrap_gsl_integration_glfixed) {
     double arg2 ;
     double arg3 ;
     gsl_integration_glfixed_table *arg4 = (gsl_integration_glfixed_table *) 0 ;
-    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -7354,6 +7360,8 @@ XS(_wrap_gsl_integration_glfixed) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(0));
@@ -7386,11 +7394,12 @@ XS(_wrap_gsl_integration_glfixed) {
       }
       params = newSVsv(params);
       
-      w_gsl_function1.params = params;
-      w_gsl_function1.function = function;
-      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
-      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
-      arg1         = &w_gsl_function1.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg1 = &(w_gsl_function->C_gsl_function);
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -7411,8 +7420,7 @@ XS(_wrap_gsl_integration_glfixed) {
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -7421,8 +7429,7 @@ XS(_wrap_gsl_integration_glfixed) {
   fail:
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -8460,7 +8467,6 @@ XS(_wrap_gsl_integration_cquad) {
     double *arg7 = (double *) 0 ;
     double *arg8 = (double *) 0 ;
     size_t *arg9 = (size_t *) 0 ;
-    struct gsl_function_perl w_gsl_function1 ;
     double val2 ;
     int ecode2 = 0 ;
     double val3 ;
@@ -8489,6 +8495,8 @@ XS(_wrap_gsl_integration_cquad) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(0));
@@ -8521,11 +8529,12 @@ XS(_wrap_gsl_integration_cquad) {
       }
       params = newSVsv(params);
       
-      w_gsl_function1.params = params;
-      w_gsl_function1.function = function;
-      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
-      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
-      arg1         = &w_gsl_function1.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg1 = &(w_gsl_function->C_gsl_function);
     }
     ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
@@ -8573,8 +8582,7 @@ XS(_wrap_gsl_integration_cquad) {
     }
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     
@@ -8588,8 +8596,7 @@ XS(_wrap_gsl_integration_cquad) {
   fail:
     {
       struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
+      gsl_function_perl_free(p);
     }
     
     

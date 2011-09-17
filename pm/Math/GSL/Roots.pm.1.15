@@ -119,6 +119,17 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 @ISA = qw( Math::GSL::Roots );
 %OWNER = ();
 %ITERATORS = ();
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        Math::GSL::Rootsc::delete_gsl_root_fsolver($self);
+        delete $OWNER{$self};
+    }
+}
+
 *swig_type_get = *Math::GSL::Rootsc::gsl_root_fsolver_type_get;
 *swig_type_set = *Math::GSL::Rootsc::gsl_root_fsolver_type_set;
 *swig_function_get = *Math::GSL::Rootsc::gsl_root_fsolver_function_get;
@@ -135,17 +146,6 @@ sub new {
     my $pkg = shift;
     my $self = Math::GSL::Rootsc::new_gsl_root_fsolver(@_);
     bless $self, $pkg if defined($self);
-}
-
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        Math::GSL::Rootsc::delete_gsl_root_fsolver($self);
-        delete $OWNER{$self};
-    }
 }
 
 sub DISOWN {
@@ -335,9 +335,10 @@ Here is a list of all the functions in this module :
 
 =item * C<gsl_root_fsolver_alloc($T)> - This function returns a pointer to a newly allocated instance of a solver of type $T. $T must be one of the constant included with this module. If there is insufficient memory to create the solver then the function returns a null pointer and the error handler is invoked with an error code of $GSL_ENOMEM.
 
-=item * C<gsl_root_fsolver_free($s)> - This function frees all the memory associated with the solver $s. 
+=item * C<gsl_root_fsolver_free($s)> - Don't call this function explicitly. It will be called automatically in DESTROY for fsolver.
 
 =item * C<gsl_root_fsolver_set($s, $f, $x_lower, $x_upper)> - This function initializes, or reinitializes, an existing solver $s to use the function $f and the initial search interval [$x_lower, $x_upper]. $f has to be of this form : sub { my $x=shift; function_with_$x }. For example, sub { my $x=shift; ($x-3.2)**3 } is a valid value for $f.
+Don't apply this function twice to the same fsolver. It will cause a memory leak. Instead of this you should create new fsolver.
 
 =item * C<gsl_root_fsolver_iterate($s)> - This function performs a single iteration of the solver $s. If the iteration encounters an unexpected problem then an error code will be returned (the Math::GSL::Errno has to be included),
  $GSL_EBADFUNC - the iteration encountered a singular point where the function or its derivative evaluated to Inf or NaN.

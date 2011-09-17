@@ -1639,6 +1639,13 @@ void array_wrapper_free(array_wrapper * daw){
         SV * params;
     };
 
+    void gsl_function_perl_free(struct gsl_function_perl * perl_f){
+        if (perl_f != NULL) {
+            SvREFCNT_dec(perl_f->function);
+            SvREFCNT_dec(perl_f->params);
+            Safefree(perl_f);
+        }
+    }
 
     /* These functions (C callbacks) calls the perl callbacks.
        Info for perl callback can be found using the 'void*params' parameter
@@ -1945,6 +1952,9 @@ SWIG_From_unsigned_SS_int  SWIG_PERL_DECL_ARGS_1(unsigned int value)
   return SWIG_From_unsigned_SS_long  SWIG_PERL_CALL_ARGS_1(value);
 }
 
+SWIGINTERN void delete_gsl_qrng(gsl_qrng *self){
+        gsl_qrng_free(self);
+    }
 
 SWIGINTERNINLINE int
 SWIG_AsVal_size_t SWIG_PERL_DECL_ARGS_2(SV * obj, size_t *val)
@@ -2452,6 +2462,33 @@ XS(_wrap_delete_gsl_qrng_type) {
 }
 
 
+XS(_wrap_delete_gsl_qrng) {
+  {
+    gsl_qrng *arg1 = (gsl_qrng *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: delete_gsl_qrng(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_qrng, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_gsl_qrng" "', argument " "1"" of type '" "gsl_qrng *""'"); 
+    }
+    arg1 = (gsl_qrng *)(argp1);
+    delete_gsl_qrng(arg1);
+    ST(argvi) = sv_newmortal();
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_gsl_qrng_type_set) {
   {
     gsl_qrng *arg1 = (gsl_qrng *) 0 ;
@@ -2728,33 +2765,6 @@ XS(_wrap_new_gsl_qrng) {
 }
 
 
-XS(_wrap_delete_gsl_qrng) {
-  {
-    gsl_qrng *arg1 = (gsl_qrng *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: delete_gsl_qrng(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_qrng, SWIG_POINTER_DISOWN |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_gsl_qrng" "', argument " "1"" of type '" "gsl_qrng *""'"); 
-    }
-    arg1 = (gsl_qrng *)(argp1);
-    free((char *) arg1);
-    ST(argvi) = sv_newmortal();
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_gsl_qrng_alloc) {
   {
     gsl_qrng_type *arg1 = (gsl_qrng_type *) 0 ;
@@ -2781,7 +2791,7 @@ XS(_wrap_gsl_qrng_alloc) {
     } 
     arg2 = (unsigned int)(val2);
     result = (gsl_qrng *)gsl_qrng_alloc((gsl_qrng_type const *)arg1,arg2);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_qrng, 0 | SWIG_SHADOW); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_qrng, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
     
     
     XSRETURN(argvi);
@@ -2849,7 +2859,7 @@ XS(_wrap_gsl_qrng_clone) {
     }
     arg1 = (gsl_qrng *)(argp1);
     result = (gsl_qrng *)gsl_qrng_clone((gsl_qrng const *)arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_qrng, 0 | SWIG_SHADOW); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_qrng, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -3033,15 +3043,11 @@ XS(_wrap_gsl_qrng_get) {
       argvi++;
     }
     
-    {
-      // if (arg2) free(arg2);
-    }
+    
     XSRETURN(argvi);
   fail:
     
-    {
-      // if (arg2) free(arg2);
-    }
+    
     SWIG_croak_null();
   }
 }
@@ -3119,6 +3125,7 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::QRNGc::gsl_qrng_type_get_get", _wrap_gsl_qrng_type_get_get},
 {"Math::GSL::QRNGc::new_gsl_qrng_type", _wrap_new_gsl_qrng_type},
 {"Math::GSL::QRNGc::delete_gsl_qrng_type", _wrap_delete_gsl_qrng_type},
+{"Math::GSL::QRNGc::delete_gsl_qrng", _wrap_delete_gsl_qrng},
 {"Math::GSL::QRNGc::gsl_qrng_type_set", _wrap_gsl_qrng_type_set},
 {"Math::GSL::QRNGc::gsl_qrng_type_get", _wrap_gsl_qrng_type_get},
 {"Math::GSL::QRNGc::gsl_qrng_dimension_set", _wrap_gsl_qrng_dimension_set},
@@ -3128,7 +3135,6 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::QRNGc::gsl_qrng_state_set", _wrap_gsl_qrng_state_set},
 {"Math::GSL::QRNGc::gsl_qrng_state_get", _wrap_gsl_qrng_state_get},
 {"Math::GSL::QRNGc::new_gsl_qrng", _wrap_new_gsl_qrng},
-{"Math::GSL::QRNGc::delete_gsl_qrng", _wrap_delete_gsl_qrng},
 {"Math::GSL::QRNGc::gsl_qrng_alloc", _wrap_gsl_qrng_alloc},
 {"Math::GSL::QRNGc::gsl_qrng_memcpy", _wrap_gsl_qrng_memcpy},
 {"Math::GSL::QRNGc::gsl_qrng_clone", _wrap_gsl_qrng_clone},

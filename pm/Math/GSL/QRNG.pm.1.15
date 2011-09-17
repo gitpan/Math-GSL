@@ -113,6 +113,17 @@ use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
 @ISA = qw( Math::GSL::QRNG );
 %OWNER = ();
 %ITERATORS = ();
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        Math::GSL::QRNGc::delete_gsl_qrng($self);
+        delete $OWNER{$self};
+    }
+}
+
 *swig_type_get = *Math::GSL::QRNGc::gsl_qrng_type_get;
 *swig_type_set = *Math::GSL::QRNGc::gsl_qrng_type_set;
 *swig_dimension_get = *Math::GSL::QRNGc::gsl_qrng_dimension_get;
@@ -125,17 +136,6 @@ sub new {
     my $pkg = shift;
     my $self = Math::GSL::QRNGc::new_gsl_qrng(@_);
     bless $self, $pkg if defined($self);
-}
-
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        Math::GSL::QRNGc::delete_gsl_qrng($self);
-        delete $OWNER{$self};
-    }
 }
 
 sub DISOWN {
@@ -211,7 +211,8 @@ Here is a list of all the functions included in this module :
 
 =item C<gsl_qrng_memcpy($dest, $src)> - This function copies the quasi-random sequence generator $src into the pre-existing generator $dest, making $dest into an exact copy of $src. The two generators must be of the same type.
 
-=item C<gsl_qrng_free($q)> - This function frees all the memory associated with the generator $q. 
+=item C<gsl_qrng_free($q)> - This function frees all the memory associated with the generator $q.
+Don't call this function explicitly. It will be called automatically in DESTROY.
 
 =item C<gsl_qrng_init($q)> - This function reinitializes the generator $q to its starting point. Note that quasi-random sequences do not use a seed and always produce the same set of values. 
 

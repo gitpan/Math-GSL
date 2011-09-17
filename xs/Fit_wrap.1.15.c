@@ -1633,6 +1633,13 @@ void array_wrapper_free(array_wrapper * daw){
         SV * params;
     };
 
+    void gsl_function_perl_free(struct gsl_function_perl * perl_f){
+        if (perl_f != NULL) {
+            SvREFCNT_dec(perl_f->function);
+            SvREFCNT_dec(perl_f->params);
+            Safefree(perl_f);
+        }
+    }
 
     /* These functions (C callbacks) calls the perl callbacks.
        Info for perl callback can be found using the 'void*params' parameter
@@ -1993,11 +2000,11 @@ XS(_wrap_gsl_fit_linear) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg11), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     
     
@@ -2010,11 +2017,11 @@ XS(_wrap_gsl_fit_linear) {
     XSRETURN(argvi);
   fail:
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     
     
@@ -2190,15 +2197,15 @@ XS(_wrap_gsl_fit_wlinear) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg13), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     
     {
-      // if (arg5) free(arg5);
+      if (arg5) free(arg5);
     }
     
     
@@ -2211,15 +2218,15 @@ XS(_wrap_gsl_fit_wlinear) {
     XSRETURN(argvi);
   fail:
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     
     {
-      // if (arg5) free(arg5);
+      if (arg5) free(arg5);
     }
     
     
@@ -2436,11 +2443,11 @@ XS(_wrap_gsl_fit_mul) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg8), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     
     
@@ -2450,11 +2457,11 @@ XS(_wrap_gsl_fit_mul) {
     XSRETURN(argvi);
   fail:
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     
     
@@ -2597,15 +2604,15 @@ XS(_wrap_gsl_fit_wmul) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg10), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     
     {
-      // if (arg5) free(arg5);
+      if (arg5) free(arg5);
     }
     
     
@@ -2615,15 +2622,15 @@ XS(_wrap_gsl_fit_wmul) {
     XSRETURN(argvi);
   fail:
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     {
-      // if (arg3) free(arg3);
+      if (arg3) free(arg3);
     }
     
     {
-      // if (arg5) free(arg5);
+      if (arg5) free(arg5);
     }
     
     

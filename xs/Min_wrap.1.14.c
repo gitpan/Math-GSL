@@ -1644,6 +1644,13 @@ void array_wrapper_free(array_wrapper * daw){
         SV * params;
     };
 
+    void gsl_function_perl_free(struct gsl_function_perl * perl_f){
+        if (perl_f != NULL) {
+            SvREFCNT_dec(perl_f->function);
+            SvREFCNT_dec(perl_f->params);
+            Safefree(perl_f);
+        }
+    }
 
     /* These functions (C callbacks) calls the perl callbacks.
        Info for perl callback can be found using the 'void*params' parameter
@@ -1935,6 +1942,14 @@ SWIG_From_size_t  SWIG_PERL_DECL_ARGS_1(size_t value)
   return SWIG_From_unsigned_SS_long  SWIG_PERL_CALL_ARGS_1((unsigned long)(value));
 }
 
+SWIGINTERN void delete_gsl_min_fminimizer(gsl_min_fminimizer *self){
+        struct gsl_function *gsl_f = (struct gsl_function *) self->function;
+        if (gsl_f != NULL) {
+            struct gsl_function_perl *perl_f = (struct gsl_function_perl *) self->function->params;
+            gsl_function_perl_free(perl_f);
+        }
+        gsl_min_fminimizer_free(self);
+    }
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -2339,6 +2354,33 @@ XS(_wrap_delete_gsl_min_fminimizer_type) {
 }
 
 
+XS(_wrap_delete_gsl_min_fminimizer) {
+  {
+    gsl_min_fminimizer *arg1 = (gsl_min_fminimizer *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: delete_gsl_min_fminimizer(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_min_fminimizer, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_gsl_min_fminimizer" "', argument " "1"" of type '" "gsl_min_fminimizer *""'"); 
+    }
+    arg1 = (gsl_min_fminimizer *)(argp1);
+    delete_gsl_min_fminimizer(arg1);
+    ST(argvi) = sv_newmortal();
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_gsl_min_fminimizer_type_set) {
   {
     gsl_min_fminimizer *arg1 = (gsl_min_fminimizer *) 0 ;
@@ -2410,7 +2452,6 @@ XS(_wrap_gsl_min_fminimizer_function_set) {
     gsl_function *arg2 = (gsl_function *) 0 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    struct gsl_function_perl w_gsl_function2 ;
     int argvi = 0;
     dXSARGS;
     
@@ -2425,6 +2466,8 @@ XS(_wrap_gsl_min_fminimizer_function_set) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(1)) && (SvTYPE(SvRV(ST(1))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(1));
@@ -2457,28 +2500,21 @@ XS(_wrap_gsl_min_fminimizer_function_set) {
       }
       params = newSVsv(params);
       
-      w_gsl_function2.params = params;
-      w_gsl_function2.function = function;
-      w_gsl_function2.C_gsl_function.params   = &w_gsl_function2;
-      w_gsl_function2.C_gsl_function.function = &call_gsl_function;
-      arg2         = &w_gsl_function2.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg2 = &(w_gsl_function->C_gsl_function);
     }
     if (arg1) (arg1)->function = arg2;
     ST(argvi) = sv_newmortal();
     
-    {
-      struct gsl_function_perl *p=(struct gsl_function_perl *) arg2->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
-    }
+    
     XSRETURN(argvi);
   fail:
     
-    {
-      struct gsl_function_perl *p=(struct gsl_function_perl *) arg2->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
-    }
+    
     SWIG_croak_null();
   }
 }
@@ -2983,33 +3019,6 @@ XS(_wrap_new_gsl_min_fminimizer) {
 }
 
 
-XS(_wrap_delete_gsl_min_fminimizer) {
-  {
-    gsl_min_fminimizer *arg1 = (gsl_min_fminimizer *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: delete_gsl_min_fminimizer(self);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_min_fminimizer, SWIG_POINTER_DISOWN |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_gsl_min_fminimizer" "', argument " "1"" of type '" "gsl_min_fminimizer *""'"); 
-    }
-    arg1 = (gsl_min_fminimizer *)(argp1);
-    free((char *) arg1);
-    ST(argvi) = sv_newmortal();
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_gsl_min_fminimizer_alloc) {
   {
     gsl_min_fminimizer_type *arg1 = (gsl_min_fminimizer_type *) 0 ;
@@ -3028,7 +3037,7 @@ XS(_wrap_gsl_min_fminimizer_alloc) {
     }
     arg1 = (gsl_min_fminimizer_type *)(argp1);
     result = (gsl_min_fminimizer *)gsl_min_fminimizer_alloc((gsl_min_fminimizer_type const *)arg1);
-    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_min_fminimizer, 0 | SWIG_SHADOW); argvi++ ;
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_min_fminimizer, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
     
     XSRETURN(argvi);
   fail:
@@ -3074,7 +3083,6 @@ XS(_wrap_gsl_min_fminimizer_set) {
     double arg5 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    struct gsl_function_perl w_gsl_function2 ;
     double val3 ;
     int ecode3 = 0 ;
     double val4 ;
@@ -3096,6 +3104,8 @@ XS(_wrap_gsl_min_fminimizer_set) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(1)) && (SvTYPE(SvRV(ST(1))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(1));
@@ -3128,11 +3138,12 @@ XS(_wrap_gsl_min_fminimizer_set) {
       }
       params = newSVsv(params);
       
-      w_gsl_function2.params = params;
-      w_gsl_function2.function = function;
-      w_gsl_function2.C_gsl_function.params   = &w_gsl_function2;
-      w_gsl_function2.C_gsl_function.function = &call_gsl_function;
-      arg2         = &w_gsl_function2.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg2 = &(w_gsl_function->C_gsl_function);
     }
     ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
@@ -3152,22 +3163,14 @@ XS(_wrap_gsl_min_fminimizer_set) {
     result = (int)gsl_min_fminimizer_set(arg1,arg2,arg3,arg4,arg5);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
-    {
-      struct gsl_function_perl *p=(struct gsl_function_perl *) arg2->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
-    }
+    
     
     
     
     XSRETURN(argvi);
   fail:
     
-    {
-      struct gsl_function_perl *p=(struct gsl_function_perl *) arg2->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
-    }
+    
     
     
     
@@ -3188,7 +3191,6 @@ XS(_wrap_gsl_min_fminimizer_set_with_values) {
     double arg8 ;
     void *argp1 = 0 ;
     int res1 = 0 ;
-    struct gsl_function_perl w_gsl_function2 ;
     double val3 ;
     int ecode3 = 0 ;
     double val4 ;
@@ -3216,6 +3218,8 @@ XS(_wrap_gsl_min_fminimizer_set_with_values) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(1)) && (SvTYPE(SvRV(ST(1))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(1));
@@ -3248,11 +3252,12 @@ XS(_wrap_gsl_min_fminimizer_set_with_values) {
       }
       params = newSVsv(params);
       
-      w_gsl_function2.params = params;
-      w_gsl_function2.function = function;
-      w_gsl_function2.C_gsl_function.params   = &w_gsl_function2;
-      w_gsl_function2.C_gsl_function.function = &call_gsl_function;
-      arg2         = &w_gsl_function2.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg2 = &(w_gsl_function->C_gsl_function);
     }
     ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
     if (!SWIG_IsOK(ecode3)) {
@@ -3287,11 +3292,7 @@ XS(_wrap_gsl_min_fminimizer_set_with_values) {
     result = (int)gsl_min_fminimizer_set_with_values(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
-    {
-      struct gsl_function_perl *p=(struct gsl_function_perl *) arg2->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
-    }
+    
     
     
     
@@ -3301,11 +3302,7 @@ XS(_wrap_gsl_min_fminimizer_set_with_values) {
     XSRETURN(argvi);
   fail:
     
-    {
-      struct gsl_function_perl *p=(struct gsl_function_perl *) arg2->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
-    }
+    
     
     
     
@@ -3637,7 +3634,6 @@ XS(_wrap_gsl_min_find_bracket) {
     double *arg6 = (double *) 0 ;
     double *arg7 = (double *) 0 ;
     size_t arg8 ;
-    struct gsl_function_perl w_gsl_function1 ;
     void *argp2 = 0 ;
     int res2 = 0 ;
     void *argp3 = 0 ;
@@ -3662,6 +3658,8 @@ XS(_wrap_gsl_min_find_bracket) {
     {
       SV * function = 0;
       SV * params = 0;
+      struct gsl_function_perl *w_gsl_function;
+      Newx(w_gsl_function, 1, struct gsl_function_perl);
       
       if (SvROK(ST(0)) && (SvTYPE(SvRV(ST(0))) == SVt_PVAV)) {
         AV* array=(AV*)SvRV(ST(0));
@@ -3694,11 +3692,12 @@ XS(_wrap_gsl_min_find_bracket) {
       }
       params = newSVsv(params);
       
-      w_gsl_function1.params = params;
-      w_gsl_function1.function = function;
-      w_gsl_function1.C_gsl_function.params   = &w_gsl_function1;
-      w_gsl_function1.C_gsl_function.function = &call_gsl_function;
-      arg1         = &w_gsl_function1.C_gsl_function;
+      w_gsl_function->params = params;
+      w_gsl_function->function = function;
+      w_gsl_function->C_gsl_function.params = w_gsl_function;
+      w_gsl_function->C_gsl_function.function = &call_gsl_function;
+      
+      arg1 = &(w_gsl_function->C_gsl_function);
     }
     res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, 0 |  0 );
     if (!SWIG_IsOK(res2)) {
@@ -3737,11 +3736,7 @@ XS(_wrap_gsl_min_find_bracket) {
     arg8 = (size_t)(val8);
     result = (int)gsl_min_find_bracket(arg1,arg2,arg3,arg4,arg5,arg6,arg7,arg8);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    {
-      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
-    }
+    
     
     
     
@@ -3751,11 +3746,7 @@ XS(_wrap_gsl_min_find_bracket) {
     
     XSRETURN(argvi);
   fail:
-    {
-      struct gsl_function_perl *p=(struct gsl_function_perl *) arg1->params;
-      SvREFCNT_dec(p->function);
-      SvREFCNT_dec(p->params);
-    }
+    
     
     
     
@@ -4501,6 +4492,7 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::Minc::gsl_min_fminimizer_type_iterate_get", _wrap_gsl_min_fminimizer_type_iterate_get},
 {"Math::GSL::Minc::new_gsl_min_fminimizer_type", _wrap_new_gsl_min_fminimizer_type},
 {"Math::GSL::Minc::delete_gsl_min_fminimizer_type", _wrap_delete_gsl_min_fminimizer_type},
+{"Math::GSL::Minc::delete_gsl_min_fminimizer", _wrap_delete_gsl_min_fminimizer},
 {"Math::GSL::Minc::gsl_min_fminimizer_type_set", _wrap_gsl_min_fminimizer_type_set},
 {"Math::GSL::Minc::gsl_min_fminimizer_type_get", _wrap_gsl_min_fminimizer_type_get},
 {"Math::GSL::Minc::gsl_min_fminimizer_function_set", _wrap_gsl_min_fminimizer_function_set},
@@ -4520,7 +4512,6 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::Minc::gsl_min_fminimizer_state_set", _wrap_gsl_min_fminimizer_state_set},
 {"Math::GSL::Minc::gsl_min_fminimizer_state_get", _wrap_gsl_min_fminimizer_state_get},
 {"Math::GSL::Minc::new_gsl_min_fminimizer", _wrap_new_gsl_min_fminimizer},
-{"Math::GSL::Minc::delete_gsl_min_fminimizer", _wrap_delete_gsl_min_fminimizer},
 {"Math::GSL::Minc::gsl_min_fminimizer_alloc", _wrap_gsl_min_fminimizer_alloc},
 {"Math::GSL::Minc::gsl_min_fminimizer_free", _wrap_gsl_min_fminimizer_free},
 {"Math::GSL::Minc::gsl_min_fminimizer_set", _wrap_gsl_min_fminimizer_set},

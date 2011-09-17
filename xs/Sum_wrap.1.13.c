@@ -1635,6 +1635,13 @@ void array_wrapper_free(array_wrapper * daw){
         SV * params;
     };
 
+    void gsl_function_perl_free(struct gsl_function_perl * perl_f){
+        if (perl_f != NULL) {
+            SvREFCNT_dec(perl_f->function);
+            SvREFCNT_dec(perl_f->params);
+            Safefree(perl_f);
+        }
+    }
 
     /* These functions (C callbacks) calls the perl callbacks.
        Info for perl callback can be found using the 'void*params' parameter
@@ -2629,7 +2636,7 @@ XS(_wrap_gsl_sum_levin_u_accel) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     
@@ -2638,7 +2645,7 @@ XS(_wrap_gsl_sum_levin_u_accel) {
     XSRETURN(argvi);
   fail:
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     
@@ -2732,7 +2739,7 @@ XS(_wrap_gsl_sum_levin_u_minmax) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg7), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     
@@ -2743,7 +2750,7 @@ XS(_wrap_gsl_sum_levin_u_minmax) {
     XSRETURN(argvi);
   fail:
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     
@@ -3448,7 +3455,7 @@ XS(_wrap_gsl_sum_levin_utrunc_accel) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg5), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     
@@ -3457,7 +3464,7 @@ XS(_wrap_gsl_sum_levin_utrunc_accel) {
     XSRETURN(argvi);
   fail:
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     
@@ -3551,7 +3558,7 @@ XS(_wrap_gsl_sum_levin_utrunc_minmax) {
       if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg7), SWIGTYPE_p_double, new_flags); argvi++  ;
     }
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     
@@ -3562,7 +3569,7 @@ XS(_wrap_gsl_sum_levin_utrunc_minmax) {
     XSRETURN(argvi);
   fail:
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     

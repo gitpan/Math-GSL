@@ -1638,6 +1638,13 @@ void array_wrapper_free(array_wrapper * daw){
         SV * params;
     };
 
+    void gsl_function_perl_free(struct gsl_function_perl * perl_f){
+        if (perl_f != NULL) {
+            SvREFCNT_dec(perl_f->function);
+            SvREFCNT_dec(perl_f->params);
+            Safefree(perl_f);
+        }
+    }
 
     /* These functions (C callbacks) calls the perl callbacks.
        Info for perl callback can be found using the 'void*params' parameter
@@ -2684,12 +2691,12 @@ XS(_wrap_gsl_ieee_printf_double) {
     gsl_ieee_printf_double((double const *)arg1);
     ST(argvi) = sv_newmortal();
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     XSRETURN(argvi);
   fail:
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     SWIG_croak_null();
   }
@@ -2810,13 +2817,13 @@ XS(_wrap_gsl_ieee_fprintf_double) {
     ST(argvi) = sv_newmortal();
     
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     XSRETURN(argvi);
   fail:
     
     {
-      // if (arg2) free(arg2);
+      if (arg2) free(arg2);
     }
     SWIG_croak_null();
   }
@@ -2936,13 +2943,13 @@ XS(_wrap_gsl_ieee_double_to_rep) {
     gsl_ieee_double_to_rep((double const *)arg1,arg2);
     ST(argvi) = sv_newmortal();
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     XSRETURN(argvi);
   fail:
     {
-      // if (arg1) free(arg1);
+      if (arg1) free(arg1);
     }
     
     SWIG_croak_null();
