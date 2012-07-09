@@ -221,7 +221,7 @@ Math::GSL::Deriv - Numerical Derivatives
 
 =head1 SYNOPSIS
 
-    use Math::GSL::Deriv qw/:all/;  
+    use Math::GSL::Deriv qw/:all/;
     use Math::GSL::Errno qw/:all/;
 
     my ($x, $h) = (1.5, 0.01);
@@ -258,9 +258,9 @@ complicated a function as your heart desires.
 
     my ($status, $val,$err) = gsl_deriv_central ( \&func , $x, $h); 
 
-    This method approximates the central difference of the subroutine reference
-    $function, evaluated at $x, with "step size" $h. This means that the
-    function is evaluated at $x-$h and $x+h.
+This method approximates the central difference of the subroutine reference
+$function, evaluated at $x, with "step size" $h. This means that the
+function is evaluated at $x-$h and $x+h.
 
 
 =item * C<gsl_deriv_backward($function, $x, $h)> 
@@ -271,9 +271,9 @@ complicated a function as your heart desires.
 
     my ($status, $val,$err) = gsl_deriv_backward ( \&func , $x, $h); 
 
-    This method approximates the backward difference of the subroutine
-    reference $function, evaluated at $x, with "step size" $h. This means that
-    the function is evaluated at $x-$h and $x.
+This method approximates the backward difference of the subroutine
+reference $function, evaluated at $x, with "step size" $h. This means that
+the function is evaluated at $x-$h and $x.
 
 =item * C<gsl_deriv_forward($function, $x, $h)> 
 
@@ -283,9 +283,9 @@ complicated a function as your heart desires.
 
     my ($status, $val,$err) = gsl_deriv_forward ( \&func , $x, $h); 
 
-    This method approximates the forward difference of the subroutine reference
-    $function, evaluated at $x, with "step size" $h. This means that the
-    function is evaluated at $x and $x+$h.
+This method approximates the forward difference of the subroutine reference
+$function, evaluated at $x, with "step size" $h. This means that the
+function is evaluated at $x and $x+$h.
 
 =back
 
@@ -294,11 +294,11 @@ documentation: L<http://www.gnu.org/software/gsl/manual/html_node/>
 
 =head1 AUTHORS
 
-Jonathan Leto <jonathan@leto.net> and Thierry Moisan <thierry.moisan@gmail.com>
+Jonathan "Duke" Leto <jonathan@leto.net> and Thierry Moisan <thierry.moisan@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2008-2009 Jonathan Leto and Thierry Moisan
+Copyright (C) 2008-2011 Jonathan "Duke" Leto and Thierry Moisan
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

@@ -138,7 +138,6 @@ package Math::GSL::Linalg;
 *gsl_linalg_complex_cholesky_decomp = *Math::GSL::Linalgc::gsl_linalg_complex_cholesky_decomp;
 *gsl_linalg_complex_cholesky_solve = *Math::GSL::Linalgc::gsl_linalg_complex_cholesky_solve;
 *gsl_linalg_complex_cholesky_svx = *Math::GSL::Linalgc::gsl_linalg_complex_cholesky_svx;
-*gsl_linalg_complex_cholesky_invert = *Math::GSL::Linalgc::gsl_linalg_complex_cholesky_invert;
 *gsl_linalg_symmtd_decomp = *Math::GSL::Linalgc::gsl_linalg_symmtd_decomp;
 *gsl_linalg_symmtd_unpack = *Math::GSL::Linalgc::gsl_linalg_symmtd_unpack;
 *gsl_linalg_symmtd_unpack_T = *Math::GSL::Linalgc::gsl_linalg_symmtd_unpack_T;
@@ -757,7 +756,7 @@ Here is a list of all the functions included in this module :
  You have to add the functions you want to use inside the qw /put_funtion_here / with spaces between each function. You can also write use Math::GSL::Complex qw/:all/ to use all avaible functions of the module.
 
 For more informations on the functions, we refer you to the GSL offcial documentation: L<http://www.gnu.org/software/gsl/manual/html_node/>
- Tip : search on google: site:http://www.gnu.org/software/gsl/manual/html_node/ name_of_the_function_you_want
+ 
 
 =back
 
@@ -795,11 +794,11 @@ This example shows how to compute the determinant of a matrix with the LU decomp
 
 =head1 AUTHORS
 
-Jonathan Leto <jonathan@leto.net> and Thierry Moisan <thierry.moisan@gmail.com>
+Jonathan "Duke" Leto <jonathan@leto.net> and Thierry Moisan <thierry.moisan@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2008-2009 Jonathan Leto and Thierry Moisan
+Copyright (C) 2008-2011 Jonathan "Duke" Leto and Thierry Moisan
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

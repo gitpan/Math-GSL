@@ -1588,15 +1588,6 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
 }
 
 
-SWIGINTERNINLINE SV *
-SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
-{    
-  SV *obj = sv_newmortal();
-  sv_setnv(obj, value);
-  return obj;
-}
-
-
     #include "gsl/gsl_nan.h"
     #include "gsl/gsl_math.h"
     #include "gsl/gsl_monte.h"
@@ -2013,6 +2004,15 @@ SWIG_AsCharPtrAndSize(SV *obj, char** cptr, size_t* psize, int *alloc)
 
 
 
+
+
+SWIGINTERNINLINE SV *
+SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
+{    
+  SV *obj = sv_newmortal();
+  sv_setnv(obj, value);
+  return obj;
+}
 
 
 SWIGINTERNINLINE SV *
@@ -4559,44 +4559,6 @@ XS(_wrap_gsl_vector_add_constant) {
     } 
     arg2 = (double)(val2);
     result = (int)gsl_vector_add_constant(arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_vector_equal) {
-  {
-    gsl_vector *arg1 = (gsl_vector *) 0 ;
-    gsl_vector *arg2 = (gsl_vector *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_vector_equal(u,v);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_vector, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_vector_equal" "', argument " "1"" of type '" "gsl_vector const *""'"); 
-    }
-    arg1 = (gsl_vector *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_gsl_vector, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_vector_equal" "', argument " "2"" of type '" "gsl_vector const *""'"); 
-    }
-    arg2 = (gsl_vector *)(argp2);
-    result = (int)gsl_vector_equal((gsl_vector const *)arg1,(gsl_vector const *)arg2);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
     
@@ -7896,44 +7858,6 @@ XS(_wrap_gsl_matrix_minmax_index) {
     
     
     
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_matrix_equal) {
-  {
-    gsl_matrix *arg1 = (gsl_matrix *) 0 ;
-    gsl_matrix *arg2 = (gsl_matrix *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_matrix_equal(a,b);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_matrix, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_matrix_equal" "', argument " "1"" of type '" "gsl_matrix const *""'"); 
-    }
-    arg1 = (gsl_matrix *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_gsl_matrix, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_matrix_equal" "', argument " "2"" of type '" "gsl_matrix const *""'"); 
-    }
-    arg2 = (gsl_matrix *)(argp2);
-    result = (int)gsl_matrix_equal((gsl_matrix const *)arg1,(gsl_matrix const *)arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
     
     
     SWIG_croak_null();
@@ -11654,44 +11578,6 @@ XS(_wrap_gsl_matrix_int_minmax_index) {
 }
 
 
-XS(_wrap_gsl_matrix_int_equal) {
-  {
-    gsl_matrix_int *arg1 = (gsl_matrix_int *) 0 ;
-    gsl_matrix_int *arg2 = (gsl_matrix_int *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_matrix_int_equal(a,b);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_matrix_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_matrix_int_equal" "', argument " "1"" of type '" "gsl_matrix_int const *""'"); 
-    }
-    arg1 = (gsl_matrix_int *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_gsl_matrix_int, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_matrix_int_equal" "', argument " "2"" of type '" "gsl_matrix_int const *""'"); 
-    }
-    arg2 = (gsl_matrix_int *)(argp2);
-    result = (int)gsl_matrix_int_equal((gsl_matrix_int const *)arg1,(gsl_matrix_int const *)arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_gsl_matrix_int_isnull) {
   {
     gsl_matrix_int *arg1 = (gsl_matrix_int *) 0 ;
@@ -15192,44 +15078,6 @@ XS(_wrap_gsl_matrix_complex_transpose_memcpy) {
     }
     arg2 = (gsl_matrix_complex *)(argp2);
     result = (int)gsl_matrix_complex_transpose_memcpy(arg1,(gsl_matrix_complex const *)arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_matrix_complex_equal) {
-  {
-    gsl_matrix_complex *arg1 = (gsl_matrix_complex *) 0 ;
-    gsl_matrix_complex *arg2 = (gsl_matrix_complex *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_matrix_complex_equal(a,b);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_matrix_complex, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_matrix_complex_equal" "', argument " "1"" of type '" "gsl_matrix_complex const *""'"); 
-    }
-    arg1 = (gsl_matrix_complex *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_gsl_matrix_complex, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_matrix_complex_equal" "', argument " "2"" of type '" "gsl_matrix_complex const *""'"); 
-    }
-    arg2 = (gsl_matrix_complex *)(argp2);
-    result = (int)gsl_matrix_complex_equal((gsl_matrix_complex const *)arg1,(gsl_matrix_complex const *)arg2);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     
     
@@ -18984,44 +18832,6 @@ XS(_wrap_gsl_matrix_char_minmax_index) {
 }
 
 
-XS(_wrap_gsl_matrix_char_equal) {
-  {
-    gsl_matrix_char *arg1 = (gsl_matrix_char *) 0 ;
-    gsl_matrix_char *arg2 = (gsl_matrix_char *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_matrix_char_equal(a,b);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_matrix_char, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_matrix_char_equal" "', argument " "1"" of type '" "gsl_matrix_char const *""'"); 
-    }
-    arg1 = (gsl_matrix_char *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_gsl_matrix_char, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_matrix_char_equal" "', argument " "2"" of type '" "gsl_matrix_char const *""'"); 
-    }
-    arg2 = (gsl_matrix_char *)(argp2);
-    result = (int)gsl_matrix_char_equal((gsl_matrix_char const *)arg1,(gsl_matrix_char const *)arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_gsl_matrix_char_isnull) {
   {
     gsl_matrix_char *arg1 = (gsl_matrix_char *) 0 ;
@@ -20037,7 +19847,6 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::Matrixc::gsl_vector_div", _wrap_gsl_vector_div},
 {"Math::GSL::Matrixc::gsl_vector_scale", _wrap_gsl_vector_scale},
 {"Math::GSL::Matrixc::gsl_vector_add_constant", _wrap_gsl_vector_add_constant},
-{"Math::GSL::Matrixc::gsl_vector_equal", _wrap_gsl_vector_equal},
 {"Math::GSL::Matrixc::gsl_vector_isnull", _wrap_gsl_vector_isnull},
 {"Math::GSL::Matrixc::gsl_vector_ispos", _wrap_gsl_vector_ispos},
 {"Math::GSL::Matrixc::gsl_vector_isneg", _wrap_gsl_vector_isneg},
@@ -20119,7 +19928,6 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::Matrixc::gsl_matrix_max_index", _wrap_gsl_matrix_max_index},
 {"Math::GSL::Matrixc::gsl_matrix_min_index", _wrap_gsl_matrix_min_index},
 {"Math::GSL::Matrixc::gsl_matrix_minmax_index", _wrap_gsl_matrix_minmax_index},
-{"Math::GSL::Matrixc::gsl_matrix_equal", _wrap_gsl_matrix_equal},
 {"Math::GSL::Matrixc::gsl_matrix_isnull", _wrap_gsl_matrix_isnull},
 {"Math::GSL::Matrixc::gsl_matrix_ispos", _wrap_gsl_matrix_ispos},
 {"Math::GSL::Matrixc::gsl_matrix_isneg", _wrap_gsl_matrix_isneg},
@@ -20212,7 +20020,6 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::Matrixc::gsl_matrix_int_max_index", _wrap_gsl_matrix_int_max_index},
 {"Math::GSL::Matrixc::gsl_matrix_int_min_index", _wrap_gsl_matrix_int_min_index},
 {"Math::GSL::Matrixc::gsl_matrix_int_minmax_index", _wrap_gsl_matrix_int_minmax_index},
-{"Math::GSL::Matrixc::gsl_matrix_int_equal", _wrap_gsl_matrix_int_equal},
 {"Math::GSL::Matrixc::gsl_matrix_int_isnull", _wrap_gsl_matrix_int_isnull},
 {"Math::GSL::Matrixc::gsl_matrix_int_ispos", _wrap_gsl_matrix_int_ispos},
 {"Math::GSL::Matrixc::gsl_matrix_int_isneg", _wrap_gsl_matrix_int_isneg},
@@ -20299,7 +20106,6 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::Matrixc::gsl_matrix_complex_swap_rowcol", _wrap_gsl_matrix_complex_swap_rowcol},
 {"Math::GSL::Matrixc::gsl_matrix_complex_transpose", _wrap_gsl_matrix_complex_transpose},
 {"Math::GSL::Matrixc::gsl_matrix_complex_transpose_memcpy", _wrap_gsl_matrix_complex_transpose_memcpy},
-{"Math::GSL::Matrixc::gsl_matrix_complex_equal", _wrap_gsl_matrix_complex_equal},
 {"Math::GSL::Matrixc::gsl_matrix_complex_isnull", _wrap_gsl_matrix_complex_isnull},
 {"Math::GSL::Matrixc::gsl_matrix_complex_ispos", _wrap_gsl_matrix_complex_ispos},
 {"Math::GSL::Matrixc::gsl_matrix_complex_isneg", _wrap_gsl_matrix_complex_isneg},
@@ -20392,7 +20198,6 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::Matrixc::gsl_matrix_char_max_index", _wrap_gsl_matrix_char_max_index},
 {"Math::GSL::Matrixc::gsl_matrix_char_min_index", _wrap_gsl_matrix_char_min_index},
 {"Math::GSL::Matrixc::gsl_matrix_char_minmax_index", _wrap_gsl_matrix_char_minmax_index},
-{"Math::GSL::Matrixc::gsl_matrix_char_equal", _wrap_gsl_matrix_char_equal},
 {"Math::GSL::Matrixc::gsl_matrix_char_isnull", _wrap_gsl_matrix_char_isnull},
 {"Math::GSL::Matrixc::gsl_matrix_char_ispos", _wrap_gsl_matrix_char_ispos},
 {"Math::GSL::Matrixc::gsl_matrix_char_isneg", _wrap_gsl_matrix_char_isneg},
@@ -20718,12 +20523,12 @@ XS(SWIG_init) {
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/local/share/swig/2.0.4/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "GSL_POSZERO", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)((+0.0))));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)((+0))));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/local/share/swig/2.0.4/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "GSL_NEGZERO", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)((-0.0))));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)((-0))));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   SWIG_TypeClientData(SWIGTYPE_p_gsl_complex_long_double, (void*) "Math::GSL::Matrix::gsl_complex_long_double");

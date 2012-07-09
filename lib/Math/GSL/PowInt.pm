@@ -58,7 +58,6 @@ package Math::GSL::PowInt;
 *gsl_pow_8 = *Math::GSL::PowIntc::gsl_pow_8;
 *gsl_pow_9 = *Math::GSL::PowIntc::gsl_pow_9;
 *gsl_pow_int = *Math::GSL::PowIntc::gsl_pow_int;
-*gsl_pow_uint = *Math::GSL::PowIntc::gsl_pow_uint;
 
 # ------- VARIABLE STUBS --------
 
@@ -116,11 +115,11 @@ Would someone like to submit some benchmarks?
 
 =head1 AUTHORS
 
-Jonathan Leto <jonathan@leto.net> and Thierry Moisan <thierry.moisan@gmail.com>
+Jonathan "Duke" Leto <jonathan@leto.net> and Thierry Moisan <thierry.moisan@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2008-2009 Jonathan Leto and Thierry Moisan
+Copyright (C) 2008-2011 Jonathan "Duke" Leto and Thierry Moisan
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

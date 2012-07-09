@@ -1576,15 +1576,6 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
 }
 
 
-SWIGINTERNINLINE SV *
-SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
-{    
-  SV *obj = sv_newmortal();
-  sv_setnv(obj, value);
-  return obj;
-}
-
-
     #include "gsl/gsl_nan.h"
     #include "gsl/gsl_math.h"
     #include "gsl/gsl_monte.h"
@@ -1940,6 +1931,15 @@ SWIG_AsVal_int SWIG_PERL_DECL_ARGS_2(SV * obj, int *val)
     }
   }  
   return res;
+}
+
+
+SWIGINTERNINLINE SV *
+SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
+{    
+  SV *obj = sv_newmortal();
+  sv_setnv(obj, value);
+  return obj;
 }
 
 
@@ -5649,43 +5649,6 @@ XS(_wrap_gsl_eigen_nonsymmv_free) {
     
     XSRETURN(argvi);
   fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_eigen_nonsymmv_params) {
-  {
-    int arg1 ;
-    gsl_eigen_nonsymmv_workspace *arg2 = (gsl_eigen_nonsymmv_workspace *) 0 ;
-    int val1 ;
-    int ecode1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_eigen_nonsymmv_params(balance,w);");
-    }
-    ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_eigen_nonsymmv_params" "', argument " "1"" of type '" "int""'");
-    } 
-    arg1 = (int)(val1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_gsl_eigen_nonsymmv_workspace, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_eigen_nonsymmv_params" "', argument " "2"" of type '" "gsl_eigen_nonsymmv_workspace *""'"); 
-    }
-    arg2 = (gsl_eigen_nonsymmv_workspace *)(argp2);
-    gsl_eigen_nonsymmv_params(arg1,arg2);
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
     
     SWIG_croak_null();
   }
@@ -10741,7 +10704,6 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::Eigenc::delete_gsl_eigen_nonsymmv_workspace", _wrap_delete_gsl_eigen_nonsymmv_workspace},
 {"Math::GSL::Eigenc::gsl_eigen_nonsymmv_alloc", _wrap_gsl_eigen_nonsymmv_alloc},
 {"Math::GSL::Eigenc::gsl_eigen_nonsymmv_free", _wrap_gsl_eigen_nonsymmv_free},
-{"Math::GSL::Eigenc::gsl_eigen_nonsymmv_params", _wrap_gsl_eigen_nonsymmv_params},
 {"Math::GSL::Eigenc::gsl_eigen_nonsymmv", _wrap_gsl_eigen_nonsymmv},
 {"Math::GSL::Eigenc::gsl_eigen_nonsymmv_Z", _wrap_gsl_eigen_nonsymmv_Z},
 {"Math::GSL::Eigenc::gsl_eigen_gensymm_workspace_size_set", _wrap_gsl_eigen_gensymm_workspace_size_set},
@@ -11178,12 +11140,12 @@ XS(SWIG_init) {
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/local/share/swig/2.0.4/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "GSL_POSZERO", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)((+0.0))));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)((+0))));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/local/share/swig/2.0.4/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "GSL_NEGZERO", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)((-0.0))));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)((-0))));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   SWIG_TypeClientData(SWIGTYPE_p_gsl_eigen_symm_workspace, (void*) "Math::GSL::Eigen::gsl_eigen_symm_workspace");

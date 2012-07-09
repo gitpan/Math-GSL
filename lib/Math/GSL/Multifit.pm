@@ -53,10 +53,8 @@ package Math::GSL::Multifit;
 *gsl_multifit_linear_free = *Math::GSL::Multifitc::gsl_multifit_linear_free;
 *gsl_multifit_linear = *Math::GSL::Multifitc::gsl_multifit_linear;
 *gsl_multifit_linear_svd = *Math::GSL::Multifitc::gsl_multifit_linear_svd;
-*gsl_multifit_linear_usvd = *Math::GSL::Multifitc::gsl_multifit_linear_usvd;
 *gsl_multifit_wlinear = *Math::GSL::Multifitc::gsl_multifit_wlinear;
 *gsl_multifit_wlinear_svd = *Math::GSL::Multifitc::gsl_multifit_wlinear_svd;
-*gsl_multifit_wlinear_usvd = *Math::GSL::Multifitc::gsl_multifit_wlinear_usvd;
 *gsl_multifit_linear_est = *Math::GSL::Multifitc::gsl_multifit_linear_est;
 *gsl_multifit_linear_residuals = *Math::GSL::Multifitc::gsl_multifit_linear_residuals;
 *gsl_multifit_gradient = *Math::GSL::Multifitc::gsl_multifit_gradient;
@@ -550,7 +548,7 @@ The following functions are not yet implemented. Patches Welcome!
 For more informations on the functions, we refer you to the GSL offcial
 documentation: L<http://www.gnu.org/software/gsl/manual/html_node/>
 
- Tip : search on google: site:http://www.gnu.org/software/gsl/manual/html_node/ name_of_the_function_you_want
+ 
 
 =head1 EXAMPLES
 
@@ -558,11 +556,11 @@ documentation: L<http://www.gnu.org/software/gsl/manual/html_node/>
 
 =head1 AUTHORS
 
-Jonathan Leto <jonathan@leto.net> and Thierry Moisan <thierry.moisan@gmail.com>
+Jonathan "Duke" Leto <jonathan@leto.net> and Thierry Moisan <thierry.moisan@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2008-2009 Jonathan Leto and Thierry Moisan
+Copyright (C) 2008-2011 Jonathan "Duke" Leto and Thierry Moisan
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

@@ -1567,15 +1567,6 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
 }
 
 
-SWIGINTERNINLINE SV *
-SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
-{    
-  SV *obj = sv_newmortal();
-  sv_setnv(obj, value);
-  return obj;
-}
-
-
     #include "gsl/gsl_nan.h"
     #include "gsl/gsl_math.h"
     #include "gsl/gsl_monte.h"
@@ -1861,6 +1852,15 @@ SWIG_AsVal_int SWIG_PERL_DECL_ARGS_2(SV * obj, int *val)
     }
   }  
   return res;
+}
+
+
+SWIGINTERNINLINE SV *
+SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
+{    
+  SV *obj = sv_newmortal();
+  sv_setnv(obj, value);
+  return obj;
 }
 
 
@@ -6589,34 +6589,6 @@ XS(_wrap_gsl_linalg_complex_cholesky_svx) {
 }
 
 
-XS(_wrap_gsl_linalg_complex_cholesky_invert) {
-  {
-    gsl_matrix_complex *arg1 = (gsl_matrix_complex *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_linalg_complex_cholesky_invert(cholesky);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_matrix_complex, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_linalg_complex_cholesky_invert" "', argument " "1"" of type '" "gsl_matrix_complex *""'"); 
-    }
-    arg1 = (gsl_matrix_complex *)(argp1);
-    result = (int)gsl_linalg_complex_cholesky_invert(arg1);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_gsl_linalg_symmtd_decomp) {
   {
     gsl_matrix *arg1 = (gsl_matrix *) 0 ;
@@ -11182,7 +11154,6 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::Linalgc::gsl_linalg_complex_cholesky_decomp", _wrap_gsl_linalg_complex_cholesky_decomp},
 {"Math::GSL::Linalgc::gsl_linalg_complex_cholesky_solve", _wrap_gsl_linalg_complex_cholesky_solve},
 {"Math::GSL::Linalgc::gsl_linalg_complex_cholesky_svx", _wrap_gsl_linalg_complex_cholesky_svx},
-{"Math::GSL::Linalgc::gsl_linalg_complex_cholesky_invert", _wrap_gsl_linalg_complex_cholesky_invert},
 {"Math::GSL::Linalgc::gsl_linalg_symmtd_decomp", _wrap_gsl_linalg_symmtd_decomp},
 {"Math::GSL::Linalgc::gsl_linalg_symmtd_unpack", _wrap_gsl_linalg_symmtd_unpack},
 {"Math::GSL::Linalgc::gsl_linalg_symmtd_unpack_T", _wrap_gsl_linalg_symmtd_unpack_T},
@@ -11609,12 +11580,12 @@ XS(SWIG_init) {
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/local/share/swig/2.0.4/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "GSL_POSZERO", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)((+0.0))));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)((+0))));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/local/share/swig/2.0.4/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "GSL_NEGZERO", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)((-0.0))));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)((-0))));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/local/share/swig/2.0.4/perl5/perltypemaps.swg,65,%set_constant@*/ do {

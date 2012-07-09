@@ -85,7 +85,6 @@ package Math::GSL::MatrixComplex;
 *gsl_vector_div = *Math::GSL::MatrixComplexc::gsl_vector_div;
 *gsl_vector_scale = *Math::GSL::MatrixComplexc::gsl_vector_scale;
 *gsl_vector_add_constant = *Math::GSL::MatrixComplexc::gsl_vector_add_constant;
-*gsl_vector_equal = *Math::GSL::MatrixComplexc::gsl_vector_equal;
 *gsl_vector_isnull = *Math::GSL::MatrixComplexc::gsl_vector_isnull;
 *gsl_vector_ispos = *Math::GSL::MatrixComplexc::gsl_vector_ispos;
 *gsl_vector_isneg = *Math::GSL::MatrixComplexc::gsl_vector_isneg;
@@ -139,7 +138,6 @@ package Math::GSL::MatrixComplex;
 *gsl_matrix_complex_swap_rowcol = *Math::GSL::MatrixComplexc::gsl_matrix_complex_swap_rowcol;
 *gsl_matrix_complex_transpose = *Math::GSL::MatrixComplexc::gsl_matrix_complex_transpose;
 *gsl_matrix_complex_transpose_memcpy = *Math::GSL::MatrixComplexc::gsl_matrix_complex_transpose_memcpy;
-*gsl_matrix_complex_equal = *Math::GSL::MatrixComplexc::gsl_matrix_complex_equal;
 *gsl_matrix_complex_isnull = *Math::GSL::MatrixComplexc::gsl_matrix_complex_isnull;
 *gsl_matrix_complex_ispos = *Math::GSL::MatrixComplexc::gsl_matrix_complex_ispos;
 *gsl_matrix_complex_isneg = *Math::GSL::MatrixComplexc::gsl_matrix_complex_isneg;
@@ -1236,11 +1234,11 @@ L<http://www.gnu.org/software/gsl/manual/html_node/>
 
 =head1 AUTHORS
 
-Jonathan Leto <jonathan@leto.net> and Thierry Moisan <thierry.moisan@gmail.com>
+Jonathan "Duke" Leto <jonathan@leto.net> and Thierry Moisan <thierry.moisan@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2008-2009 Jonathan Leto and Thierry Moisan
+Copyright (C) 2008-2011 Jonathan "Duke" Leto and Thierry Moisan
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

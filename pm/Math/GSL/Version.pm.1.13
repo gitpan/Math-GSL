@@ -55,6 +55,4 @@ package Math::GSL::Version;
 package Math::GSL::Version;
 
 *GSL_VERSION = *Math::GSL::Versionc::GSL_VERSION;
-*GSL_MAJOR_VERSION = *Math::GSL::Versionc::GSL_MAJOR_VERSION;
-*GSL_MINOR_VERSION = *Math::GSL::Versionc::GSL_MINOR_VERSION;
 1;

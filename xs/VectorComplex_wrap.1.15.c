@@ -1567,15 +1567,6 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
 }
 
 
-SWIGINTERNINLINE SV *
-SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
-{    
-  SV *obj = sv_newmortal();
-  sv_setnv(obj, value);
-  return obj;
-}
-
-
     #include "gsl/gsl_nan.h"
     #include "gsl/gsl_math.h"
     #include "gsl/gsl_monte.h"
@@ -1991,6 +1982,15 @@ SWIG_AsCharPtrAndSize(SV *obj, char** cptr, size_t* psize, int *alloc)
 
 
 
+
+
+SWIGINTERNINLINE SV *
+SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
+{    
+  SV *obj = sv_newmortal();
+  sv_setnv(obj, value);
+  return obj;
+}
 
 #ifdef __cplusplus
 extern "C" {
@@ -4479,44 +4479,6 @@ XS(_wrap_gsl_vector_add_constant) {
 }
 
 
-XS(_wrap_gsl_vector_equal) {
-  {
-    gsl_vector *arg1 = (gsl_vector *) 0 ;
-    gsl_vector *arg2 = (gsl_vector *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_vector_equal(u,v);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_vector, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_vector_equal" "', argument " "1"" of type '" "gsl_vector const *""'"); 
-    }
-    arg1 = (gsl_vector *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_gsl_vector, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_vector_equal" "', argument " "2"" of type '" "gsl_vector const *""'"); 
-    }
-    arg2 = (gsl_vector *)(argp2);
-    result = (int)gsl_vector_equal((gsl_vector const *)arg1,(gsl_vector const *)arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_gsl_vector_isnull) {
   {
     gsl_vector *arg1 = (gsl_vector *) 0 ;
@@ -6571,44 +6533,6 @@ XS(_wrap_gsl_vector_complex_swap_elements) {
 }
 
 
-XS(_wrap_gsl_vector_complex_equal) {
-  {
-    gsl_vector_complex *arg1 = (gsl_vector_complex *) 0 ;
-    gsl_vector_complex *arg2 = (gsl_vector_complex *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_vector_complex_equal(u,v);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_vector_complex, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_vector_complex_equal" "', argument " "1"" of type '" "gsl_vector_complex const *""'"); 
-    }
-    arg1 = (gsl_vector_complex *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_gsl_vector_complex, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_vector_complex_equal" "', argument " "2"" of type '" "gsl_vector_complex const *""'"); 
-    }
-    arg2 = (gsl_vector_complex *)(argp2);
-    result = (int)gsl_vector_complex_equal((gsl_vector_complex const *)arg1,(gsl_vector_complex const *)arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_gsl_vector_complex_isnull) {
   {
     gsl_vector_complex *arg1 = (gsl_vector_complex *) 0 ;
@@ -7282,7 +7206,6 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::VectorComplexc::gsl_vector_div", _wrap_gsl_vector_div},
 {"Math::GSL::VectorComplexc::gsl_vector_scale", _wrap_gsl_vector_scale},
 {"Math::GSL::VectorComplexc::gsl_vector_add_constant", _wrap_gsl_vector_add_constant},
-{"Math::GSL::VectorComplexc::gsl_vector_equal", _wrap_gsl_vector_equal},
 {"Math::GSL::VectorComplexc::gsl_vector_isnull", _wrap_gsl_vector_isnull},
 {"Math::GSL::VectorComplexc::gsl_vector_ispos", _wrap_gsl_vector_ispos},
 {"Math::GSL::VectorComplexc::gsl_vector_isneg", _wrap_gsl_vector_isneg},
@@ -7339,7 +7262,6 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::VectorComplexc::gsl_vector_complex_reverse", _wrap_gsl_vector_complex_reverse},
 {"Math::GSL::VectorComplexc::gsl_vector_complex_swap", _wrap_gsl_vector_complex_swap},
 {"Math::GSL::VectorComplexc::gsl_vector_complex_swap_elements", _wrap_gsl_vector_complex_swap_elements},
-{"Math::GSL::VectorComplexc::gsl_vector_complex_equal", _wrap_gsl_vector_complex_equal},
 {"Math::GSL::VectorComplexc::gsl_vector_complex_isnull", _wrap_gsl_vector_complex_isnull},
 {"Math::GSL::VectorComplexc::gsl_vector_complex_ispos", _wrap_gsl_vector_complex_ispos},
 {"Math::GSL::VectorComplexc::gsl_vector_complex_isneg", _wrap_gsl_vector_complex_isneg},
@@ -7660,12 +7582,12 @@ XS(SWIG_init) {
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/local/share/swig/2.0.4/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "GSL_POSZERO", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)((+0.0))));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)((+0))));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/local/share/swig/2.0.4/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "GSL_NEGZERO", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)((-0.0))));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)((-0))));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   SWIG_TypeClientData(SWIGTYPE_p_gsl_complex_long_double, (void*) "Math::GSL::VectorComplex::gsl_complex_long_double");

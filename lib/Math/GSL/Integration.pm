@@ -77,13 +77,6 @@ package Math::GSL::Integration;
 *gsl_integration_qaws = *Math::GSL::Integrationc::gsl_integration_qaws;
 *gsl_integration_qawo = *Math::GSL::Integrationc::gsl_integration_qawo;
 *gsl_integration_qawf = *Math::GSL::Integrationc::gsl_integration_qawf;
-*gsl_integration_glfixed_table_alloc = *Math::GSL::Integrationc::gsl_integration_glfixed_table_alloc;
-*gsl_integration_glfixed_table_free = *Math::GSL::Integrationc::gsl_integration_glfixed_table_free;
-*gsl_integration_glfixed = *Math::GSL::Integrationc::gsl_integration_glfixed;
-*gsl_integration_glfixed_point = *Math::GSL::Integrationc::gsl_integration_glfixed_point;
-*gsl_integration_cquad_workspace_alloc = *Math::GSL::Integrationc::gsl_integration_cquad_workspace_alloc;
-*gsl_integration_cquad_workspace_free = *Math::GSL::Integrationc::gsl_integration_cquad_workspace_free;
-*gsl_integration_cquad = *Math::GSL::Integrationc::gsl_integration_cquad;
 
 ############# Class : Math::GSL::Integration::gsl_integration_workspace ##############
 
@@ -229,149 +222,6 @@ sub DESTROY {
     delete $ITERATORS{$self};
     if (exists $OWNER{$self}) {
         Math::GSL::Integrationc::delete_gsl_integration_qawo_table($self);
-        delete $OWNER{$self};
-    }
-}
-
-sub DISOWN {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    delete $OWNER{$ptr};
-}
-
-sub ACQUIRE {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    $OWNER{$ptr} = 1;
-}
-
-
-############# Class : Math::GSL::Integration::gsl_integration_glfixed_table ##############
-
-package Math::GSL::Integration::gsl_integration_glfixed_table;
-use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( Math::GSL::Integration );
-%OWNER = ();
-%ITERATORS = ();
-*swig_n_get = *Math::GSL::Integrationc::gsl_integration_glfixed_table_n_get;
-*swig_n_set = *Math::GSL::Integrationc::gsl_integration_glfixed_table_n_set;
-*swig_x_get = *Math::GSL::Integrationc::gsl_integration_glfixed_table_x_get;
-*swig_x_set = *Math::GSL::Integrationc::gsl_integration_glfixed_table_x_set;
-*swig_w_get = *Math::GSL::Integrationc::gsl_integration_glfixed_table_w_get;
-*swig_w_set = *Math::GSL::Integrationc::gsl_integration_glfixed_table_w_set;
-*swig_precomputed_get = *Math::GSL::Integrationc::gsl_integration_glfixed_table_precomputed_get;
-*swig_precomputed_set = *Math::GSL::Integrationc::gsl_integration_glfixed_table_precomputed_set;
-sub new {
-    my $pkg = shift;
-    my $self = Math::GSL::Integrationc::new_gsl_integration_glfixed_table(@_);
-    bless $self, $pkg if defined($self);
-}
-
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        Math::GSL::Integrationc::delete_gsl_integration_glfixed_table($self);
-        delete $OWNER{$self};
-    }
-}
-
-sub DISOWN {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    delete $OWNER{$ptr};
-}
-
-sub ACQUIRE {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    $OWNER{$ptr} = 1;
-}
-
-
-############# Class : Math::GSL::Integration::gsl_integration_cquad_ival ##############
-
-package Math::GSL::Integration::gsl_integration_cquad_ival;
-use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( Math::GSL::Integration );
-%OWNER = ();
-%ITERATORS = ();
-*swig_a_get = *Math::GSL::Integrationc::gsl_integration_cquad_ival_a_get;
-*swig_a_set = *Math::GSL::Integrationc::gsl_integration_cquad_ival_a_set;
-*swig_b_get = *Math::GSL::Integrationc::gsl_integration_cquad_ival_b_get;
-*swig_b_set = *Math::GSL::Integrationc::gsl_integration_cquad_ival_b_set;
-*swig_c_get = *Math::GSL::Integrationc::gsl_integration_cquad_ival_c_get;
-*swig_c_set = *Math::GSL::Integrationc::gsl_integration_cquad_ival_c_set;
-*swig_fx_get = *Math::GSL::Integrationc::gsl_integration_cquad_ival_fx_get;
-*swig_fx_set = *Math::GSL::Integrationc::gsl_integration_cquad_ival_fx_set;
-*swig_igral_get = *Math::GSL::Integrationc::gsl_integration_cquad_ival_igral_get;
-*swig_igral_set = *Math::GSL::Integrationc::gsl_integration_cquad_ival_igral_set;
-*swig_err_get = *Math::GSL::Integrationc::gsl_integration_cquad_ival_err_get;
-*swig_err_set = *Math::GSL::Integrationc::gsl_integration_cquad_ival_err_set;
-*swig_depth_get = *Math::GSL::Integrationc::gsl_integration_cquad_ival_depth_get;
-*swig_depth_set = *Math::GSL::Integrationc::gsl_integration_cquad_ival_depth_set;
-*swig_rdepth_get = *Math::GSL::Integrationc::gsl_integration_cquad_ival_rdepth_get;
-*swig_rdepth_set = *Math::GSL::Integrationc::gsl_integration_cquad_ival_rdepth_set;
-*swig_ndiv_get = *Math::GSL::Integrationc::gsl_integration_cquad_ival_ndiv_get;
-*swig_ndiv_set = *Math::GSL::Integrationc::gsl_integration_cquad_ival_ndiv_set;
-sub new {
-    my $pkg = shift;
-    my $self = Math::GSL::Integrationc::new_gsl_integration_cquad_ival(@_);
-    bless $self, $pkg if defined($self);
-}
-
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        Math::GSL::Integrationc::delete_gsl_integration_cquad_ival($self);
-        delete $OWNER{$self};
-    }
-}
-
-sub DISOWN {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    delete $OWNER{$ptr};
-}
-
-sub ACQUIRE {
-    my $self = shift;
-    my $ptr = tied(%$self);
-    $OWNER{$ptr} = 1;
-}
-
-
-############# Class : Math::GSL::Integration::gsl_integration_cquad_workspace ##############
-
-package Math::GSL::Integration::gsl_integration_cquad_workspace;
-use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
-@ISA = qw( Math::GSL::Integration );
-%OWNER = ();
-%ITERATORS = ();
-*swig_size_get = *Math::GSL::Integrationc::gsl_integration_cquad_workspace_size_get;
-*swig_size_set = *Math::GSL::Integrationc::gsl_integration_cquad_workspace_size_set;
-*swig_ivals_get = *Math::GSL::Integrationc::gsl_integration_cquad_workspace_ivals_get;
-*swig_ivals_set = *Math::GSL::Integrationc::gsl_integration_cquad_workspace_ivals_set;
-*swig_heap_get = *Math::GSL::Integrationc::gsl_integration_cquad_workspace_heap_get;
-*swig_heap_set = *Math::GSL::Integrationc::gsl_integration_cquad_workspace_heap_set;
-sub new {
-    my $pkg = shift;
-    my $self = Math::GSL::Integrationc::new_gsl_integration_cquad_workspace(@_);
-    bless $self, $pkg if defined($self);
-}
-
-sub DESTROY {
-    return unless $_[0]->isa('HASH');
-    my $self = tied(%{$_[0]});
-    return unless defined $self;
-    delete $ITERATORS{$self};
-    if (exists $OWNER{$self}) {
-        Math::GSL::Integrationc::delete_gsl_integration_cquad_workspace($self);
         delete $OWNER{$self};
     }
 }
@@ -784,11 +634,11 @@ documentation: L<http://www.gnu.org/software/gsl/manual/html_node/>
 
 =head1 AUTHORS
 
-Jonathan Leto <jonathan@leto.net> and Thierry Moisan <thierry.moisan@gmail.com>
+Jonathan "Duke" Leto <jonathan@leto.net> and Thierry Moisan <thierry.moisan@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2008-2009 Jonathan Leto and Thierry Moisan
+Copyright (C) 2008-2011 Jonathan "Duke" Leto and Thierry Moisan
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

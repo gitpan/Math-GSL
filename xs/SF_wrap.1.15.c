@@ -1502,11 +1502,15 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 
 #define SWIGTYPE_p_char swig_types[0]
 #define SWIGTYPE_p_double swig_types[1]
-#define SWIGTYPE_p_gsl_sf_result_e10_struct swig_types[2]
-#define SWIGTYPE_p_gsl_sf_result_struct swig_types[3]
-#define SWIGTYPE_p_unsigned_int swig_types[4]
-static swig_type_info *swig_types[6];
-static swig_module_info swig_module = {swig_types, 5, 0, 0, 0, 0};
+#define SWIGTYPE_p_gsl_eigen_symmv_workspace swig_types[2]
+#define SWIGTYPE_p_gsl_matrix swig_types[3]
+#define SWIGTYPE_p_gsl_sf_mathieu_workspace swig_types[4]
+#define SWIGTYPE_p_gsl_sf_result_e10_struct swig_types[5]
+#define SWIGTYPE_p_gsl_sf_result_struct swig_types[6]
+#define SWIGTYPE_p_gsl_vector swig_types[7]
+#define SWIGTYPE_p_unsigned_int swig_types[8]
+static swig_type_info *swig_types[10];
+static swig_module_info swig_module = {swig_types, 9, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1552,15 +1556,6 @@ SWIGINTERNINLINE SV *
 SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
 {    
   return SWIG_From_long  SWIG_PERL_CALL_ARGS_1(value);
-}
-
-
-SWIGINTERNINLINE SV *
-SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
-{    
-  SV *obj = sv_newmortal();
-  sv_setnv(obj, value);
-  return obj;
 }
 
 
@@ -1742,9 +1737,7 @@ void array_wrapper_free(array_wrapper * daw){
     #include "gsl/gsl_sf_lambert.h"
     #include "gsl/gsl_sf_legendre.h"
     #include "gsl/gsl_sf_log.h"
-#if defined(GSL_MINOR_VERSION) &&  GSL_MINOR_VERSION >= 11
     #include "gsl/gsl_sf_mathieu.h"
-#endif
     #include "gsl/gsl_sf_pow_int.h"
     #include "gsl/gsl_sf_psi.h"
     #include "gsl/gsl_sf_result.h"
@@ -1965,6 +1958,15 @@ SWIG_AsVal_unsigned_SS_int SWIG_PERL_DECL_ARGS_2(SV * obj, unsigned int *val)
 }
 
 
+SWIGINTERNINLINE SV *
+SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
+{    
+  SV *obj = sv_newmortal();
+  sv_setnv(obj, value);
+  return obj;
+}
+
+
 SWIGINTERN int
 SWIG_AsVal_long SWIG_PERL_DECL_ARGS_2(SV *obj, long* val)
 {
@@ -2025,6 +2027,22 @@ SWIG_AsVal_size_t SWIG_PERL_DECL_ARGS_2(SV * obj, size_t *val)
   int res = SWIG_AsVal_unsigned_SS_long SWIG_PERL_CALL_ARGS_2(obj, val ? &v : 0);
   if (SWIG_IsOK(res) && val) *val = (size_t)(v);
   return res;
+}
+
+
+SWIGINTERNINLINE SV *
+SWIG_From_unsigned_SS_long  SWIG_PERL_DECL_ARGS_1(unsigned long value)
+{    
+  SV *obj = sv_newmortal();
+  sv_setuv(obj, (UV) value);
+  return obj;
+}
+
+
+SWIGINTERNINLINE SV *
+SWIG_From_size_t  SWIG_PERL_DECL_ARGS_1(size_t value)
+{    
+  return SWIG_From_unsigned_SS_long  SWIG_PERL_CALL_ARGS_1((unsigned long)(value));
 }
 
 #ifdef __cplusplus
@@ -6562,54 +6580,6 @@ XS(_wrap_gsl_sf_bessel_Knu_scaled) {
     
     XSRETURN(argvi);
   fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_sf_bessel_Knu_scaled_e10_e) {
-  {
-    double arg1 ;
-    double arg2 ;
-    gsl_sf_result_e10 *arg3 = (gsl_sf_result_e10 *) 0 ;
-    double val1 ;
-    int ecode1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 3) || (items > 3)) {
-      SWIG_croak("Usage: gsl_sf_bessel_Knu_scaled_e10_e(nu,x,result);");
-    }
-    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_sf_bessel_Knu_scaled_e10_e" "', argument " "1"" of type '" "double""'");
-    } 
-    arg1 = (double)(val1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sf_bessel_Knu_scaled_e10_e" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_gsl_sf_result_e10_struct, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_sf_bessel_Knu_scaled_e10_e" "', argument " "3"" of type '" "gsl_sf_result_e10 *""'"); 
-    }
-    arg3 = (gsl_sf_result_e10 *)(argp3);
-    result = (int)gsl_sf_bessel_Knu_scaled_e10_e(arg1,arg2,arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
     
     
     SWIG_croak_null();
@@ -20115,6 +20085,2088 @@ XS(_wrap_gsl_sf_log_1plusx_mx) {
 }
 
 
+XS(_wrap_gsl_sf_mathieu_workspace_size_set) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    size_t arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    size_t val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_size_set(self,size);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_size_set" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sf_mathieu_workspace_size_set" "', argument " "2"" of type '" "size_t""'");
+    } 
+    arg2 = (size_t)(val2);
+    if (arg1) (arg1)->size = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_size_get) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    size_t result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_size_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_size_get" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    result =  ((arg1)->size);
+    ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_even_order_set) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    size_t arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    size_t val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_even_order_set(self,even_order);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_even_order_set" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sf_mathieu_workspace_even_order_set" "', argument " "2"" of type '" "size_t""'");
+    } 
+    arg2 = (size_t)(val2);
+    if (arg1) (arg1)->even_order = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_even_order_get) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    size_t result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_even_order_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_even_order_get" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    result =  ((arg1)->even_order);
+    ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_odd_order_set) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    size_t arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    size_t val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_odd_order_set(self,odd_order);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_odd_order_set" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sf_mathieu_workspace_odd_order_set" "', argument " "2"" of type '" "size_t""'");
+    } 
+    arg2 = (size_t)(val2);
+    if (arg1) (arg1)->odd_order = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_odd_order_get) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    size_t result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_odd_order_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_odd_order_get" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    result =  ((arg1)->odd_order);
+    ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_extra_values_set) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    int arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_extra_values_set(self,extra_values);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_extra_values_set" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sf_mathieu_workspace_extra_values_set" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    if (arg1) (arg1)->extra_values = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_extra_values_get) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_extra_values_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_extra_values_get" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    result = (int) ((arg1)->extra_values);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_qa_set) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_qa_set(self,qa);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_qa_set" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sf_mathieu_workspace_qa_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->qa = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_qa_get) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_qa_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_qa_get" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    result = (double) ((arg1)->qa);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_qb_set) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    double arg2 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_qb_set(self,qb);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_qb_set" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sf_mathieu_workspace_qb_set" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    if (arg1) (arg1)->qb = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_qb_get) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double result;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_qb_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_qb_get" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    result = (double) ((arg1)->qb);
+    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_aa_set) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    double *arg2 = (double *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_aa_set(self,aa);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_aa_set" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_sf_mathieu_workspace_aa_set" "', argument " "2"" of type '" "double *""'"); 
+    }
+    arg2 = (double *)(argp2);
+    if (arg1) (arg1)->aa = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_aa_get) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_aa_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_aa_get" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    result = (double *) ((arg1)->aa);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_double, 0 | 0); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_bb_set) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    double *arg2 = (double *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_bb_set(self,bb);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_bb_set" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_sf_mathieu_workspace_bb_set" "', argument " "2"" of type '" "double *""'"); 
+    }
+    arg2 = (double *)(argp2);
+    if (arg1) (arg1)->bb = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_bb_get) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_bb_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_bb_get" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    result = (double *) ((arg1)->bb);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_double, 0 | 0); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_dd_set) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    double *arg2 = (double *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_dd_set(self,dd);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_dd_set" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_sf_mathieu_workspace_dd_set" "', argument " "2"" of type '" "double *""'"); 
+    }
+    arg2 = (double *)(argp2);
+    if (arg1) (arg1)->dd = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_dd_get) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_dd_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_dd_get" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    result = (double *) ((arg1)->dd);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_double, 0 | 0); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_ee_set) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    double *arg2 = (double *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_ee_set(self,ee);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_ee_set" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_sf_mathieu_workspace_ee_set" "', argument " "2"" of type '" "double *""'"); 
+    }
+    arg2 = (double *)(argp2);
+    if (arg1) (arg1)->ee = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_ee_get) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_ee_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_ee_get" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    result = (double *) ((arg1)->ee);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_double, 0 | 0); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_tt_set) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    double *arg2 = (double *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_tt_set(self,tt);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_tt_set" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_sf_mathieu_workspace_tt_set" "', argument " "2"" of type '" "double *""'"); 
+    }
+    arg2 = (double *)(argp2);
+    if (arg1) (arg1)->tt = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_tt_get) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_tt_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_tt_get" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    result = (double *) ((arg1)->tt);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_double, 0 | 0); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_e2_set) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    double *arg2 = (double *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_e2_set(self,e2);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_e2_set" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_sf_mathieu_workspace_e2_set" "', argument " "2"" of type '" "double *""'"); 
+    }
+    arg2 = (double *)(argp2);
+    if (arg1) (arg1)->e2 = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_e2_get) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_e2_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_e2_get" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    result = (double *) ((arg1)->e2);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_double, 0 | 0); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_zz_set) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    double *arg2 = (double *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_zz_set(self,zz);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_zz_set" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_double, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_sf_mathieu_workspace_zz_set" "', argument " "2"" of type '" "double *""'"); 
+    }
+    arg2 = (double *)(argp2);
+    if (arg1) (arg1)->zz = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_zz_get) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    double *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_zz_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_zz_get" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    result = (double *) ((arg1)->zz);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_double, 0 | 0); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_eval_set) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    gsl_vector *arg2 = (gsl_vector *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_eval_set(self,eval);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_eval_set" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_gsl_vector, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_sf_mathieu_workspace_eval_set" "', argument " "2"" of type '" "gsl_vector *""'"); 
+    }
+    arg2 = (gsl_vector *)(argp2);
+    if (arg1) (arg1)->eval = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_eval_get) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_vector *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_eval_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_eval_get" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    result = (gsl_vector *) ((arg1)->eval);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_vector, 0 | 0); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_evec_set) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    gsl_matrix *arg2 = (gsl_matrix *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_evec_set(self,evec);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_evec_set" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_gsl_matrix, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_sf_mathieu_workspace_evec_set" "', argument " "2"" of type '" "gsl_matrix *""'"); 
+    }
+    arg2 = (gsl_matrix *)(argp2);
+    if (arg1) (arg1)->evec = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_evec_get) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_matrix *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_evec_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_evec_get" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    result = (gsl_matrix *) ((arg1)->evec);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_matrix, 0 | 0); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_wmat_set) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    gsl_eigen_symmv_workspace *arg2 = (gsl_eigen_symmv_workspace *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    void *argp2 = 0 ;
+    int res2 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_wmat_set(self,wmat);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_wmat_set" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_gsl_eigen_symmv_workspace, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res2)) {
+      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_sf_mathieu_workspace_wmat_set" "', argument " "2"" of type '" "gsl_eigen_symmv_workspace *""'"); 
+    }
+    arg2 = (gsl_eigen_symmv_workspace *)(argp2);
+    if (arg1) (arg1)->wmat = arg2;
+    ST(argvi) = sv_newmortal();
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_workspace_wmat_get) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    gsl_eigen_symmv_workspace *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_workspace_wmat_get(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_workspace_wmat_get" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    result = (gsl_eigen_symmv_workspace *) ((arg1)->wmat);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_eigen_symmv_workspace, 0 | 0); argvi++ ;
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_new_gsl_sf_mathieu_workspace) {
+  {
+    int argvi = 0;
+    gsl_sf_mathieu_workspace *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 0) || (items > 0)) {
+      SWIG_croak("Usage: new_gsl_sf_mathieu_workspace();");
+    }
+    result = (gsl_sf_mathieu_workspace *)calloc(1, sizeof(gsl_sf_mathieu_workspace));
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_sf_mathieu_workspace, SWIG_OWNER | SWIG_SHADOW); argvi++ ;
+    XSRETURN(argvi);
+  fail:
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_delete_gsl_sf_mathieu_workspace) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: delete_gsl_sf_mathieu_workspace(self);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, SWIG_POINTER_DISOWN |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "delete_gsl_sf_mathieu_workspace" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    free((char *) arg1);
+    ST(argvi) = sv_newmortal();
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_a_array) {
+  {
+    int arg1 ;
+    int arg2 ;
+    double arg3 ;
+    gsl_sf_mathieu_workspace *arg4 = (gsl_sf_mathieu_workspace *) 0 ;
+    double *arg5 ;
+    int val1 ;
+    int ecode1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    double val3 ;
+    int ecode3 = 0 ;
+    void *argp4 = 0 ;
+    int res4 = 0 ;
+    void *argp5 = 0 ;
+    int res5 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 5) || (items > 5)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_a_array(order_min,order_max,qq,work,result_array);");
+    }
+    ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_sf_mathieu_a_array" "', argument " "1"" of type '" "int""'");
+    } 
+    arg1 = (int)(val1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sf_mathieu_a_array" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_sf_mathieu_a_array" "', argument " "3"" of type '" "double""'");
+    } 
+    arg3 = (double)(val3);
+    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res4)) {
+      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_sf_mathieu_a_array" "', argument " "4"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg4 = (gsl_sf_mathieu_workspace *)(argp4);
+    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_double, 0 |  0 );
+    if (!SWIG_IsOK(res5)) {
+      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_sf_mathieu_a_array" "', argument " "5"" of type '" "double []""'"); 
+    } 
+    arg5 = (double *)(argp5);
+    result = (int)gsl_sf_mathieu_a_array(arg1,arg2,arg3,arg4,arg5);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_b_array) {
+  {
+    int arg1 ;
+    int arg2 ;
+    double arg3 ;
+    gsl_sf_mathieu_workspace *arg4 = (gsl_sf_mathieu_workspace *) 0 ;
+    double *arg5 ;
+    int val1 ;
+    int ecode1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    double val3 ;
+    int ecode3 = 0 ;
+    void *argp4 = 0 ;
+    int res4 = 0 ;
+    void *argp5 = 0 ;
+    int res5 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 5) || (items > 5)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_b_array(order_min,order_max,qq,work,result_array);");
+    }
+    ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_sf_mathieu_b_array" "', argument " "1"" of type '" "int""'");
+    } 
+    arg1 = (int)(val1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sf_mathieu_b_array" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_sf_mathieu_b_array" "', argument " "3"" of type '" "double""'");
+    } 
+    arg3 = (double)(val3);
+    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res4)) {
+      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_sf_mathieu_b_array" "', argument " "4"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg4 = (gsl_sf_mathieu_workspace *)(argp4);
+    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_double, 0 |  0 );
+    if (!SWIG_IsOK(res5)) {
+      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_sf_mathieu_b_array" "', argument " "5"" of type '" "double []""'"); 
+    } 
+    arg5 = (double *)(argp5);
+    result = (int)gsl_sf_mathieu_b_array(arg1,arg2,arg3,arg4,arg5);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_a) {
+  {
+    int arg1 ;
+    double arg2 ;
+    gsl_sf_result *arg3 = (gsl_sf_result *) 0 ;
+    int val1 ;
+    int ecode1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    void *argp3 = 0 ;
+    int res3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_a(order,qq,result);");
+    }
+    ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_sf_mathieu_a" "', argument " "1"" of type '" "int""'");
+    } 
+    arg1 = (int)(val1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sf_mathieu_a" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_gsl_sf_result_struct, 0 |  0 );
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_sf_mathieu_a" "', argument " "3"" of type '" "gsl_sf_result *""'"); 
+    }
+    arg3 = (gsl_sf_result *)(argp3);
+    result = (int)gsl_sf_mathieu_a(arg1,arg2,arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_b) {
+  {
+    int arg1 ;
+    double arg2 ;
+    gsl_sf_result *arg3 = (gsl_sf_result *) 0 ;
+    int val1 ;
+    int ecode1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    void *argp3 = 0 ;
+    int res3 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_b(order,qq,result);");
+    }
+    ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_sf_mathieu_b" "', argument " "1"" of type '" "int""'");
+    } 
+    arg1 = (int)(val1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sf_mathieu_b" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_gsl_sf_result_struct, 0 |  0 );
+    if (!SWIG_IsOK(res3)) {
+      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_sf_mathieu_b" "', argument " "3"" of type '" "gsl_sf_result *""'"); 
+    }
+    arg3 = (gsl_sf_result *)(argp3);
+    result = (int)gsl_sf_mathieu_b(arg1,arg2,arg3);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_a_coeff) {
+  {
+    int arg1 ;
+    double arg2 ;
+    double arg3 ;
+    double *arg4 ;
+    int val1 ;
+    int ecode1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    double val3 ;
+    int ecode3 = 0 ;
+    void *argp4 = 0 ;
+    int res4 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 4) || (items > 4)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_a_coeff(order,qq,aa,coeff);");
+    }
+    ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_sf_mathieu_a_coeff" "', argument " "1"" of type '" "int""'");
+    } 
+    arg1 = (int)(val1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sf_mathieu_a_coeff" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_sf_mathieu_a_coeff" "', argument " "3"" of type '" "double""'");
+    } 
+    arg3 = (double)(val3);
+    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
+    if (!SWIG_IsOK(res4)) {
+      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_sf_mathieu_a_coeff" "', argument " "4"" of type '" "double []""'"); 
+    } 
+    arg4 = (double *)(argp4);
+    result = (int)gsl_sf_mathieu_a_coeff(arg1,arg2,arg3,arg4);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_b_coeff) {
+  {
+    int arg1 ;
+    double arg2 ;
+    double arg3 ;
+    double *arg4 ;
+    int val1 ;
+    int ecode1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    double val3 ;
+    int ecode3 = 0 ;
+    void *argp4 = 0 ;
+    int res4 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 4) || (items > 4)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_b_coeff(order,qq,aa,coeff);");
+    }
+    ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_sf_mathieu_b_coeff" "', argument " "1"" of type '" "int""'");
+    } 
+    arg1 = (int)(val1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sf_mathieu_b_coeff" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_sf_mathieu_b_coeff" "', argument " "3"" of type '" "double""'");
+    } 
+    arg3 = (double)(val3);
+    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
+    if (!SWIG_IsOK(res4)) {
+      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_sf_mathieu_b_coeff" "', argument " "4"" of type '" "double []""'"); 
+    } 
+    arg4 = (double *)(argp4);
+    result = (int)gsl_sf_mathieu_b_coeff(arg1,arg2,arg3,arg4);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_alloc) {
+  {
+    size_t arg1 ;
+    double arg2 ;
+    size_t val1 ;
+    int ecode1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    int argvi = 0;
+    gsl_sf_mathieu_workspace *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 2) || (items > 2)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_alloc(nn,qq);");
+    }
+    ecode1 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_sf_mathieu_alloc" "', argument " "1"" of type '" "size_t""'");
+    } 
+    arg1 = (size_t)(val1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sf_mathieu_alloc" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    result = (gsl_sf_mathieu_workspace *)gsl_sf_mathieu_alloc(arg1,arg2);
+    ST(argvi) = SWIG_NewPointerObj(SWIG_as_voidptr(result), SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 | SWIG_SHADOW); argvi++ ;
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_free) {
+  {
+    gsl_sf_mathieu_workspace *arg1 = (gsl_sf_mathieu_workspace *) 0 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    int argvi = 0;
+    dXSARGS;
+    
+    if ((items < 1) || (items > 1)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_free(workspace);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sf_mathieu_free" "', argument " "1"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg1 = (gsl_sf_mathieu_workspace *)(argp1);
+    gsl_sf_mathieu_free(arg1);
+    ST(argvi) = sv_newmortal();
+    
+    XSRETURN(argvi);
+  fail:
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_ce) {
+  {
+    int arg1 ;
+    double arg2 ;
+    double arg3 ;
+    gsl_sf_result *arg4 = (gsl_sf_result *) 0 ;
+    int val1 ;
+    int ecode1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    double val3 ;
+    int ecode3 = 0 ;
+    void *argp4 = 0 ;
+    int res4 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 4) || (items > 4)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_ce(order,qq,zz,result);");
+    }
+    ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_sf_mathieu_ce" "', argument " "1"" of type '" "int""'");
+    } 
+    arg1 = (int)(val1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sf_mathieu_ce" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_sf_mathieu_ce" "', argument " "3"" of type '" "double""'");
+    } 
+    arg3 = (double)(val3);
+    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_gsl_sf_result_struct, 0 |  0 );
+    if (!SWIG_IsOK(res4)) {
+      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_sf_mathieu_ce" "', argument " "4"" of type '" "gsl_sf_result *""'"); 
+    }
+    arg4 = (gsl_sf_result *)(argp4);
+    result = (int)gsl_sf_mathieu_ce(arg1,arg2,arg3,arg4);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_se) {
+  {
+    int arg1 ;
+    double arg2 ;
+    double arg3 ;
+    gsl_sf_result *arg4 = (gsl_sf_result *) 0 ;
+    int val1 ;
+    int ecode1 = 0 ;
+    double val2 ;
+    int ecode2 = 0 ;
+    double val3 ;
+    int ecode3 = 0 ;
+    void *argp4 = 0 ;
+    int res4 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 4) || (items > 4)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_se(order,qq,zz,result);");
+    }
+    ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_sf_mathieu_se" "', argument " "1"" of type '" "int""'");
+    } 
+    arg1 = (int)(val1);
+    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sf_mathieu_se" "', argument " "2"" of type '" "double""'");
+    } 
+    arg2 = (double)(val2);
+    ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_sf_mathieu_se" "', argument " "3"" of type '" "double""'");
+    } 
+    arg3 = (double)(val3);
+    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_gsl_sf_result_struct, 0 |  0 );
+    if (!SWIG_IsOK(res4)) {
+      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_sf_mathieu_se" "', argument " "4"" of type '" "gsl_sf_result *""'"); 
+    }
+    arg4 = (gsl_sf_result *)(argp4);
+    result = (int)gsl_sf_mathieu_se(arg1,arg2,arg3,arg4);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_ce_array) {
+  {
+    int arg1 ;
+    int arg2 ;
+    double arg3 ;
+    double arg4 ;
+    gsl_sf_mathieu_workspace *arg5 = (gsl_sf_mathieu_workspace *) 0 ;
+    double *arg6 ;
+    int val1 ;
+    int ecode1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    double val3 ;
+    int ecode3 = 0 ;
+    double val4 ;
+    int ecode4 = 0 ;
+    void *argp5 = 0 ;
+    int res5 = 0 ;
+    void *argp6 = 0 ;
+    int res6 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 6) || (items > 6)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_ce_array(nmin,nmax,qq,zz,work,result_array);");
+    }
+    ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_sf_mathieu_ce_array" "', argument " "1"" of type '" "int""'");
+    } 
+    arg1 = (int)(val1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sf_mathieu_ce_array" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_sf_mathieu_ce_array" "', argument " "3"" of type '" "double""'");
+    } 
+    arg3 = (double)(val3);
+    ecode4 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    if (!SWIG_IsOK(ecode4)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_sf_mathieu_ce_array" "', argument " "4"" of type '" "double""'");
+    } 
+    arg4 = (double)(val4);
+    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res5)) {
+      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_sf_mathieu_ce_array" "', argument " "5"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg5 = (gsl_sf_mathieu_workspace *)(argp5);
+    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_double, 0 |  0 );
+    if (!SWIG_IsOK(res6)) {
+      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_sf_mathieu_ce_array" "', argument " "6"" of type '" "double []""'"); 
+    } 
+    arg6 = (double *)(argp6);
+    result = (int)gsl_sf_mathieu_ce_array(arg1,arg2,arg3,arg4,arg5,arg6);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_se_array) {
+  {
+    int arg1 ;
+    int arg2 ;
+    double arg3 ;
+    double arg4 ;
+    gsl_sf_mathieu_workspace *arg5 = (gsl_sf_mathieu_workspace *) 0 ;
+    double *arg6 ;
+    int val1 ;
+    int ecode1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    double val3 ;
+    int ecode3 = 0 ;
+    double val4 ;
+    int ecode4 = 0 ;
+    void *argp5 = 0 ;
+    int res5 = 0 ;
+    void *argp6 = 0 ;
+    int res6 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 6) || (items > 6)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_se_array(nmin,nmax,qq,zz,work,result_array);");
+    }
+    ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_sf_mathieu_se_array" "', argument " "1"" of type '" "int""'");
+    } 
+    arg1 = (int)(val1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sf_mathieu_se_array" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_sf_mathieu_se_array" "', argument " "3"" of type '" "double""'");
+    } 
+    arg3 = (double)(val3);
+    ecode4 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    if (!SWIG_IsOK(ecode4)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_sf_mathieu_se_array" "', argument " "4"" of type '" "double""'");
+    } 
+    arg4 = (double)(val4);
+    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res5)) {
+      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_sf_mathieu_se_array" "', argument " "5"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg5 = (gsl_sf_mathieu_workspace *)(argp5);
+    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_double, 0 |  0 );
+    if (!SWIG_IsOK(res6)) {
+      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_sf_mathieu_se_array" "', argument " "6"" of type '" "double []""'"); 
+    } 
+    arg6 = (double *)(argp6);
+    result = (int)gsl_sf_mathieu_se_array(arg1,arg2,arg3,arg4,arg5,arg6);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_Mc) {
+  {
+    int arg1 ;
+    int arg2 ;
+    double arg3 ;
+    double arg4 ;
+    gsl_sf_result *arg5 = (gsl_sf_result *) 0 ;
+    int val1 ;
+    int ecode1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    double val3 ;
+    int ecode3 = 0 ;
+    double val4 ;
+    int ecode4 = 0 ;
+    void *argp5 = 0 ;
+    int res5 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 5) || (items > 5)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_Mc(kind,order,qq,zz,result);");
+    }
+    ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_sf_mathieu_Mc" "', argument " "1"" of type '" "int""'");
+    } 
+    arg1 = (int)(val1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sf_mathieu_Mc" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_sf_mathieu_Mc" "', argument " "3"" of type '" "double""'");
+    } 
+    arg3 = (double)(val3);
+    ecode4 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    if (!SWIG_IsOK(ecode4)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_sf_mathieu_Mc" "', argument " "4"" of type '" "double""'");
+    } 
+    arg4 = (double)(val4);
+    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_gsl_sf_result_struct, 0 |  0 );
+    if (!SWIG_IsOK(res5)) {
+      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_sf_mathieu_Mc" "', argument " "5"" of type '" "gsl_sf_result *""'"); 
+    }
+    arg5 = (gsl_sf_result *)(argp5);
+    result = (int)gsl_sf_mathieu_Mc(arg1,arg2,arg3,arg4,arg5);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_Ms) {
+  {
+    int arg1 ;
+    int arg2 ;
+    double arg3 ;
+    double arg4 ;
+    gsl_sf_result *arg5 = (gsl_sf_result *) 0 ;
+    int val1 ;
+    int ecode1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    double val3 ;
+    int ecode3 = 0 ;
+    double val4 ;
+    int ecode4 = 0 ;
+    void *argp5 = 0 ;
+    int res5 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 5) || (items > 5)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_Ms(kind,order,qq,zz,result);");
+    }
+    ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_sf_mathieu_Ms" "', argument " "1"" of type '" "int""'");
+    } 
+    arg1 = (int)(val1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sf_mathieu_Ms" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    ecode3 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_sf_mathieu_Ms" "', argument " "3"" of type '" "double""'");
+    } 
+    arg3 = (double)(val3);
+    ecode4 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    if (!SWIG_IsOK(ecode4)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_sf_mathieu_Ms" "', argument " "4"" of type '" "double""'");
+    } 
+    arg4 = (double)(val4);
+    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_gsl_sf_result_struct, 0 |  0 );
+    if (!SWIG_IsOK(res5)) {
+      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_sf_mathieu_Ms" "', argument " "5"" of type '" "gsl_sf_result *""'"); 
+    }
+    arg5 = (gsl_sf_result *)(argp5);
+    result = (int)gsl_sf_mathieu_Ms(arg1,arg2,arg3,arg4,arg5);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_Mc_array) {
+  {
+    int arg1 ;
+    int arg2 ;
+    int arg3 ;
+    double arg4 ;
+    double arg5 ;
+    gsl_sf_mathieu_workspace *arg6 = (gsl_sf_mathieu_workspace *) 0 ;
+    double *arg7 ;
+    int val1 ;
+    int ecode1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int val3 ;
+    int ecode3 = 0 ;
+    double val4 ;
+    int ecode4 = 0 ;
+    double val5 ;
+    int ecode5 = 0 ;
+    void *argp6 = 0 ;
+    int res6 = 0 ;
+    void *argp7 = 0 ;
+    int res7 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 7) || (items > 7)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_Mc_array(kind,nmin,nmax,qq,zz,work,result_array);");
+    }
+    ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_sf_mathieu_Mc_array" "', argument " "1"" of type '" "int""'");
+    } 
+    arg1 = (int)(val1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sf_mathieu_Mc_array" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_sf_mathieu_Mc_array" "', argument " "3"" of type '" "int""'");
+    } 
+    arg3 = (int)(val3);
+    ecode4 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    if (!SWIG_IsOK(ecode4)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_sf_mathieu_Mc_array" "', argument " "4"" of type '" "double""'");
+    } 
+    arg4 = (double)(val4);
+    ecode5 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
+    if (!SWIG_IsOK(ecode5)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "gsl_sf_mathieu_Mc_array" "', argument " "5"" of type '" "double""'");
+    } 
+    arg5 = (double)(val5);
+    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res6)) {
+      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_sf_mathieu_Mc_array" "', argument " "6"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg6 = (gsl_sf_mathieu_workspace *)(argp6);
+    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_double, 0 |  0 );
+    if (!SWIG_IsOK(res7)) {
+      SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_sf_mathieu_Mc_array" "', argument " "7"" of type '" "double []""'"); 
+    } 
+    arg7 = (double *)(argp7);
+    result = (int)gsl_sf_mathieu_Mc_array(arg1,arg2,arg3,arg4,arg5,arg6,arg7);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_gsl_sf_mathieu_Ms_array) {
+  {
+    int arg1 ;
+    int arg2 ;
+    int arg3 ;
+    double arg4 ;
+    double arg5 ;
+    gsl_sf_mathieu_workspace *arg6 = (gsl_sf_mathieu_workspace *) 0 ;
+    double *arg7 ;
+    int val1 ;
+    int ecode1 = 0 ;
+    int val2 ;
+    int ecode2 = 0 ;
+    int val3 ;
+    int ecode3 = 0 ;
+    double val4 ;
+    int ecode4 = 0 ;
+    double val5 ;
+    int ecode5 = 0 ;
+    void *argp6 = 0 ;
+    int res6 = 0 ;
+    void *argp7 = 0 ;
+    int res7 = 0 ;
+    int argvi = 0;
+    int result;
+    dXSARGS;
+    
+    if ((items < 7) || (items > 7)) {
+      SWIG_croak("Usage: gsl_sf_mathieu_Ms_array(kind,nmin,nmax,qq,zz,work,result_array);");
+    }
+    ecode1 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
+    if (!SWIG_IsOK(ecode1)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_sf_mathieu_Ms_array" "', argument " "1"" of type '" "int""'");
+    } 
+    arg1 = (int)(val1);
+    ecode2 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sf_mathieu_Ms_array" "', argument " "2"" of type '" "int""'");
+    } 
+    arg2 = (int)(val2);
+    ecode3 = SWIG_AsVal_int SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_sf_mathieu_Ms_array" "', argument " "3"" of type '" "int""'");
+    } 
+    arg3 = (int)(val3);
+    ecode4 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    if (!SWIG_IsOK(ecode4)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_sf_mathieu_Ms_array" "', argument " "4"" of type '" "double""'");
+    } 
+    arg4 = (double)(val4);
+    ecode5 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
+    if (!SWIG_IsOK(ecode5)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "gsl_sf_mathieu_Ms_array" "', argument " "5"" of type '" "double""'");
+    } 
+    arg5 = (double)(val5);
+    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_gsl_sf_mathieu_workspace, 0 |  0 );
+    if (!SWIG_IsOK(res6)) {
+      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_sf_mathieu_Ms_array" "', argument " "6"" of type '" "gsl_sf_mathieu_workspace *""'"); 
+    }
+    arg6 = (gsl_sf_mathieu_workspace *)(argp6);
+    res7 = SWIG_ConvertPtr(ST(6), &argp7,SWIGTYPE_p_double, 0 |  0 );
+    if (!SWIG_IsOK(res7)) {
+      SWIG_exception_fail(SWIG_ArgError(res7), "in method '" "gsl_sf_mathieu_Ms_array" "', argument " "7"" of type '" "double []""'"); 
+    } 
+    arg7 = (double *)(argp7);
+    result = (int)gsl_sf_mathieu_Ms_array(arg1,arg2,arg3,arg4,arg5,arg6,arg7);
+    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
+    
+    
+    
+    
+    
+    
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    
+    
+    
+    
+    
+    SWIG_croak_null();
+  }
+}
+
+
 XS(_wrap_gsl_sf_pow_int_e) {
   {
     double arg1 ;
@@ -23001,29 +25053,45 @@ XS(_wrap_gsl_sf_eta) {
 
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_gsl_eigen_symmv_workspace = {"_p_gsl_eigen_symmv_workspace", "gsl_eigen_symmv_workspace *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_gsl_matrix = {"_p_gsl_matrix", "gsl_matrix *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_gsl_sf_mathieu_workspace = {"_p_gsl_sf_mathieu_workspace", "gsl_sf_mathieu_workspace *", 0, 0, (void*)"Math::GSL::SF::gsl_sf_mathieu_workspace", 0};
 static swig_type_info _swigt__p_gsl_sf_result_e10_struct = {"_p_gsl_sf_result_e10_struct", "gsl_sf_result_e10 *|struct gsl_sf_result_e10_struct *|gsl_sf_result_e10_struct *", 0, 0, (void*)"Math::GSL::SF::gsl_sf_result_e10_struct", 0};
 static swig_type_info _swigt__p_gsl_sf_result_struct = {"_p_gsl_sf_result_struct", "gsl_sf_result *|struct gsl_sf_result_struct *|gsl_sf_result_struct *", 0, 0, (void*)"Math::GSL::SF::gsl_sf_result_struct", 0};
+static swig_type_info _swigt__p_gsl_vector = {"_p_gsl_vector", "gsl_vector *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_int = {"_p_unsigned_int", "unsigned int *|gsl_mode_t *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_char,
   &_swigt__p_double,
+  &_swigt__p_gsl_eigen_symmv_workspace,
+  &_swigt__p_gsl_matrix,
+  &_swigt__p_gsl_sf_mathieu_workspace,
   &_swigt__p_gsl_sf_result_e10_struct,
   &_swigt__p_gsl_sf_result_struct,
+  &_swigt__p_gsl_vector,
   &_swigt__p_unsigned_int,
 };
 
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_gsl_eigen_symmv_workspace[] = {  {&_swigt__p_gsl_eigen_symmv_workspace, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_gsl_matrix[] = {  {&_swigt__p_gsl_matrix, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_gsl_sf_mathieu_workspace[] = {  {&_swigt__p_gsl_sf_mathieu_workspace, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_sf_result_e10_struct[] = {  {&_swigt__p_gsl_sf_result_e10_struct, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_sf_result_struct[] = {  {&_swigt__p_gsl_sf_result_struct, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_gsl_vector[] = {  {&_swigt__p_gsl_vector, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_int[] = {  {&_swigt__p_unsigned_int, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_char,
   _swigc__p_double,
+  _swigc__p_gsl_eigen_symmv_workspace,
+  _swigc__p_gsl_matrix,
+  _swigc__p_gsl_sf_mathieu_workspace,
   _swigc__p_gsl_sf_result_e10_struct,
   _swigc__p_gsl_sf_result_struct,
+  _swigc__p_gsl_vector,
   _swigc__p_unsigned_int,
 };
 
@@ -23155,7 +25223,6 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::SFc::gsl_sf_bessel_Inu", _wrap_gsl_sf_bessel_Inu},
 {"Math::GSL::SFc::gsl_sf_bessel_Knu_scaled_e", _wrap_gsl_sf_bessel_Knu_scaled_e},
 {"Math::GSL::SFc::gsl_sf_bessel_Knu_scaled", _wrap_gsl_sf_bessel_Knu_scaled},
-{"Math::GSL::SFc::gsl_sf_bessel_Knu_scaled_e10_e", _wrap_gsl_sf_bessel_Knu_scaled_e10_e},
 {"Math::GSL::SFc::gsl_sf_bessel_Knu_e", _wrap_gsl_sf_bessel_Knu_e},
 {"Math::GSL::SFc::gsl_sf_bessel_Knu", _wrap_gsl_sf_bessel_Knu},
 {"Math::GSL::SFc::gsl_sf_bessel_lnKnu_e", _wrap_gsl_sf_bessel_lnKnu_e},
@@ -23453,6 +25520,56 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::SFc::gsl_sf_log_1plusx", _wrap_gsl_sf_log_1plusx},
 {"Math::GSL::SFc::gsl_sf_log_1plusx_mx_e", _wrap_gsl_sf_log_1plusx_mx_e},
 {"Math::GSL::SFc::gsl_sf_log_1plusx_mx", _wrap_gsl_sf_log_1plusx_mx},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_size_set", _wrap_gsl_sf_mathieu_workspace_size_set},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_size_get", _wrap_gsl_sf_mathieu_workspace_size_get},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_even_order_set", _wrap_gsl_sf_mathieu_workspace_even_order_set},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_even_order_get", _wrap_gsl_sf_mathieu_workspace_even_order_get},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_odd_order_set", _wrap_gsl_sf_mathieu_workspace_odd_order_set},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_odd_order_get", _wrap_gsl_sf_mathieu_workspace_odd_order_get},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_extra_values_set", _wrap_gsl_sf_mathieu_workspace_extra_values_set},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_extra_values_get", _wrap_gsl_sf_mathieu_workspace_extra_values_get},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_qa_set", _wrap_gsl_sf_mathieu_workspace_qa_set},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_qa_get", _wrap_gsl_sf_mathieu_workspace_qa_get},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_qb_set", _wrap_gsl_sf_mathieu_workspace_qb_set},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_qb_get", _wrap_gsl_sf_mathieu_workspace_qb_get},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_aa_set", _wrap_gsl_sf_mathieu_workspace_aa_set},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_aa_get", _wrap_gsl_sf_mathieu_workspace_aa_get},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_bb_set", _wrap_gsl_sf_mathieu_workspace_bb_set},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_bb_get", _wrap_gsl_sf_mathieu_workspace_bb_get},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_dd_set", _wrap_gsl_sf_mathieu_workspace_dd_set},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_dd_get", _wrap_gsl_sf_mathieu_workspace_dd_get},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_ee_set", _wrap_gsl_sf_mathieu_workspace_ee_set},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_ee_get", _wrap_gsl_sf_mathieu_workspace_ee_get},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_tt_set", _wrap_gsl_sf_mathieu_workspace_tt_set},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_tt_get", _wrap_gsl_sf_mathieu_workspace_tt_get},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_e2_set", _wrap_gsl_sf_mathieu_workspace_e2_set},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_e2_get", _wrap_gsl_sf_mathieu_workspace_e2_get},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_zz_set", _wrap_gsl_sf_mathieu_workspace_zz_set},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_zz_get", _wrap_gsl_sf_mathieu_workspace_zz_get},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_eval_set", _wrap_gsl_sf_mathieu_workspace_eval_set},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_eval_get", _wrap_gsl_sf_mathieu_workspace_eval_get},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_evec_set", _wrap_gsl_sf_mathieu_workspace_evec_set},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_evec_get", _wrap_gsl_sf_mathieu_workspace_evec_get},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_wmat_set", _wrap_gsl_sf_mathieu_workspace_wmat_set},
+{"Math::GSL::SFc::gsl_sf_mathieu_workspace_wmat_get", _wrap_gsl_sf_mathieu_workspace_wmat_get},
+{"Math::GSL::SFc::new_gsl_sf_mathieu_workspace", _wrap_new_gsl_sf_mathieu_workspace},
+{"Math::GSL::SFc::delete_gsl_sf_mathieu_workspace", _wrap_delete_gsl_sf_mathieu_workspace},
+{"Math::GSL::SFc::gsl_sf_mathieu_a_array", _wrap_gsl_sf_mathieu_a_array},
+{"Math::GSL::SFc::gsl_sf_mathieu_b_array", _wrap_gsl_sf_mathieu_b_array},
+{"Math::GSL::SFc::gsl_sf_mathieu_a", _wrap_gsl_sf_mathieu_a},
+{"Math::GSL::SFc::gsl_sf_mathieu_b", _wrap_gsl_sf_mathieu_b},
+{"Math::GSL::SFc::gsl_sf_mathieu_a_coeff", _wrap_gsl_sf_mathieu_a_coeff},
+{"Math::GSL::SFc::gsl_sf_mathieu_b_coeff", _wrap_gsl_sf_mathieu_b_coeff},
+{"Math::GSL::SFc::gsl_sf_mathieu_alloc", _wrap_gsl_sf_mathieu_alloc},
+{"Math::GSL::SFc::gsl_sf_mathieu_free", _wrap_gsl_sf_mathieu_free},
+{"Math::GSL::SFc::gsl_sf_mathieu_ce", _wrap_gsl_sf_mathieu_ce},
+{"Math::GSL::SFc::gsl_sf_mathieu_se", _wrap_gsl_sf_mathieu_se},
+{"Math::GSL::SFc::gsl_sf_mathieu_ce_array", _wrap_gsl_sf_mathieu_ce_array},
+{"Math::GSL::SFc::gsl_sf_mathieu_se_array", _wrap_gsl_sf_mathieu_se_array},
+{"Math::GSL::SFc::gsl_sf_mathieu_Mc", _wrap_gsl_sf_mathieu_Mc},
+{"Math::GSL::SFc::gsl_sf_mathieu_Ms", _wrap_gsl_sf_mathieu_Ms},
+{"Math::GSL::SFc::gsl_sf_mathieu_Mc_array", _wrap_gsl_sf_mathieu_Mc_array},
+{"Math::GSL::SFc::gsl_sf_mathieu_Ms_array", _wrap_gsl_sf_mathieu_Ms_array},
 {"Math::GSL::SFc::gsl_sf_pow_int_e", _wrap_gsl_sf_pow_int_e},
 {"Math::GSL::SFc::gsl_sf_pow_int", _wrap_gsl_sf_pow_int},
 {"Math::GSL::SFc::gsl_sf_psi_int_e", _wrap_gsl_sf_psi_int_e},
@@ -23840,17 +25957,17 @@ XS(SWIG_init) {
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/local/share/swig/2.0.4/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "GSL_POSZERO", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)((+0.0))));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)((+0))));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/local/share/swig/2.0.4/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "GSL_NEGZERO", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)((-0.0))));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)((-0))));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/local/share/swig/2.0.4/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "GSL_VERSION", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_FromCharPtr("1.15"));
+    sv_setsv(sv, SWIG_FromCharPtr("1.13"));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/local/share/swig/2.0.4/perl5/perltypemaps.swg,65,%set_constant@*/ do {
@@ -23888,6 +26005,12 @@ XS(SWIG_init) {
     sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(297)));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
+  /*@SWIG:/usr/local/share/swig/2.0.4/perl5/perltypemaps.swg,65,%set_constant@*/ do {
+    SV *sv = get_sv((char*) SWIG_prefix "GSL_SF_MATHIEU_COEFF", TRUE | 0x2 | GV_ADDMULTI);
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(100)));
+    SvREADONLY_on(sv);
+  } while(0) /*@SWIG@*/;
+  SWIG_TypeClientData(SWIGTYPE_p_gsl_sf_mathieu_workspace, (void*) "Math::GSL::SF::gsl_sf_mathieu_workspace");
   SWIG_TypeClientData(SWIGTYPE_p_gsl_sf_result_struct, (void*) "Math::GSL::SF::gsl_sf_result_struct");
   SWIG_TypeClientData(SWIGTYPE_p_gsl_sf_result_e10_struct, (void*) "Math::GSL::SF::gsl_sf_result_e10_struct");
   ST(0) = &PL_sv_yes;

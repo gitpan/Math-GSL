@@ -85,7 +85,6 @@ package Math::GSL::Matrix;
 *gsl_vector_div = *Math::GSL::Matrixc::gsl_vector_div;
 *gsl_vector_scale = *Math::GSL::Matrixc::gsl_vector_scale;
 *gsl_vector_add_constant = *Math::GSL::Matrixc::gsl_vector_add_constant;
-*gsl_vector_equal = *Math::GSL::Matrixc::gsl_vector_equal;
 *gsl_vector_isnull = *Math::GSL::Matrixc::gsl_vector_isnull;
 *gsl_vector_ispos = *Math::GSL::Matrixc::gsl_vector_ispos;
 *gsl_vector_isneg = *Math::GSL::Matrixc::gsl_vector_isneg;
@@ -145,7 +144,6 @@ package Math::GSL::Matrix;
 *gsl_matrix_max_index = *Math::GSL::Matrixc::gsl_matrix_max_index;
 *gsl_matrix_min_index = *Math::GSL::Matrixc::gsl_matrix_min_index;
 *gsl_matrix_minmax_index = *Math::GSL::Matrixc::gsl_matrix_minmax_index;
-*gsl_matrix_equal = *Math::GSL::Matrixc::gsl_matrix_equal;
 *gsl_matrix_isnull = *Math::GSL::Matrixc::gsl_matrix_isnull;
 *gsl_matrix_ispos = *Math::GSL::Matrixc::gsl_matrix_ispos;
 *gsl_matrix_isneg = *Math::GSL::Matrixc::gsl_matrix_isneg;
@@ -216,7 +214,6 @@ package Math::GSL::Matrix;
 *gsl_matrix_int_max_index = *Math::GSL::Matrixc::gsl_matrix_int_max_index;
 *gsl_matrix_int_min_index = *Math::GSL::Matrixc::gsl_matrix_int_min_index;
 *gsl_matrix_int_minmax_index = *Math::GSL::Matrixc::gsl_matrix_int_minmax_index;
-*gsl_matrix_int_equal = *Math::GSL::Matrixc::gsl_matrix_int_equal;
 *gsl_matrix_int_isnull = *Math::GSL::Matrixc::gsl_matrix_int_isnull;
 *gsl_matrix_int_ispos = *Math::GSL::Matrixc::gsl_matrix_int_ispos;
 *gsl_matrix_int_isneg = *Math::GSL::Matrixc::gsl_matrix_int_isneg;
@@ -281,7 +278,6 @@ package Math::GSL::Matrix;
 *gsl_matrix_complex_swap_rowcol = *Math::GSL::Matrixc::gsl_matrix_complex_swap_rowcol;
 *gsl_matrix_complex_transpose = *Math::GSL::Matrixc::gsl_matrix_complex_transpose;
 *gsl_matrix_complex_transpose_memcpy = *Math::GSL::Matrixc::gsl_matrix_complex_transpose_memcpy;
-*gsl_matrix_complex_equal = *Math::GSL::Matrixc::gsl_matrix_complex_equal;
 *gsl_matrix_complex_isnull = *Math::GSL::Matrixc::gsl_matrix_complex_isnull;
 *gsl_matrix_complex_ispos = *Math::GSL::Matrixc::gsl_matrix_complex_ispos;
 *gsl_matrix_complex_isneg = *Math::GSL::Matrixc::gsl_matrix_complex_isneg;
@@ -352,7 +348,6 @@ package Math::GSL::Matrix;
 *gsl_matrix_char_max_index = *Math::GSL::Matrixc::gsl_matrix_char_max_index;
 *gsl_matrix_char_min_index = *Math::GSL::Matrixc::gsl_matrix_char_min_index;
 *gsl_matrix_char_minmax_index = *Math::GSL::Matrixc::gsl_matrix_char_minmax_index;
-*gsl_matrix_char_equal = *Math::GSL::Matrixc::gsl_matrix_char_equal;
 *gsl_matrix_char_isnull = *Math::GSL::Matrixc::gsl_matrix_char_isnull;
 *gsl_matrix_char_ispos = *Math::GSL::Matrixc::gsl_matrix_char_ispos;
 *gsl_matrix_char_isneg = *Math::GSL::Matrixc::gsl_matrix_char_isneg;
@@ -2331,7 +2326,7 @@ Other tags are also avaible, here is a complete list of all tags for this module
 For more informations on the functions, we refer you to the GSL offcial documentation
 L<http://www.gnu.org/software/gsl/manual/html_node/>
 
-Tip : search on google: site:http://www.gnu.org/software/gsl/manual/html_node/name_of_the_function_you_want
+
 
 =head1 EXAMPLES
 
@@ -2392,11 +2387,11 @@ Tip : search on google: site:http://www.gnu.org/software/gsl/manual/html_node/na
 
 =head1 AUTHORS
 
-Jonathan Leto <jonathan@leto.net> and Thierry Moisan <thierry.moisan@gmail.com>
+Jonathan "Duke" Leto <jonathan@leto.net> and Thierry Moisan <thierry.moisan@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2008-2009 Jonathan Leto and Thierry Moisan
+Copyright (C) 2008-2011 Jonathan "Duke" Leto and Thierry Moisan
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

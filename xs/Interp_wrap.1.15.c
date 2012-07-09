@@ -1556,15 +1556,6 @@ SWIG_From_int  SWIG_PERL_DECL_ARGS_1(int value)
 }
 
 
-SWIGINTERNINLINE SV *
-SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
-{    
-  SV *obj = sv_newmortal();
-  sv_setnv(obj, value);
-  return obj;
-}
-
-
     #include "gsl/gsl_nan.h"
     #include "gsl/gsl_math.h"
     #include "gsl/gsl_monte.h"
@@ -1856,6 +1847,15 @@ SWIGINTERNINLINE SV *
 SWIG_From_size_t  SWIG_PERL_DECL_ARGS_1(size_t value)
 {    
   return SWIG_From_unsigned_SS_long  SWIG_PERL_CALL_ARGS_1((unsigned long)(value));
+}
+
+
+SWIGINTERNINLINE SV *
+SWIG_From_double  SWIG_PERL_DECL_ARGS_1(double value)
+{    
+  SV *obj = sv_newmortal();
+  sv_setnv(obj, value);
+  return obj;
 }
 
 
@@ -2899,34 +2899,6 @@ XS(_wrap_gsl_interp_min_size) {
     }
     arg1 = (gsl_interp *)(argp1);
     result = (unsigned int)gsl_interp_min_size((gsl_interp const *)arg1);
-    ST(argvi) = SWIG_From_unsigned_SS_int  SWIG_PERL_CALL_ARGS_1((unsigned int)(result)); argvi++ ;
-    
-    XSRETURN(argvi);
-  fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_interp_type_min_size) {
-  {
-    gsl_interp_type *arg1 = (gsl_interp_type *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    int argvi = 0;
-    unsigned int result;
-    dXSARGS;
-    
-    if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_interp_type_min_size(T);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_interp_type, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_interp_type_min_size" "', argument " "1"" of type '" "gsl_interp_type const *""'"); 
-    }
-    arg1 = (gsl_interp_type *)(argp1);
-    result = (unsigned int)gsl_interp_type_min_size((gsl_interp_type const *)arg1);
     ST(argvi) = SWIG_From_unsigned_SS_int  SWIG_PERL_CALL_ARGS_1((unsigned int)(result)); argvi++ ;
     
     XSRETURN(argvi);
@@ -4043,7 +4015,6 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::Interpc::gsl_interp_init", _wrap_gsl_interp_init},
 {"Math::GSL::Interpc::gsl_interp_name", _wrap_gsl_interp_name},
 {"Math::GSL::Interpc::gsl_interp_min_size", _wrap_gsl_interp_min_size},
-{"Math::GSL::Interpc::gsl_interp_type_min_size", _wrap_gsl_interp_type_min_size},
 {"Math::GSL::Interpc::gsl_interp_eval_e", _wrap_gsl_interp_eval_e},
 {"Math::GSL::Interpc::gsl_interp_eval", _wrap_gsl_interp_eval},
 {"Math::GSL::Interpc::gsl_interp_eval_deriv_e", _wrap_gsl_interp_eval_deriv_e},
@@ -4361,12 +4332,12 @@ XS(SWIG_init) {
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/local/share/swig/2.0.4/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "GSL_POSZERO", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)((+0.0))));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)((+0))));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   /*@SWIG:/usr/local/share/swig/2.0.4/perl5/perltypemaps.swg,65,%set_constant@*/ do {
     SV *sv = get_sv((char*) SWIG_prefix "GSL_NEGZERO", TRUE | 0x2 | GV_ADDMULTI);
-    sv_setsv(sv, SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)((-0.0))));
+    sv_setsv(sv, SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)((-0))));
     SvREADONLY_on(sv);
   } while(0) /*@SWIG@*/;
   SWIG_TypeClientData(SWIGTYPE_p_gsl_interp_accel, (void*) "Math::GSL::Interp::gsl_interp_accel");

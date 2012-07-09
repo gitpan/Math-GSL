@@ -4,9 +4,9 @@
       "Jonathan Leto <jonathan@leto.net>"
    ],
    "dynamic_config" : 1,
-   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.110580",
+   "generated_by" : "Module::Build version 0.38, CPAN::Meta::Converter version 2.120921",
    "license" : [
-      "gpl_1"
+      "open_source"
    ],
    "meta-spec" : {
       "url" : "http://search.cpan.org/perldoc?CPAN::Meta::Spec",
@@ -18,7 +18,7 @@
          "requires" : {
             "Test::Class" : "0.12",
             "Test::Exception" : "0.21",
-            "Test::Most" : 0
+            "Test::Most" : "0"
          }
       },
       "configure" : {
@@ -30,7 +30,7 @@
       "runtime" : {
          "requires" : {
             "ExtUtils::PkgConfig" : "1.03",
-            "Scalar::Util" : 0,
+            "Scalar::Util" : "0",
             "perl" : "v5.8.0",
             "version" : "0.77"
          }
@@ -39,7 +39,7 @@
    "provides" : {
       "Math::GSL" : {
          "file" : "lib/Math/GSL.pm",
-         "version" : "0.26"
+         "version" : "0.27"
       },
       "Math::GSL::BLAS" : {
          "file" : "lib/Math/GSL/BLAS.pm",
@@ -410,18 +410,6 @@
          "version" : 0
       },
       "Math::GSL::Integration::gsl_function_vec_struct" : {
-         "file" : "lib/Math/GSL/Integration.pm",
-         "version" : 0
-      },
-      "Math::GSL::Integration::gsl_integration_cquad_ival" : {
-         "file" : "lib/Math/GSL/Integration.pm",
-         "version" : 0
-      },
-      "Math::GSL::Integration::gsl_integration_cquad_workspace" : {
-         "file" : "lib/Math/GSL/Integration.pm",
-         "version" : 0
-      },
-      "Math::GSL::Integration::gsl_integration_glfixed_table" : {
          "file" : "lib/Math/GSL/Integration.pm",
          "version" : 0
       },
@@ -893,6 +881,10 @@
          "file" : "lib/Math/GSL/SF.pm",
          "version" : 0
       },
+      "Math::GSL::SF::gsl_sf_mathieu_workspace" : {
+         "file" : "lib/Math/GSL/SF.pm",
+         "version" : 0
+      },
       "Math::GSL::SF::gsl_sf_result_e10_struct" : {
          "file" : "lib/Math/GSL/SF.pm",
          "version" : 0
@@ -1070,7 +1062,10 @@
    "resources" : {
       "license" : [
          "http://www.gnu.org/licenses/old-licenses/gpl-1.0.txt"
-      ]
+      ],
+      "repository" : {
+         "url" : "http://github.com/leto/math--gsl/tree/master"
+      }
    },
-   "version" : "0.26"
+   "version" : "0.27"
 }

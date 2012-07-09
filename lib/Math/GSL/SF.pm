@@ -163,7 +163,6 @@ package Math::GSL::SF;
 *gsl_sf_bessel_Inu = *Math::GSL::SFc::gsl_sf_bessel_Inu;
 *gsl_sf_bessel_Knu_scaled_e = *Math::GSL::SFc::gsl_sf_bessel_Knu_scaled_e;
 *gsl_sf_bessel_Knu_scaled = *Math::GSL::SFc::gsl_sf_bessel_Knu_scaled;
-*gsl_sf_bessel_Knu_scaled_e10_e = *Math::GSL::SFc::gsl_sf_bessel_Knu_scaled_e10_e;
 *gsl_sf_bessel_Knu_e = *Math::GSL::SFc::gsl_sf_bessel_Knu_e;
 *gsl_sf_bessel_Knu = *Math::GSL::SFc::gsl_sf_bessel_Knu;
 *gsl_sf_bessel_lnKnu_e = *Math::GSL::SFc::gsl_sf_bessel_lnKnu_e;
@@ -461,6 +460,22 @@ package Math::GSL::SF;
 *gsl_sf_log_1plusx = *Math::GSL::SFc::gsl_sf_log_1plusx;
 *gsl_sf_log_1plusx_mx_e = *Math::GSL::SFc::gsl_sf_log_1plusx_mx_e;
 *gsl_sf_log_1plusx_mx = *Math::GSL::SFc::gsl_sf_log_1plusx_mx;
+*gsl_sf_mathieu_a_array = *Math::GSL::SFc::gsl_sf_mathieu_a_array;
+*gsl_sf_mathieu_b_array = *Math::GSL::SFc::gsl_sf_mathieu_b_array;
+*gsl_sf_mathieu_a = *Math::GSL::SFc::gsl_sf_mathieu_a;
+*gsl_sf_mathieu_b = *Math::GSL::SFc::gsl_sf_mathieu_b;
+*gsl_sf_mathieu_a_coeff = *Math::GSL::SFc::gsl_sf_mathieu_a_coeff;
+*gsl_sf_mathieu_b_coeff = *Math::GSL::SFc::gsl_sf_mathieu_b_coeff;
+*gsl_sf_mathieu_alloc = *Math::GSL::SFc::gsl_sf_mathieu_alloc;
+*gsl_sf_mathieu_free = *Math::GSL::SFc::gsl_sf_mathieu_free;
+*gsl_sf_mathieu_ce = *Math::GSL::SFc::gsl_sf_mathieu_ce;
+*gsl_sf_mathieu_se = *Math::GSL::SFc::gsl_sf_mathieu_se;
+*gsl_sf_mathieu_ce_array = *Math::GSL::SFc::gsl_sf_mathieu_ce_array;
+*gsl_sf_mathieu_se_array = *Math::GSL::SFc::gsl_sf_mathieu_se_array;
+*gsl_sf_mathieu_Mc = *Math::GSL::SFc::gsl_sf_mathieu_Mc;
+*gsl_sf_mathieu_Ms = *Math::GSL::SFc::gsl_sf_mathieu_Ms;
+*gsl_sf_mathieu_Mc_array = *Math::GSL::SFc::gsl_sf_mathieu_Mc_array;
+*gsl_sf_mathieu_Ms_array = *Math::GSL::SFc::gsl_sf_mathieu_Ms_array;
 *gsl_sf_pow_int_e = *Math::GSL::SFc::gsl_sf_pow_int_e;
 *gsl_sf_pow_int = *Math::GSL::SFc::gsl_sf_pow_int;
 *gsl_sf_psi_int_e = *Math::GSL::SFc::gsl_sf_psi_int_e;
@@ -528,6 +543,75 @@ package Math::GSL::SF;
 *gsl_sf_eta_int = *Math::GSL::SFc::gsl_sf_eta_int;
 *gsl_sf_eta_e = *Math::GSL::SFc::gsl_sf_eta_e;
 *gsl_sf_eta = *Math::GSL::SFc::gsl_sf_eta;
+
+############# Class : Math::GSL::SF::gsl_sf_mathieu_workspace ##############
+
+package Math::GSL::SF::gsl_sf_mathieu_workspace;
+use vars qw(@ISA %OWNER %ITERATORS %BLESSEDMEMBERS);
+@ISA = qw( Math::GSL::SF );
+%OWNER = ();
+%ITERATORS = ();
+*swig_size_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_size_get;
+*swig_size_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_size_set;
+*swig_even_order_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_even_order_get;
+*swig_even_order_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_even_order_set;
+*swig_odd_order_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_odd_order_get;
+*swig_odd_order_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_odd_order_set;
+*swig_extra_values_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_extra_values_get;
+*swig_extra_values_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_extra_values_set;
+*swig_qa_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_qa_get;
+*swig_qa_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_qa_set;
+*swig_qb_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_qb_get;
+*swig_qb_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_qb_set;
+*swig_aa_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_aa_get;
+*swig_aa_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_aa_set;
+*swig_bb_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_bb_get;
+*swig_bb_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_bb_set;
+*swig_dd_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_dd_get;
+*swig_dd_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_dd_set;
+*swig_ee_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_ee_get;
+*swig_ee_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_ee_set;
+*swig_tt_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_tt_get;
+*swig_tt_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_tt_set;
+*swig_e2_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_e2_get;
+*swig_e2_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_e2_set;
+*swig_zz_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_zz_get;
+*swig_zz_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_zz_set;
+*swig_eval_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_eval_get;
+*swig_eval_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_eval_set;
+*swig_evec_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_evec_get;
+*swig_evec_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_evec_set;
+*swig_wmat_get = *Math::GSL::SFc::gsl_sf_mathieu_workspace_wmat_get;
+*swig_wmat_set = *Math::GSL::SFc::gsl_sf_mathieu_workspace_wmat_set;
+sub new {
+    my $pkg = shift;
+    my $self = Math::GSL::SFc::new_gsl_sf_mathieu_workspace(@_);
+    bless $self, $pkg if defined($self);
+}
+
+sub DESTROY {
+    return unless $_[0]->isa('HASH');
+    my $self = tied(%{$_[0]});
+    return unless defined $self;
+    delete $ITERATORS{$self};
+    if (exists $OWNER{$self}) {
+        Math::GSL::SFc::delete_gsl_sf_mathieu_workspace($self);
+        delete $OWNER{$self};
+    }
+}
+
+sub DISOWN {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    delete $OWNER{$ptr};
+}
+
+sub ACQUIRE {
+    my $self = shift;
+    my $ptr = tied(%$self);
+    $OWNER{$ptr} = 1;
+}
+
 
 ############# Class : Math::GSL::SF::gsl_sf_result_struct ##############
 
@@ -630,6 +714,7 @@ package Math::GSL::SF;
 *GSL_SF_GAMMA_XMAX = *Math::GSL::SFc::GSL_SF_GAMMA_XMAX;
 *GSL_SF_FACT_NMAX = *Math::GSL::SFc::GSL_SF_FACT_NMAX;
 *GSL_SF_DOUBLEFACT_NMAX = *Math::GSL::SFc::GSL_SF_DOUBLEFACT_NMAX;
+*GSL_SF_MATHIEU_COEFF = *Math::GSL::SFc::GSL_SF_MATHIEU_COEFF;
 
 
 @EXPORT_airy = qw/
@@ -1228,7 +1313,7 @@ Math::GSL::SF - Special Functions
 
 =head1 SYNOPSIS
 
-    use Math::GSL::SF qw /:all/;
+    use Math::GSL::SF qw/:all/;
 
 =head1 DESCRIPTION
 
@@ -1250,7 +1335,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_airy_Ai($x, $mode, $result)> 
 
-- These routines compute the Airy function Ai($x) with an accuracy specified by $mode. $mode should be $GSL_PREC_DOUBLE, $GSL_PREC_SINGLE or $GSL_PREC_APPROX. $result is a gsl_sf_result structure.
+ These routines compute the Airy function Ai($x) with an accuracy specified by $mode. $mode should be $GSL_PREC_DOUBLE, $GSL_PREC_SINGLE or $GSL_PREC_APPROX. $result is a gsl_sf_result structure.
 
 =back 
 
@@ -1260,7 +1345,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_airy_Bi($x, $mode)>
 
-- These routines compute the Airy function Bi($x) with an accuracy specified by $mode. $mode should be $GSL_PREC_DOUBLE, $GSL_PREC_SINGLE or $GSL_PREC_APPROX. $result is a gsl_sf_result structure.
+ These routines compute the Airy function Bi($x) with an accuracy specified by $mode. $mode should be $GSL_PREC_DOUBLE, $GSL_PREC_SINGLE or $GSL_PREC_APPROX. $result is a gsl_sf_result structure.
 
 =back
 
@@ -1270,7 +1355,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_airy_Ai_scaled($x, $mode)> 
 
-- These routines compute a scaled version of the Airy function S_A($x) Ai($x). For $x>0 the scaling factor S_A($x) is \exp(+(2/3) $x**(3/2)), and is 1 for $x<0. $result is a gsl_sf_result structure. 
+ These routines compute a scaled version of the Airy function S_A($x) Ai($x). For $x>0 the scaling factor S_A($x) is \exp(+(2/3) $x**(3/2)), and is 1 for $x<0. $result is a gsl_sf_result structure. 
 
 =back
 
@@ -1280,7 +1365,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_airy_Bi_scaled($x, $mode)>
 
-- These routines compute a scaled version of the Airy function S_B($x) Bi($x). For $x>0 the scaling factor S_B($x) is exp(-(2/3) $x**(3/2)), and is 1 for $x<0. $result is a gsl_sf_result structure.
+ These routines compute a scaled version of the Airy function S_B($x) Bi($x). For $x>0 the scaling factor S_B($x) is exp(-(2/3) $x**(3/2)), and is 1 for $x<0. $result is a gsl_sf_result structure.
 
 =back
 
@@ -1290,7 +1375,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_airy_Ai_deriv($x, $mode)>
 
-- These routines compute the Airy function derivative Ai'($x) with an accuracy specified by $mode. $result is a gsl_sf_result structure.
+ These routines compute the Airy function derivative Ai'($x) with an accuracy specified by $mode. $result is a gsl_sf_result structure.
 
 =back
 
@@ -1300,7 +1385,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_airy_Bi_deriv($x, $mode)>
 
--These routines compute the Airy function derivative Bi'($x) with an accuracy specified by $mode. $result is a gsl_sf_result structure.
+These routines compute the Airy function derivative Bi'($x) with an accuracy specified by $mode. $result is a gsl_sf_result structure.
 
 =back
 
@@ -1310,7 +1395,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_airy_Ai_deriv_scaled($x, $mode)>
 
--These routines compute the scaled Airy function derivative S_A(x) Ai'(x). For x>0 the scaling factor S_A(x) is \exp(+(2/3) x^(3/2)), and is 1 for x<0. $result is a gsl_sf_result structure.
+These routines compute the scaled Airy function derivative S_A(x) Ai'(x). For x>0 the scaling factor S_A(x) is \exp(+(2/3) x^(3/2)), and is 1 for x<0. $result is a gsl_sf_result structure.
 
 =back
 
@@ -1320,7 +1405,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_airy_Bi_deriv_scaled($x, $mode)>
 
--These routines compute the scaled Airy function derivative S_B(x) Bi'(x). For x>0 the scaling factor S_B(x) is exp(-(2/3) x^(3/2)), and is 1 for x<0. $result is a gsl_sf_result structure.
+These routines compute the scaled Airy function derivative S_B(x) Bi'(x). For x>0 the scaling factor S_B(x) is exp(-(2/3) x^(3/2)), and is 1 for x<0. $result is a gsl_sf_result structure.
 
 =back
 
@@ -1330,7 +1415,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_airy_zero_Ai($s)>
 
--These routines compute the location of the s-th zero of the Airy function Ai($x). $result is a gsl_sf_result structure.
+These routines compute the location of the s-th zero of the Airy function Ai($x). $result is a gsl_sf_result structure.
 
 =back
 
@@ -1340,7 +1425,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_airy_zero_Bi($s)>
 
--These routines compute the location of the s-th zero of the Airy function Bi($x). $result is a gsl_sf_result structure.
+These routines compute the location of the s-th zero of the Airy function Bi($x). $result is a gsl_sf_result structure.
 
 =back
 
@@ -1350,7 +1435,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_airy_zero_Ai_deriv($s)>
 
--These routines compute the location of the s-th zero of the Airy function derivative Ai'(x). $result is a gsl_sf_result structure.
+These routines compute the location of the s-th zero of the Airy function derivative Ai'(x). $result is a gsl_sf_result structure.
 
 =back
 
@@ -1360,7 +1445,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_airy_zero_Bi_deriv($s)>
 
-- These routines compute the location of the s-th zero of the Airy function derivative Bi'(x). $result is a gsl_sf_result structure.
+ These routines compute the location of the s-th zero of the Airy function derivative Bi'(x). $result is a gsl_sf_result structure.
 
 =back
 
@@ -1370,7 +1455,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_J0($x)>
 
--These routines compute the regular cylindrical Bessel function of zeroth order, J_0($x). $result is a gsl_sf_result structure.
+These routines compute the regular cylindrical Bessel function of zeroth order, J_0($x). $result is a gsl_sf_result structure.
 
 =back
 
@@ -1380,7 +1465,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_J1($x)>
 
-- These routines compute the regular cylindrical Bessel function of first order, J_1($x). $result is a gsl_sf_result structure.
+ These routines compute the regular cylindrical Bessel function of first order, J_1($x). $result is a gsl_sf_result structure.
 
 =back
 
@@ -1390,13 +1475,18 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_Jn($n, $x)>
 
--These routines compute the regular cylindrical Bessel function of order n, J_n($x).
+These routines compute the regular cylindrical Bessel function of order n, J_n($x).
 
 =back
 
 =over
 
-=item C<gsl_sf_bessel_Jn_array($nmin, $nmax, $x, $result_array)> - This routine computes the values of the regular cylindrical Bessel functions J_n($x) for n from $nmin to $nmax inclusive, storing the results in the array $result_array. The values are computed using recurrence relations for efficiency, and therefore may differ slightly from the exact values.
+=item C<gsl_sf_bessel_Jn_array($nmin, $nmax, $x, $result_array)> 
+
+This routine computes the values of the regular cylindrical Bessel functions
+J_n($x) for n from $nmin to $nmax inclusive, storing the results in the array
+$result_array. The values are computed using recurrence relations for
+efficiency, and therefore may differ slightly from the exact values.
 
 =back
 
@@ -1406,7 +1496,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_Y0($x)>
 
-- These routines compute the irregular spherical Bessel function of zeroth order, y_0(x) = -\cos(x)/x.
+ These routines compute the irregular spherical Bessel function of zeroth order, y_0(x) = -\cos(x)/x.
 
 =back
 
@@ -1416,7 +1506,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_Y1($x)>
 
--These routines compute the irregular spherical Bessel function of first order, y_1(x) = -(\cos(x)/x + \sin(x))/x. 
+These routines compute the irregular spherical Bessel function of first order, y_1(x) = -(\cos(x)/x + \sin(x))/x. 
 
 =back
 
@@ -1426,7 +1516,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_Yn($n, $x)>
 
--These routines compute the irregular cylindrical Bessel function of order $n, Y_n(x), for x>0. 
+These routines compute the irregular cylindrical Bessel function of order $n, Y_n(x), for x>0. 
 
 =back
 
@@ -1434,7 +1524,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_Yn_array>
 
--
+
 
 =back
 
@@ -1444,7 +1534,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_I0($x)>
 
--These routines compute the regular modified cylindrical Bessel function of zeroth order, I_0(x). 
+These routines compute the regular modified cylindrical Bessel function of zeroth order, I_0(x). 
 
 =back
 
@@ -1454,7 +1544,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_I1($x)>
 
--These routines compute the regular modified cylindrical Bessel function of first order, I_1(x). 
+These routines compute the regular modified cylindrical Bessel function of first order, I_1(x). 
 
 =back
 
@@ -1464,7 +1554,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_In($n, $x)>
 
--These routines compute the regular modified cylindrical Bessel function of order $n, I_n(x). 
+These routines compute the regular modified cylindrical Bessel function of order $n, I_n(x). 
 
 =back
 
@@ -1472,7 +1562,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_In_array>
 
--
+
 
 =back
 
@@ -1482,7 +1572,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_I0_scaled($x)>
 
--These routines compute the scaled regular modified cylindrical Bessel function of zeroth order \exp(-|x|) I_0(x). 
+These routines compute the scaled regular modified cylindrical Bessel function of zeroth order \exp(-|x|) I_0(x). 
 
 =back
 
@@ -1492,7 +1582,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_I1_scaled($x)>
 
--These routines compute the scaled regular modified cylindrical Bessel function of first order \exp(-|x|) I_1(x). 
+These routines compute the scaled regular modified cylindrical Bessel function of first order \exp(-|x|) I_1(x). 
 
 =back
 
@@ -1502,7 +1592,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_In_scaled($n, $x)>
 
--These routines compute the scaled regular modified cylindrical Bessel function of order $n, \exp(-|x|) I_n(x) 
+These routines compute the scaled regular modified cylindrical Bessel function of order $n, \exp(-|x|) I_n(x) 
 
 =back
 
@@ -1510,7 +1600,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_In_scaled_array>
 
--
+
 
 =back
 
@@ -1520,7 +1610,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_K0($x)>
 
--These routines compute the irregular modified cylindrical Bessel function of zeroth order, K_0(x), for x > 0.
+These routines compute the irregular modified cylindrical Bessel function of zeroth order, K_0(x), for x > 0.
 
 =back
 
@@ -1530,7 +1620,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_K1($x)>
 
--These routines compute the irregular modified cylindrical Bessel function of first order, K_1(x), for x > 0. 
+These routines compute the irregular modified cylindrical Bessel function of first order, K_1(x), for x > 0. 
 
 =back
 
@@ -1540,7 +1630,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_Kn($n, $x)>
 
--These routines compute the irregular modified cylindrical Bessel function of order $n, K_n(x), for x > 0.
+These routines compute the irregular modified cylindrical Bessel function of order $n, K_n(x), for x > 0.
 
 =back
 
@@ -1548,7 +1638,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_Kn_array>
 
--
+
 
 =back
 
@@ -1558,7 +1648,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_K0_scaled($x)>
 
--These routines compute the scaled irregular modified cylindrical Bessel function of zeroth order \exp(x) K_0(x) for x>0. 
+These routines compute the scaled irregular modified cylindrical Bessel function of zeroth order \exp(x) K_0(x) for x>0. 
 
 =back
 
@@ -1568,7 +1658,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_K1_scaled($x)>
 
--
+
 
 =back
 
@@ -1578,7 +1668,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_Kn_scaled($n, $x)>
 
--
+
 
 =back
 
@@ -1586,7 +1676,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_Kn_scaled_array >
 
--
+
 
 =back
 
@@ -1596,7 +1686,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_j0($x)>
 
--
+
 
 =back
 
@@ -1606,7 +1696,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_j1($x)>
 
--
+
 
 =back
 
@@ -1616,7 +1706,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_j2($x)>
 
--
+
 
 =back
 
@@ -1626,7 +1716,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_jl($l, $x)>
 
--
+
 
 =back
 
@@ -1634,7 +1724,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_jl_array>
 
--
+
 
 =back
 
@@ -1642,7 +1732,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_jl_steed_array>
 
--
+
 
 =back
 
@@ -1652,7 +1742,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_y0($x)>
 
--
+
 
 =back
 
@@ -1662,7 +1752,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_y1($x)>
 
--
+
 
 =back
 
@@ -1672,7 +1762,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_y2($x)>
 
--
+
 
 =back
 
@@ -1682,7 +1772,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_yl($l, $x)>
 
--
+
 
 =back
 
@@ -1690,7 +1780,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_yl_array>
 
--
+
 
 =back
 
@@ -1700,7 +1790,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_i0_scaled($x)>
 
--
+
 
 =back
 
@@ -1710,7 +1800,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_i1_scaled($x)>
 
--
+
 
 =back
 
@@ -1720,7 +1810,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_i2_scaled($x)>
 
--
+
 
 =back
 
@@ -1730,7 +1820,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_il_scaled($x)>
 
--
+
 
 =back
 
@@ -1738,7 +1828,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_il_scaled_array>
 
--
+
 
 =back
 
@@ -1748,7 +1838,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_k0_scale($x)>
 
--
+
 
 =back
 
@@ -1758,7 +1848,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_k1_scaled($x)>
 
--
+
 
 =back
 
@@ -1768,7 +1858,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_k2_scaled($x)>
 
--
+
 
 =back
 
@@ -1778,7 +1868,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_kl_scaled($l, $x)>
 
--
+
 
 =back
 
@@ -1786,7 +1876,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_kl_scaled_array>
 
--
+
 
 =back
 
@@ -1796,7 +1886,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_Jnu($nu, $x)>
 
--
+
 
 =back
 
@@ -1804,7 +1894,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_sequence_Jnu_e >
 
--
+
 
 =back
 
@@ -1814,7 +1904,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_Ynu($nu, $x)>
 
--
+
 
 =back
 
@@ -1824,7 +1914,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_Inu_scaled($nu, $x)>
 
--
+
 
 =back
 
@@ -1834,7 +1924,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_Inu($nu, $x)>
 
--
+
 
 =back
 
@@ -1844,7 +1934,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_Knu_scaled($nu, $x)>
 
--
+
 
 =back
 
@@ -1854,7 +1944,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_Knu($nu, $x)>
 
--
+
 
 =back
 
@@ -1864,7 +1954,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_lnKnu($nu, $x)>
 
--
+
 
 =back
 
@@ -1874,7 +1964,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_zero_J0($s)>
 
--
+
 
 =back
 
@@ -1884,7 +1974,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_zero_J1($s)>
 
--
+
 
 =back
 
@@ -1894,7 +1984,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_bessel_zero_Jnu($nu, $s)>
 
--
+
 
 =back
 
@@ -1904,7 +1994,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_clausen($x)>
 
--
+
 
 =back
 
@@ -1914,7 +2004,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_hydrogenicR_1($Z, $r)>
 
--
+
 
 =back
 
@@ -1924,7 +2014,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_hydrogenicR($n, $l, $Z, $r)>
 
--
+
 
 =back
 
@@ -1952,7 +2042,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_coupling_3j($two_ja, $two_jb, $two_jc, $two_ma, $two_mb, $two_mc)>
 
-- These routines compute the Wigner 3-j coefficient,
+ These routines compute the Wigner 3-j coefficient,
    (ja jb jc
     ma mb mc)
  where the arguments are given in half-integer units, ja = $two_ja/2, ma = $two_ma/2, etc. 
@@ -1965,7 +2055,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_coupling_6j($two_ja, $two_jb, $two_jc, $two_jd, $two_je, $two_jf)>
 
-- These routines compute the Wigner 6-j coefficient,
+ These routines compute the Wigner 6-j coefficient,
    {ja jb jc
     jd je jf}
  where the arguments are given in half-integer units, ja = $two_ja/2, ma = $two_ma/2, etc. 
@@ -1978,7 +2068,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_coupling_RacahW>
 
--
+
 
 =back
 
@@ -1988,7 +2078,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_coupling_9j($two_ja, $two_jb, $two_jc, $two_jd, $two_je, $two_jf, $two_jg, $two_jh, $two_ji)>
 
--These routines compute the Wigner 9-j coefficient,
+These routines compute the Wigner 9-j coefficient,
 
           {ja jb jc
            jd je jf
@@ -2003,7 +2093,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_dawson($x)>
 
--These routines compute the value of Dawson's integral for $x. 
+These routines compute the value of Dawson's integral for $x. 
 
 =back
 
@@ -2013,7 +2103,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_debye_1($x)>
 
--These routines compute the first-order Debye function D_1(x) = (1/x) \int_0^x dt (t/(e^t - 1)). 
+These routines compute the first-order Debye function D_1(x) = (1/x) \int_0^x dt (t/(e^t - 1)). 
 
 =back
 
@@ -2023,7 +2113,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_debye_2($x)>
 
--These routines compute the second-order Debye function D_2(x) = (2/x^2) \int_0^x dt (t^2/(e^t - 1)). 
+These routines compute the second-order Debye function D_2(x) = (2/x^2) \int_0^x dt (t^2/(e^t - 1)). 
 
 =back
 
@@ -2033,7 +2123,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_debye_3($x)>
 
--These routines compute the third-order Debye function D_3(x) = (3/x^3) \int_0^x dt (t^3/(e^t - 1)). 
+These routines compute the third-order Debye function D_3(x) = (3/x^3) \int_0^x dt (t^3/(e^t - 1)). 
 
 =back
 
@@ -2043,7 +2133,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_debye_4($x)>
 
--These routines compute the fourth-order Debye function D_4(x) = (4/x^4) \int_0^x dt (t^4/(e^t - 1)). 
+These routines compute the fourth-order Debye function D_4(x) = (4/x^4) \int_0^x dt (t^4/(e^t - 1)). 
 
 =back
 
@@ -2053,7 +2143,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_debye_5($x)>
 
--These routines compute the fifth-order Debye function D_5(x) = (5/x^5) \int_0^x dt (t^5/(e^t - 1)). 
+These routines compute the fifth-order Debye function D_5(x) = (5/x^5) \int_0^x dt (t^5/(e^t - 1)). 
 
 =back
 
@@ -2063,7 +2153,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_debye_6($x)>
 
--These routines compute the sixth-order Debye function D_6(x) = (6/x^6) \int_0^x dt (t^6/(e^t - 1)). 
+These routines compute the sixth-order Debye function D_6(x) = (6/x^6) \int_0^x dt (t^6/(e^t - 1)). 
 
 =back
 
@@ -2073,7 +2163,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_dilog($x)>
 
-- These routines compute the dilogarithm for a real argument. In Lewin's notation this is Li_2(x), the real part of the dilogarithm of a real x. It is defined by the integral representation Li_2(x) = - \Re \int_0^x ds \log(1-s) / s. Note that \Im(Li_2(x)) = 0 for x <= 1, and -\pi\log(x) for x > 1. Note that Abramowitz & Stegun refer to the Spence integral S(x)=Li_2(1-x) as the dilogarithm rather than Li_2(x). 
+ These routines compute the dilogarithm for a real argument. In Lewin's notation this is Li_2(x), the real part of the dilogarithm of a real x. It is defined by the integral representation Li_2(x) = - \Re \int_0^x ds \log(1-s) / s. Note that \Im(Li_2(x)) = 0 for x <= 1, and -\pi\log(x) for x > 1. Note that Abramowitz & Stegun refer to the Spence integral S(x)=Li_2(1-x) as the dilogarithm rather than Li_2(x). 
 
 =back
 
@@ -2095,7 +2185,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_multiply_err_e($x, $dx, $y, $dy, $result)> - This function multiplies $x and $y with associated absolute errors $dx and $dy. The product xy +/- xy \sqrt((dx/x)^2 +(dy/y)^2) is stored in $result. 
 
--
+
 
 =back
 
@@ -2106,7 +2196,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_ellint_Kcomp($k, $mode)>
 
--These routines compute the complete elliptic integral K($k) to the accuracy specified by the mode variable mode. Note that Abramowitz & Stegun define this function in terms of the parameter m = k^2. 
+These routines compute the complete elliptic integral K($k) to the accuracy specified by the mode variable mode. Note that Abramowitz & Stegun define this function in terms of the parameter m = k^2. 
 
 =back
 
@@ -2116,7 +2206,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_ellint_Ecomp($k, $mode)>
 
--
+
 
 =back
 
@@ -2126,7 +2216,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_ellint_Pcomp($k, $n, $mode)>
 
--
+
 
 =back
 
@@ -2136,7 +2226,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_ellint_Dcomp >
 
--
+
 
 =back
 
@@ -2146,7 +2236,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_ellint_F($phi, $k, $mode)>
 
--These routines compute the incomplete elliptic integral F($phi,$k) to the accuracy specified by the mode variable mode. Note that Abramowitz & Stegun define this function in terms of the parameter m = k^2.
+These routines compute the incomplete elliptic integral F($phi,$k) to the accuracy specified by the mode variable mode. Note that Abramowitz & Stegun define this function in terms of the parameter m = k^2.
 
 =back
 
@@ -2156,7 +2246,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_ellint_E($phi, $k, $mode)>
 
--These routines compute the incomplete elliptic integral E($phi,$k) to the accuracy specified by the mode variable mode. Note that Abramowitz & Stegun define this function in terms of the parameter m = k^2.
+These routines compute the incomplete elliptic integral E($phi,$k) to the accuracy specified by the mode variable mode. Note that Abramowitz & Stegun define this function in terms of the parameter m = k^2.
 
 =back
 
@@ -2166,7 +2256,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_ellint_P($phi, $k, $n, $mode)>
 
--These routines compute the incomplete elliptic integral \Pi(\phi,k,n) to the accuracy specified by the mode variable mode. Note that Abramowitz & Stegun define this function in terms of the parameters m = k^2 and \sin^2(\alpha) = k^2, with the change of sign n \to -n.
+These routines compute the incomplete elliptic integral \Pi(\phi,k,n) to the accuracy specified by the mode variable mode. Note that Abramowitz & Stegun define this function in terms of the parameters m = k^2 and \sin^2(\alpha) = k^2, with the change of sign n \to -n.
 
 =back
 
@@ -2176,7 +2266,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_ellint_D($phi, $k, $n, $mode)>
 
--These functions compute the incomplete elliptic integral D(\phi,k) which is defined through the Carlson form RD(x,y,z) by the following relation, D(\phi,k,n) = (1/3)(\sin(\phi))^3 RD (1-\sin^2(\phi), 1-k^2 \sin^2(\phi), 1). The argument $n is not used and will be removed in a future release.
+These functions compute the incomplete elliptic integral D(\phi,k) which is defined through the Carlson form RD(x,y,z) by the following relation, D(\phi,k,n) = (1/3)(\sin(\phi))^3 RD (1-\sin^2(\phi), 1-k^2 \sin^2(\phi), 1). The argument $n is not used and will be removed in a future release.
 
 =back
 
@@ -2186,7 +2276,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_ellint_RC($x, $y, $mode)>
 
-- These routines compute the incomplete elliptic integral RC($x,$y) to the accuracy specified by the mode variable $mode. 
+ These routines compute the incomplete elliptic integral RC($x,$y) to the accuracy specified by the mode variable $mode. 
 
 =back
 
@@ -2196,7 +2286,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_ellint_RD($x, $y, $z, $mode)>
 
-- These routines compute the incomplete elliptic integral RD($x,$y,$z) to the accuracy specified by the mode variable $mode.
+ These routines compute the incomplete elliptic integral RD($x,$y,$z) to the accuracy specified by the mode variable $mode.
 
 =back
 
@@ -2206,7 +2296,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_ellint_RF($x, $y, $z, $mode)>
 
-- These routines compute the incomplete elliptic integral RF($x,$y,$z) to the accuracy specified by the mode variable $mode. 
+ These routines compute the incomplete elliptic integral RF($x,$y,$z) to the accuracy specified by the mode variable $mode. 
 
 =back
 
@@ -2216,7 +2306,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_ellint_RJ($x, $y, $z, $p, $mode)>
 
-- These routines compute the incomplete elliptic integral RJ($x,$y,$z,$p) to the accuracy specified by the mode variable $mode. 
+ These routines compute the incomplete elliptic integral RJ($x,$y,$z,$p) to the accuracy specified by the mode variable $mode. 
 
 =back
 
@@ -2228,7 +2318,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_erfc($x)>
 
--These routines compute the complementary error function erfc(x) = 1 - erf(x) = (2/\sqrt(\pi)) \int_x^\infty \exp(-t^2). 
+These routines compute the complementary error function erfc(x) = 1 - erf(x) = (2/\sqrt(\pi)) \int_x^\infty \exp(-t^2). 
 
 =back
 
@@ -2238,7 +2328,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_log_erfc($x)>
 
--These routines compute the logarithm of the complementary error function \log(\erfc(x)).
+These routines compute the logarithm of the complementary error function \log(\erfc(x)).
 
 =back
 
@@ -2248,7 +2338,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_erf($x)>
 
--These routines compute the error function erf(x), where erf(x) = (2/\sqrt(\pi)) \int_0^x dt \exp(-t^2).
+These routines compute the error function erf(x), where erf(x) = (2/\sqrt(\pi)) \int_0^x dt \exp(-t^2).
 
 =back
 
@@ -2258,7 +2348,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_erf_Z($x)>
 
--These routines compute the Gaussian probability density function Z(x) = (1/\sqrt{2\pi}) \exp(-x^2/2).
+These routines compute the Gaussian probability density function Z(x) = (1/\sqrt{2\pi}) \exp(-x^2/2).
 
 =back
 
@@ -2268,7 +2358,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_erf_Q($x)>
 
-- These routines compute the upper tail of the Gaussian probability function Q(x) = (1/\sqrt{2\pi}) \int_x^\infty dt \exp(-t^2/2). The hazard function for the normal distribution, also known as the inverse Mill's ratio, is defined as, h(x) = Z(x)/Q(x) = \sqrt{2/\pi} \exp(-x^2 / 2) / \erfc(x/\sqrt 2) It decreases rapidly as x approaches -\infty and asymptotes to h(x) \sim x as x approaches +\infty. 
+ These routines compute the upper tail of the Gaussian probability function Q(x) = (1/\sqrt{2\pi}) \int_x^\infty dt \exp(-t^2/2). The hazard function for the normal distribution, also known as the inverse Mill's ratio, is defined as, h(x) = Z(x)/Q(x) = \sqrt{2/\pi} \exp(-x^2 / 2) / \erfc(x/\sqrt 2) It decreases rapidly as x approaches -\infty and asymptotes to h(x) \sim x as x approaches +\infty. 
 
 =back
 
@@ -2278,7 +2368,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_hazard($x)>
 
-- These routines compute the hazard function for the normal distribution.
+ These routines compute the hazard function for the normal distribution.
 
 =back
 
@@ -2288,7 +2378,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_exp($x)>
 
-- These routines provide an exponential function \exp(x) using GSL semantics and error checking. 
+ These routines provide an exponential function \exp(x) using GSL semantics and error checking. 
 
 =back
 
@@ -2304,7 +2394,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_exp_mult>
 
--
+
 
 =back
 
@@ -2320,7 +2410,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_expm1($x)>
 
--These routines compute the quantity \exp(x)-1 using an algorithm that is accurate for small x. 
+These routines compute the quantity \exp(x)-1 using an algorithm that is accurate for small x. 
 
 =back
 
@@ -2330,7 +2420,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_exprel($x)>
 
--These routines compute the quantity (\exp(x)-1)/x using an algorithm that is accurate for small x. For small x the algorithm is based on the expansion (\exp(x)-1)/x = 1 + x/2 + x^2/(2*3) + x^3/(2*3*4) + \dots. 
+These routines compute the quantity (\exp(x)-1)/x using an algorithm that is accurate for small x. For small x the algorithm is based on the expansion (\exp(x)-1)/x = 1 + x/2 + x^2/(2*3) + x^3/(2*3*4) + \dots. 
 
 =back
 
@@ -2340,7 +2430,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_exprel_2($x)>
 
--These routines compute the quantity 2(\exp(x)-1-x)/x^2 using an algorithm that is accurate for small x. For small x the algorithm is based on the expansion 2(\exp(x)-1-x)/x^2 = 1 + x/3 + x^2/(3*4) + x^3/(3*4*5) + \dots.
+These routines compute the quantity 2(\exp(x)-1-x)/x^2 using an algorithm that is accurate for small x. For small x the algorithm is based on the expansion 2(\exp(x)-1-x)/x^2 = 1 + x/3 + x^2/(3*4) + x^3/(3*4*5) + \dots.
 
 =back
 
@@ -2350,7 +2440,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_exprel_n($x)>
 
--These routines compute the N-relative exponential, which is the n-th generalization of the functions gsl_sf_exprel and gsl_sf_exprel2. The N-relative exponential is given by, 
+These routines compute the N-relative exponential, which is the n-th generalization of the functions gsl_sf_exprel and gsl_sf_exprel2. The N-relative exponential is given by, 
  exprel_N(x) = N!/x^N (\exp(x) - \sum_{k=0}^{N-1} x^k/k!)
   = 1 + x/(N+1) + x^2/((N+1)(N+2)) + ...
   = 1F1 (1,1+N,x)    
@@ -2375,7 +2465,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_expint_E1($x)>
 
--These routines compute the exponential integral E_1(x), E_1(x) := \Re \int_1^\infty dt \exp(-xt)/t.
+These routines compute the exponential integral E_1(x), E_1(x) := \Re \int_1^\infty dt \exp(-xt)/t.
 
 =back
 
@@ -2385,7 +2475,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_expint_E2($x)>
 
--These routines compute the second-order exponential integral E_2(x),
+These routines compute the second-order exponential integral E_2(x),
   E_2(x) := \Re \int_1^\infty dt \exp(-xt)/t^2.
      
 
@@ -2397,7 +2487,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_expint_En($n, $x)>
 
--These routines compute the exponential integral E_n(x) of order n,
+These routines compute the exponential integral E_n(x) of order n,
   E_n(x) := \Re \int_1^\infty dt \exp(-xt)/t^n.
      
 
@@ -2409,7 +2499,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_expint_E1_scaled>
 
--
+
 
 =back
 
@@ -2419,7 +2509,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_expint_E2_scaled >
 
--
+
 
 =back
 
@@ -2429,7 +2519,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_expint_En_scaled>
 
--
+
 
 =back
 
@@ -2439,7 +2529,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_expint_Ei($x)>
 
--These routines compute the exponential integral Ei(x), Ei(x) := - PV(\int_{-x}^\infty dt \exp(-t)/t) where PV denotes the principal value of the integral. 
+These routines compute the exponential integral Ei(x), Ei(x) := - PV(\int_{-x}^\infty dt \exp(-t)/t) where PV denotes the principal value of the integral. 
 
 =back
 
@@ -2449,7 +2539,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_expint_Ei_scaled >
 
--
+
 
 =back
 
@@ -2459,7 +2549,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_Shi($x)>
 
--These routines compute the integral Shi(x) = \int_0^x dt \sinh(t)/t. 
+These routines compute the integral Shi(x) = \int_0^x dt \sinh(t)/t. 
 
 =back
 
@@ -2469,7 +2559,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_Chi($x)>
 
--These routines compute the integral Chi(x) := \Re[ \gamma_E + \log(x) + \int_0^x dt (\cosh[t]-1)/t] , where \gamma_E is the Euler constant (available as $M_EULER from the Math::GSL::Const module).
+These routines compute the integral Chi(x) := \Re[ \gamma_E + \log(x) + \int_0^x dt (\cosh[t]-1)/t] , where \gamma_E is the Euler constant (available as $M_EULER from the Math::GSL::Const module).
 
 =back
 
@@ -2479,7 +2569,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_expint_3($x)>
 
--These routines compute the third-order exponential integral Ei_3(x) = \int_0^xdt \exp(-t^3) for x >= 0.
+These routines compute the third-order exponential integral Ei_3(x) = \int_0^xdt \exp(-t^3) for x >= 0.
 
 =back
 
@@ -2489,7 +2579,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_Si($x)>
 
--These routines compute the Sine integral Si(x) = \int_0^x dt \sin(t)/t.
+These routines compute the Sine integral Si(x) = \int_0^x dt \sin(t)/t.
 
 =back
 
@@ -2499,7 +2589,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_Ci($x)>
 
--These routines compute the Cosine integral Ci(x) = -\int_x^\infty dt \cos(t)/t for x > 0.
+These routines compute the Cosine integral Ci(x) = -\int_x^\infty dt \cos(t)/t for x > 0.
 
 =back
 
@@ -2509,7 +2599,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_fermi_dirac_m1($x)>
 
--These routines compute the complete Fermi-Dirac integral with an index of -1. This integral is given by F_{-1}(x) = e^x / (1 + e^x).
+These routines compute the complete Fermi-Dirac integral with an index of -1. This integral is given by F_{-1}(x) = e^x / (1 + e^x).
 
 =back
 
@@ -2519,7 +2609,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_fermi_dirac_0($x)>
 
--These routines compute the complete Fermi-Dirac integral with an index of 0. This integral is given by F_0(x) = \ln(1 + e^x).
+These routines compute the complete Fermi-Dirac integral with an index of 0. This integral is given by F_0(x) = \ln(1 + e^x).
 
 =back
 
@@ -2529,7 +2619,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_fermi_dirac_1($x)>
 
--These routines compute the complete Fermi-Dirac integral with an index of 1, F_1(x) = \int_0^\infty dt (t /(\exp(t-x)+1)). 
+These routines compute the complete Fermi-Dirac integral with an index of 1, F_1(x) = \int_0^\infty dt (t /(\exp(t-x)+1)). 
 
 =back
 
@@ -2539,7 +2629,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_fermi_dirac_2($x)>
 
--These routines compute the complete Fermi-Dirac integral with an index of 2, F_2(x) = (1/2) \int_0^\infty dt (t^2 /(\exp(t-x)+1)). 
+These routines compute the complete Fermi-Dirac integral with an index of 2, F_2(x) = (1/2) \int_0^\infty dt (t^2 /(\exp(t-x)+1)). 
 
 =back
 
@@ -2549,7 +2639,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_fermi_dirac_int($j, $x)>
 
--These routines compute the complete Fermi-Dirac integral with an integer index of j, F_j(x) = (1/\Gamma(j+1)) \int_0^\infty dt (t^j /(\exp(t-x)+1)).
+These routines compute the complete Fermi-Dirac integral with an integer index of j, F_j(x) = (1/\Gamma(j+1)) \int_0^\infty dt (t^j /(\exp(t-x)+1)).
 
 =back
 
@@ -2559,7 +2649,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_fermi_dirac_mhalf($x)>
 
--These routines compute the complete Fermi-Dirac integral F_{-1/2}(x).
+These routines compute the complete Fermi-Dirac integral F_{-1/2}(x).
 
 =back
 
@@ -2569,7 +2659,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_fermi_dirac_half($x)>
 
--These routines compute the complete Fermi-Dirac integral F_{1/2}(x). 
+These routines compute the complete Fermi-Dirac integral F_{1/2}(x). 
 
 =back
 
@@ -2579,7 +2669,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_fermi_dirac_3half($x)>
 
--These routines compute the complete Fermi-Dirac integral F_{3/2}(x). 
+These routines compute the complete Fermi-Dirac integral F_{3/2}(x). 
 
 =back
 
@@ -2589,7 +2679,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_fermi_dirac_inc_0($x, $b, $result)>
 
--These routines compute the incomplete Fermi-Dirac integral with an index of zero, F_0(x,b) = \ln(1 + e^{b-x}) - (b-x). 
+These routines compute the incomplete Fermi-Dirac integral with an index of zero, F_0(x,b) = \ln(1 + e^{b-x}) - (b-x). 
 
 =back
 
@@ -2599,7 +2689,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_legendre_Pl($l, $x)>
 
--These functions evaluate the Legendre polynomial P_l(x) for a specific value of l, x subject to l >= 0, |x| <= 1 
+These functions evaluate the Legendre polynomial P_l(x) for a specific value of l, x subject to l >= 0, |x| <= 1 
 
 =back
 
@@ -2609,7 +2699,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_legendre_Pl_deriv_array>
 
--
+
 
 =back
 
@@ -2627,7 +2717,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_legendre_P3($x)>
 
--These functions evaluate the Legendre polynomials P_l(x) using explicit representations for l=1, 2, 3. 
+These functions evaluate the Legendre polynomials P_l(x) using explicit representations for l=1, 2, 3. 
 
 =back
 
@@ -2637,7 +2727,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_legendre_Q0($x)>
 
--These routines compute the Legendre function Q_0(x) for x > -1, x != 1.
+These routines compute the Legendre function Q_0(x) for x > -1, x != 1.
 
 =back
 
@@ -2647,7 +2737,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_legendre_Q1($x)>
 
--These routines compute the Legendre function Q_1(x) for x > -1, x != 1.
+These routines compute the Legendre function Q_1(x) for x > -1, x != 1.
 
 =back
 
@@ -2657,7 +2747,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_legendre_Ql($l, $x)>
 
--These routines compute the Legendre function Q_l(x) for x > -1, x != 1 and l >= 0.
+These routines compute the Legendre function Q_l(x) for x > -1, x != 1 and l >= 0.
 
 =back
 
@@ -2667,7 +2757,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_legendre_Plm($l, $m, $x)>
 
--These routines compute the associated Legendre polynomial P_l^m(x) for m >= 0, l >= m, |x| <= 1.
+These routines compute the associated Legendre polynomial P_l^m(x) for m >= 0, l >= m, |x| <= 1.
 
 =back
 
@@ -2677,7 +2767,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_legendre_Plm_deriv_array >
 
--
+
 
 =back
 
@@ -2687,7 +2777,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_legendre_sphPlm($l, $m, $x)>
 
--These routines compute the normalized associated Legendre polynomial $\sqrt{(2l+1)/(4\pi)} \sqrt{(l-m)!/(l+m)!} P_l^m(x)$ suitable for use in spherical harmonics. The parameters must satisfy m >= 0, l >= m, |x| <= 1. Theses routines avoid the overflows that occur for the standard normalization of P_l^m(x).
+These routines compute the normalized associated Legendre polynomial $\sqrt{(2l+1)/(4\pi)} \sqrt{(l-m)!/(l+m)!} P_l^m(x)$ suitable for use in spherical harmonics. The parameters must satisfy m >= 0, l >= m, |x| <= 1. Theses routines avoid the overflows that occur for the standard normalization of P_l^m(x).
 
 =back
 
@@ -2697,7 +2787,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_legendre_sphPlm_deriv_array>
 
--
+
 
 =back
 
@@ -2713,7 +2803,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_lngamma($x)>
 
--These routines compute the logarithm of the Gamma function, \log(\Gamma(x)), subject to x not being a negative integer or zero. For x<0 the real part of \log(\Gamma(x)) is returned, which is equivalent to \log(|\Gamma(x)|). The function is computed using the real Lanczos method.
+These routines compute the logarithm of the Gamma function, \log(\Gamma(x)), subject to x not being a negative integer or zero. For x<0 the real part of \log(\Gamma(x)) is returned, which is equivalent to \log(|\Gamma(x)|). The function is computed using the real Lanczos method.
 
 =back
 
@@ -2729,7 +2819,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_gamma>
 
--
+
 
 =back
 
@@ -2739,7 +2829,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_gammastar >
 
--
+
 
 =back
 
@@ -2749,7 +2839,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_gammainv>
 
--
+
 
 =back
 
@@ -2757,7 +2847,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_lngamma_complex_e >
 
--
+
 
 =back
 
@@ -2767,7 +2857,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_gamma_inc_Q>
 
--
+
 
 =back
 
@@ -2777,7 +2867,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_gamma_inc_P>
 
--
+
 
 =back
 
@@ -2787,7 +2877,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_gamma_inc >
 
--
+
 
 =back
 
@@ -2797,7 +2887,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_taylorcoeff>
 
--
+
 
 =back
 
@@ -2807,7 +2897,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_fact>
 
--
+
 
 =back
 
@@ -2817,7 +2907,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_doublefact >
 
--
+
 
 =back
 
@@ -2827,7 +2917,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_lnfact>
 
--
+
 
 =back
 
@@ -2837,7 +2927,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_lndoublefact>
 
--
+
 
 =back
 
@@ -2847,7 +2937,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_lnchoose >
 
--
+
 
 =back
 
@@ -2857,7 +2947,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_choose>
 
--
+
 
 =back
 
@@ -2867,7 +2957,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_lnpoch>
 
--
+
 
 =back
 
@@ -2875,7 +2965,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_lnpoch_sgn_e>
 
--
+
 
 =back
 
@@ -2885,7 +2975,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_poch>
 
--
+
 
 =back
 
@@ -2895,7 +2985,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_pochrel >
 
--
+
 
 =back
 
@@ -2905,7 +2995,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_lnbeta>
 
--
+
 
 =back
 
@@ -2913,7 +3003,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_lnbeta_sgn_e >
 
--
+
 
 =back
 
@@ -2923,7 +3013,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_beta>
 
--
+
 
 =back
 
@@ -2933,7 +3023,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_beta_inc>
 
--
+
 
 =back
 
@@ -2951,7 +3041,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_gegenpoly_3>
 
--
+
 
 =back
 
@@ -2961,7 +3051,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_gegenpoly_n >
 
--
+
 
 =back
 
@@ -2973,7 +3063,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_hyperg_0F1 >
 
--
+
 
 =back
 
@@ -2983,7 +3073,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_hyperg_1F1_int>
 
--
+
 
 =back
 
@@ -2993,7 +3083,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_hyperg_1F1>
 
--
+
 
 =back
 
@@ -3003,7 +3093,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_hyperg_U_int >
 
--
+
 
 =back
 
@@ -3011,7 +3101,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_hyperg_U_int_e10_e>
 
--
+
 
 =back
 
@@ -3021,7 +3111,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_hyperg_U >
 
--
+
 
 =back
 
@@ -3029,7 +3119,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_hyperg_U_e10_e>
 
--
+
 
 =back
 
@@ -3039,7 +3129,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_hyperg_2F1 >
 
--
+
 
 =back
 
@@ -3049,7 +3139,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_hyperg_2F1_conj>
 
--
+
 
 =back
 
@@ -3059,7 +3149,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_hyperg_2F1_renorm>
 
--
+
 
 =back
 
@@ -3069,7 +3159,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_hyperg_2F1_conj_renorm >
 
--
+
 
 =back
 
@@ -3079,7 +3169,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_hyperg_2F0>
 
--
+
 
 =back
 
@@ -3097,7 +3187,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_laguerre_3>
 
--
+
 
 =back
 
@@ -3107,7 +3197,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_laguerre_n>
 
--
+
 
 =back
 
@@ -3117,7 +3207,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_lambert_W0 >
 
--
+
 
 =back
 
@@ -3127,7 +3217,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_lambert_Wm1>
 
--
+
 
 =back
 
@@ -3137,7 +3227,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_conicalP_half>
 
--
+
 
 =back
 
@@ -3147,7 +3237,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_conicalP_mhalf >
 
--
+
 
 =back
 
@@ -3157,7 +3247,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_conicalP_0>
 
--
+
 
 =back
 
@@ -3167,7 +3257,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_conicalP_1>
 
--
+
 
 =back
 
@@ -3177,7 +3267,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_conicalP_sph_reg >
 
--
+
 
 =back
 
@@ -3187,7 +3277,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_conicalP_cyl_reg>
 
--
+
 
 =back
 
@@ -3197,7 +3287,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_legendre_H3d_0>
 
--
+
 
 =back
 
@@ -3207,7 +3297,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_legendre_H3d_1 >
 
--
+
 
 =back
 
@@ -3217,7 +3307,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_legendre_H3d>
 
--
+
 
 =back
 
@@ -3225,7 +3315,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_legendre_H3d_array >
 
--
+
 
 =back
 
@@ -3235,7 +3325,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_log>
 
--
+
 
 =back
 
@@ -3245,7 +3335,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_log_abs>
 
--
+
 
 =back
 
@@ -3253,7 +3343,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_complex_log_e>
 
--
+
 
 =back
 
@@ -3263,7 +3353,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_log_1plusx>
 
--
+
 
 =back
 
@@ -3273,7 +3363,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_log_1plusx_mx >
 
--
+
 
 =back
 
@@ -3283,7 +3373,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_mathieu_b_array>
 
--
+
 
 =back
 
@@ -3293,7 +3383,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_mathieu_b>
 
--
+
 
 =back
 
@@ -3303,7 +3393,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_mathieu_b_coeff >
 
--
+
 
 =back
 
@@ -3311,7 +3401,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_mathieu_alloc>
 
--
+
 
 =back
 
@@ -3319,7 +3409,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_mathieu_free>
 
--
+
 
 =back
 
@@ -3329,7 +3419,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_mathieu_se>
 
--
+
 
 =back
 
@@ -3339,7 +3429,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_mathieu_se_array >
 
--
+
 
 =back
 
@@ -3349,7 +3439,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_mathieu_Ms>
 
--
+
 
 =back
 
@@ -3359,7 +3449,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_mathieu_Ms_array>
 
--
+
 
 =back
 
@@ -3369,7 +3459,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_pow_int >
 
--
+
 
 =back
 
@@ -3379,7 +3469,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_psi_int>
 
--
+
 
 =back
 
@@ -3389,7 +3479,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_psi>
 
--
+
 
 =back
 
@@ -3399,7 +3489,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_psi_1piy >
 
--
+
 
 =back
 
@@ -3407,7 +3497,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_complex_psi_e>
 
--
+
 
 =back
 
@@ -3417,7 +3507,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_psi_1_int >
 
--
+
 
 =back
 
@@ -3427,7 +3517,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_psi_1>
 
--
+
 
 =back
 
@@ -3437,7 +3527,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_psi_n>
 
--
+
 
 =back
 
@@ -3445,7 +3535,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_result_smash_e>
 
--
+
 
 =back
 
@@ -3455,7 +3545,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_synchrotron_1>
 
--
+
 
 =back
 
@@ -3465,7 +3555,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_synchrotron_2 >
 
--
+
 
 =back
 
@@ -3475,7 +3565,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_transport_2>
 
--
+
 
 =back
 
@@ -3485,7 +3575,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_transport_3>
 
--
+
 
 =back
 
@@ -3495,7 +3585,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_transport_4 >
 
--
+
 
 =back
 
@@ -3505,7 +3595,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_transport_5>
 
--
+
 
 =back
 
@@ -3515,7 +3605,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_sin>
 
--
+
 
 =back
 
@@ -3525,7 +3615,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_cos >
 
--
+
 
 =back
 
@@ -3535,7 +3625,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_hypot>
 
--
+
 
 =back
 
@@ -3543,7 +3633,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_complex_sin_e >
 
--
+
 
 =back
 
@@ -3551,7 +3641,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_complex_cos_e>
 
--
+
 
 =back
 
@@ -3559,7 +3649,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_complex_logsin_e>
 
--
+
 
 =back
 
@@ -3569,7 +3659,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_sinc>
 
--
+
 
 =back
 
@@ -3579,7 +3669,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_lnsinh >
 
--
+
 
 =back
 
@@ -3589,7 +3679,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_lncosh>
 
--
+
 
 =back
 
@@ -3597,7 +3687,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_polar_to_rect >
 
--
+
 
 =back
 
@@ -3605,7 +3695,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_rect_to_polar>
 
--
+
 
 =back
 
@@ -3615,7 +3705,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_cos_err_e >
 
--
+
 
 =back
 
@@ -3625,7 +3715,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_angle_restrict_symm>
 
--
+
 
 =back
 
@@ -3635,7 +3725,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_angle_restrict_pos>
 
--
+
 
 =back
 
@@ -3651,7 +3741,7 @@ Here is a list of all included functions:
 
 =item C<gsl_sf_atanint>
 
--These routines compute the Arctangent integral, which is defined as AtanInt(x) = \int_0^x dt \arctan(t)/t.
+These routines compute the Arctangent integral, which is defined as AtanInt(x) = \int_0^x dt \arctan(t)/t.
 
 =back
 
@@ -3753,7 +3843,7 @@ This module also contains the following constants used as mode in various of tho
 For more informations on the functions, we refer you to the GSL offcial
 documentation: L<http://www.gnu.org/software/gsl/manual/html_node/>
 
-Tip : search on google: site:http://www.gnu.org/software/gsl/manual/html_node/name_of_the_function_you_want
+
 
 =head1 EXAMPLES
 
@@ -3767,11 +3857,11 @@ An example using Math::GSL::SF and gnuplot is in the B<examples/sf> folder of th
 
 =head1 AUTHORS
 
-Jonathan Leto <jonathan@leto.net> and Thierry Moisan <thierry.moisan@gmail.com>
+Jonathan "Duke" Leto <jonathan@leto.net> and Thierry Moisan <thierry.moisan@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2008-2009 Jonathan Leto and Thierry Moisan
+Copyright (C) 2008-2011 Jonathan "Duke" Leto and Thierry Moisan
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.

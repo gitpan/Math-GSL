@@ -619,7 +619,7 @@ This function computes the probability p($k) of obtaining $k from a geometric di
 
 =item gsl_ran_hypergeometric($r, $n1, $n2, $t)
 
-This function returns a random integer from the hypergeometric distribution. The probability distribution for hypergeometric random variates is, p(k) =  C(n_1, k) C(n_2, t - k) / C(n_1 + n_2, t) where C(a,b) = a!/(b!(a-b)!) and t <= n_1 + n_2. The domain of k is max(0,t-n_2), ..., min(t,n_1). If a population contains n_1 elements of “type 1” and n_2 elements of “type 2” then the hypergeometric distribution gives the probability of obtaining k elements of “type 1” in t samples from the population without replacement. $r is a gsl_rng structure. 
+This function returns a random integer from the hypergeometric distribution. The probability distribution for hypergeometric random variates is, p(k) =  C(n_1, k) C(n_2, t - k) / C(n_1 + n_2, t) where C(a,b) = a!/(b!(a-b)!) and t <= n_1 + n_2. The domain of k is max(0,t-n_2), ..., min(t,n_1). If a population contains n_1 elements of "type 1" and n_2 elements of "type 2" then the hypergeometric distribution gives the probability of obtaining k elements of "type 1" in t samples from the population without replacement. $r is a gsl_rng structure. 
 
 =item gsl_ran_hypergeometric_pdf($k, $n1, $n2, $t)
 
@@ -1018,7 +1018,7 @@ De-allocates the gsl_ran_discrete pointed to by g.
 
 For more informations on the functions, we refer you to the GSL offcial documentation: 
 L<http://www.gnu.org/software/gsl/manual/html_node/>
- Tip : search on google: site:http://www.gnu.org/software/gsl/manual/html_node/ name_of_the_function_you_want
+ 
 
  You might also want to write
  use Math::GSL::RNG qw/:all/;
@@ -1039,11 +1039,11 @@ L<http://www.gnu.org/software/gsl/manual/html_node/>
 
 =head1 AUTHORS
 
-Jonathan Leto <jonathan@leto.net> and Thierry Moisan <thierry.moisan@gmail.com>
+Jonathan "Duke" Leto <jonathan@leto.net> and Thierry Moisan <thierry.moisan@gmail.com>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (C) 2008-2009 Jonathan Leto and Thierry Moisan
+Copyright (C) 2008-2011 Jonathan "Duke" Leto and Thierry Moisan
 
 This program is free software; you can redistribute it and/or modify it
 under the same terms as Perl itself.
