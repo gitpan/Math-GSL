@@ -178,7 +178,7 @@ $ccflags .= try_cflags("-Wno-unused-variable");
 $ccflags .= try_cflags("-g");
 
 
-my $ldflags    = "$gsl_pkgcfg{libs} -gsl";
+my $ldflags = $gsl_pkgcfg{libs};
 $swig_flags = "$gsl_pkgcfg{cflags} $swig_flags";
 
 if ( GSLBuilder::is_cygwin()  && $Config{shrpenv} =~ m{\Aenv LD_RUN_PATH=(.*)\Z} ) {
@@ -236,9 +236,9 @@ my $builder = GSLBuilder->new(
         },
     },
     build_requires => {
-        'Test::Most'            =>       0,
-        'Test::Exception'       =>    0.21,
-        'Test::Class'           =>    0.12,
+        'Test::Most'            =>    '0.31',
+        'Test::Exception'       =>    '0.21',
+        'Test::Class'           =>    '0.12',
     },
     requires => {
         'ExtUtils::PkgConfig'   => '1.03',
@@ -264,8 +264,11 @@ print "Have a great day!\n";
 
 
 sub swig_version {
-    my $cmd = "swig -version";
+    my $swig = GSLBuilder::swig_binary_name();
+
+    my $cmd = "$swig -version";
     my $out = `$cmd`;
+
     if ($?) {
         die "Can't run [$cmd] : $out";
     }

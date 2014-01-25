@@ -5,12 +5,12 @@ author:
 build_requires:
   Test::Class: 0.12
   Test::Exception: 0.21
-  Test::Most: 0
+  Test::Most: 0.31
 configure_requires:
   ExtUtils::PkgConfig: 1.03
   Module::Build: 0.38
 dynamic_config: 1
-generated_by: 'Module::Build version 0.38, CPAN::Meta::Converter version 2.120921'
+generated_by: 'Module::Build version 0.4003, CPAN::Meta::Converter version 2.120921'
 license: open_source
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -19,7 +19,7 @@ name: Math-GSL
 provides:
   Math::GSL:
     file: lib/Math/GSL.pm
-    version: 0.27
+    version: 0.28
   Math::GSL::BLAS:
     file: lib/Math/GSL/BLAS.pm
     version: 0
@@ -299,6 +299,15 @@ provides:
   Math::GSL::Integration::gsl_function_vec_struct:
     file: lib/Math/GSL/Integration.pm
     version: 0
+  Math::GSL::Integration::gsl_integration_cquad_ival:
+    file: lib/Math/GSL/Integration.pm
+    version: 0
+  Math::GSL::Integration::gsl_integration_cquad_workspace:
+    file: lib/Math/GSL/Integration.pm
+    version: 0
+  Math::GSL::Integration::gsl_integration_glfixed_table:
+    file: lib/Math/GSL/Integration.pm
+    version: 0
   Math::GSL::Integration::gsl_integration_qawo_table:
     file: lib/Math/GSL/Integration.pm
     version: 0
@@ -465,6 +474,15 @@ provides:
     file: lib/Math/GSL/Multifit.pm
     version: 0
   Math::GSL::Multifit::gsl_multifit_linear_workspace:
+    file: lib/Math/GSL/Multifit.pm
+    version: 0
+  Math::GSL::Multifit::gsl_multifit_robust_stats:
+    file: lib/Math/GSL/Multifit.pm
+    version: 0
+  Math::GSL::Multifit::gsl_multifit_robust_type:
+    file: lib/Math/GSL/Multifit.pm
+    version: 0
+  Math::GSL::Multifit::gsl_multifit_robust_workspace:
     file: lib/Math/GSL/Multifit.pm
     version: 0
   Math::GSL::Multifitc:
@@ -790,4 +808,4 @@ requires:
 resources:
   license: http://www.gnu.org/licenses/old-licenses/gpl-1.0.txt
   repository: http://github.com/leto/math--gsl/tree/master
-version: 0.27
+version: 0.28

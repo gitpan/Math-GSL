@@ -5,6 +5,8 @@ Scientific Library (GSL) is a numerical library for C and C++ programmers. It
 is free software under the GNU General Public License.  Math::GSL uses SWIG to
 generate Perl bindings to *most* GSL functionality.
 
+[![Build Status](https://secure.travis-ci.org/leto/math--gsl.png)](http://travis-ci.org/leto/math--gsl)
+
 # Dependencies
 
 ## CPAN distribution dependencies
@@ -49,7 +51,7 @@ Search CPAN http://search.cpan.org/dist/Math::GSL
 
 # Copyright and Licence
 
-Copyright (C) 2008-2012 Jonathan "Duke" Leto and Thierry Moisan.
+Copyright (C) 2008-2013 Jonathan "Duke" Leto and Thierry Moisan.
 
 A full list of contributors is listed in the [CREDITS](https://github.com/leto/math--gsl/blob/master/CREDITS) file.
 
