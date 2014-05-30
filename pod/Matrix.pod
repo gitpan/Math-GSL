@@ -300,8 +300,6 @@ Math::GSL::Matrix - Mathematical functions concerning Matrices
     my $matrix8 = gsl_matrix_alloc(5,5);        # standard interface
 
 
-=head1 Objected Oriented Interface to GSL Math::GSL::Matrix
-
 =head2 Math::GSL::Matrix->new()
 
 Creates a new Matrix of the given size.
@@ -386,6 +384,18 @@ sub copy {
     return $copy;
 }
 
+
+=head2 dim()
+
+Returns the number of rows and columns in a matrix as an array.
+
+   my ($rows, $cols) = $matrix->dim;
+
+Basically a shortcut to C<rows> and C<cols> methods.
+
+=cut
+
+sub dim { ($_[0]->rows, $_[0]->cols) }
 
 =head2 rows()
 
@@ -589,6 +599,28 @@ sub as_list($)
     return @matrix;
 }
 
+=head2 get_elem()
+
+Returns an element of a matrix.
+
+    my $matrix = Math::GSL::Matrix->new(3,3);
+    ...
+    my $middle = $matrix->get_elem(1,1);
+
+B<NOTE:> just like any other method on this module, rows and arrays start
+with indice 0.
+
+=cut
+
+sub get_elem {
+	my ($self, $row, $col) = @_;
+	die __PACKAGE__.'::get_elem($x, $y, $v) - $x must be a valid row number'
+		if ($row < 0 || $row >= $self->rows);
+	die __PACKAGE__.'::get_elem($x, $y, $v) - $y must be a valid column number'
+		if ($col < 0 || $col >= $self->cols);
+	return gsl_matrix_get($self->raw, $row, $col);
+}
+
 =head2 row()
 
 Returns a row matrix of the row you enter.
@@ -640,6 +672,32 @@ sub col
        } (0 .. $self->rows-1);
 
    return $colmat;
+}
+
+=head2 set_elem()
+
+Sets a specific value in the matrix.
+
+    my $matrix = Math::GSL::Matrix->new(2,2);
+    $matrix->set_elem(0, 0, $value);
+
+You can set multiple elements at once with chained calls:
+
+    $matrix->set_elem(0,0,1)->set_elem(1,1,1);
+
+B<NOTE:> just like any other method on this module, rows and arrays start
+with indice 0.
+
+=cut
+
+sub set_elem {
+	my ($self, $row, $col, $value) = @_;
+	die __PACKAGE__.'::set_elem($x, $y, $v) - $x must be a valid row number'
+		if ($row < 0 || $row >= $self->rows);
+	die __PACKAGE__.'::set_elem($x, $y, $v) - $y must be a valid column number'
+		if ($col < 0 || $col >= $self->cols);
+	gsl_matrix_set($self->raw, $row, $col, $value);
+	return $self;
 }
 
 =head2 set_row()
@@ -698,6 +756,179 @@ sub set_col {
     map { gsl_matrix_set($self->raw, $_, $col, $values->[$_]) } (0..$length);
     return $self;
 }
+
+=head2 max()
+
+Computes the maximum value of a matrix. In array context returns the maximum
+value and the position of that element in the matrix. If the matrix is a
+vector (being it vertical or horizontal) only one coordinate is returned: the
+position of the element in the vector.
+
+    $max = $matrix->max();
+    ($max, $i, $j) = $matrix->max();
+
+=cut
+
+sub max {
+	my $matrix = shift;
+
+	my $max = gsl_matrix_max($matrix->raw);
+
+	if (wantarray) {
+		my ($i, $j) = gsl_matrix_max_index($matrix->raw);
+
+		return ($max, $j) if $matrix->rows == 1;
+		return ($max, $i) if $matrix->cols == 1;
+		return ($max, $i, $j);
+
+	} else {
+		return $max;			
+	}
+}
+
+=head2 min()
+
+Computes the minimum value of a matrix. In array context returns the minimum
+value and the position of that element in the matrix. If the matrix is a
+vector (being it vertical or horizontal) only one coordinate is returned: the
+position of the element in the vector.
+
+    $min = $matrix->min();
+    ($min, $i, $j) = $matrix->min();
+
+=cut
+
+sub min {
+	my $matrix = shift;
+
+	my $min = gsl_matrix_min($matrix->raw);
+
+	if (wantarray) {
+		my ($i, $j) = gsl_matrix_min_index($matrix->raw);
+
+		return ($min, $j) if $matrix->rows == 1;
+		return ($min, $i) if $matrix->cols == 1;
+		return ($min, $i, $j);
+
+	} else {
+		return $min;			
+	}
+}
+
+=head2 ieach()
+
+Applied a function to each element of a matrix. 
+
+    # compute exp to each element of matrix
+    $matrix->ieach( sub { exp(shift) });
+
+This method B<changes> the original matrix. See C<each> for a
+non destructive method.
+
+=cut
+
+sub ieach($&) {
+	my ($matrix, $func) = @_;
+
+    die __PACKAGE__.'::ieach($func) - $func must be a code reference'
+    	unless ref($func) eq "CODE";
+
+
+	for my $i (0 .. $matrix->rows-1) {
+		for my $j (0 .. $matrix->cols-1) {
+			# should be faster than use ->set_elem and ->get_elem
+			gsl_matrix_set($matrix->raw, $i, $j, 
+				           $func->(gsl_matrix_get($matrix->raw, $i, $j)));
+		}
+	}
+	return $matrix;
+}
+
+
+=head2 each()
+
+Applied a function to each element of a matrix. 
+
+    # compute exp to each element of matrix
+    $matrix->each( sub { exp(shift) });
+
+This method returns a B<new> matrix.
+
+=cut
+
+sub each($&) {
+	my ($matrix, $func) = @_;
+
+    die __PACKAGE__.'::each($func) - $func must be a code reference'
+    	unless ref($func) eq "CODE";
+
+    my $result = Math::GSL::Matrix->new($matrix->rows, $matrix->cols);
+	for my $i (0 .. $matrix->rows-1) {
+		for my $j (0 .. $matrix->cols-1) {
+			# should be faster than use ->set_elem and ->get_elem
+			gsl_matrix_set($result->raw, $i, $j, 
+				           $func->(gsl_matrix_get($matrix->raw, $i, $j)));
+		}
+	}
+	return $result;
+}
+
+=head2 vconcat ()
+
+Concatenates vertically a new matrix with the object matrix, where the
+object matrix is above in the final matrix.
+Note that both matrices need to have the same number of columns.
+The method returns a B<new> matrix.
+
+    my $final = $m1->vconcat($m2);
+    # $final is $m1 on top of $m2
+
+=cut
+
+sub vconcat {
+    my ($self, $b) = @_;
+
+    die __PACKAGE__.'::vconcat($m) - $m must be a Math::GSL::Matrix object'
+        unless blessed($b) && $b->isa('Math::GSL::Matrix');
+    die __PACKAGE__.'::vconcat($m) - $self and $m should have same number of columns'
+        unless $self->cols == $b->cols;
+
+    bless {
+         _matrix => gsl_matrix_vconcat($self->raw, $b->raw),
+         _rows   => $self->rows + $b->rows,
+         _cols   => $self->cols
+    }, 'Math::GSL::Matrix'
+}
+
+=head2 hconcat ()
+
+Concatenates horizontally a new matrix with the object matrix, where the
+object matrix is at the left in the final matrix.
+Note that both matrices need to have the same number of rows.
+The method returns a B<new> matrix.
+
+    my $final = $m1->hconcat($m2);
+    # $final is $m1 at the left of $m2
+
+=cut
+
+sub hconcat {
+    my ($self, $b) = @_;
+
+    die __PACKAGE__.'::hconcat($m) - $m must be a Math::GSL::Matrix object'
+        unless blessed($b) && $b->isa('Math::GSL::Matrix');
+    die __PACKAGE__.'::hconcat($m) - $self and $m should have same number of rows'
+        unless $self->rows == $b->rows;
+
+    bless {
+         _matrix => gsl_matrix_hconcat($self->raw, $b->raw),
+         _rows   => $self->rows,
+         _cols   => $self->cols + $b->cols,
+    }, 'Math::GSL::Matrix'
+}
+
+
+
 
 sub _addition {
     my ($left, $right) = @_;
@@ -904,7 +1135,7 @@ These are related to constant views of a matrix.
 
 =item C<gsl_matrix_const_row>
 
-=item C<gsl_matrix_const_colum>
+=item C<gsl_matrix_const_column>
 
 =item C<gsl_matrix_const_diagonal>
 
