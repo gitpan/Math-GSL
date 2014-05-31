@@ -19,7 +19,7 @@ name: Math-GSL
 provides:
   Math::GSL:
     file: lib/Math/GSL.pm
-    version: 0.29_1
+    version: 0.29_2
   Math::GSL::BLAS:
     file: lib/Math/GSL/BLAS.pm
   Math::GSL::BLASc:
@@ -548,4 +548,4 @@ requires:
 resources:
   license: http://www.gnu.org/licenses/old-licenses/gpl-1.0.txt
   repository: http://github.com/leto/math--gsl/tree/master
-version: 0.29_1
+version: 0.29_2
