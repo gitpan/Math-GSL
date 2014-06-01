@@ -50,14 +50,12 @@ sub this {
 package Math::GSL::Sort;
 
 *gsl_sort = *Math::GSL::Sortc::gsl_sort;
-*gsl_sort2 = *Math::GSL::Sortc::gsl_sort2;
 *gsl_sort_index = *Math::GSL::Sortc::gsl_sort_index;
 *gsl_sort_smallest = *Math::GSL::Sortc::gsl_sort_smallest;
 *gsl_sort_smallest_index = *Math::GSL::Sortc::gsl_sort_smallest_index;
 *gsl_sort_largest = *Math::GSL::Sortc::gsl_sort_largest;
 *gsl_sort_largest_index = *Math::GSL::Sortc::gsl_sort_largest_index;
 *gsl_sort_int = *Math::GSL::Sortc::gsl_sort_int;
-*gsl_sort2_int = *Math::GSL::Sortc::gsl_sort2_int;
 *gsl_sort_int_index = *Math::GSL::Sortc::gsl_sort_int_index;
 *gsl_sort_int_smallest = *Math::GSL::Sortc::gsl_sort_int_smallest;
 *gsl_sort_int_smallest_index = *Math::GSL::Sortc::gsl_sort_int_smallest_index;
@@ -70,7 +68,6 @@ package Math::GSL::Sort;
 *gsl_sort_vector_smallest_index = *Math::GSL::Sortc::gsl_sort_vector_smallest_index;
 *gsl_sort_vector_largest_index = *Math::GSL::Sortc::gsl_sort_vector_largest_index;
 *gsl_sort_vector_int = *Math::GSL::Sortc::gsl_sort_vector_int;
-*gsl_sort_vector2_int = *Math::GSL::Sortc::gsl_sort_vector2_int;
 *gsl_sort_vector_int_index = *Math::GSL::Sortc::gsl_sort_vector_int_index;
 *gsl_sort_vector_int_smallest = *Math::GSL::Sortc::gsl_sort_vector_int_smallest;
 *gsl_sort_vector_int_largest = *Math::GSL::Sortc::gsl_sort_vector_int_largest;

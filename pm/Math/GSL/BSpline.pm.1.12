@@ -57,7 +57,6 @@ package Math::GSL::BSpline;
 *gsl_bspline_breakpoint = *Math::GSL::BSplinec::gsl_bspline_breakpoint;
 *gsl_bspline_knots = *Math::GSL::BSplinec::gsl_bspline_knots;
 *gsl_bspline_knots_uniform = *Math::GSL::BSplinec::gsl_bspline_knots_uniform;
-*gsl_bspline_knots_greville = *Math::GSL::BSplinec::gsl_bspline_knots_greville;
 *gsl_bspline_eval = *Math::GSL::BSplinec::gsl_bspline_eval;
 
 ############# Class : Math::GSL::BSpline::gsl_bspline_workspace ##############

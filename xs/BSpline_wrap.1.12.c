@@ -1485,11 +1485,10 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 /* -------- TYPES TABLE (BEGIN) -------- */
 
 #define SWIGTYPE_p_char swig_types[0]
-#define SWIGTYPE_p_double swig_types[1]
-#define SWIGTYPE_p_gsl_bspline_workspace swig_types[2]
-#define SWIGTYPE_p_gsl_vector swig_types[3]
-static swig_type_info *swig_types[5];
-static swig_module_info swig_module = {swig_types, 4, 0, 0, 0, 0};
+#define SWIGTYPE_p_gsl_bspline_workspace swig_types[1]
+#define SWIGTYPE_p_gsl_vector swig_types[2]
+static swig_type_info *swig_types[4];
+static swig_module_info swig_module = {swig_types, 3, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -2779,56 +2778,6 @@ XS(_wrap_gsl_bspline_knots_uniform) {
 }
 
 
-XS(_wrap_gsl_bspline_knots_greville) {
-  {
-    gsl_vector *arg1 = (gsl_vector *) 0 ;
-    gsl_bspline_workspace *arg2 = (gsl_bspline_workspace *) 0 ;
-    double *arg3 = (double *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    double temp3 ;
-    int res3 = SWIG_TMPOBJ ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    arg3 = &temp3;
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_bspline_knots_greville(abscissae,w);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_vector, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_bspline_knots_greville" "', argument " "1"" of type '" "gsl_vector const *""'"); 
-    }
-    arg1 = (gsl_vector *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_gsl_bspline_workspace, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_bspline_knots_greville" "', argument " "2"" of type '" "gsl_bspline_workspace *""'"); 
-    }
-    arg2 = (gsl_bspline_workspace *)(argp2);
-    result = (int)gsl_bspline_knots_greville((gsl_vector const *)arg1,arg2,arg3);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    if (SWIG_IsTmpObj(res3)) {
-      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((*arg3)); argvi++  ;
-    } else {
-      int new_flags = SWIG_IsNewObj(res3) ? (SWIG_POINTER_OWN | 0) : 0;
-      if (argvi >= items) EXTEND(sp,1);  ST(argvi) = SWIG_NewPointerObj((void*)(arg3), SWIGTYPE_p_double, new_flags); argvi++  ;
-    }
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_gsl_bspline_eval) {
   {
     double arg1 ;
@@ -2881,25 +2830,21 @@ XS(_wrap_gsl_bspline_eval) {
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
 static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
-static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_gsl_bspline_workspace = {"_p_gsl_bspline_workspace", "gsl_bspline_workspace *", 0, 0, (void*)"Math::GSL::BSpline::gsl_bspline_workspace", 0};
 static swig_type_info _swigt__p_gsl_vector = {"_p_gsl_vector", "gsl_vector *", 0, 0, (void*)0, 0};
 
 static swig_type_info *swig_type_initial[] = {
   &_swigt__p_char,
-  &_swigt__p_double,
   &_swigt__p_gsl_bspline_workspace,
   &_swigt__p_gsl_vector,
 };
 
 static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0, 0}};
-static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_bspline_workspace[] = {  {&_swigt__p_gsl_bspline_workspace, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_vector[] = {  {&_swigt__p_gsl_vector, 0, 0, 0},{0, 0, 0, 0}};
 
 static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_char,
-  _swigc__p_double,
   _swigc__p_gsl_bspline_workspace,
   _swigc__p_gsl_vector,
 };
@@ -2945,7 +2890,6 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::BSplinec::gsl_bspline_breakpoint", _wrap_gsl_bspline_breakpoint},
 {"Math::GSL::BSplinec::gsl_bspline_knots", _wrap_gsl_bspline_knots},
 {"Math::GSL::BSplinec::gsl_bspline_knots_uniform", _wrap_gsl_bspline_knots_uniform},
-{"Math::GSL::BSplinec::gsl_bspline_knots_greville", _wrap_gsl_bspline_knots_greville},
 {"Math::GSL::BSplinec::gsl_bspline_eval", _wrap_gsl_bspline_eval},
 {0,0}
 };

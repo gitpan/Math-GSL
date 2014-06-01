@@ -39,7 +39,7 @@
    "provides" : {
       "Math::GSL" : {
          "file" : "lib/Math/GSL.pm",
-         "version" : "0.29_2"
+         "version" : "0.29"
       },
       "Math::GSL::BLAS" : {
          "file" : "lib/Math/GSL/BLAS.pm"
@@ -822,7 +822,7 @@
          "file" : "lib/Math/GSL/Wavelet.pm"
       }
    },
-   "release_status" : "testing",
+   "release_status" : "stable",
    "resources" : {
       "license" : [
          "http://www.gnu.org/licenses/old-licenses/gpl-1.0.txt"
@@ -831,5 +831,5 @@
          "url" : "http://github.com/leto/math--gsl/tree/master"
       }
    },
-   "version" : "0.29_2"
+   "version" : "0.29"
 }

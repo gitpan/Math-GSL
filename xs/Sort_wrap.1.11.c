@@ -2019,73 +2019,6 @@ XS(_wrap_gsl_sort) {
 }
 
 
-XS(_wrap_gsl_sort2) {
-  {
-    double *arg1 = (double *) 0 ;
-    size_t arg2 ;
-    double *arg3 = (double *) 0 ;
-    size_t arg4 ;
-    size_t arg5 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    size_t val2 ;
-    int ecode2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
-    size_t val4 ;
-    int ecode4 = 0 ;
-    size_t val5 ;
-    int ecode5 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 5) || (items > 5)) {
-      SWIG_croak("Usage: gsl_sort2(data1,stride1,data2,stride2,n);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sort2" "', argument " "1"" of type '" "double *""'"); 
-    }
-    arg1 = (double *)(argp1);
-    ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sort2" "', argument " "2"" of type '" "size_t""'");
-    } 
-    arg2 = (size_t)(val2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_sort2" "', argument " "3"" of type '" "double *""'"); 
-    }
-    arg3 = (double *)(argp3);
-    ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
-    if (!SWIG_IsOK(ecode4)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_sort2" "', argument " "4"" of type '" "size_t""'");
-    } 
-    arg4 = (size_t)(val4);
-    ecode5 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
-    if (!SWIG_IsOK(ecode5)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "gsl_sort2" "', argument " "5"" of type '" "size_t""'");
-    } 
-    arg5 = (size_t)(val5);
-    gsl_sort2(arg1,arg2,arg3,arg4,arg5);
-    ST(argvi) = sv_newmortal();
-    
-    
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_gsl_sort_index) {
   {
     size_t *arg1 = (size_t *) 0 ;
@@ -2672,73 +2605,6 @@ XS(_wrap_gsl_sort_int) {
     
     XSRETURN(argvi);
   fail:
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_sort2_int) {
-  {
-    int *arg1 = (int *) 0 ;
-    size_t arg2 ;
-    int *arg3 = (int *) 0 ;
-    size_t arg4 ;
-    size_t arg5 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    size_t val2 ;
-    int ecode2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
-    size_t val4 ;
-    int ecode4 = 0 ;
-    size_t val5 ;
-    int ecode5 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 5) || (items > 5)) {
-      SWIG_croak("Usage: gsl_sort2_int(data1,stride1,data2,stride2,n);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sort2_int" "', argument " "1"" of type '" "int *""'"); 
-    }
-    arg1 = (int *)(argp1);
-    ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_sort2_int" "', argument " "2"" of type '" "size_t""'");
-    } 
-    arg2 = (size_t)(val2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_sort2_int" "', argument " "3"" of type '" "int *""'"); 
-    }
-    arg3 = (int *)(argp3);
-    ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
-    if (!SWIG_IsOK(ecode4)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_sort2_int" "', argument " "4"" of type '" "size_t""'");
-    } 
-    arg4 = (size_t)(val4);
-    ecode5 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
-    if (!SWIG_IsOK(ecode5)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "gsl_sort2_int" "', argument " "5"" of type '" "size_t""'");
-    } 
-    arg5 = (size_t)(val5);
-    gsl_sort2_int(arg1,arg2,arg3,arg4,arg5);
-    ST(argvi) = sv_newmortal();
-    
-    
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
     
     
     
@@ -3518,43 +3384,6 @@ XS(_wrap_gsl_sort_vector_int) {
     
     XSRETURN(argvi);
   fail:
-    
-    SWIG_croak_null();
-  }
-}
-
-
-XS(_wrap_gsl_sort_vector2_int) {
-  {
-    gsl_vector_int *arg1 = (gsl_vector_int *) 0 ;
-    gsl_vector_int *arg2 = (gsl_vector_int *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_sort_vector2_int(v1,v2);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_vector_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_sort_vector2_int" "', argument " "1"" of type '" "gsl_vector_int *""'"); 
-    }
-    arg1 = (gsl_vector_int *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_gsl_vector_int, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_sort_vector2_int" "', argument " "2"" of type '" "gsl_vector_int *""'"); 
-    }
-    arg2 = (gsl_vector_int *)(argp2);
-    gsl_sort_vector2_int(arg1,arg2);
-    ST(argvi) = sv_newmortal();
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
     
     SWIG_croak_null();
   }
@@ -4865,14 +4694,12 @@ static swig_variable_info swig_variables[] = {
 };
 static swig_command_info swig_commands[] = {
 {"Math::GSL::Sortc::gsl_sort", _wrap_gsl_sort},
-{"Math::GSL::Sortc::gsl_sort2", _wrap_gsl_sort2},
 {"Math::GSL::Sortc::gsl_sort_index", _wrap_gsl_sort_index},
 {"Math::GSL::Sortc::gsl_sort_smallest", _wrap_gsl_sort_smallest},
 {"Math::GSL::Sortc::gsl_sort_smallest_index", _wrap_gsl_sort_smallest_index},
 {"Math::GSL::Sortc::gsl_sort_largest", _wrap_gsl_sort_largest},
 {"Math::GSL::Sortc::gsl_sort_largest_index", _wrap_gsl_sort_largest_index},
 {"Math::GSL::Sortc::gsl_sort_int", _wrap_gsl_sort_int},
-{"Math::GSL::Sortc::gsl_sort2_int", _wrap_gsl_sort2_int},
 {"Math::GSL::Sortc::gsl_sort_int_index", _wrap_gsl_sort_int_index},
 {"Math::GSL::Sortc::gsl_sort_int_smallest", _wrap_gsl_sort_int_smallest},
 {"Math::GSL::Sortc::gsl_sort_int_smallest_index", _wrap_gsl_sort_int_smallest_index},
@@ -4885,7 +4712,6 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::Sortc::gsl_sort_vector_smallest_index", _wrap_gsl_sort_vector_smallest_index},
 {"Math::GSL::Sortc::gsl_sort_vector_largest_index", _wrap_gsl_sort_vector_largest_index},
 {"Math::GSL::Sortc::gsl_sort_vector_int", _wrap_gsl_sort_vector_int},
-{"Math::GSL::Sortc::gsl_sort_vector2_int", _wrap_gsl_sort_vector2_int},
 {"Math::GSL::Sortc::gsl_sort_vector_int_index", _wrap_gsl_sort_vector_int_index},
 {"Math::GSL::Sortc::gsl_sort_vector_int_smallest", _wrap_gsl_sort_vector_int_smallest},
 {"Math::GSL::Sortc::gsl_sort_vector_int_largest", _wrap_gsl_sort_vector_int_largest},
