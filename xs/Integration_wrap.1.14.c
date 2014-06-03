@@ -7439,84 +7439,6 @@ XS(_wrap_gsl_integration_glfixed) {
 }
 
 
-XS(_wrap_gsl_integration_glfixed_point) {
-  {
-    double arg1 ;
-    double arg2 ;
-    size_t arg3 ;
-    double *arg4 = (double *) 0 ;
-    double *arg5 = (double *) 0 ;
-    gsl_integration_glfixed_table *arg6 = (gsl_integration_glfixed_table *) 0 ;
-    double val1 ;
-    int ecode1 = 0 ;
-    double val2 ;
-    int ecode2 = 0 ;
-    size_t val3 ;
-    int ecode3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
-    void *argp5 = 0 ;
-    int res5 = 0 ;
-    void *argp6 = 0 ;
-    int res6 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 6) || (items > 6)) {
-      SWIG_croak("Usage: gsl_integration_glfixed_point(a,b,i,xi,wi,t);");
-    }
-    ecode1 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(0), &val1);
-    if (!SWIG_IsOK(ecode1)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode1), "in method '" "gsl_integration_glfixed_point" "', argument " "1"" of type '" "double""'");
-    } 
-    arg1 = (double)(val1);
-    ecode2 = SWIG_AsVal_double SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_integration_glfixed_point" "', argument " "2"" of type '" "double""'");
-    } 
-    arg2 = (double)(val2);
-    ecode3 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
-    if (!SWIG_IsOK(ecode3)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_integration_glfixed_point" "', argument " "3"" of type '" "size_t""'");
-    } 
-    arg3 = (size_t)(val3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_integration_glfixed_point" "', argument " "4"" of type '" "double *""'"); 
-    }
-    arg4 = (double *)(argp4);
-    res5 = SWIG_ConvertPtr(ST(4), &argp5,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res5)) {
-      SWIG_exception_fail(SWIG_ArgError(res5), "in method '" "gsl_integration_glfixed_point" "', argument " "5"" of type '" "double *""'"); 
-    }
-    arg5 = (double *)(argp5);
-    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_gsl_integration_glfixed_table, 0 |  0 );
-    if (!SWIG_IsOK(res6)) {
-      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_integration_glfixed_point" "', argument " "6"" of type '" "gsl_integration_glfixed_table const *""'"); 
-    }
-    arg6 = (gsl_integration_glfixed_table *)(argp6);
-    result = (int)gsl_integration_glfixed_point(arg1,arg2,arg3,arg4,arg5,(gsl_integration_glfixed_table const *)arg6);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_gsl_function_struct_function_set) {
   {
     struct gsl_function_struct *arg1 = (struct gsl_function_struct *) 0 ;
@@ -8342,7 +8264,6 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::Integrationc::gsl_integration_glfixed_table_alloc", _wrap_gsl_integration_glfixed_table_alloc},
 {"Math::GSL::Integrationc::gsl_integration_glfixed_table_free", _wrap_gsl_integration_glfixed_table_free},
 {"Math::GSL::Integrationc::gsl_integration_glfixed", _wrap_gsl_integration_glfixed},
-{"Math::GSL::Integrationc::gsl_integration_glfixed_point", _wrap_gsl_integration_glfixed_point},
 {"Math::GSL::Integrationc::gsl_function_struct_function_set", _wrap_gsl_function_struct_function_set},
 {"Math::GSL::Integrationc::gsl_function_struct_function_get", _wrap_gsl_function_struct_function_get},
 {"Math::GSL::Integrationc::gsl_function_struct_params_set", _wrap_gsl_function_struct_params_set},
