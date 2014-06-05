@@ -7,8 +7,8 @@ build_requires:
   Test::Exception: '0.21'
   Test::Most: '0.31'
 configure_requires:
-  ExtUtils::PkgConfig: '1.03'
   Module::Build: '0.38'
+  PkgConfig: '0.07520'
 dynamic_config: 1
 generated_by: 'Module::Build version 0.4205, CPAN::Meta::Converter version 2.141520'
 license: gpl
@@ -19,7 +19,7 @@ name: Math-GSL
 provides:
   Math::GSL:
     file: lib/Math/GSL.pm
-    version: 0.30_2
+    version: 0.30_3
   Math::GSL::BLAS:
     file: lib/Math/GSL/BLAS.pm
     version: '0'
@@ -801,11 +801,11 @@ provides:
     file: lib/Math/GSL/Wavelet.pm
     version: '0'
 requires:
-  ExtUtils::PkgConfig: '1.03'
+  PkgConfig: '0.07520'
   Scalar::Util: '0'
   perl: v5.8.0
   version: '0.77'
 resources:
   license: http://www.gnu.org/licenses/old-licenses/gpl-1.0.txt
   repository: http://github.com/leto/math--gsl/tree/master
-version: 0.30_2
+version: 0.30_3

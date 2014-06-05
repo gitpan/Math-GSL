@@ -1447,7 +1447,7 @@ functions defined by GSL library.
 
 =head2 Constructor
 
-=head3 C<< Math::GSL::Matrix->new() >>
+=head3 Math::GSL::Matrix->new() 
 
 Creates a new Matrix of the given size.
 
@@ -1507,7 +1507,7 @@ sub _new_from_dims
 
 =head2 Getters
 
-=head3 C<< raw() >>
+=head3 raw() 
 
 Get the underlying GSL matrix object created by SWIG, useful for using gsl_matrix_* functions which do not have an OO counterpart.
 
@@ -1520,7 +1520,7 @@ Get the underlying GSL matrix object created by SWIG, useful for using gsl_matri
 sub raw  { (shift)->{_matrix} }
 
 
-=head3 C<< dim() >>
+=head3 dim() 
 
 Returns the number of rows and columns in a matrix as an array.
 
@@ -1532,7 +1532,7 @@ Basically a shortcut to C<rows> and C<cols> methods.
 
 sub dim { ($_[0]->rows, $_[0]->cols) }
 
-=head3 C<< rows() >>
+=head3 rows() 
 
 Returns the number of rows in the matrix.
 
@@ -1541,7 +1541,7 @@ Returns the number of rows in the matrix.
 
 sub rows { (shift)->{_rows}   }
 
-=head3 C<< cols() >>
+=head3 cols() 
 
 Returns the number of columns in the matrix.
 
@@ -1550,7 +1550,7 @@ Returns the number of columns in the matrix.
 
 sub cols { (shift)->{_cols}   }
 
-=head3 C<< as_list() >>
+=head3 as_list() 
 
 Get the contents of a Math::GSL::Matrix object as a Perl list.
 
@@ -1601,6 +1601,8 @@ B<NOTE:> just like any other method on this module, rows and arrays start
 with indice 0.
 
 =cut
+
+sub element { get_elem(@_); } # compatibility with Math::MatrixReal
 
 sub get_elem {
     my ($self, $row, $col) = @_;
@@ -1727,7 +1729,7 @@ sub min {
 
 =head2 Setters
 
-=head3 C<< identity() >>
+=head3 identity() 
 
 Set a matrix to the identity matrix, i.e. one on the diagonal and zero elsewhere.
 
@@ -1742,7 +1744,7 @@ sub identity
     return $self;
 }
 
-=head3 C<< zero() >>
+=head3 zero() 
 
 Set a matrix to the zero matrix.
 
@@ -1757,7 +1759,9 @@ sub zero # brrr!
     return $self;
 }
 
-=head3 C<< set_elem() >>
+=head3 set_elem() 
+
+=head3 assign()
 
 Sets a specific value in the matrix.
 
@@ -1773,6 +1777,9 @@ with indice 0.
 
 =cut
 
+# added this to add compatibility with Math::RealMatrix. Useful.
+sub assign { set_elem(@_); }
+
 sub set_elem {
     my ($self, $row, $col, $value) = @_;
     die __PACKAGE__.'::set_elem($x, $y, $v) - $x must be a valid row number'
@@ -1783,7 +1790,7 @@ sub set_elem {
     return $self;
 }
 
-=head3 C<< set_row() >>
+=head3 set_row() 
 
 Sets a the values of a row with the elements of an array.
 
@@ -1811,7 +1818,7 @@ sub set_row {
     return $self;
 }
 
-=head3 C<< set_col() >>
+=head3 set_col() 
 
 Sets a the values of a column with the elements of an array.
 
@@ -1842,7 +1849,7 @@ sub set_col {
 
 =head2 Utility Functions
 
-=head3 C<< copy() >>
+=head3 copy() 
 
 Returns a copy of the matrix, which has the same size and values but resides at a different location in memory.
 
@@ -1863,7 +1870,7 @@ sub copy {
 
 
 
-=head3 C<< is_square() >>
+=head3 is_square() 
 
 Returns true if a matrix is square, i.e. it has the same number of rows as columns, false otherwise.
 
@@ -1875,7 +1882,7 @@ sub is_square($)
     return ($self->rows == $self->cols) ? 1 : 0 ;
 }
 
-=head3 C<< det() >>
+=head3 det() 
 
 Returns the determinant of a matrix (computed by LU decomposition) or dies if called on a non-square matrix.
 
@@ -1895,7 +1902,7 @@ sub det($)
     return gsl_linalg_LU_det($LU->raw, $s );
 }
 
-=head3 C<< lndet() >>
+=head3 lndet() 
 
 Returns the natural log of the absolute value of the determinant of a matrix (computed by LU decomposition) or dies if called on a non-square matrix.
 
@@ -1915,7 +1922,7 @@ sub lndet($)
     return gsl_linalg_LU_lndet($LU->raw);
 }
 
-=head3 C<< inverse() >>
+=head3 inverse() 
 
 Returns the inverse of a matrix or dies when called on a non-square matrix.
 
@@ -1940,7 +1947,7 @@ sub inverse($)
 
 }
 
-=head3 C<< eigenvalues() >>
+=head3 eigenvalues() 
 
 Computes the a matrix eigen values.
 
@@ -1968,7 +1975,7 @@ sub eigenvalues($)
 
 }
 
-=head3 C<< eigenpair() >>
+=head3 eigenpair() 
 
 =cut
 
