@@ -1588,7 +1588,6 @@ sub as_vector($)
 
 }
 
-
 =head3 get_elem()
 
 Returns an element of a matrix.
@@ -1601,8 +1600,6 @@ B<NOTE:> just like any other method on this module, rows and arrays start
 with indice 0.
 
 =cut
-
-sub element { get_elem(@_); } # compatibility with Math::MatrixReal
 
 sub get_elem {
     my ($self, $row, $col) = @_;
@@ -1761,8 +1758,6 @@ sub zero # brrr!
 
 =head3 set_elem() 
 
-=head3 assign()
-
 Sets a specific value in the matrix.
 
     my $matrix = Math::GSL::Matrix->new(2,2);
@@ -1776,9 +1771,6 @@ B<NOTE:> just like any other method on this module, rows and arrays start
 with indice 0.
 
 =cut
-
-# added this to add compatibility with Math::RealMatrix. Useful.
-sub assign { set_elem(@_); }
 
 sub set_elem {
     my ($self, $row, $col, $value) = @_;
@@ -2168,12 +2160,7 @@ sub _multiplication {
     my $lcopy = $left->copy;
 
     if ( blessed $right && $right->isa('Math::GSL::Matrix') ) {
-        if ( $left->cols == $right->cols && $left->rows == $right->rows ) {
-            return _dot_product($left,$right);
-            #gsl_matrix_mul_elements($lcopy->raw, $right->raw);
-        } else {
-            croak "Math::GSL::Matrix - multiplication of elements of matrices must be called with two objects matrices and must have the same number of columns and rows";
-        } 
+        return _dot_product($left,$right);
     } else {
         gsl_matrix_scale($lcopy->raw, $right);
     }
@@ -2195,9 +2182,9 @@ sub _dot_product {
     my ($left,$right) = @_;
 
     croak "Math::GSL::Matrix - incompatible matrices in multiplication"
-        unless ( blessed $right && $right->isa('Math::GSL::Matrix') and $left->rows == $right->cols );
+        unless ( blessed $right && $right->isa('Math::GSL::Matrix') and $left->cols == $right->rows );
     my $C = Math::GSL::Matrix->new($left->rows, $right->cols);
-    gsl_blas_dgemm($CblasNoTrans, $CblasNoTrans, 1, $left->raw, $right->raw, 1, $C->raw);
+    gsl_blas_dgemm($CblasNoTrans, $CblasNoTrans, 1, $left->raw, $right->raw, 0, $C->raw);
     return $C;
 }
 
