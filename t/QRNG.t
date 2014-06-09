@@ -18,13 +18,11 @@ sub teardown : Test(teardown) {
 }
 
 sub GSL_QRNG_ALLOC : Tests {
-	print STDERR "\n- GSL_QRNG_ALLOC";
     my $qrng = gsl_qrng_alloc($gsl_qrng_sobol, 2);
     isa_ok( $qrng, 'Math::GSL::QRNG');
 }
 
 sub GSL_QRNG_STATE_SIZE : Tests {
-    print STDERR "\n- GSL_QRNG_STATE_SIZE";
     my $self  = shift;
     my $state = gsl_qrng_state($self->{sobol});
     my $size  = gsl_qrng_size($self->{sobol});
@@ -38,14 +36,12 @@ sub GSL_QRNG_STATE_SIZE : Tests {
 }
 
 sub GSL_QRNG_CLONE : Tests {
-    print STDERR "\n- GSL_QRNG_CLONE";
     my $self  = shift;
     my $droid = gsl_qrng_clone($self->{sobol});
     isa_ok($droid, 'Math::GSL::QRNG' );
 }
 
 sub GSL_QRNG_NAME : Tests {
-    print STDERR "\n- GSL_QRNG_NAME";
     my $self = shift;
     my $name = gsl_qrng_name($self->{sobol});
     cmp_ok($name,'eq','sobol', 'gsl_qrng_name == sobol' );
@@ -53,7 +49,6 @@ sub GSL_QRNG_NAME : Tests {
 
 sub GSL_QRNG_GET : Tests {
     my $self = shift;
-    print STDERR "\n- GSL_QRNG_GET";
     my ($status, @values)= gsl_qrng_get($self->{sobol});
 
     is ($status, $GSL_SUCCESS);
@@ -64,4 +59,4 @@ sub GSL_QRNG_GET : Tests {
 }
 
 Test::Class->runtests;
-print STDERR "\n";
+

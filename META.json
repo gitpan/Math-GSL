@@ -24,12 +24,12 @@
       "configure" : {
          "requires" : {
             "Module::Build" : "0.38",
-            "PkgConfig" : "0.07520"
+            "PkgConfig" : "0.07720"
          }
       },
       "runtime" : {
          "requires" : {
-            "PkgConfig" : "0.07520",
+            "PkgConfig" : "0.07720",
             "Scalar::Util" : "0",
             "perl" : "v5.8.0",
             "version" : "0.77"
@@ -39,7 +39,7 @@
    "provides" : {
       "Math::GSL" : {
          "file" : "lib/Math/GSL.pm",
-         "version" : "0.30_6"
+         "version" : "0.30"
       },
       "Math::GSL::BLAS" : {
          "file" : "lib/Math/GSL/BLAS.pm",
@@ -1082,7 +1082,7 @@
          "version" : 0
       }
    },
-   "release_status" : "testing",
+   "release_status" : "stable",
    "resources" : {
       "license" : [
          "http://www.gnu.org/licenses/old-licenses/gpl-1.0.txt"
@@ -1091,5 +1091,5 @@
          "url" : "http://github.com/leto/math--gsl/tree/master"
       }
    },
-   "version" : "0.30_6"
+   "version" : "0.30"
 }
