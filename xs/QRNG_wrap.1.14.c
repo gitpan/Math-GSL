@@ -3003,42 +3003,39 @@ XS(_wrap_gsl_qrng_get) {
     gsl_qrng *arg1 = (gsl_qrng *) 0 ;
     double *arg2 ;
     void *argp1 = 0 ;
-    int res1 = 0 ;
-    double temp2 ;
-    int res2 = SWIG_TMPOBJ ;
+    int res1 ;
     int argvi = 0;
+    SV * _saved[1] ;
     int result;
     dXSARGS;
     
-    arg2 = &temp2;
     if ((items < 1) || (items > 1)) {
-      SWIG_croak("Usage: gsl_qrng_get(q);");
+      SWIG_croak("Usage: gsl_qrng_get(q,x);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_qrng, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_qrng_get" "', argument " "1"" of type '" "gsl_qrng const *""'"); 
+    {
+      res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_qrng, 0 |  0 );
+      if (!SWIG_IsOK(res1)) {
+        SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_qrng_get" "', argument " "1"" of type '" "gsl_qrng *""'"); 
+      }
+      arg1 = (gsl_qrng*) argp1;
+      arg2 = (double*) calloc(arg1->dimension, sizeof(double));	
     }
-    arg1 = (gsl_qrng *)(argp1);
+    _saved[0] = ST(0);
     result = (int)gsl_qrng_get((gsl_qrng const *)arg1,arg2);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
     {
-      if (argvi >= items) {
-        EXTEND(sp,1);
-      }
-      ST(argvi) = sv_newmortal();
-      sv_setnv(ST(argvi),(NV) *(arg2));
-      argvi++;
+      int ii;
+      EXTEND(sp, arg1->dimension);
       
-      ST(argvi) = sv_newmortal();
-      sv_setnv(ST(argvi),(NV) *(arg2+1));
-      argvi++;
+      for (ii = 0; ii < arg1->dimension; ++ii) {
+        ST(argvi) = sv_newmortal();
+        sv_setnv(ST(argvi),(NV) *(arg2+ii));
+        argvi++;
+      }
+      free(arg2);
     }
-    
-    
     XSRETURN(argvi);
   fail:
-    
-    
     SWIG_croak_null();
   }
 }
