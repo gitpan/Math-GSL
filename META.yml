@@ -19,7 +19,7 @@ name: Math-GSL
 provides:
   Math::GSL:
     file: lib/Math/GSL.pm
-    version: 0.32_1
+    version: 0.32_2
   Math::GSL::BLAS:
     file: lib/Math/GSL/BLAS.pm
     version: '0'
@@ -617,6 +617,18 @@ provides:
   Math::GSL::QRNG:
     file: lib/Math/GSL/QRNG.pm
     version: '0'
+  Math::GSL::QRNG::Halton:
+    file: lib/Math/GSL/QRNG.pm
+    version: '0'
+  Math::GSL::QRNG::Niederreiter2:
+    file: lib/Math/GSL/QRNG.pm
+    version: '0'
+  Math::GSL::QRNG::ReverseHalton:
+    file: lib/Math/GSL/QRNG.pm
+    version: '0'
+  Math::GSL::QRNG::Sobol:
+    file: lib/Math/GSL/QRNG.pm
+    version: '0'
   Math::GSL::QRNG::gsl_qrng:
     file: lib/Math/GSL/QRNG.pm
     version: '0'
@@ -803,9 +815,10 @@ provides:
 requires:
   PkgConfig: '0.07720'
   Scalar::Util: '0'
+  parent: '0'
   perl: v5.8.0
   version: '0.77'
 resources:
   license: http://www.gnu.org/licenses/old-licenses/gpl-1.0.txt
   repository: http://github.com/leto/math--gsl/tree/master
-version: 0.32_1
+version: 0.32_2
