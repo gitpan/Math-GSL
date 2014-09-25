@@ -1488,10 +1488,11 @@ SWIG_Perl_SetModule(swig_module_info *module) {
 #define SWIGTYPE_p_double swig_types[1]
 #define SWIGTYPE_p_gsl_ran_discrete_t swig_types[2]
 #define SWIGTYPE_p_gsl_rng swig_types[3]
-#define SWIGTYPE_p_size_t swig_types[4]
-#define SWIGTYPE_p_unsigned_int swig_types[5]
-static swig_type_info *swig_types[7];
-static swig_module_info swig_module = {swig_types, 6, 0, 0, 0, 0};
+#define SWIGTYPE_p_int swig_types[4]
+#define SWIGTYPE_p_size_t swig_types[5]
+#define SWIGTYPE_p_unsigned_int swig_types[6]
+static swig_type_info *swig_types[8];
+static swig_module_info swig_module = {swig_types, 7, 0, 0, 0, 0};
 #define SWIG_TypeQuery(name) SWIG_TypeQueryModule(&swig_module, &swig_module, name)
 #define SWIG_MangledTypeQuery(name) SWIG_MangledTypeQueryModule(&swig_module, &swig_module, name)
 
@@ -1854,6 +1855,7 @@ SWIG_AsVal_unsigned_SS_int SWIG_PERL_DECL_ARGS_2(SV * obj, unsigned int *val)
 
 
     #include "gsl/gsl_randist.h"
+    #include "../c/Randist.c"
 
     /* create wrappers for multinormial and dirichlet */
     
@@ -6853,6 +6855,368 @@ XS(_wrap_gsl_ran_discrete_pdf) {
 }
 
 
+XS(_wrap_our_gsl_ran_shuffle) {
+  {
+    gsl_rng *arg1 = (gsl_rng *) 0 ;
+    int *arg2 = (int *) 0 ;
+    size_t arg3 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    size_t val3 ;
+    int ecode3 = 0 ;
+    int argvi = 0;
+    array_wrapper *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 3) || (items > 3)) {
+      SWIG_croak("Usage: our_gsl_ran_shuffle(r,v,n);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_rng, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "our_gsl_ran_shuffle" "', argument " "1"" of type '" "gsl_rng const *""'"); 
+    }
+    arg1 = (gsl_rng *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(1)))
+      croak("Math::GSL : $v is not a reference!");
+      if (SvTYPE(SvRV(ST(1))) != SVt_PVAV)
+      croak("Math::GSL : $v is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(1));
+      len = av_len(tempav);
+      arg2 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg2[i] = (int) SvNV(*tv);
+      }
+    }
+    ecode3 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(2), &val3);
+    if (!SWIG_IsOK(ecode3)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "our_gsl_ran_shuffle" "', argument " "3"" of type '" "size_t""'");
+    } 
+    arg3 = (size_t)(val3);
+    result = (array_wrapper *)our_gsl_ran_shuffle((gsl_rng const *)arg1,arg2,arg3);
+    {
+      SV** tmparr;
+      AV* av;
+      array_wrapper * wrapper;
+      int i;
+      
+      double * dptr;
+      float * fptr;
+      int * iptr;
+      unsigned int * uptr;
+      
+      wrapper = result;
+      
+      tmparr = malloc(sizeof(SV*) * wrapper->size);
+      if (tmparr == NULL)
+      croak("out typemap for array_wrapper: couldn't malloc tmparr");
+      
+      switch (wrapper->type){
+      case awDouble:
+        dptr = (double *)wrapper->data;
+        for (i=0; i< wrapper->size; i++){
+          tmparr[i] = newSVnv(dptr[i]);
+        }
+        break;
+      case awFloat:
+        fptr = (float *)wrapper->data;
+        for (i=0; i< wrapper->size; i++){
+          tmparr[i] = newSVnv((double)fptr[i]);
+        }
+        break;
+      case awInt:
+        iptr = (int *)wrapper->data;
+        for (i=0; i< wrapper->size; i++){
+          tmparr[i] = newSViv(iptr[i]);
+        }
+        break;
+      case awUnsigned:
+        uptr = (unsigned int*)wrapper->data;
+        for (i=0; i< wrapper->size; i++){
+          tmparr[i] = newSVuv(uptr[i]);
+        }
+        break;
+      default:
+        croak("out typemap for array_wrapper : type should be awDouble, awFloat, awInt, or awUnsigned");
+      }
+      
+      av = av_make(wrapper->size, tmparr);
+      ST(argvi) = sv_2mortal(newRV_noinc((SV*) av));
+      free(tmparr);
+      array_wrapper_free(wrapper);
+      argvi++;
+    }
+    
+    {
+      if (arg2) free(arg2);
+    }
+    
+    XSRETURN(argvi);
+  fail:
+    
+    {
+      if (arg2) free(arg2);
+    }
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_our_gsl_ran_choose) {
+  {
+    gsl_rng *arg1 = (gsl_rng *) 0 ;
+    size_t arg2 ;
+    int *arg3 = (int *) 0 ;
+    size_t arg4 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    size_t val2 ;
+    int ecode2 = 0 ;
+    size_t val4 ;
+    int ecode4 = 0 ;
+    int argvi = 0;
+    array_wrapper *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 4) || (items > 4)) {
+      SWIG_croak("Usage: our_gsl_ran_choose(r,k,v,n);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_rng, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "our_gsl_ran_choose" "', argument " "1"" of type '" "gsl_rng const *""'"); 
+    }
+    arg1 = (gsl_rng *)(argp1);
+    ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "our_gsl_ran_choose" "', argument " "2"" of type '" "size_t""'");
+    } 
+    arg2 = (size_t)(val2);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(2)))
+      croak("Math::GSL : $v is not a reference!");
+      if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
+      croak("Math::GSL : $v is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(2));
+      len = av_len(tempav);
+      arg3 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg3[i] = (int) SvNV(*tv);
+      }
+    }
+    ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    if (!SWIG_IsOK(ecode4)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "our_gsl_ran_choose" "', argument " "4"" of type '" "size_t""'");
+    } 
+    arg4 = (size_t)(val4);
+    result = (array_wrapper *)our_gsl_ran_choose((gsl_rng const *)arg1,arg2,arg3,arg4);
+    {
+      SV** tmparr;
+      AV* av;
+      array_wrapper * wrapper;
+      int i;
+      
+      double * dptr;
+      float * fptr;
+      int * iptr;
+      unsigned int * uptr;
+      
+      wrapper = result;
+      
+      tmparr = malloc(sizeof(SV*) * wrapper->size);
+      if (tmparr == NULL)
+      croak("out typemap for array_wrapper: couldn't malloc tmparr");
+      
+      switch (wrapper->type){
+      case awDouble:
+        dptr = (double *)wrapper->data;
+        for (i=0; i< wrapper->size; i++){
+          tmparr[i] = newSVnv(dptr[i]);
+        }
+        break;
+      case awFloat:
+        fptr = (float *)wrapper->data;
+        for (i=0; i< wrapper->size; i++){
+          tmparr[i] = newSVnv((double)fptr[i]);
+        }
+        break;
+      case awInt:
+        iptr = (int *)wrapper->data;
+        for (i=0; i< wrapper->size; i++){
+          tmparr[i] = newSViv(iptr[i]);
+        }
+        break;
+      case awUnsigned:
+        uptr = (unsigned int*)wrapper->data;
+        for (i=0; i< wrapper->size; i++){
+          tmparr[i] = newSVuv(uptr[i]);
+        }
+        break;
+      default:
+        croak("out typemap for array_wrapper : type should be awDouble, awFloat, awInt, or awUnsigned");
+      }
+      
+      av = av_make(wrapper->size, tmparr);
+      ST(argvi) = sv_2mortal(newRV_noinc((SV*) av));
+      free(tmparr);
+      array_wrapper_free(wrapper);
+      argvi++;
+    }
+    
+    
+    {
+      if (arg3) free(arg3);
+    }
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    {
+      if (arg3) free(arg3);
+    }
+    
+    SWIG_croak_null();
+  }
+}
+
+
+XS(_wrap_our_gsl_ran_sample) {
+  {
+    gsl_rng *arg1 = (gsl_rng *) 0 ;
+    size_t arg2 ;
+    int *arg3 = (int *) 0 ;
+    size_t arg4 ;
+    void *argp1 = 0 ;
+    int res1 = 0 ;
+    size_t val2 ;
+    int ecode2 = 0 ;
+    size_t val4 ;
+    int ecode4 = 0 ;
+    int argvi = 0;
+    array_wrapper *result = 0 ;
+    dXSARGS;
+    
+    if ((items < 4) || (items > 4)) {
+      SWIG_croak("Usage: our_gsl_ran_sample(r,k,v,n);");
+    }
+    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_rng, 0 |  0 );
+    if (!SWIG_IsOK(res1)) {
+      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "our_gsl_ran_sample" "', argument " "1"" of type '" "gsl_rng const *""'"); 
+    }
+    arg1 = (gsl_rng *)(argp1);
+    ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
+    if (!SWIG_IsOK(ecode2)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "our_gsl_ran_sample" "', argument " "2"" of type '" "size_t""'");
+    } 
+    arg2 = (size_t)(val2);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(2)))
+      croak("Math::GSL : $v is not a reference!");
+      if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
+      croak("Math::GSL : $v is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(2));
+      len = av_len(tempav);
+      arg3 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg3[i] = (int) SvNV(*tv);
+      }
+    }
+    ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
+    if (!SWIG_IsOK(ecode4)) {
+      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "our_gsl_ran_sample" "', argument " "4"" of type '" "size_t""'");
+    } 
+    arg4 = (size_t)(val4);
+    result = (array_wrapper *)our_gsl_ran_sample((gsl_rng const *)arg1,arg2,arg3,arg4);
+    {
+      SV** tmparr;
+      AV* av;
+      array_wrapper * wrapper;
+      int i;
+      
+      double * dptr;
+      float * fptr;
+      int * iptr;
+      unsigned int * uptr;
+      
+      wrapper = result;
+      
+      tmparr = malloc(sizeof(SV*) * wrapper->size);
+      if (tmparr == NULL)
+      croak("out typemap for array_wrapper: couldn't malloc tmparr");
+      
+      switch (wrapper->type){
+      case awDouble:
+        dptr = (double *)wrapper->data;
+        for (i=0; i< wrapper->size; i++){
+          tmparr[i] = newSVnv(dptr[i]);
+        }
+        break;
+      case awFloat:
+        fptr = (float *)wrapper->data;
+        for (i=0; i< wrapper->size; i++){
+          tmparr[i] = newSVnv((double)fptr[i]);
+        }
+        break;
+      case awInt:
+        iptr = (int *)wrapper->data;
+        for (i=0; i< wrapper->size; i++){
+          tmparr[i] = newSViv(iptr[i]);
+        }
+        break;
+      case awUnsigned:
+        uptr = (unsigned int*)wrapper->data;
+        for (i=0; i< wrapper->size; i++){
+          tmparr[i] = newSVuv(uptr[i]);
+        }
+        break;
+      default:
+        croak("out typemap for array_wrapper : type should be awDouble, awFloat, awInt, or awUnsigned");
+      }
+      
+      av = av_make(wrapper->size, tmparr);
+      ST(argvi) = sv_2mortal(newRV_noinc((SV*) av));
+      free(tmparr);
+      array_wrapper_free(wrapper);
+      argvi++;
+    }
+    
+    
+    {
+      if (arg3) free(arg3);
+    }
+    
+    XSRETURN(argvi);
+  fail:
+    
+    
+    {
+      if (arg3) free(arg3);
+    }
+    
+    SWIG_croak_null();
+  }
+}
+
+
 
 /* -------- TYPE CONVERSION AND EQUIVALENCE RULES (BEGIN) -------- */
 
@@ -6860,6 +7224,7 @@ static swig_type_info _swigt__p_char = {"_p_char", "char *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_double = {"_p_double", "double *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_gsl_ran_discrete_t = {"_p_gsl_ran_discrete_t", "gsl_ran_discrete_t *", 0, 0, (void*)"Math::GSL::Randist::gsl_ran_discrete_t", 0};
 static swig_type_info _swigt__p_gsl_rng = {"_p_gsl_rng", "gsl_rng *", 0, 0, (void*)0, 0};
+static swig_type_info _swigt__p_int = {"_p_int", "int *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_size_t = {"_p_size_t", "size_t *", 0, 0, (void*)0, 0};
 static swig_type_info _swigt__p_unsigned_int = {"_p_unsigned_int", "unsigned int *", 0, 0, (void*)0, 0};
 
@@ -6868,6 +7233,7 @@ static swig_type_info *swig_type_initial[] = {
   &_swigt__p_double,
   &_swigt__p_gsl_ran_discrete_t,
   &_swigt__p_gsl_rng,
+  &_swigt__p_int,
   &_swigt__p_size_t,
   &_swigt__p_unsigned_int,
 };
@@ -6876,6 +7242,7 @@ static swig_cast_info _swigc__p_char[] = {  {&_swigt__p_char, 0, 0, 0},{0, 0, 0,
 static swig_cast_info _swigc__p_double[] = {  {&_swigt__p_double, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_ran_discrete_t[] = {  {&_swigt__p_gsl_ran_discrete_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_gsl_rng[] = {  {&_swigt__p_gsl_rng, 0, 0, 0},{0, 0, 0, 0}};
+static swig_cast_info _swigc__p_int[] = {  {&_swigt__p_int, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_size_t[] = {  {&_swigt__p_size_t, 0, 0, 0},{0, 0, 0, 0}};
 static swig_cast_info _swigc__p_unsigned_int[] = {  {&_swigt__p_unsigned_int, 0, 0, 0},{0, 0, 0, 0}};
 
@@ -6884,6 +7251,7 @@ static swig_cast_info *swig_cast_initial[] = {
   _swigc__p_double,
   _swigc__p_gsl_ran_discrete_t,
   _swigc__p_gsl_rng,
+  _swigc__p_int,
   _swigc__p_size_t,
   _swigc__p_unsigned_int,
 };
@@ -7003,6 +7371,9 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::Randistc::gsl_ran_discrete_free", _wrap_gsl_ran_discrete_free},
 {"Math::GSL::Randistc::gsl_ran_discrete", _wrap_gsl_ran_discrete},
 {"Math::GSL::Randistc::gsl_ran_discrete_pdf", _wrap_gsl_ran_discrete_pdf},
+{"Math::GSL::Randistc::our_gsl_ran_shuffle", _wrap_our_gsl_ran_shuffle},
+{"Math::GSL::Randistc::our_gsl_ran_choose", _wrap_our_gsl_ran_choose},
+{"Math::GSL::Randistc::our_gsl_ran_sample", _wrap_our_gsl_ran_sample},
 {0,0}
 };
 /* -----------------------------------------------------------------------------

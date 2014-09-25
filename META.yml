@@ -6,11 +6,12 @@ build_requires:
   Test::Class: '0.12'
   Test::Exception: '0.21'
   Test::Most: '0.31'
+  Test::Taint: '1.06'
 configure_requires:
   Module::Build: '0.38'
   PkgConfig: '0.07720'
 dynamic_config: 1
-generated_by: 'Module::Build version 0.4205, CPAN::Meta::Converter version 2.141520'
+generated_by: 'Module::Build version 0.421, CPAN::Meta::Converter version 2.142060'
 license: gpl
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -19,7 +20,7 @@ name: Math-GSL
 provides:
   Math::GSL:
     file: lib/Math/GSL.pm
-    version: '0.32'
+    version: '0.33'
   Math::GSL::BLAS:
     file: lib/Math/GSL/BLAS.pm
     version: '0'
@@ -821,4 +822,4 @@ requires:
 resources:
   license: http://www.gnu.org/licenses/old-licenses/gpl-1.0.txt
   repository: http://github.com/leto/math--gsl/tree/master
-version: '0.32'
+version: '0.33'

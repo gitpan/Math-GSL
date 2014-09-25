@@ -290,8 +290,8 @@ Math::GSL::Matrix - Mathematical functions concerning Matrices
     my $matrix3 = $matrix1 - 4;
     my $matrix4 = $matrix2 + $matrix1;
     my $matrix5 = $matrix2 . $matrix1;          # This is a scalar product, it simply multiply each element
-						# with the element of $matrix1 that have the same position
-    						# See Math::GSL::BLAS if you want scalar product
+                                                # with the element of $matrix1 that have the same position
+                                                # See Math::GSL::BLAS if you want scalar product
 
     my $matrix6 = $matrix2 . 8;                 # Multiply every elements of $matrix2 by 8
     my $matrix7 = $matrix2 * $matrix1;          # scalar product of two matrices
@@ -759,6 +759,80 @@ sub det($)
     return gsl_linalg_LU_det($LU->raw, $s );
 }
 
+=head3 write
+
+Saves B<ONE> matrix into a file using the GSL binary format.
+
+     $matrix->save("matrix.dat");
+
+Note that this method always overwrite the file if it exists. In case more
+than one GSL object will be written to the file,  please use the C<gsl_fopen>,
+C<gsl_matrix_fwrite> and C<gsl_fclose> manually. Future versions might include
+helper for this task.
+
+B<NOTE>: in order to allow the read of one of these files without needing
+to know in advance the size of the matrix, an horizontal matrix with two 
+elements is saved in the beginning of the file with the number of rows
+and columns of the saved matrix.
+
+=cut
+
+sub write
+{
+    my ($self, $filename) = @_;
+
+    my $fh = gsl_fopen($filename, "w");
+    croak __PACKAGE__."::write - error opening file $filename for writing" unless $fh;
+
+    # create a temporary matrix with the main matrix dimensions
+    my $dim = gsl_matrix_alloc(1, 2);
+    my ($rows, $cols) = $self->dim;
+    gsl_matrix_set($dim, 0, 0, $rows);
+    gsl_matrix_set($dim, 0, 1, $cols);
+
+    my $err = gsl_matrix_fwrite($fh, $dim);
+    croak __PACKAGE__."::write - error writing matrix" if $err;
+
+    gsl_matrix_free($dim);
+
+    $err = gsl_matrix_fwrite($fh, $self->raw);
+    croak __PACKAGE__."::write - error writing matrix" if $err;
+
+    gsl_fclose($fh);
+}
+
+=head3 read
+
+Loads a matrix from a GSL binary file (saved using the C<save> method, 
+as it stores some extra information on the file).
+
+    my $matrix = Math::GSL::Matrix->read("matrix.dat");
+
+=cut
+
+sub read
+{
+    my ($class, $filename) = @_;
+    croak __PACKAGE__."::read - $filename does not exist" unless -f $filename;
+
+    my $fh = gsl_fopen($filename, "r");
+    croak __PACKAGE__."::read - error opening file $filename for reading" unless $fh;
+
+    my $dim = gsl_matrix_alloc(1, 2);
+    my $err = gsl_matrix_fread($fh, $dim);
+    croak __PACKAGE__."::read - error reading matrix" if $err;
+
+    my $m = gsl_matrix_alloc(gsl_matrix_get($dim, 0, 0),
+                             gsl_matrix_get($dim, 0, 1));
+    $err = gsl_matrix_fread($fh, $m);
+    croak __PACKAGE__."::read - error reading matrix" if $err;
+
+    gsl_matrix_free($dim);
+
+    gsl_fclose($fh);
+    return Math::GSL::Matrix->new($m);
+}
+
 =head3 lndet() 
 
 Returns the natural log of the absolute value of the determinant of a matrix (computed by LU decomposition) or dies if called on a non-square matrix.
@@ -1051,6 +1125,18 @@ sub _dot_product {
     my $C = Math::GSL::Matrix->new($left->rows, $right->cols);
     gsl_blas_dgemm($CblasNoTrans, $CblasNoTrans, 1, $left->raw, $right->raw, 0, $C->raw);
     return $C;
+}
+
+sub DESTROY {
+    my $self = shift;
+
+    # during global phase of destruction there is no
+    # sure that objects are destroyed in order. So, when
+    # going out, just do not destroy anything. The Operating
+    # System should do us for us.
+    return if ${^GLOBAL_PHASE} eq 'DESTRUCT';
+
+    gsl_matrix_free($self->raw) if defined($self->raw);
 }
 
 =head1 GSL FUNCTION INTERFACE

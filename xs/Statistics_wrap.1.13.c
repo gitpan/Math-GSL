@@ -5799,8 +5799,6 @@ XS(_wrap_gsl_stats_int_mean) {
     int *arg1 ;
     size_t arg2 ;
     size_t arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -5812,11 +5810,24 @@ XS(_wrap_gsl_stats_int_mean) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_stats_int_mean(data,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_mean" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_mean" "', argument " "2"" of type '" "size_t""'");
@@ -5829,12 +5840,16 @@ XS(_wrap_gsl_stats_int_mean) {
     arg3 = (size_t)(val3);
     result = (double)gsl_stats_int_mean((int const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -5847,8 +5862,6 @@ XS(_wrap_gsl_stats_int_variance) {
     int *arg1 ;
     size_t arg2 ;
     size_t arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -5860,11 +5873,24 @@ XS(_wrap_gsl_stats_int_variance) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_stats_int_variance(data,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_variance" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_variance" "', argument " "2"" of type '" "size_t""'");
@@ -5877,12 +5903,16 @@ XS(_wrap_gsl_stats_int_variance) {
     arg3 = (size_t)(val3);
     result = (double)gsl_stats_int_variance((int const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -5895,8 +5925,6 @@ XS(_wrap_gsl_stats_int_sd) {
     int *arg1 ;
     size_t arg2 ;
     size_t arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -5908,11 +5936,24 @@ XS(_wrap_gsl_stats_int_sd) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_stats_int_sd(data,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_sd" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_sd" "', argument " "2"" of type '" "size_t""'");
@@ -5925,12 +5966,16 @@ XS(_wrap_gsl_stats_int_sd) {
     arg3 = (size_t)(val3);
     result = (double)gsl_stats_int_sd((int const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -5944,8 +5989,6 @@ XS(_wrap_gsl_stats_int_variance_with_fixed_mean) {
     size_t arg2 ;
     size_t arg3 ;
     double arg4 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -5959,11 +6002,24 @@ XS(_wrap_gsl_stats_int_variance_with_fixed_mean) {
     if ((items < 4) || (items > 4)) {
       SWIG_croak("Usage: gsl_stats_int_variance_with_fixed_mean(data,stride,n,mean);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_variance_with_fixed_mean" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_variance_with_fixed_mean" "', argument " "2"" of type '" "size_t""'");
@@ -5981,13 +6037,17 @@ XS(_wrap_gsl_stats_int_variance_with_fixed_mean) {
     arg4 = (double)(val4);
     result = (double)gsl_stats_int_variance_with_fixed_mean((int const (*))arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -6002,8 +6062,6 @@ XS(_wrap_gsl_stats_int_sd_with_fixed_mean) {
     size_t arg2 ;
     size_t arg3 ;
     double arg4 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -6017,11 +6075,24 @@ XS(_wrap_gsl_stats_int_sd_with_fixed_mean) {
     if ((items < 4) || (items > 4)) {
       SWIG_croak("Usage: gsl_stats_int_sd_with_fixed_mean(data,stride,n,mean);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_sd_with_fixed_mean" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_sd_with_fixed_mean" "', argument " "2"" of type '" "size_t""'");
@@ -6039,13 +6110,17 @@ XS(_wrap_gsl_stats_int_sd_with_fixed_mean) {
     arg4 = (double)(val4);
     result = (double)gsl_stats_int_sd_with_fixed_mean((int const (*))arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -6059,8 +6134,6 @@ XS(_wrap_gsl_stats_int_tss) {
     int *arg1 ;
     size_t arg2 ;
     size_t arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -6072,11 +6145,24 @@ XS(_wrap_gsl_stats_int_tss) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_stats_int_tss(data,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_tss" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_tss" "', argument " "2"" of type '" "size_t""'");
@@ -6089,12 +6175,16 @@ XS(_wrap_gsl_stats_int_tss) {
     arg3 = (size_t)(val3);
     result = (double)gsl_stats_int_tss((int const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -6108,8 +6198,6 @@ XS(_wrap_gsl_stats_int_tss_m) {
     size_t arg2 ;
     size_t arg3 ;
     double arg4 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -6123,11 +6211,24 @@ XS(_wrap_gsl_stats_int_tss_m) {
     if ((items < 4) || (items > 4)) {
       SWIG_croak("Usage: gsl_stats_int_tss_m(data,stride,n,mean);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_tss_m" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_tss_m" "', argument " "2"" of type '" "size_t""'");
@@ -6145,13 +6246,17 @@ XS(_wrap_gsl_stats_int_tss_m) {
     arg4 = (double)(val4);
     result = (double)gsl_stats_int_tss_m((int const (*))arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -6165,8 +6270,6 @@ XS(_wrap_gsl_stats_int_absdev) {
     int *arg1 ;
     size_t arg2 ;
     size_t arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -6178,11 +6281,24 @@ XS(_wrap_gsl_stats_int_absdev) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_stats_int_absdev(data,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_absdev" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_absdev" "', argument " "2"" of type '" "size_t""'");
@@ -6195,12 +6311,16 @@ XS(_wrap_gsl_stats_int_absdev) {
     arg3 = (size_t)(val3);
     result = (double)gsl_stats_int_absdev((int const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -6213,8 +6333,6 @@ XS(_wrap_gsl_stats_int_skew) {
     int *arg1 ;
     size_t arg2 ;
     size_t arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -6226,11 +6344,24 @@ XS(_wrap_gsl_stats_int_skew) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_stats_int_skew(data,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_skew" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_skew" "', argument " "2"" of type '" "size_t""'");
@@ -6243,12 +6374,16 @@ XS(_wrap_gsl_stats_int_skew) {
     arg3 = (size_t)(val3);
     result = (double)gsl_stats_int_skew((int const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -6261,8 +6396,6 @@ XS(_wrap_gsl_stats_int_kurtosis) {
     int *arg1 ;
     size_t arg2 ;
     size_t arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -6274,11 +6407,24 @@ XS(_wrap_gsl_stats_int_kurtosis) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_stats_int_kurtosis(data,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_kurtosis" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_kurtosis" "', argument " "2"" of type '" "size_t""'");
@@ -6291,12 +6437,16 @@ XS(_wrap_gsl_stats_int_kurtosis) {
     arg3 = (size_t)(val3);
     result = (double)gsl_stats_int_kurtosis((int const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -6309,8 +6459,6 @@ XS(_wrap_gsl_stats_int_lag1_autocorrelation) {
     int *arg1 ;
     size_t arg2 ;
     size_t arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -6322,11 +6470,24 @@ XS(_wrap_gsl_stats_int_lag1_autocorrelation) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_stats_int_lag1_autocorrelation(data,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_lag1_autocorrelation" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_lag1_autocorrelation" "', argument " "2"" of type '" "size_t""'");
@@ -6339,12 +6500,16 @@ XS(_wrap_gsl_stats_int_lag1_autocorrelation) {
     arg3 = (size_t)(val3);
     result = (double)gsl_stats_int_lag1_autocorrelation((int const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -6359,12 +6524,8 @@ XS(_wrap_gsl_stats_int_covariance) {
     int *arg3 ;
     size_t arg4 ;
     size_t arg5 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
     size_t val4 ;
     int ecode4 = 0 ;
     size_t val5 ;
@@ -6376,21 +6537,47 @@ XS(_wrap_gsl_stats_int_covariance) {
     if ((items < 5) || (items > 5)) {
       SWIG_croak("Usage: gsl_stats_int_covariance(data1,stride1,data2,stride2,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_covariance" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data1 is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data1 is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_covariance" "', argument " "2"" of type '" "size_t""'");
     } 
     arg2 = (size_t)(val2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_stats_int_covariance" "', argument " "3"" of type '" "int const []""'"); 
-    } 
-    arg3 = (int *)(argp3);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(2)))
+      croak("Math::GSL : $data2 is not a reference!");
+      if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
+      croak("Math::GSL : $data2 is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(2));
+      len = av_len(tempav);
+      arg3 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg3[i] = (int) SvNV(*tv);
+      }
+    }
     ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
     if (!SWIG_IsOK(ecode4)) {
       SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_stats_int_covariance" "', argument " "4"" of type '" "size_t""'");
@@ -6403,16 +6590,24 @@ XS(_wrap_gsl_stats_int_covariance) {
     arg5 = (size_t)(val5);
     result = (double)gsl_stats_int_covariance((int const (*))arg1,arg2,(int const (*))arg3,arg4,arg5);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     SWIG_croak_null();
@@ -6427,12 +6622,8 @@ XS(_wrap_gsl_stats_int_correlation) {
     int *arg3 ;
     size_t arg4 ;
     size_t arg5 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
     size_t val4 ;
     int ecode4 = 0 ;
     size_t val5 ;
@@ -6444,21 +6635,47 @@ XS(_wrap_gsl_stats_int_correlation) {
     if ((items < 5) || (items > 5)) {
       SWIG_croak("Usage: gsl_stats_int_correlation(data1,stride1,data2,stride2,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_correlation" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data1 is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data1 is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_correlation" "', argument " "2"" of type '" "size_t""'");
     } 
     arg2 = (size_t)(val2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_stats_int_correlation" "', argument " "3"" of type '" "int const []""'"); 
-    } 
-    arg3 = (int *)(argp3);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(2)))
+      croak("Math::GSL : $data2 is not a reference!");
+      if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
+      croak("Math::GSL : $data2 is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(2));
+      len = av_len(tempav);
+      arg3 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg3[i] = (int) SvNV(*tv);
+      }
+    }
     ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
     if (!SWIG_IsOK(ecode4)) {
       SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_stats_int_correlation" "', argument " "4"" of type '" "size_t""'");
@@ -6471,16 +6688,24 @@ XS(_wrap_gsl_stats_int_correlation) {
     arg5 = (size_t)(val5);
     result = (double)gsl_stats_int_correlation((int const (*))arg1,arg2,(int const (*))arg3,arg4,arg5);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     SWIG_croak_null();
@@ -6494,8 +6719,6 @@ XS(_wrap_gsl_stats_int_variance_m) {
     size_t arg2 ;
     size_t arg3 ;
     double arg4 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -6509,11 +6732,24 @@ XS(_wrap_gsl_stats_int_variance_m) {
     if ((items < 4) || (items > 4)) {
       SWIG_croak("Usage: gsl_stats_int_variance_m(data,stride,n,mean);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_variance_m" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_variance_m" "', argument " "2"" of type '" "size_t""'");
@@ -6531,13 +6767,17 @@ XS(_wrap_gsl_stats_int_variance_m) {
     arg4 = (double)(val4);
     result = (double)gsl_stats_int_variance_m((int const (*))arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -6552,8 +6792,6 @@ XS(_wrap_gsl_stats_int_sd_m) {
     size_t arg2 ;
     size_t arg3 ;
     double arg4 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -6567,11 +6805,24 @@ XS(_wrap_gsl_stats_int_sd_m) {
     if ((items < 4) || (items > 4)) {
       SWIG_croak("Usage: gsl_stats_int_sd_m(data,stride,n,mean);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_sd_m" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_sd_m" "', argument " "2"" of type '" "size_t""'");
@@ -6589,13 +6840,17 @@ XS(_wrap_gsl_stats_int_sd_m) {
     arg4 = (double)(val4);
     result = (double)gsl_stats_int_sd_m((int const (*))arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -6610,8 +6865,6 @@ XS(_wrap_gsl_stats_int_absdev_m) {
     size_t arg2 ;
     size_t arg3 ;
     double arg4 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -6625,11 +6878,24 @@ XS(_wrap_gsl_stats_int_absdev_m) {
     if ((items < 4) || (items > 4)) {
       SWIG_croak("Usage: gsl_stats_int_absdev_m(data,stride,n,mean);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_absdev_m" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_absdev_m" "', argument " "2"" of type '" "size_t""'");
@@ -6647,13 +6913,17 @@ XS(_wrap_gsl_stats_int_absdev_m) {
     arg4 = (double)(val4);
     result = (double)gsl_stats_int_absdev_m((int const (*))arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -6669,8 +6939,6 @@ XS(_wrap_gsl_stats_int_skew_m_sd) {
     size_t arg3 ;
     double arg4 ;
     double arg5 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -6686,11 +6954,24 @@ XS(_wrap_gsl_stats_int_skew_m_sd) {
     if ((items < 5) || (items > 5)) {
       SWIG_croak("Usage: gsl_stats_int_skew_m_sd(data,stride,n,mean,sd);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_skew_m_sd" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_skew_m_sd" "', argument " "2"" of type '" "size_t""'");
@@ -6713,14 +6994,18 @@ XS(_wrap_gsl_stats_int_skew_m_sd) {
     arg5 = (double)(val5);
     result = (double)gsl_stats_int_skew_m_sd((int const (*))arg1,arg2,arg3,arg4,arg5);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -6737,8 +7022,6 @@ XS(_wrap_gsl_stats_int_kurtosis_m_sd) {
     size_t arg3 ;
     double arg4 ;
     double arg5 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -6754,11 +7037,24 @@ XS(_wrap_gsl_stats_int_kurtosis_m_sd) {
     if ((items < 5) || (items > 5)) {
       SWIG_croak("Usage: gsl_stats_int_kurtosis_m_sd(data,stride,n,mean,sd);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_kurtosis_m_sd" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_kurtosis_m_sd" "', argument " "2"" of type '" "size_t""'");
@@ -6781,14 +7077,18 @@ XS(_wrap_gsl_stats_int_kurtosis_m_sd) {
     arg5 = (double)(val5);
     result = (double)gsl_stats_int_kurtosis_m_sd((int const (*))arg1,arg2,arg3,arg4,arg5);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -6804,8 +7104,6 @@ XS(_wrap_gsl_stats_int_lag1_autocorrelation_m) {
     size_t arg2 ;
     size_t arg3 ;
     double arg4 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -6819,11 +7117,24 @@ XS(_wrap_gsl_stats_int_lag1_autocorrelation_m) {
     if ((items < 4) || (items > 4)) {
       SWIG_croak("Usage: gsl_stats_int_lag1_autocorrelation_m(data,stride,n,mean);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_lag1_autocorrelation_m" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_lag1_autocorrelation_m" "', argument " "2"" of type '" "size_t""'");
@@ -6841,13 +7152,17 @@ XS(_wrap_gsl_stats_int_lag1_autocorrelation_m) {
     arg4 = (double)(val4);
     result = (double)gsl_stats_int_lag1_autocorrelation_m((int const (*))arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
@@ -6865,12 +7180,8 @@ XS(_wrap_gsl_stats_int_covariance_m) {
     size_t arg5 ;
     double arg6 ;
     double arg7 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
     size_t val4 ;
     int ecode4 = 0 ;
     size_t val5 ;
@@ -6886,21 +7197,47 @@ XS(_wrap_gsl_stats_int_covariance_m) {
     if ((items < 7) || (items > 7)) {
       SWIG_croak("Usage: gsl_stats_int_covariance_m(data1,stride1,data2,stride2,n,mean1,mean2);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_covariance_m" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data1 is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data1 is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_covariance_m" "', argument " "2"" of type '" "size_t""'");
     } 
     arg2 = (size_t)(val2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_stats_int_covariance_m" "', argument " "3"" of type '" "int const []""'"); 
-    } 
-    arg3 = (int *)(argp3);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(2)))
+      croak("Math::GSL : $data2 is not a reference!");
+      if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
+      croak("Math::GSL : $data2 is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(2));
+      len = av_len(tempav);
+      arg3 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg3[i] = (int) SvNV(*tv);
+      }
+    }
     ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
     if (!SWIG_IsOK(ecode4)) {
       SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_stats_int_covariance_m" "', argument " "4"" of type '" "size_t""'");
@@ -6923,18 +7260,26 @@ XS(_wrap_gsl_stats_int_covariance_m) {
     arg7 = (double)(val7);
     result = (double)gsl_stats_int_covariance_m((int const (*))arg1,arg2,(int const (*))arg3,arg4,arg5,arg6,arg7);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
-    
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     
@@ -6952,14 +7297,10 @@ XS(_wrap_gsl_stats_int_pvariance) {
     int *arg4 ;
     size_t arg5 ;
     size_t arg6 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
     int ecode3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
     size_t val5 ;
     int ecode5 = 0 ;
     size_t val6 ;
@@ -6971,11 +7312,24 @@ XS(_wrap_gsl_stats_int_pvariance) {
     if ((items < 6) || (items > 6)) {
       SWIG_croak("Usage: gsl_stats_int_pvariance(data1,stride1,n1,data2,stride2,n2);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_pvariance" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data1 is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data1 is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_pvariance" "', argument " "2"" of type '" "size_t""'");
@@ -6986,11 +7340,24 @@ XS(_wrap_gsl_stats_int_pvariance) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_stats_int_pvariance" "', argument " "3"" of type '" "size_t""'");
     } 
     arg3 = (size_t)(val3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_stats_int_pvariance" "', argument " "4"" of type '" "int const []""'"); 
-    } 
-    arg4 = (int *)(argp4);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(3)))
+      croak("Math::GSL : $data2 is not a reference!");
+      if (SvTYPE(SvRV(ST(3))) != SVt_PVAV)
+      croak("Math::GSL : $data2 is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(3));
+      len = av_len(tempav);
+      arg4 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg4[i] = (int) SvNV(*tv);
+      }
+    }
     ecode5 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
     if (!SWIG_IsOK(ecode5)) {
       SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "gsl_stats_int_pvariance" "', argument " "5"" of type '" "size_t""'");
@@ -7003,18 +7370,26 @@ XS(_wrap_gsl_stats_int_pvariance) {
     arg6 = (size_t)(val6);
     result = (double)gsl_stats_int_pvariance((int const (*))arg1,arg2,arg3,(int const (*))arg4,arg5,arg6);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
     
-    
-    
+    {
+      if (arg4) free(arg4);
+    }
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
     
-    
-    
+    {
+      if (arg4) free(arg4);
+    }
     
     
     SWIG_croak_null();
@@ -7030,14 +7405,10 @@ XS(_wrap_gsl_stats_int_ttest) {
     int *arg4 ;
     size_t arg5 ;
     size_t arg6 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
     int ecode3 = 0 ;
-    void *argp4 = 0 ;
-    int res4 = 0 ;
     size_t val5 ;
     int ecode5 = 0 ;
     size_t val6 ;
@@ -7049,11 +7420,24 @@ XS(_wrap_gsl_stats_int_ttest) {
     if ((items < 6) || (items > 6)) {
       SWIG_croak("Usage: gsl_stats_int_ttest(data1,stride1,n1,data2,stride2,n2);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_ttest" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data1 is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data1 is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_ttest" "', argument " "2"" of type '" "size_t""'");
@@ -7064,11 +7448,24 @@ XS(_wrap_gsl_stats_int_ttest) {
       SWIG_exception_fail(SWIG_ArgError(ecode3), "in method '" "gsl_stats_int_ttest" "', argument " "3"" of type '" "size_t""'");
     } 
     arg3 = (size_t)(val3);
-    res4 = SWIG_ConvertPtr(ST(3), &argp4,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res4)) {
-      SWIG_exception_fail(SWIG_ArgError(res4), "in method '" "gsl_stats_int_ttest" "', argument " "4"" of type '" "int const []""'"); 
-    } 
-    arg4 = (int *)(argp4);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(3)))
+      croak("Math::GSL : $data2 is not a reference!");
+      if (SvTYPE(SvRV(ST(3))) != SVt_PVAV)
+      croak("Math::GSL : $data2 is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(3));
+      len = av_len(tempav);
+      arg4 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg4[i] = (int) SvNV(*tv);
+      }
+    }
     ecode5 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
     if (!SWIG_IsOK(ecode5)) {
       SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "gsl_stats_int_ttest" "', argument " "5"" of type '" "size_t""'");
@@ -7081,18 +7478,26 @@ XS(_wrap_gsl_stats_int_ttest) {
     arg6 = (size_t)(val6);
     result = (double)gsl_stats_int_ttest((int const (*))arg1,arg2,arg3,(int const (*))arg4,arg5,arg6);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
+    {
+      if (arg1) free(arg1);
+    }
     
     
-    
-    
+    {
+      if (arg4) free(arg4);
+    }
     
     
     XSRETURN(argvi);
   fail:
+    {
+      if (arg1) free(arg1);
+    }
     
     
-    
-    
+    {
+      if (arg4) free(arg4);
+    }
     
     
     SWIG_croak_null();
@@ -7105,8 +7510,6 @@ XS(_wrap_gsl_stats_int_max) {
     int *arg1 ;
     size_t arg2 ;
     size_t arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -7118,11 +7521,24 @@ XS(_wrap_gsl_stats_int_max) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_stats_int_max(data,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_max" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_max" "', argument " "2"" of type '" "size_t""'");
@@ -7135,12 +7551,16 @@ XS(_wrap_gsl_stats_int_max) {
     arg3 = (size_t)(val3);
     result = (int)gsl_stats_int_max((int const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -7153,8 +7573,6 @@ XS(_wrap_gsl_stats_int_min) {
     int *arg1 ;
     size_t arg2 ;
     size_t arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -7166,11 +7584,24 @@ XS(_wrap_gsl_stats_int_min) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_stats_int_min(data,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_min" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_min" "', argument " "2"" of type '" "size_t""'");
@@ -7183,12 +7614,16 @@ XS(_wrap_gsl_stats_int_min) {
     arg3 = (size_t)(val3);
     result = (int)gsl_stats_int_min((int const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -7207,8 +7642,6 @@ XS(_wrap_gsl_stats_int_minmax) {
     int res1 = 0 ;
     void *argp2 = 0 ;
     int res2 = 0 ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
     size_t val4 ;
     int ecode4 = 0 ;
     size_t val5 ;
@@ -7229,11 +7662,24 @@ XS(_wrap_gsl_stats_int_minmax) {
       SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_stats_int_minmax" "', argument " "2"" of type '" "int *""'"); 
     }
     arg2 = (int *)(argp2);
-    res3 = SWIG_ConvertPtr(ST(2), &argp3,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_stats_int_minmax" "', argument " "3"" of type '" "int const []""'"); 
-    } 
-    arg3 = (int *)(argp3);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(2)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(2));
+      len = av_len(tempav);
+      arg3 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg3[i] = (int) SvNV(*tv);
+      }
+    }
     ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
     if (!SWIG_IsOK(ecode4)) {
       SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_stats_int_minmax" "', argument " "4"" of type '" "size_t""'");
@@ -7248,14 +7694,18 @@ XS(_wrap_gsl_stats_int_minmax) {
     ST(argvi) = sv_newmortal();
     
     
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     XSRETURN(argvi);
   fail:
     
     
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     SWIG_croak_null();
@@ -7268,8 +7718,6 @@ XS(_wrap_gsl_stats_int_max_index) {
     int *arg1 ;
     size_t arg2 ;
     size_t arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -7281,11 +7729,24 @@ XS(_wrap_gsl_stats_int_max_index) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_stats_int_max_index(data,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_max_index" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_max_index" "', argument " "2"" of type '" "size_t""'");
@@ -7298,12 +7759,16 @@ XS(_wrap_gsl_stats_int_max_index) {
     arg3 = (size_t)(val3);
     result = gsl_stats_int_max_index((int const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -7316,8 +7781,6 @@ XS(_wrap_gsl_stats_int_min_index) {
     int *arg1 ;
     size_t arg2 ;
     size_t arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -7329,11 +7792,24 @@ XS(_wrap_gsl_stats_int_min_index) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_stats_int_min_index(data,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_min_index" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_min_index" "', argument " "2"" of type '" "size_t""'");
@@ -7346,12 +7822,16 @@ XS(_wrap_gsl_stats_int_min_index) {
     arg3 = (size_t)(val3);
     result = gsl_stats_int_min_index((int const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_size_t  SWIG_PERL_CALL_ARGS_1((size_t)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -7370,8 +7850,6 @@ XS(_wrap_gsl_stats_int_minmax_index) {
     int res1 = SWIG_TMPOBJ ;
     size_t temp2 ;
     int res2 = SWIG_TMPOBJ ;
-    void *argp3 = 0 ;
-    int res3 = 0 ;
     size_t val4 ;
     int ecode4 = 0 ;
     size_t val5 ;
@@ -7384,11 +7862,24 @@ XS(_wrap_gsl_stats_int_minmax_index) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_stats_int_minmax_index(data,stride,n);");
     }
-    res3 = SWIG_ConvertPtr(ST(0), &argp3,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_stats_int_minmax_index" "', argument " "3"" of type '" "int const []""'"); 
-    } 
-    arg3 = (int *)(argp3);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg3 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg3[i] = (int) SvNV(*tv);
+      }
+    }
     ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val4);
     if (!SWIG_IsOK(ecode4)) {
       SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_stats_int_minmax_index" "', argument " "4"" of type '" "size_t""'");
@@ -7415,14 +7906,18 @@ XS(_wrap_gsl_stats_int_minmax_index) {
     }
     
     
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     XSRETURN(argvi);
   fail:
     
     
-    
+    {
+      if (arg3) free(arg3);
+    }
     
     
     SWIG_croak_null();
@@ -7435,8 +7930,6 @@ XS(_wrap_gsl_stats_int_median_from_sorted_data) {
     int *arg1 ;
     size_t arg2 ;
     size_t arg3 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -7448,11 +7941,24 @@ XS(_wrap_gsl_stats_int_median_from_sorted_data) {
     if ((items < 3) || (items > 3)) {
       SWIG_croak("Usage: gsl_stats_int_median_from_sorted_data(sorted_data,stride,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_median_from_sorted_data" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $sorted_data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $sorted_data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_median_from_sorted_data" "', argument " "2"" of type '" "size_t""'");
@@ -7465,12 +7971,16 @@ XS(_wrap_gsl_stats_int_median_from_sorted_data) {
     arg3 = (size_t)(val3);
     result = (double)gsl_stats_int_median_from_sorted_data((int const (*))arg1,arg2,arg3);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     SWIG_croak_null();
@@ -7484,8 +7994,6 @@ XS(_wrap_gsl_stats_int_quantile_from_sorted_data) {
     size_t arg2 ;
     size_t arg3 ;
     double arg4 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     size_t val3 ;
@@ -7499,11 +8007,24 @@ XS(_wrap_gsl_stats_int_quantile_from_sorted_data) {
     if ((items < 4) || (items > 4)) {
       SWIG_croak("Usage: gsl_stats_int_quantile_from_sorted_data(sorted_data,stride,n,f);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_int_quantile_from_sorted_data" "', argument " "1"" of type '" "int const []""'"); 
-    } 
-    arg1 = (int *)(argp1);
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $sorted_data is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $sorted_data is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
+    }
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_quantile_from_sorted_data" "', argument " "2"" of type '" "size_t""'");
@@ -7521,13 +8042,17 @@ XS(_wrap_gsl_stats_int_quantile_from_sorted_data) {
     arg4 = (double)(val4);
     result = (double)gsl_stats_int_quantile_from_sorted_data((int const (*))arg1,arg2,arg3,arg4);
     ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     
     

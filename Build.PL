@@ -105,6 +105,15 @@ print "  swig: $swig_flags\n" unless GSLBuilder::is_release();
 
 print "\n";
 
+my $c_deps = GSLBuilder::c_modules();
+my $swig_source = [
+                   map {
+                       my $deps = [ catfile("pod", "$_.pod") ];
+                       push @$deps, catfile("c","$_.c"), catfile("c","$_.h") if $c_deps->{$_};
+                       [ catfile("swig", "$_.i"), $deps ]
+                   } @Subsystems ,
+                  ];
+
 my $builder = GSLBuilder->new(
     module_name         => 'Math::GSL',
     add_to_cleanup      => [ $cleanup ],
@@ -122,28 +131,28 @@ my $builder = GSLBuilder->new(
         },
     },
     build_requires => {
-        'Test::Most'      =>    '0.31',
-        'Test::Exception' =>    '0.21',
-        'Test::Class'     =>    '0.12',
+        'Test::Most'      => '0.31',
+        'Test::Exception' => '0.21',
+        'Test::Class'     => '0.12',
+        'Test::Taint'     => '1.06',
     },
     requires => {
         'PkgConfig'       => '0.07720',
         'Scalar::Util'    => 0,
-        version           => '0.77',
-        perl              => '5.8.0',
-        parent            => 0,
+        'version'         => '0.77',
+        'perl'            => '5.8.0',
+        'parent'          => 0,
     },
     sign                  => 0,
     configure_requires => {
         'PkgConfig'       => '0.07720',
         'Module::Build'   => '0.38',
     },
-    swig_source           => [
-                                map { [ catfile("swig", "$_.i"), [ catfile("pod", "$_.pod")] ] } @Subsystems ,
-                             ],
+    swig_source           => $swig_source,
     ver2func => $ver2func,
     current_version => $gsl_conf->{gsl_version},
 );
+
 
 $builder->add_build_element('swig');
 

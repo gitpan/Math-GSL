@@ -9686,8 +9686,6 @@ XS(_wrap_gsl_vector_int_view_array) {
   {
     int *arg1 = (int *) 0 ;
     size_t arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     int argvi = 0;
@@ -9697,11 +9695,24 @@ XS(_wrap_gsl_vector_int_view_array) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: gsl_vector_int_view_array(v,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_vector_int_view_array" "', argument " "1"" of type '" "int *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $v is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $v is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
     }
-    arg1 = (int *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_vector_int_view_array" "', argument " "2"" of type '" "size_t""'");
@@ -9709,11 +9720,15 @@ XS(_wrap_gsl_vector_int_view_array) {
     arg2 = (size_t)(val2);
     result = gsl_vector_int_view_array(arg1,arg2);
     ST(argvi) = SWIG_NewPointerObj((_gsl_vector_int_view *)memcpy((_gsl_vector_int_view *)malloc(sizeof(_gsl_vector_int_view)),&result,sizeof(_gsl_vector_int_view)), SWIGTYPE_p__gsl_vector_int_view, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     SWIG_croak_null();
   }
@@ -9772,8 +9787,6 @@ XS(_wrap_gsl_vector_int_const_view_array) {
   {
     int *arg1 = (int *) 0 ;
     size_t arg2 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
     size_t val2 ;
     int ecode2 = 0 ;
     int argvi = 0;
@@ -9783,11 +9796,24 @@ XS(_wrap_gsl_vector_int_const_view_array) {
     if ((items < 2) || (items > 2)) {
       SWIG_croak("Usage: gsl_vector_int_const_view_array(v,n);");
     }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_int, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_vector_int_const_view_array" "', argument " "1"" of type '" "int const *""'"); 
+    {
+      AV *tempav;
+      I32 len;
+      int i;
+      SV **tv;
+      if (!SvROK(ST(0)))
+      croak("Math::GSL : $v is not a reference!");
+      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
+      croak("Math::GSL : $v is not an array ref!");
+      
+      tempav = (AV*)SvRV(ST(0));
+      len = av_len(tempav);
+      arg1 = (int *) malloc((len+2)*sizeof(int));
+      for (i = 0; i <= len; i++) {
+        tv = av_fetch(tempav, i, 0);
+        arg1[i] = (int) SvNV(*tv);
+      }
     }
-    arg1 = (int *)(argp1);
     ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
     if (!SWIG_IsOK(ecode2)) {
       SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_vector_int_const_view_array" "', argument " "2"" of type '" "size_t""'");
@@ -9795,11 +9821,15 @@ XS(_wrap_gsl_vector_int_const_view_array) {
     arg2 = (size_t)(val2);
     result = gsl_vector_int_const_view_array((int const *)arg1,arg2);
     ST(argvi) = SWIG_NewPointerObj((_gsl_vector_int_const_view *)memcpy((_gsl_vector_int_const_view *)malloc(sizeof(_gsl_vector_int_const_view)),&result,sizeof(_gsl_vector_int_const_view)), SWIGTYPE_p__gsl_vector_int_const_view, SWIG_POINTER_OWN | SWIG_SHADOW); argvi++ ;
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     XSRETURN(argvi);
   fail:
-    
+    {
+      if (arg1) free(arg1);
+    }
     
     SWIG_croak_null();
   }
