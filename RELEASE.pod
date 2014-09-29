@@ -88,7 +88,21 @@ Check if the tarball compiles and passes tests
 Everything seems good? Create the release and upload it to CPAN.
 
      ./Build dist
-     cpan-upload Math-GSL-
+     cpan-upload Math-GSL-x.xx.tar.gz
+
+=item 13.
+
+Be sure to add and commit changed files.
+
+=item 14.
+
+Add a release to GitHub with the tarball. This will also tag the
+current tree status.
+
+=item 15.
+
+Organizational suggestion: close the milestone that refers to the
+current release and create the next one, if it does not still exist.
 
 =back
 
