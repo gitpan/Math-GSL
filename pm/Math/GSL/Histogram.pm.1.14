@@ -231,6 +231,8 @@ package Math::GSL::Histogram;
 
 =head1 NAME
 
+=encoding utf8
+
 Math::GSL::Histogram - Create and manipulate histograms of data
 
 =head1 SYNOPSIS

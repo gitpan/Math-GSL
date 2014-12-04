@@ -439,6 +439,8 @@ bless $gsl_multiroot_fdfsolver_hybridsj, Math::GSL::Multiroots::gsl_multiroot_fd
 
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Math::GSL::Multiroots - Multidimensional root-finding 

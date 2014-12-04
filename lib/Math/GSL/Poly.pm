@@ -313,6 +313,8 @@ package Math::GSL::Poly;
 
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Math::GSL::Poly - Solve and evaluate polynomials

@@ -442,6 +442,8 @@ bless $gsl_multimin_fminimizer_nmsimplex2rand, Math::GSL::Multimin::gsl_multimin
 
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Math::GSL::Multimin - Routines for finding minima of arbitrary multidimensional functions

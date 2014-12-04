@@ -58,7 +58,6 @@ package Math::GSL::BSpline;
 *gsl_bspline_greville_abscissa = *Math::GSL::BSplinec::gsl_bspline_greville_abscissa;
 *gsl_bspline_knots = *Math::GSL::BSplinec::gsl_bspline_knots;
 *gsl_bspline_knots_uniform = *Math::GSL::BSplinec::gsl_bspline_knots_uniform;
-*gsl_bspline_knots_greville = *Math::GSL::BSplinec::gsl_bspline_knots_greville;
 *gsl_bspline_eval = *Math::GSL::BSplinec::gsl_bspline_eval;
 *gsl_bspline_eval_nonzero = *Math::GSL::BSplinec::gsl_bspline_eval_nonzero;
 *gsl_bspline_deriv_alloc = *Math::GSL::BSplinec::gsl_bspline_deriv_alloc;
@@ -187,6 +186,8 @@ package Math::GSL::BSpline;
 %EXPORT_TAGS = ( all => [ @EXPORT_OK ] );
 
 __END__
+
+=encoding utf8
 
 =head1 NAME
 

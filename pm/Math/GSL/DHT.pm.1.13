@@ -128,6 +128,8 @@ package Math::GSL::DHT;
              /;
 %EXPORT_TAGS = ( all => [ @EXPORT_OK ] );
 
+=encoding utf8
+
 __END__
 
 =head1 NAME

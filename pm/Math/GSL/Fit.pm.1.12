@@ -77,6 +77,9 @@ package Math::GSL::Fit;
 
 __END__
 
+=encoding utf8
+
+
 =head1 NAME
 
 Math::GSL::Fit - Least-squares functions for a general linear model with one- or two-parameter regression

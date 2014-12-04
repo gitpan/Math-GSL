@@ -208,4 +208,11 @@ package Math::GSL::IEEEUtils;
                $GSL_IEEE_TRAP_INEXACT 
              /;
 %EXPORT_TAGS = ( all => [ @EXPORT_OK ] );
+
+=head1 NAME
+
+Math::GSL::IEEEUtils - IEEE Utility Functions
+
+=encoding utf8
+
 1;

@@ -108,7 +108,6 @@ package Math::GSL::Statistics;
 *gsl_stats_int_lag1_autocorrelation = *Math::GSL::Statisticsc::gsl_stats_int_lag1_autocorrelation;
 *gsl_stats_int_covariance = *Math::GSL::Statisticsc::gsl_stats_int_covariance;
 *gsl_stats_int_correlation = *Math::GSL::Statisticsc::gsl_stats_int_correlation;
-*gsl_stats_int_spearman = *Math::GSL::Statisticsc::gsl_stats_int_spearman;
 *gsl_stats_int_variance_m = *Math::GSL::Statisticsc::gsl_stats_int_variance_m;
 *gsl_stats_int_sd_m = *Math::GSL::Statisticsc::gsl_stats_int_sd_m;
 *gsl_stats_int_absdev_m = *Math::GSL::Statisticsc::gsl_stats_int_absdev_m;
@@ -139,7 +138,6 @@ package Math::GSL::Statistics;
 *gsl_stats_char_lag1_autocorrelation = *Math::GSL::Statisticsc::gsl_stats_char_lag1_autocorrelation;
 *gsl_stats_char_covariance = *Math::GSL::Statisticsc::gsl_stats_char_covariance;
 *gsl_stats_char_correlation = *Math::GSL::Statisticsc::gsl_stats_char_correlation;
-*gsl_stats_char_spearman = *Math::GSL::Statisticsc::gsl_stats_char_spearman;
 *gsl_stats_char_variance_m = *Math::GSL::Statisticsc::gsl_stats_char_variance_m;
 *gsl_stats_char_sd_m = *Math::GSL::Statisticsc::gsl_stats_char_sd_m;
 *gsl_stats_char_absdev_m = *Math::GSL::Statisticsc::gsl_stats_char_absdev_m;
@@ -285,6 +283,8 @@ push @EXPORT_OK, @EXPORT_int, @EXPORT_char;
                 char => \@EXPORT_char
                );
 __END__
+
+=encoding utf8
 
 =head1 NAME
 

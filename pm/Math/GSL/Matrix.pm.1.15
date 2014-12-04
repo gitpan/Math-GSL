@@ -1413,6 +1413,8 @@ int => [ qw/
 );
 
 
+=encoding utf8
+
 =head1 NAME
 
 Math::GSL::Matrix - Mathematical functions concerning Matrices
@@ -2011,6 +2013,27 @@ sub inverse($)
 
     return $inverse;
 
+}
+
+=head3 transpose()
+
+Returns the transpose of a matrix  or dies when called on a non-square matrix.
+
+    my $transposed = $matrix->transpose;
+
+=cut
+
+sub transpose($)
+{
+    my $self = shift;
+    croak(__PACKAGE__."- transpose only exists for square matrices") unless $self->is_square;
+
+    my $copy = $self->copy;
+
+    # should check return status
+    gsl_matrix_transpose($copy->raw);
+
+    return $copy;
 }
 
 =head3 eigenvalues() 

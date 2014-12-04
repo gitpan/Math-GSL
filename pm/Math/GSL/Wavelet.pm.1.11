@@ -253,6 +253,8 @@ bless $gsl_wavelet_bspline_centered, Math::GSL::Wavelet::gsl_wavelet_type;
 
 %EXPORT_TAGS = ( all => [ @EXPORT_OK ], );
 
+=encoding utf8
+
 =head1 NAME
 
 Math::GSL::Wavelet - 1-D (Real) Wavelets

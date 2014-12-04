@@ -195,6 +195,8 @@ sub length { (shift)->{_length} }
 
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Math::GSL::Permutation - functions for creating and manipulating permutations

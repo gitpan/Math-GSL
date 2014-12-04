@@ -136,6 +136,8 @@ package Math::GSL::Spline;
 
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Math::GSL::Spline - Splines

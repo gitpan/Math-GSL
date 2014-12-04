@@ -372,6 +372,8 @@ package Math::GSL::CBLAS;
 
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Math::GSL::CBLAS - Basic Linear Algebra Subprograms based on C functions

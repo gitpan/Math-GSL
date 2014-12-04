@@ -474,6 +474,8 @@ bless $gsl_multifit_fdfsolver_lmsder, Math::GSL::Multifit::gsl_multifit_fdfsolve
 
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Math::GSL::Multifit - Least-squares functions for a general linear model with multiple parameters

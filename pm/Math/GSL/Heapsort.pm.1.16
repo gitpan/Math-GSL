@@ -134,6 +134,9 @@ package Math::GSL::Heapsort;
 
 __END__
 
+=encoding utf8
+
+
 =head1 NAME
 
 Math::GSL::Heapsort - Functions for sorting data, both directly and indirectly (using an index)

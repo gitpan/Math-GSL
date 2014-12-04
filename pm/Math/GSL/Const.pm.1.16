@@ -1069,6 +1069,8 @@ package Math::GSL::Const;
 
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Math::GSL::Const - Constants 

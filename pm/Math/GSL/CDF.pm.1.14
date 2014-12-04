@@ -180,6 +180,8 @@ our %EXPORT_TAGS = ( all =>  [  @EXPORT_OK ], geometric => [ gsl_cdf_geometric_P
 
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Math::GSL::CDF - Cumulative Distribution Functions

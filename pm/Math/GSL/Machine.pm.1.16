@@ -176,6 +176,8 @@ package Math::GSL::Machine;
 %EXPORT_TAGS = ( all => [ @EXPORT_OK ] );
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Math::GSL::Machine - Machine constants 

@@ -72,7 +72,6 @@ package Math::GSL::Linalg;
 *gsl_linalg_SV_decomp_mod = *Math::GSL::Linalgc::gsl_linalg_SV_decomp_mod;
 *gsl_linalg_SV_decomp_jacobi = *Math::GSL::Linalgc::gsl_linalg_SV_decomp_jacobi;
 *gsl_linalg_SV_solve = *Math::GSL::Linalgc::gsl_linalg_SV_solve;
-*gsl_linalg_SV_leverage = *Math::GSL::Linalgc::gsl_linalg_SV_leverage;
 *gsl_linalg_LU_decomp = *Math::GSL::Linalgc::gsl_linalg_LU_decomp;
 *gsl_linalg_LU_solve = *Math::GSL::Linalgc::gsl_linalg_LU_solve;
 *gsl_linalg_LU_svx = *Math::GSL::Linalgc::gsl_linalg_LU_svx;
@@ -524,6 +523,8 @@ package Math::GSL::Linalg;
 %EXPORT_TAGS = ( all =>[ @EXPORT_OK ] );
 
 __END__
+
+=encoding utf8
 
 =head1 NAME
 

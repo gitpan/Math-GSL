@@ -3151,44 +3151,6 @@ XS(_wrap_gsl_linalg_SV_solve) {
 }
 
 
-XS(_wrap_gsl_linalg_SV_leverage) {
-  {
-    gsl_matrix *arg1 = (gsl_matrix *) 0 ;
-    gsl_vector *arg2 = (gsl_vector *) 0 ;
-    void *argp1 = 0 ;
-    int res1 = 0 ;
-    void *argp2 = 0 ;
-    int res2 = 0 ;
-    int argvi = 0;
-    int result;
-    dXSARGS;
-    
-    if ((items < 2) || (items > 2)) {
-      SWIG_croak("Usage: gsl_linalg_SV_leverage(U,h);");
-    }
-    res1 = SWIG_ConvertPtr(ST(0), &argp1,SWIGTYPE_p_gsl_matrix, 0 |  0 );
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_linalg_SV_leverage" "', argument " "1"" of type '" "gsl_matrix const *""'"); 
-    }
-    arg1 = (gsl_matrix *)(argp1);
-    res2 = SWIG_ConvertPtr(ST(1), &argp2,SWIGTYPE_p_gsl_vector, 0 |  0 );
-    if (!SWIG_IsOK(res2)) {
-      SWIG_exception_fail(SWIG_ArgError(res2), "in method '" "gsl_linalg_SV_leverage" "', argument " "2"" of type '" "gsl_vector *""'"); 
-    }
-    arg2 = (gsl_vector *)(argp2);
-    result = (int)gsl_linalg_SV_leverage((gsl_matrix const *)arg1,arg2);
-    ST(argvi) = SWIG_From_int  SWIG_PERL_CALL_ARGS_1((int)(result)); argvi++ ;
-    
-    
-    XSRETURN(argvi);
-  fail:
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_gsl_linalg_LU_decomp) {
   {
     gsl_matrix *arg1 = (gsl_matrix *) 0 ;
@@ -11156,7 +11118,6 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::Linalgc::gsl_linalg_SV_decomp_mod", _wrap_gsl_linalg_SV_decomp_mod},
 {"Math::GSL::Linalgc::gsl_linalg_SV_decomp_jacobi", _wrap_gsl_linalg_SV_decomp_jacobi},
 {"Math::GSL::Linalgc::gsl_linalg_SV_solve", _wrap_gsl_linalg_SV_solve},
-{"Math::GSL::Linalgc::gsl_linalg_SV_leverage", _wrap_gsl_linalg_SV_leverage},
 {"Math::GSL::Linalgc::gsl_linalg_LU_decomp", _wrap_gsl_linalg_LU_decomp},
 {"Math::GSL::Linalgc::gsl_linalg_LU_solve", _wrap_gsl_linalg_LU_solve},
 {"Math::GSL::Linalgc::gsl_linalg_LU_svx", _wrap_gsl_linalg_LU_svx},

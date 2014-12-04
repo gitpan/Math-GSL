@@ -723,6 +723,8 @@ package Math::GSL::FFT;
                );
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Math::GSL::FFT - Fast Fourier Transforms (FFT)

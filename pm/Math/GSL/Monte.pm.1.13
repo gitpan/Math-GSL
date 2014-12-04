@@ -503,6 +503,8 @@ package Math::GSL::Monte;
 
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Math::GSL::Monte - Multidimensional Monte Carlo integration

@@ -90,6 +90,8 @@ package Math::GSL::Wavelet2D;
 
 %EXPORT_TAGS = ( all => [ @EXPORT_OK ] );
 
+=encoding utf8
+
 =head1 NAME
 
 Math::GSL::Wavelet2D - 2-D Wavelets

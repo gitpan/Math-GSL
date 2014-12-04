@@ -63,13 +63,15 @@ package Math::GSL::Diff;
 *GSL_NEGZERO = *Math::GSL::Diffc::GSL_NEGZERO;
 
 @EXPORT_OK = qw/
-               gsl_diff_central 
+               gsl_diff_central
                gsl_diff_backward
                gsl_diff_forward
              /;
 %EXPORT_TAGS = ( all => [ @EXPORT_OK ] );
 
 __END__
+
+=encoding utf8
 
 =head1 NAME
 

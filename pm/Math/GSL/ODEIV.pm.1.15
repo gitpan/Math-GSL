@@ -458,6 +458,8 @@ bless $gsl_odeiv_step_gear2, Math::GSL::ODEIV::gsl_odeiv_step_type;
 
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Math::GSL::ODEIV - functions for solving ordinary differential equation (ODE) initial value problems

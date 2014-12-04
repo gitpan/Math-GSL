@@ -896,6 +896,8 @@ package Math::GSL::Eigen;
 
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Math::GSL::Eigen - Functions for computing eigenvalues and eigenvectors of matrices

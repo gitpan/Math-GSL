@@ -6821,114 +6821,6 @@ XS(_wrap_gsl_stats_int_correlation) {
 }
 
 
-XS(_wrap_gsl_stats_int_spearman) {
-  {
-    int *arg1 ;
-    size_t arg2 ;
-    int *arg3 ;
-    size_t arg4 ;
-    size_t arg5 ;
-    double *arg6 ;
-    size_t val2 ;
-    int ecode2 = 0 ;
-    size_t val4 ;
-    int ecode4 = 0 ;
-    size_t val5 ;
-    int ecode5 = 0 ;
-    void *argp6 = 0 ;
-    int res6 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 6) || (items > 6)) {
-      SWIG_croak("Usage: gsl_stats_int_spearman(data1,stride1,data2,stride2,n,work);");
-    }
-    {
-      AV *tempav;
-      I32 len;
-      int i;
-      SV **tv;
-      if (!SvROK(ST(0)))
-      croak("Math::GSL : $data1 is not a reference!");
-      if (SvTYPE(SvRV(ST(0))) != SVt_PVAV)
-      croak("Math::GSL : $data1 is not an array ref!");
-      
-      tempav = (AV*)SvRV(ST(0));
-      len = av_len(tempav);
-      arg1 = (int *) malloc((len+2)*sizeof(int));
-      for (i = 0; i <= len; i++) {
-        tv = av_fetch(tempav, i, 0);
-        arg1[i] = (int) SvNV(*tv);
-      }
-    }
-    ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_int_spearman" "', argument " "2"" of type '" "size_t""'");
-    } 
-    arg2 = (size_t)(val2);
-    {
-      AV *tempav;
-      I32 len;
-      int i;
-      SV **tv;
-      if (!SvROK(ST(2)))
-      croak("Math::GSL : $data2 is not a reference!");
-      if (SvTYPE(SvRV(ST(2))) != SVt_PVAV)
-      croak("Math::GSL : $data2 is not an array ref!");
-      
-      tempav = (AV*)SvRV(ST(2));
-      len = av_len(tempav);
-      arg3 = (int *) malloc((len+2)*sizeof(int));
-      for (i = 0; i <= len; i++) {
-        tv = av_fetch(tempav, i, 0);
-        arg3[i] = (int) SvNV(*tv);
-      }
-    }
-    ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
-    if (!SWIG_IsOK(ecode4)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_stats_int_spearman" "', argument " "4"" of type '" "size_t""'");
-    } 
-    arg4 = (size_t)(val4);
-    ecode5 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
-    if (!SWIG_IsOK(ecode5)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "gsl_stats_int_spearman" "', argument " "5"" of type '" "size_t""'");
-    } 
-    arg5 = (size_t)(val5);
-    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res6)) {
-      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_stats_int_spearman" "', argument " "6"" of type '" "double []""'"); 
-    } 
-    arg6 = (double *)(argp6);
-    result = (double)gsl_stats_int_spearman((int const (*))arg1,arg2,(int const (*))arg3,arg4,arg5,arg6);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    {
-      if (arg1) free(arg1);
-    }
-    
-    {
-      if (arg3) free(arg3);
-    }
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    {
-      if (arg1) free(arg1);
-    }
-    
-    {
-      if (arg3) free(arg3);
-    }
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_gsl_stats_int_variance_m) {
   {
     int *arg1 ;
@@ -8986,86 +8878,6 @@ XS(_wrap_gsl_stats_char_correlation) {
 }
 
 
-XS(_wrap_gsl_stats_char_spearman) {
-  {
-    char *arg1 ;
-    size_t arg2 ;
-    char *arg3 ;
-    size_t arg4 ;
-    size_t arg5 ;
-    double *arg6 ;
-    int res1 ;
-    char *buf1 = 0 ;
-    int alloc1 = 0 ;
-    size_t val2 ;
-    int ecode2 = 0 ;
-    int res3 ;
-    char *buf3 = 0 ;
-    int alloc3 = 0 ;
-    size_t val4 ;
-    int ecode4 = 0 ;
-    size_t val5 ;
-    int ecode5 = 0 ;
-    void *argp6 = 0 ;
-    int res6 = 0 ;
-    int argvi = 0;
-    double result;
-    dXSARGS;
-    
-    if ((items < 6) || (items > 6)) {
-      SWIG_croak("Usage: gsl_stats_char_spearman(data1,stride1,data2,stride2,n,work);");
-    }
-    res1 = SWIG_AsCharPtrAndSize(ST(0), &buf1, NULL, &alloc1);
-    if (!SWIG_IsOK(res1)) {
-      SWIG_exception_fail(SWIG_ArgError(res1), "in method '" "gsl_stats_char_spearman" "', argument " "1"" of type '" "char const []""'");
-    }
-    arg1 = (char *)(buf1);
-    ecode2 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(1), &val2);
-    if (!SWIG_IsOK(ecode2)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode2), "in method '" "gsl_stats_char_spearman" "', argument " "2"" of type '" "size_t""'");
-    } 
-    arg2 = (size_t)(val2);
-    res3 = SWIG_AsCharPtrAndSize(ST(2), &buf3, NULL, &alloc3);
-    if (!SWIG_IsOK(res3)) {
-      SWIG_exception_fail(SWIG_ArgError(res3), "in method '" "gsl_stats_char_spearman" "', argument " "3"" of type '" "char const []""'");
-    }
-    arg3 = (char *)(buf3);
-    ecode4 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(3), &val4);
-    if (!SWIG_IsOK(ecode4)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode4), "in method '" "gsl_stats_char_spearman" "', argument " "4"" of type '" "size_t""'");
-    } 
-    arg4 = (size_t)(val4);
-    ecode5 = SWIG_AsVal_size_t SWIG_PERL_CALL_ARGS_2(ST(4), &val5);
-    if (!SWIG_IsOK(ecode5)) {
-      SWIG_exception_fail(SWIG_ArgError(ecode5), "in method '" "gsl_stats_char_spearman" "', argument " "5"" of type '" "size_t""'");
-    } 
-    arg5 = (size_t)(val5);
-    res6 = SWIG_ConvertPtr(ST(5), &argp6,SWIGTYPE_p_double, 0 |  0 );
-    if (!SWIG_IsOK(res6)) {
-      SWIG_exception_fail(SWIG_ArgError(res6), "in method '" "gsl_stats_char_spearman" "', argument " "6"" of type '" "double []""'"); 
-    } 
-    arg6 = (double *)(argp6);
-    result = (double)gsl_stats_char_spearman((char const (*))arg1,arg2,(char const (*))arg3,arg4,arg5,arg6);
-    ST(argvi) = SWIG_From_double  SWIG_PERL_CALL_ARGS_1((double)(result)); argvi++ ;
-    if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
-    
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    
-    
-    
-    XSRETURN(argvi);
-  fail:
-    if (alloc1 == SWIG_NEWOBJ) free((char*)buf1);
-    
-    if (alloc3 == SWIG_NEWOBJ) free((char*)buf3);
-    
-    
-    
-    SWIG_croak_null();
-  }
-}
-
-
 XS(_wrap_gsl_stats_char_variance_m) {
   {
     char *arg1 ;
@@ -10235,7 +10047,6 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::Statisticsc::gsl_stats_int_lag1_autocorrelation", _wrap_gsl_stats_int_lag1_autocorrelation},
 {"Math::GSL::Statisticsc::gsl_stats_int_covariance", _wrap_gsl_stats_int_covariance},
 {"Math::GSL::Statisticsc::gsl_stats_int_correlation", _wrap_gsl_stats_int_correlation},
-{"Math::GSL::Statisticsc::gsl_stats_int_spearman", _wrap_gsl_stats_int_spearman},
 {"Math::GSL::Statisticsc::gsl_stats_int_variance_m", _wrap_gsl_stats_int_variance_m},
 {"Math::GSL::Statisticsc::gsl_stats_int_sd_m", _wrap_gsl_stats_int_sd_m},
 {"Math::GSL::Statisticsc::gsl_stats_int_absdev_m", _wrap_gsl_stats_int_absdev_m},
@@ -10266,7 +10077,6 @@ static swig_command_info swig_commands[] = {
 {"Math::GSL::Statisticsc::gsl_stats_char_lag1_autocorrelation", _wrap_gsl_stats_char_lag1_autocorrelation},
 {"Math::GSL::Statisticsc::gsl_stats_char_covariance", _wrap_gsl_stats_char_covariance},
 {"Math::GSL::Statisticsc::gsl_stats_char_correlation", _wrap_gsl_stats_char_correlation},
-{"Math::GSL::Statisticsc::gsl_stats_char_spearman", _wrap_gsl_stats_char_spearman},
 {"Math::GSL::Statisticsc::gsl_stats_char_variance_m", _wrap_gsl_stats_char_variance_m},
 {"Math::GSL::Statisticsc::gsl_stats_char_sd_m", _wrap_gsl_stats_char_sd_m},
 {"Math::GSL::Statisticsc::gsl_stats_char_absdev_m", _wrap_gsl_stats_char_absdev_m},

@@ -191,6 +191,8 @@ package Math::GSL::Sum;
 
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Math::GSL::Sum - Sum series with the Levin u-transform

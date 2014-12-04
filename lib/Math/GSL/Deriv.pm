@@ -215,6 +215,8 @@ package Math::GSL::Deriv;
 
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 Math::GSL::Deriv - Numerical Derivatives
